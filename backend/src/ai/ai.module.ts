@@ -31,5 +31,6 @@ import { StoriesModule } from '../stories/stories.module';
   ],
   controllers: [AiController],
   providers: [AiService],
+  exports: [AiService],
 })
 export class AiModule {}

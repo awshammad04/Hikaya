@@ -53,7 +53,7 @@ import { LoadingRegion, SkeletonLine, SkeletonText } from "../components/Skeleto
 import { PageTransition, Reveal } from "../components/motion";
 import { LocalArtisansSection } from "../components/LocalArtisansSection";
 import { useInterfaceLanguage } from "../context/LanguageContext";
-import { locationById } from "../locationsData";
+import { locationById, governorateName, nationalRecord, catalog } from "../data/heritage";
 import { visitorWalkthrough } from "../visitorWalkthroughs";
 import { SourceCitationLine } from "../components/SourceCitationLine";
 import { markMemoryUncovered } from "../services/progress";
@@ -103,7 +103,7 @@ export const LocationDetailsPage: React.FC = () => {
   const [reason, setReason] = useState<string | undefined>();
   const [routeOpen, setRouteOpen] = useState(false);
   const requestedTab = searchParams.get("tab");
-  const [tab, setTab] = useState(searchParams.get("ask") ? "guide" : requestedTab === "memories" ? "memories" : "story");
+  const [tab, setTab] = useState(searchParams.get("ask") ? "guide" : ["story","timeline","gallery","quiz","memories","artisans"].includes(requestedTab ?? "") ? requestedTab! : "story");
 
   const { markVisited, hasVisited } = useVisitedLocations(0);
   const walkingTour = searchParams.get("tour") === "1";
@@ -210,6 +210,9 @@ export const LocationDetailsPage: React.FC = () => {
   }
 
   const profile = locationById(location.id);
+  const governorateId = location.governorateId ?? "jerusalem";
+  const isJerusalem = governorateId === "jerusalem";
+  const mapPath = isJerusalem ? "/map" : `/governorates/${governorateId}/map`;
   const displayName = isArabic ? (profile?.arabicName ?? location.arabicName ?? location.name) : location.name;
   const secondaryName = isArabic ? location.name : (location.arabicName ?? profile?.arabicName);
   const description = isArabic ? (profile?.arabicSummary ?? location.description) : (profile?.summary ?? location.description);
@@ -236,7 +239,7 @@ export const LocationDetailsPage: React.FC = () => {
         <DataSourceBanner source={source} reason={reason} />
 
         <Link
-          to="/map"
+          to={mapPath}
           className="text-xs font-serif font-bold uppercase tracking-widest text-brand-muted hover:text-brand-olive inline-flex items-center gap-1.5"
         >
           <ArrowLeft className="w-3.5 h-3.5" />
@@ -253,7 +256,7 @@ export const LocationDetailsPage: React.FC = () => {
           <div className="absolute inset-0 bg-gradient-to-t from-brand-olive/95 via-brand-olive/30 to-transparent" />
           <div className="absolute bottom-6 left-6 right-6">
             <span className="text-[10px] text-brand-amber font-mono tracking-widest uppercase font-black">
-              {isArabic ? "تراث القدس الحي" : "Jerusalem living heritage"}
+              {isArabic ? `تراث ${governorateName(governorateId,true)} الحي` : `${governorateName(governorateId,false)} living heritage`}
               {hasVisited(location.id) && (isArabic ? " · تمّت الزيارة" : " · visited")}
             </span>
             <h1 className="font-serif font-black text-4xl text-stone-100 leading-tight">
@@ -264,7 +267,7 @@ export const LocationDetailsPage: React.FC = () => {
                 {secondaryName}
               </span>
             )}
-            {profile && (
+            {profile?.imageSourceUrl && (
               <a href={profile.imageSourceUrl} target="_blank" rel="noreferrer" className="absolute bottom-0 end-0 text-[9px] text-stone-300/90 bg-black/35 px-2 py-1 rounded-full inline-flex items-center gap-1 hover:text-white">
                 <ExternalLink className="w-2.5 h-2.5" />{profile.imageCredit} · {profile.imageLicense}
               </a>
@@ -272,6 +275,7 @@ export const LocationDetailsPage: React.FC = () => {
           </div>
         </header>
 
+        {!isJerusalem && <p className="rounded-2xl bg-brand-amber/10 p-4 text-xs leading-relaxed text-brand-muted">{isArabic ? catalog.gaps.ar : catalog.gaps.en}</p>}
         <div className="space-y-5">
           {/* --- Facts ----------------------------------------------------- */}
           <section className="rounded-3xl border border-brand-border bg-white p-5 shadow-sm md:p-6">
@@ -286,7 +290,7 @@ export const LocationDetailsPage: React.FC = () => {
                       key={category}
                       className="rounded-full border border-brand-border-light bg-brand-bg px-2.5 py-1 font-mono text-[10px] text-brand-muted"
                     >
-                      {isArabic ? category : ({ "حارة تاريخية": "Historic quarter", "معلم ديني": "Sacred site", "سوق تراثي": "Historic souq", "حي مقدسي": "Jerusalem neighbourhood", "ذاكرة شفوية": "Oral memory" }[category] ?? category)}
+                      {isArabic ? category : ({ "حارة تاريخية": "Historic quarter", "معلم ديني": "Sacred site", "سوق تراثي": "Historic souq", "حي مقدسي": "Jerusalem neighbourhood", "ذاكرة شفوية": "Oral memory", "متحف":"Museum", "تراث ثقافي":"Cultural heritage" }[category] ?? category)}
                     </span>
                   ))}
                 </div>
@@ -299,7 +303,7 @@ export const LocationDetailsPage: React.FC = () => {
                   </p>
                   <p className="flex items-center gap-2 text-brand-text">
                     <MapPin className="h-3.5 w-3.5 shrink-0 text-brand-amber" />
-                    {isArabic ? "القدس، فلسطين" : `${location.city}, ${location.country}`}
+                    {isArabic ? `${nationalRecord(location.id)?.arabicCity ?? "القدس"}، فلسطين` : `${location.city}, ${location.country}`}
                   </p>
                   {location.latitude != null && location.longitude != null && (
                     <p className="font-mono text-brand-muted" dir="ltr">
@@ -309,7 +313,7 @@ export const LocationDetailsPage: React.FC = () => {
                 </div>
 
                 <div className="flex flex-wrap items-center gap-3">
-                  {location.latitude != null && location.longitude != null && (
+                  {isJerusalem && location.latitude != null && location.longitude != null && (
                     <button
                       type="button"
                       onClick={() => setRouteOpen(true)}

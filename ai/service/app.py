@@ -52,6 +52,7 @@ app.add_middleware(
 # Contract error codes that mean "the caller asked for something impossible",
 # as opposed to a server-side failure.
 _CLIENT_ERRORS = {
+    "invalid_scope",
     "missing_content",
     "content_not_reviewed",
     "unsupported_audience",
@@ -115,4 +116,11 @@ def ask_guide_endpoint(payload: Dict[str, Any]):
                                                   "message": str(exc)}},
         )
     response = answer_question(request).to_dict()
+    return JSONResponse(status_code=_status_code(response), content=response)
+
+
+@app.post("/generate-journey")
+def generate_journey_endpoint(payload: Dict[str, Any]):
+    from .journeys import generate_journey
+    response = generate_journey(payload)
     return JSONResponse(status_code=_status_code(response), content=response)

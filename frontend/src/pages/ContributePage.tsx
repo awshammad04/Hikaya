@@ -17,7 +17,7 @@ import { useInterfaceLanguage } from "../context/LanguageContext";
 export const ContributePage: React.FC = () => {
   const { isArabic } = useInterfaceLanguage();
   const [searchParams] = useSearchParams();
-  const { locations, loading, source, reason } = useLocations();
+  const { locations, loading, source, reason } = useLocations("all");
 
   return (
     <PageTransition>
@@ -29,7 +29,7 @@ export const ContributePage: React.FC = () => {
             {isArabic ? "شارك ذكرى مقدسية" : "Share a memory"}
           </h1>
           <p className="text-sm text-brand-text leading-relaxed mt-2">
-            {isArabic ? "حكاية القدس ليست سجلاً للمباني والتواريخ فقط. شارع مشيت فيه، أو دكان أُغلق، أو عبارة قالتها جدتك؛ كل ذلك تراث، وهو أول ما يضيع إن لم ندوّنه." : "Hikaya is not only a record of buildings and dates. A street you walked, a shop that closed, something your grandmother said — that is heritage too, and it is the part that disappears first if nobody writes it down."}
+            {isArabic ? "حكاية ليست سجلاً للمباني والتواريخ فقط. شارع مشيت فيه، أو دكان أُغلق، أو عبارة قالتها جدتك؛ كل ذلك تراث، وهو أول ما يضيع إن لم ندوّنه." : "Hikaya is not only a record of buildings and dates. A street you walked, a shop that closed, something your grandmother said — that is heritage too, and it is the part that disappears first if nobody writes it down."}
           </p>
         </div>
 

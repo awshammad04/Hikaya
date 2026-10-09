@@ -7,9 +7,9 @@ export const AboutPage: React.FC = () => {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="font-serif font-black text-3xl text-brand-olive">{isArabic ? "عن حكاية القدس" : "About Hikayat AlQuds"}</h1>
+        <h1 className="font-serif font-black text-3xl text-brand-olive">{isArabic ? "عن حكاية" : "About Hikaya"}</h1>
         <p className="text-xs text-brand-muted font-serif italic">
-          {isArabic ? "دليل شخصي ذكي للقدس · مسار Q GUIDE 2026" : "AI-powered personalized guidance for Jerusalem · Q GUIDE 2026."}
+          {isArabic ? "دليل شخصي للتراث الفلسطيني" : "Personalized guidance through Palestinian heritage."}
         </p>
       </div>
       <AboutPanel />

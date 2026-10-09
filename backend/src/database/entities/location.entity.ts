@@ -7,6 +7,10 @@
  */
 export class Location {
   id: string;
+  governorateId?: string;
+  arabicDescription?: string;
+  reviewStatus?: string;
+  coordinateStatus?: string;
   name: string;
   arabicName?: string;
   city?: string;

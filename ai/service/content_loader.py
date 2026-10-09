@@ -80,6 +80,10 @@ class ReviewedContent(object):
         """Path relative to the repository root, for reporting back to the backend."""
         return os.path.relpath(self.path, _REPO_ROOT).replace(os.sep, "/")
 
+    @property
+    def governorate_id(self):
+        return self.meta.get('governorate_id', 'jerusalem')
+
     # -- section helpers ----------------------------------------------------
 
     def section(self, key, default=""):
@@ -199,7 +203,7 @@ def summary_path(location_id, content_dir=None):
         if not filename.endswith(".md") or filename.lower() == "readme.md":
             continue
         path = os.path.join(directory, filename)
-        with open(path, "r") as handle:
+        with open(path, "r", encoding="utf8") as handle:
             head = handle.read(2048)
         meta = _parse_frontmatter(head)
         if meta.get("location_id") == location_id:
@@ -213,7 +217,7 @@ def load(location_id, content_dir=None):
     path = summary_path(location_id, content_dir)
     if not path:
         return None
-    with open(path, "r") as handle:
+    with open(path, "r", encoding="utf8") as handle:
         text = handle.read()
     return parse_summary(text, path=path)
 
@@ -228,12 +232,13 @@ def available_locations(content_dir=None):
     for filename in sorted(os.listdir(directory)):
         if not filename.endswith(".md") or filename.lower() == "readme.md":
             continue
-        with open(os.path.join(directory, filename), "r") as handle:
+        with open(os.path.join(directory, filename), "r", encoding="utf8") as handle:
             meta = _parse_frontmatter(handle.read(2048))
         if meta.get("location_id"):
             found.append(
                 {
                     "location_id": meta["location_id"],
+                    "governorate_id": meta.get("governorate_id", "jerusalem"),
                     "name": meta.get("name", ""),
                     "file": filename,
                     "reviewed": meta.get("reviewed", "false"),

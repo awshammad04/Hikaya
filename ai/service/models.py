@@ -60,6 +60,7 @@ class StoryRequest:
 
     location_id: Optional[str] = None
     location_name: Optional[str] = None
+    governorate_id: Optional[str] = None
     historical_text: Optional[str] = None
     target_audience: str = "general"
     language: str = "en"
@@ -121,6 +122,8 @@ class SourceInfo:
 
     location_id: Optional[str] = None
     location_name: Optional[str] = None
+    governorate_id: Optional[str] = None
+    references: List[Dict[str, str]] = field(default_factory=list)
     content_file: Optional[str] = None
     summary_file: Optional[str] = None
     provided_inline: bool = False
@@ -176,6 +179,8 @@ class GuideRequest:
     """
 
     question: str = ""
+    governorate_ids: List[str] = field(default_factory=list)
+    location_ids: Optional[List[str]] = None
     location_id: Optional[str] = None
     historical_text: Optional[str] = None
     language: str = "en"
@@ -196,11 +201,8 @@ class GuideRequest:
                 ERR_UNSUPPORTED_LANGUAGE,
                 "Unsupported language '%s'." % self.language,
             )
-        if not self.location_id and not self.historical_text:
-            raise ValidationError(
-                ERR_MISSING_CONTENT,
-                "Either location_id or historical_text is required.",
-            )
+        if not self.location_id and not self.historical_text and not self.governorate_ids and not self.location_ids:
+            raise ValidationError(ERR_MISSING_CONTENT, "Choose a location or retrieval scope.")
         if len(self.history) > MAX_HISTORY_TURNS:
             # Keeping the tail is enough for pronoun resolution and bounds the
             # prompt an untrusted caller can build.
@@ -209,6 +211,7 @@ class GuideRequest:
 
 @dataclass
 class GuideResponse:
+    sources: List[SourceInfo] = field(default_factory=list)
     status: str = STATUS_OK
     answer: str = ""
     answered_from_source: bool = True

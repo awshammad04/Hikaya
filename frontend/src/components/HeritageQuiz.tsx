@@ -4,6 +4,7 @@ import { Award, Check, FileText, RotateCcw, X } from "lucide-react";
 import { ApiQuizQuestion } from "../types";
 import { markQuizCompleted } from "../services/progress";
 import { useInterfaceLanguage } from "../context/LanguageContext";
+import { localizeNationalQuiz } from "../data/heritage";
 import { localizeQuiz } from "../arabicContent";
 
 interface HeritageQuizProps {
@@ -29,7 +30,7 @@ export const HeritageQuiz: React.FC<HeritageQuizProps> = ({
   const reduced = useReducedMotion();
   const [answers, setAnswers] = useState<Record<string, number>>({});
   const [finished, setFinished] = useState(false);
-  const displayedQuestions = questions.map((question) => localizeQuiz(question, isArabic));
+  const displayedQuestions = questions.map((question) => localizeNationalQuiz(localizeQuiz(question, isArabic), isArabic));
 
   if (!questions.length) {
     return (

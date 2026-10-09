@@ -1,7 +1,11 @@
 # Frontend Module
 
-The Arabic-first Hikaya Quds interface: a focused visitor guide to Jerusalem’s
-quarters, gates, neighbourhoods, markets and living memories.
+The Arabic-first Hikaya interface covers Jerusalem, Ramallah, Hebron and Gaza.
+The original Jerusalem experience remains intact alongside national navigation,
+governorate maps and a unified cultural story builder.
+
+See [Palestine expansion](../docs/palestine-expansion.md) for routes, shared
+components, fallback behavior, content limits and verification commands.
 
 ## Framework
 

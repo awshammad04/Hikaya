@@ -10,4 +10,4 @@
 
 ## Notes
 
-This is the current Hikaya Quds team roster for the Q GUIDE 2026 build.
+This is the current Hikaya team roster for the Q GUIDE 2026 build.

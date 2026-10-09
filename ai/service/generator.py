@@ -96,6 +96,10 @@ def generate_story(request, content_dir=None):
         )
 
     title, summary, narrative, notes, model_info = result
+    if content and content.governorate_id != 'jerusalem' and request.language == 'ar':
+        for old, new in [('A few facts:', 'حقائق موثّقة:'), ('Chronology:', 'التسلسل الزمني:'), ('Historical sequence:', 'التسلسل التاريخي:'), ('Attributed traditions:', 'تقاليد منسوبة:'), ('Key takeaway:', 'خلاصة:'), ('Main landmarks:', 'المعالم:'), ('Things to look for:', 'ما يوثقه السجل:'), ('A gentle discovery:', 'اكتشاف مبسّط:')]:
+            narrative = narrative.replace(old, new)
+        title = content.name
 
     warnings = fact_guard.check(
         narrative,
@@ -133,6 +137,19 @@ def answer_question(request, content_dir=None):
         response.status = "error"
         response.error = {"code": exc.code, "message": exc.message}
         return response
+
+    if request.governorate_ids or request.location_ids:
+        from .scope import resolve_ids
+        try:
+            ids = resolve_ids(request.governorate_ids, [request.location_id] if request.location_id else request.location_ids, content_dir)
+        except ValidationError as exc:
+            return GuideResponse(status='error', answered_from_source=False, error={'code':exc.code, 'message':exc.message})
+        answers = [answer_question(GuideRequest(question=request.question, location_id=id, language=request.language, history=request.history), content_dir) for id in ids]
+        supported = [answer for answer in answers if answer.answered_from_source and not answer.error]
+        return GuideResponse(answer='\n\n'.join(answer.source.location_name+': '+answer.answer for answer in supported) if supported else _not_in_records(request.language),
+                             answered_from_source=bool(supported), excerpts=[excerpt for answer in supported for excerpt in answer.excerpts],
+                             sources=[answer.source for answer in supported],
+                             uncertainty_notes=[] if supported else [_not_in_records(request.language)], model=OFFLINE_MODEL)
 
     story_like = StoryRequest(
         location_id=request.location_id,
@@ -227,6 +244,8 @@ def _resolve_source(request, content_dir):
     reviewed summary is loaded by ``location_id``.
     """
     if request.historical_text:
+        if request.governorate_id:
+            raise ValidationError('invalid_scope', 'Scoped requests must use the stored reviewed record.')
         return None, SourceInfo(
             location_id=request.location_id,
             location_name=request.location_name,
@@ -234,6 +253,11 @@ def _resolve_source(request, content_dir):
         )
 
     content = content_loader.load(request.location_id or "", content_dir)
+    if content and request.governorate_id and content.governorate_id != request.governorate_id:
+        raise ValidationError('invalid_scope', 'Location is outside the requested governorate.')
+    if content:
+        from .scope import localized
+        content = localized(content, request.language)
     if content is None:
         raise ValidationError(
             ERR_UNKNOWN_LOCATION,
@@ -246,9 +270,13 @@ def _resolve_source(request, content_dir):
             "The content for '%s' is not marked reviewed." % request.location_id,
         )
 
+    from .scope import catalog
+    record = next((item for item in catalog()['locations'] if item['id'] == content.location_id), None)
     return content, SourceInfo(
         location_id=content.location_id,
         location_name=content.name,
+        governorate_id=content.governorate_id,
+        references=record["sources"] if record else [],
         content_file=content.source_file,
         summary_file=content.repo_path,
         provided_inline=False,

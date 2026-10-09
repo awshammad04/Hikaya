@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { ExternalLink, Footprints, MapPin, Navigation2, Route, ShieldCheck, X } from "lucide-react";
 import { ApiLocation } from "../types";
-import { locationById } from "../locationsData";
+import { locationById } from "../data/heritage";
 import { useInterfaceLanguage } from "../context/LanguageContext";
 
 interface InAppWalkingRouteModalProps {
@@ -37,13 +37,13 @@ export const InAppWalkingRouteModal: React.FC<InAppWalkingRouteModalProps> = ({ 
     : undefined;
   const steps = isArabic
     ? [
-        "حدّد نقطة بدايتك على هاتفك؛ لا تجمع حكاية القدس موقعك ولا تدّعي معرفة مكانك الحالي.",
+        "حدّد نقطة بدايتك على هاتفك؛ لا تجمع حكاية موقعك ولا تدّعي معرفة مكانك الحالي.",
         `افتح محطة «${name}» على خريطة الدليل لتقرأ موقعها ضمن الحارات والمعالم القريبة قبل أن تبدأ المشي.`,
         "اتبع الممرات العامة المفتوحة فقط، وتحرك بهدوء في الأزقة والأسواق ومناطق العبادة والسكن.",
         "تحقّق محلياً من الدخول وساعات الفتح والظروف الراهنة؛ قد يتغير الوصول أو اتجاه الحركة خلال اليوم.",
       ]
     : [
-        "Set your starting point on your phone; Hikayat AlQuds neither collects your location nor claims to know where you are.",
+        "Set your starting point on your phone; Hikaya neither collects your location nor claims to know where you are.",
         `Open “${name}” on the guide map to see its position among nearby quarters and landmarks before you set off.`,
         "Use only open public passages, moving thoughtfully through lanes, markets, worship spaces and residential areas.",
         "Check local access, opening hours and current conditions on the day; access and movement can change.",
@@ -61,7 +61,7 @@ export const InAppWalkingRouteModal: React.FC<InAppWalkingRouteModalProps> = ({ 
           <div className="relative flex items-start gap-3">
             <span className="grid h-11 w-11 shrink-0 place-items-center rounded-2xl bg-brand-amber text-white shadow-lg"><Route className="h-5 w-5" /></span>
             <div>
-              <p className="text-[10px] font-mono font-bold uppercase tracking-[0.18em] text-brand-amber">{isArabic ? "داخل حكاية القدس" : "Inside Hikayat AlQuds"}</p>
+              <p className="text-[10px] font-mono font-bold uppercase tracking-[0.18em] text-brand-amber">{isArabic ? "داخل حكاية" : "Inside Hikaya"}</p>
               <h2 className="mt-1 font-serif text-2xl font-black">{isArabic ? `طريق المشي إلى ${name}` : `Walk to ${name}`}</h2>
             </div>
           </div>

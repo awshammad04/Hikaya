@@ -13,6 +13,7 @@ import { ApiTimelineEvent } from "../types";
 import { SkeletonLine, SkeletonText } from "./Skeleton";
 import { useInterfaceLanguage } from "../context/LanguageContext";
 import { localizeTimeline } from "../arabicContent";
+import { localizeNationalTimeline } from "../data/heritage";
 import { SourceCitationLine } from "./SourceCitationLine";
 
 interface HistoricalTimelineProps {
@@ -253,7 +254,7 @@ export const HistoricalTimeline: React.FC<HistoricalTimelineProps> = ({
   loading,
 }) => {
   const { isArabic } = useInterfaceLanguage();
-  const displayedEvents = events.map((event) => localizeTimeline(event, isArabic));
+  const displayedEvents = events.map((event) => localizeNationalTimeline(localizeTimeline(event, isArabic), isArabic));
 
   if (loading) {
     return (

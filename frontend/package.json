@@ -1,5 +1,6 @@
 {
   "name": "react-example",
+  "description": "Hikaya — an AI-powered personal guide and living heritage archive across Palestine.",
   "private": true,
   "version": "0.0.0",
   "type": "module",

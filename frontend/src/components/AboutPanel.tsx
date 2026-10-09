@@ -11,13 +11,13 @@ export const AboutPanel: React.FC = () => {
         <div className="absolute inset-0 tatreez-grid pointer-events-none opacity-5" />
         <div className="relative z-10 space-y-4">
           <div className="inline-block bg-brand-amber/20 text-brand-amber text-[10px] font-mono font-bold px-3 py-1 rounded-full uppercase tracking-widest border border-brand-amber/30">
-            {isArabic ? "هاكاثون القدس 2026 · مسار Q GUIDE" : "Jerusalem Hackathon 2026 · Q GUIDE"}
+            {isArabic ? "Hikaya" : "Hikaya"}
           </div>
           <h3 className="font-serif font-black text-3xl text-brand-amber">
-            {isArabic ? "حكاية القدس · دليل حي ومتخصص بالمدينة" : "Hikayat AlQuds · A City-Specific Living Guide"}
+            {isArabic ? "حكاية · دليل حي للتراث الفلسطيني" : "Hikaya · A Living Palestinian Heritage Guide"}
           </h3>
           <p className="text-stone-300 text-sm leading-relaxed italic">
-            {isArabic ? "حكاية القدس دليل شخصي مدعوم بالذكاء الاصطناعي وأرشيف حي يركّز حصراً على حارات القدس وأبوابها وأسواقها وأحيائها المحيطة. يجمع بين السرد الموثّق والمسارات التي تعمل دون اتصال والرواية الصوتية وصور الماضي والحاضر وذكريات المجتمع المراجعة." : "Hikayat AlQuds is an AI-powered personal guide and living archive focused exclusively on Jerusalem’s quarters, gates, souqs and surrounding neighbourhoods. It combines grounded storytelling, offline routing, narration, then-and-now photography and reviewed community memories."}
+            {isArabic ? "حكاية دليل شخصي مدعوم بالذكاء الاصطناعي وأرشيف حي يجمع القدس ورام الله والخليل وغزة. يجمع بين السرد الموثّق والمسارات التي تعمل دون اتصال والرواية الصوتية وصور الماضي والحاضر وذكريات المجتمع المراجعة." : "Hikaya is an AI-powered personal guide and living archive covering Jerusalem, Ramallah, Hebron and Gaza. It combines grounded storytelling, offline routing, narration, then-and-now photography and reviewed community memories."}
           </p>
         </div>
       </div>
@@ -25,10 +25,10 @@ export const AboutPanel: React.FC = () => {
       <div className="flex items-center justify-between gap-5 rounded-3xl border border-brand-border bg-white p-4 shadow-sm">
         <div className="min-w-0">
           <p className="font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-brand-amber">Official identity</p>
-          <p className="mt-1 font-serif text-lg font-black text-brand-olive">HIKAYAT ALQUDS · حكاية القدس</p>
-          <p className="mt-1 text-xs leading-5 text-brand-muted">{isArabic ? "شعار المنصة الرسمي لمسار Q GUIDE." : "Official platform mark for the Q GUIDE track."}</p>
+          <p className="mt-1 font-serif text-lg font-black text-brand-olive">Hikaya · حكاية</p>
+          <p className="mt-1 text-xs leading-5 text-brand-muted">{isArabic ? "شعار حكاية الرسمي." : "Official Hikaya logo."}</p>
         </div>
-        <img src="/logo-vertical.png" alt="HIKAYAT ALQUDS | حكاية القدس" className="h-28 w-24 shrink-0 rounded-2xl object-contain mix-blend-multiply" />
+        <img src="/logo-vertical.png" alt="Hikaya | حكاية" className="h-28 w-24 shrink-0 rounded-2xl object-contain mix-blend-multiply" />
       </div>
 
       {/* Grid of Key Features */}
@@ -41,7 +41,7 @@ export const AboutPanel: React.FC = () => {
             {isArabic ? "إطار يمنع اختلاق المعلومات" : "Anti-Hallucination Framework"}
           </h4>
           <p className="text-xs text-brand-text leading-relaxed">
-            {isArabic ? <>لا يصوغ الذكاء الاصطناعي إلا من مكتبة حكاية القدس التحريرية المراجعة. يتحقق حارس الحقائق من الأسماء والتواريخ، وتبقى الروايات الدينية والشفوية منسوبة إلى مصادرها، ويظهر تنبيه صريح عند غياب المعلومة بدلاً من التخمين.</> : <>The AI can only synthesize Hikayat AlQuds’s reviewed editorial library. Fact-guard checks names and dates, religious and oral traditions remain attributed, and uncovered questions return an explicit uncertainty note rather than a guess.</>}
+            {isArabic ? <>لا يصوغ الذكاء الاصطناعي إلا من مكتبة حكاية التحريرية المراجعة. يتحقق حارس الحقائق من الأسماء والتواريخ، وتبقى الروايات الدينية والشفوية منسوبة إلى مصادرها، ويظهر تنبيه صريح عند غياب المعلومة بدلاً من التخمين.</> : <>The AI can only synthesize Hikaya’s reviewed editorial library. Fact-guard checks names and dates, religious and oral traditions remain attributed, and uncovered questions return an explicit uncertainty note rather than a guess.</>}
           </p>
         </div>
 
@@ -115,11 +115,11 @@ export const AboutPanel: React.FC = () => {
           {isArabic ? "تنزيل حزمة المشروع الكاملة" : "Download Complete Project Package"}
         </h4>
         <p className="text-xs text-brand-muted max-w-md mx-auto leading-relaxed">
-          {isArabic ? "صدّر واجهة حكاية القدس وخادمها المحلي لتشغيل عرض تجريبي قابل للنقل." : "Export the current Hikayat AlQuds frontend and local server package for a portable demo."}
+          {isArabic ? "صدّر واجهة حكاية وخادمها المحلي لتشغيل عرض تجريبي قابل للنقل." : "Export the current Hikaya frontend and local server package for a portable demo."}
         </p>
         <a
           href="/api/download-zip"
-          download="hikaya-quds-q-guide-2026.zip"
+          download="hikaya.zip"
           className="inline-flex items-center gap-2 bg-brand-amber hover:bg-[#b45309] text-stone-100 font-serif font-black tracking-widest uppercase px-6 py-3.5 rounded-full shadow-lg transition-all"
         >
           <Download className="w-4 h-4" />

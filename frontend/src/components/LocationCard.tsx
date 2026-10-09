@@ -13,7 +13,7 @@ import {
 import { ApiLocation } from "../types";
 import { CoverImage } from "./CoverImage";
 import { useInterfaceLanguage } from "../context/LanguageContext";
-import { locationById } from "../locationsData";
+import { locationById } from "../data/heritage";
 
 interface LocationCardProps {
   location: ApiLocation;

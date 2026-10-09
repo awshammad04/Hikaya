@@ -1,4 +1,4 @@
-import { Controller, Get, Param } from '@nestjs/common';
+import { Controller, Get, Param, Query } from '@nestjs/common';
 import { LocationsService, LocationWithStats } from './locations.service';
 import { Location } from '../database/entities/location.entity';
 import { MediaItem } from '../database/entities/media.entity';
@@ -25,8 +25,13 @@ export class LocationsController {
   constructor(private readonly locationsService: LocationsService) {}
 
   @Get()
-  findAll(): Promise<LocationWithStats[]> {
-    return this.locationsService.findAllWithStats();
+  findAll(
+    @Query('governorateId') governorateId?: string,
+    @Query('scope') scope?: string,
+  ): Promise<LocationWithStats[]> {
+    return this.locationsService.findAllWithStats(
+      scope === 'all' ? 'all' : governorateId,
+    );
   }
 
   @Get(':id/media')

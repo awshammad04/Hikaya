@@ -7,6 +7,8 @@ import { LocationsModule } from './locations/locations.module';
 import { StoriesModule } from './stories/stories.module';
 import { ContributionsModule } from './contributions/contributions.module';
 import { AiModule } from './ai/ai.module';
+import { GovernoratesModule } from './governorates/governorates.module';
+import { JourneysModule } from './journeys/journeys.module';
 
 @Module({
   imports: [
@@ -16,6 +18,8 @@ import { AiModule } from './ai/ai.module';
     StoriesModule,
     ContributionsModule,
     AiModule,
+    GovernoratesModule,
+    JourneysModule,
   ],
   controllers: [AppController],
   providers: [AppService],

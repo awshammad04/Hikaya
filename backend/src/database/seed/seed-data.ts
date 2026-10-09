@@ -33,7 +33,7 @@ export const SEED_STORIES: Story[] = SEED_LOCATIONS.map((item) => ({
   title: `${item.name}: a Jerusalem walk`,
   summary: item.description,
   originalContent: item.aiSummaryFile,
-  simplifiedStory: `${item.name} (${item.arabicName}) is one of the eight focused Jerusalem places in Hikaya Quds. ${item.description} Open the reviewed timeline, gallery and memories to follow what the documentation supports; where the record has a gap, the guide will not guess.`,
+  simplifiedStory: `${item.name} (${item.arabicName}) is one of the eight focused Jerusalem places in Hikaya. ${item.description} Open the reviewed timeline, gallery and memories to follow what the documentation supports; where the record has a gap, the guide will not guess.`,
   audience: 'general', language: 'en', tone: 'storytelling', source: item.contentFile,
   isAiGenerated: false, uncertaintyNotes: [], status: 'published',
 }));

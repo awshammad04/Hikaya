@@ -28,7 +28,7 @@ export const DataSourceBanner: React.FC<DataSourceBannerProps> = ({ source }) =>
           {isArabic ? "وضع عدم الاتصال" : "Offline sample data"}
         </p>
         <p>
-          {isArabic ? "تعمل حكاية القدس الآن بالمحتوى الموثّق المحفوظ على جهازك. ستعود المزامنة تلقائياً عند اتصال الخدمة، ويمكنك متابعة الجولة والخرائط والاختبارات دون انقطاع." : "Hikayat AlQuds is using the reviewed content saved on this device. It will reconnect automatically when the service returns, while tours, maps and quizzes remain available."}
+          {isArabic ? "تعمل حكاية الآن بالمحتوى الموثّق المحفوظ على جهازك. ستعود المزامنة تلقائياً عند اتصال الخدمة، ويمكنك متابعة الجولة والخرائط والاختبارات دون انقطاع." : "Hikaya is using the reviewed content saved on this device. It will reconnect automatically when the service returns, while tours, maps and quizzes remain available."}
         </p>
       </div>
     </div>

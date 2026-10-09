@@ -1,4 +1,4 @@
-# Hikaya Quds — Experience Improvements
+# Hikaya — Experience Improvements
 
 What was built in response to the improvement ideas document, what was
 deliberately done differently, and what was not built.

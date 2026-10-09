@@ -53,6 +53,7 @@ export const HomePage: React.FC = () => {
   return (
     <PageTransition>
       <div className="space-y-14">
+        <Link to="/" className="text-xs text-brand-muted hover:text-brand-olive">{isArabic ? "فلسطين / القدس" : "Palestine / Jerusalem"}</Link>
         <DataSourceBanner source={source} reason={reason} />
 
         {/* --- Hero -------------------------------------------------------- */}
@@ -64,7 +65,7 @@ export const HomePage: React.FC = () => {
                 animate={{ opacity: 1 }}
                 transition={{ delay: reduced ? 0 : 0.1 }}
               >
-                HIKAYAT ALQUDS · JERUSALEM HACKATHON 2026 · Q GUIDE
+                Hikaya
               </motion.p>
 
               <motion.h1
@@ -73,7 +74,7 @@ export const HomePage: React.FC = () => {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: reduced ? 0 : 0.15, duration: 0.5 }}
               >
-                {isArabic ? "القدس تحكي.. وحكاية القدس توثّق وتُرشد" : "Places Remember. Jerusalem Speaks."}
+                {isArabic ? "القدس تحكي.. وحكاية توثّق وتُرشد" : "Places Remember. Jerusalem Speaks."}
               </motion.h1>
 
               <motion.p
@@ -83,7 +84,7 @@ export const HomePage: React.FC = () => {
                 transition={{ delay: reduced ? 0 : 0.25, duration: 0.5 }}
               >
                 {isArabic
-                  ? "مرشد شخصي ذكي لحارات القدس وأبوابها المقدسة وأسواقها التراثية. يستند كل مسار وكل حكاية إلى مصادر راجعتها حكاية القدس؛ وحين تكون المعلومة ناقصة يصرّح الدليل بذلك ولا يخمّن."
+                  ? "مرشد شخصي ذكي لحارات القدس وأبوابها المقدسة وأسواقها التراثية. يستند كل مسار وكل حكاية إلى مصادر راجعتها حكاية؛ وحين تكون المعلومة ناقصة يصرّح الدليل بذلك ولا يخمّن."
                   : "An AI-powered personal guide to Jerusalem’s quarters, sacred gates and traditional souqs. Every route and story is grounded in reviewed Hikaya sources; where the record is incomplete, the guide says so instead of guessing."}
               </motion.p>
 
@@ -107,7 +108,7 @@ export const HomePage: React.FC = () => {
                 >
                   <Sparkles className="w-3.5 h-3.5" />
                   <span className="sm:hidden">{isArabic ? "اسأل الدليل" : "Ask the guide"}</span>
-                  <span className="hidden sm:inline">{isArabic ? "اسأل حكاية القدس" : "Ask Hikayat AlQuds"}</span>
+                  <span className="hidden sm:inline">{isArabic ? "اسأل حكاية" : "Ask Hikaya"}</span>
                 </Link>
                 <Link
                   to="/contribute"

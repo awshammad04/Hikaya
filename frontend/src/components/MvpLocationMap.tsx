@@ -16,7 +16,7 @@ import {
 } from "lucide-react";
 import { ApiLocation } from "../types";
 import { useInterfaceLanguage } from "../context/LanguageContext";
-import { locationById } from "../locationsData";
+import { locationById } from "../data/heritage";
 
 interface MvpLocationMapProps {
   locations: ApiLocation[];
@@ -24,6 +24,10 @@ interface MvpLocationMapProps {
   onSelect: (location: ApiLocation) => void;
   visited?: string[];
   routeIds?: string[];
+  bounds?: typeof BOUNDS;
+  mapLabel?: string;
+  jerusalem?: boolean;
+  drawRoute?: boolean;
 }
 
 const BOUNDS = { minLng: 35.215, maxLng: 35.255, minLat: 31.765, maxLat: 31.798 };
@@ -41,6 +45,8 @@ type GestureStart = {
 };
 
 const CATEGORY_STYLE: Record<string, { color: string; en: string; ar: string }> = {
+  "متحف": { color: "#416759", en: "Museum", ar: "متحف" },
+  "تراث ثقافي": { color: "#98723a", en: "Cultural heritage", ar: "تراث ثقافي" },
   "معلم ديني": { color: "#d97706", en: "Sacred site", ar: "معلم ديني" },
   "سوق تراثي": { color: "#98723a", en: "Historic souq", ar: "سوق تراثي" },
   "حارة تاريخية": { color: "#5a5a40", en: "Historic quarter", ar: "حارة تاريخية" },
@@ -49,10 +55,10 @@ const CATEGORY_STYLE: Record<string, { color: string; en: string; ar: string }> 
 
 const CATEGORY_ORDER = Object.keys(CATEGORY_STYLE);
 
-function point(lat: number, lng: number) {
+function point(lat: number, lng: number, bounds = BOUNDS) {
   return {
-    x: MAP.left + ((lng - BOUNDS.minLng) / (BOUNDS.maxLng - BOUNDS.minLng)) * MAP.width,
-    y: MAP.top + ((BOUNDS.maxLat - lat) / (BOUNDS.maxLat - BOUNDS.minLat)) * MAP.height,
+    x: MAP.left + ((lng - bounds.minLng) / (bounds.maxLng - bounds.minLng)) * MAP.width,
+    y: MAP.top + ((bounds.maxLat - lat) / (bounds.maxLat - bounds.minLat)) * MAP.height,
   };
 }
 
@@ -102,9 +108,11 @@ export const MvpLocationMap: React.FC<MvpLocationMapProps> = ({
   onSelect,
   visited = [],
   routeIds = [],
+  bounds = BOUNDS, mapLabel, jerusalem = true, drawRoute = true,
 }) => {
   const { isArabic } = useInterfaceLanguage();
   const reduced = useReducedMotion();
+  const project = useCallback((lat: number,lng: number) => point(lat,lng,bounds),[bounds]);
   const [active, setActive] = useState<string[]>([]);
   const [zoom, setZoom] = useState(MIN_ZOOM);
   const [pan, setPan] = useState<MapPoint>({ x: 0, y: 0 });
@@ -126,8 +134,8 @@ export const MvpLocationMap: React.FC<MvpLocationMapProps> = ({
   const shown = active.length
     ? plottable.filter((location) => location.categories.some((category) => active.includes(category)))
     : plottable;
-  const routePoints = routeIds.map((id) => locations.find((location) => location.id === id)).filter((item): item is ApiLocation => Boolean(item?.latitude != null && item?.longitude != null)).map((item) => point(item.latitude!, item.longitude!));
-  const wallPoints = OLD_CITY.map(([lat, lng]) => { const p = point(lat, lng); return `${p.x},${p.y}`; }).join(" ");
+  const routePoints = routeIds.map((id) => locations.find((location) => location.id === id)).filter((item): item is ApiLocation => Boolean(item?.latitude != null && item?.longitude != null)).map((item) => project(item.latitude!, item.longitude!));
+  const wallPoints = OLD_CITY.map(([lat, lng]) => { const p = project(lat, lng); return `${p.x},${p.y}`; }).join(" ");
 
   const clampPan = useCallback((candidate: MapPoint, nextZoom: number): MapPoint => {
     const rect = viewportRef.current?.getBoundingClientRect();
@@ -168,7 +176,7 @@ export const MvpLocationMap: React.FC<MvpLocationMapProps> = ({
     const selected = locations.find((location) => location.id === selectedId);
     const rect = viewportRef.current?.getBoundingClientRect();
     if (!selected || selected.latitude == null || selected.longitude == null || !rect) return;
-    const selectedPoint = point(selected.latitude, selected.longitude);
+    const selectedPoint = project(selected.latitude, selected.longitude);
     const nextZoom = 2.25;
     commitView(nextZoom, {
       x: rect.width / 2 - (selectedPoint.x / 1000) * rect.width * nextZoom,
@@ -317,7 +325,7 @@ export const MvpLocationMap: React.FC<MvpLocationMapProps> = ({
             transformOrigin: "0 0",
           }}
         >
-        <svg className="absolute inset-0 w-full h-full pointer-events-none" viewBox="0 0 1000 760" preserveAspectRatio="none" role="img" aria-label={isArabic ? "خريطة توضيحية للقدس" : "Illustrated Jerusalem map"}>
+        <svg className="absolute inset-0 w-full h-full pointer-events-none" viewBox="0 0 1000 760" preserveAspectRatio="none" role="img" aria-label={mapLabel ?? (isArabic ? "خريطة توضيحية للقدس" : "Illustrated Jerusalem map")}>
           <defs>
             <linearGradient id="mapPaper" x1="0" y1="0" x2="1" y2="1"><stop stopColor="#f8f4e9" /><stop offset="1" stopColor="#e4dcc8" /></linearGradient>
             <pattern id="mapGrain" width="34" height="34" patternUnits="userSpaceOnUse"><circle cx="2" cy="2" r="1" fill="#8d856f" opacity=".14" /></pattern>
@@ -326,6 +334,7 @@ export const MvpLocationMap: React.FC<MvpLocationMapProps> = ({
           <rect width="1000" height="760" fill="url(#mapPaper)" />
           <rect width="1000" height="760" fill="url(#mapGrain)" />
 
+          {jerusalem && <>
           {/* Terrain contours: a quiet geographic backdrop rather than an empty grid. */}
           <g fill="none" stroke="#8f8a73" strokeWidth="1.2" opacity=".2">
             <path d="M20 105 C180 35 300 150 455 95 S760 55 980 115" />
@@ -354,7 +363,7 @@ export const MvpLocationMap: React.FC<MvpLocationMapProps> = ({
           <g stroke="#8f8368" strokeWidth="2" opacity=".45"><path d="M300 430 L550 445" /><path d="M424 330 L415 520" /></g>
 
           {GATES.map((gate) => {
-            const p = point(gate.lat, gate.lng);
+            const p = project(gate.lat, gate.lng);
             const labelDirection = gate.en === "Lions’ Gate" ? 1 : -1;
             return <g key={gate.en}>
               <circle cx={p.x} cy={p.y} r={4.5 / zoom} fill="#d97706" stroke="#fffaf0" strokeWidth={2 / zoom} opacity={showDetailedMapLabels ? .9 : .38} />
@@ -382,15 +391,17 @@ export const MvpLocationMap: React.FC<MvpLocationMapProps> = ({
             <text x="670" y="520" textAnchor="middle" transform="rotate(83 670 520)" fontSize={9.5 / zoom}>{isArabic ? "وادي قدرون" : "KIDRON VALLEY"}</text>
           </g>
 
-          {routePoints.length > 1 && <polyline points={routePoints.map((p) => `${p.x},${p.y}`).join(" ")} fill="none" stroke="#fffaf0" strokeWidth="7" opacity=".82" strokeLinecap="round" strokeLinejoin="round" vectorEffect="non-scaling-stroke" />}
-          {routePoints.length > 1 && <polyline points={routePoints.map((p) => `${p.x},${p.y}`).join(" ")} fill="none" stroke="#d97706" strokeWidth="3" strokeDasharray={`${7 / zoom} ${7 / zoom}`} strokeLinecap="round" strokeLinejoin="round" vectorEffect="non-scaling-stroke" />}
+          </>}
+
+          {drawRoute && routePoints.length > 1 && <polyline points={routePoints.map((p) => `${p.x},${p.y}`).join(" ")} fill="none" stroke="#fffaf0" strokeWidth="7" opacity=".82" strokeLinecap="round" strokeLinejoin="round" vectorEffect="non-scaling-stroke" />}
+          {drawRoute && routePoints.length > 1 && <polyline points={routePoints.map((p) => `${p.x},${p.y}`).join(" ")} fill="none" stroke="#d97706" strokeWidth="3" strokeDasharray={`${7 / zoom} ${7 / zoom}`} strokeLinecap="round" strokeLinejoin="round" vectorEffect="non-scaling-stroke" />}
 
           <g transform="translate(895 90)" fill="#5a5a40"><path d="M0 30 L12 0 L24 30 L12 24 Z" fill="#d97706" /><text x="12" y="48" textAnchor="middle" fontSize={14 / zoom} fontWeight="800">{isArabic ? "ش" : "N"}</text></g>
-          <g transform="translate(65 710)" stroke="#5a5a40" strokeWidth="4"><path d="M0 0 H80" /><path d="M0 -5 V5 M80 -5 V5" /><text x="40" y="20" textAnchor="middle" stroke="none" fill="#5a5a40" fontSize={12 / zoom}>{isArabic ? "≈ ١ كم" : "≈ 1 km"}</text></g>
+          {jerusalem && <g transform="translate(65 710)" stroke="#5a5a40" strokeWidth="4"><path d="M0 0 H80" /><path d="M0 -5 V5 M80 -5 V5" /><text x="40" y="20" textAnchor="middle" stroke="none" fill="#5a5a40" fontSize={12 / zoom}>{isArabic ? "≈ ١ كم" : "≈ 1 km"}</text></g>}
         </svg>
 
         {shown.map((location, index) => {
-          const p = point(location.latitude!, location.longitude!);
+          const p = project(location.latitude!, location.longitude!);
           const x = (p.x / 1000) * 100;
           const y = (p.y / 760) * 100;
           const isSelected = location.id === selectedId;
@@ -438,7 +449,7 @@ export const MvpLocationMap: React.FC<MvpLocationMapProps> = ({
         </div>
 
         <div className="absolute top-5 start-5 z-30 max-w-[calc(100%-6.5rem)] rounded-2xl bg-[#fffaf0]/92 backdrop-blur px-4 py-3 border border-white/70 shadow-sm pointer-events-none">
-          <p className="text-[10px] uppercase tracking-widest text-brand-muted inline-flex items-center gap-1.5"><Compass className="w-3 h-3 text-brand-amber" />{isArabic ? "القدس وضواحي البلدة القديمة" : "Jerusalem & Old City approaches"}</p>
+          <p className="text-[10px] uppercase tracking-widest text-brand-muted inline-flex items-center gap-1.5"><Compass className="w-3 h-3 text-brand-amber" />{mapLabel ?? (isArabic ? "القدس وضواحي البلدة القديمة" : "Jerusalem & Old City approaches")}</p>
           <p className="font-serif font-black text-lg text-brand-olive">{isArabic ? `${shown.length} أماكن موثقة` : `${shown.length} documented places`}</p>
         </div>
 
@@ -482,14 +493,14 @@ export const MvpLocationMap: React.FC<MvpLocationMapProps> = ({
               type="button"
               onClick={fitRoute}
               className="grid h-10 w-11 place-items-center rounded-xl border border-white/80 bg-brand-amber text-white shadow-md transition hover:bg-[#b45f05]"
-              aria-label={isArabic ? "ملاءمة المسار داخل الخريطة" : "Fit route in the map"}
-              title={isArabic ? "ركّز على المسار" : "Fit route"}
+              aria-label={jerusalem ? (isArabic ? "ملاءمة المسار داخل الخريطة" : "Fit route in the map") : (isArabic ? "إظهار أماكن الحكاية في الخريطة" : "Fit story chapters in the map")}
+              title={jerusalem ? (isArabic ? "ركّز على المسار" : "Fit route") : (isArabic ? "أماكن الحكاية" : "Fit chapters")}
             >
               <RouteIcon className="h-4 w-4" />
             </button>
           )}
 
-          {selectedId && (
+          {selectedId && locations.some((item) => item.id === selectedId && item.latitude != null && item.longitude != null) && (
             <button
               type="button"
               onClick={focusSelected}
@@ -520,9 +531,9 @@ export const MvpLocationMap: React.FC<MvpLocationMapProps> = ({
 
       <div className="flex flex-wrap gap-x-4 gap-y-1">
         {available.map((category) => <span key={category} className="text-[10px] text-brand-muted inline-flex items-center gap-1.5"><span className="w-2 h-2 rounded-full" style={{ backgroundColor: CATEGORY_STYLE[category].color }} />{isArabic ? CATEGORY_STYLE[category].ar : CATEGORY_STYLE[category].en}</span>)}
-        {routeIds.length > 1 && <span className="text-[10px] text-brand-amber inline-flex items-center gap-1"><span className="w-5 border-t-2 border-dashed border-brand-amber" />{isArabic ? "المسار المقترح" : "Suggested route"}</span>}
+        {drawRoute && routeIds.length > 1 && <span className="text-[10px] text-brand-amber inline-flex items-center gap-1"><span className="w-5 border-t-2 border-dashed border-brand-amber" />{isArabic ? "المسار المقترح" : "Suggested route"}</span>}
       </div>
-      <p className="text-[10px] text-brand-muted">{isArabic ? "خريطة توضيحية تعمل دون اتصال. اتبع زر الاتجاهات لكل محطة للحصول على مسار مشي حي، وتحقق محلياً من الوصول وساعات الفتح والظروف الراهنة." : "Offline illustrated map. Use each stop’s directions button for live walking navigation, and verify current access, opening hours and local conditions."}</p>
+      <p className="text-[10px] text-brand-muted">{!jerusalem ? (isArabic ? "خريطة نقاط مرجعية دون اتصال؛ لا تعرض حدوداً أو طرقاً أو مداخل مؤكدة. الأماكن التي لم تُوثّق إحداثياتها متاحة في القائمة." : "Offline reference-point map; no boundaries, roads or verified entrances are implied. Places awaiting coordinate verification remain available in the list.") : isArabic ? "خريطة توضيحية تعمل دون اتصال. اتبع زر الاتجاهات لكل محطة للحصول على مسار مشي حي، وتحقق محلياً من الوصول وساعات الفتح والظروف الراهنة." : "Offline illustrated map. Use each stop’s directions button for live walking navigation, and verify current access, opening hours and local conditions."}</p>
     </div>
   );
 };

@@ -1,6 +1,7 @@
 import { Location } from '../entities/location.entity';
 import { DatabaseService } from '../database.service';
 import { SEED_LOCATIONS } from '../seed/seed-data';
+import { PALESTINE_LOCATIONS } from '../seed/palestine-data';
 
 export interface LocationsRepository {
   findAll(): Promise<Location[]>;
@@ -9,6 +10,10 @@ export interface LocationsRepository {
 
 interface LocationRow {
   id: string;
+  governorate_id?: string;
+  arabic_description?: string;
+  review_status?: string;
+  coordinate_status?: string;
   name: string;
   arabic_name: string | null;
   city: string | null;
@@ -33,6 +38,10 @@ interface LocationRow {
 function toLocation(row: LocationRow): Location {
   return {
     id: row.id,
+    governorateId: row.governorate_id ?? 'jerusalem',
+    arabicDescription: row.arabic_description,
+    reviewStatus: row.review_status,
+    coordinateStatus: row.coordinate_status,
     name: row.name,
     arabicName: row.arabic_name ?? undefined,
     city: row.city ?? undefined,
@@ -83,8 +92,12 @@ export class PostgresLocationsRepository implements LocationsRepository {
 
 /** Serves database/seed.sql from memory when PostgreSQL is not configured. */
 export class InMemoryLocationsRepository implements LocationsRepository {
-  private readonly locations: Location[] = SEED_LOCATIONS.map((location) => ({
+  private readonly locations: Location[] = [
+    ...SEED_LOCATIONS,
+    ...PALESTINE_LOCATIONS,
+  ].map((location) => ({
     ...location,
+    governorateId: location.governorateId ?? 'jerusalem',
     categories: [...location.categories],
   }));
 

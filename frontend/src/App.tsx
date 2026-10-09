@@ -12,6 +12,11 @@ import { AboutPage } from "./pages/AboutPage";
 import { ConstellationPage } from "./pages/ConstellationPage";
 import { ContributePage } from "./pages/ContributePage";
 import { HomePage } from "./pages/HomePage";
+import { PalestineHomePage } from "./pages/PalestineHomePage";
+import { GovernoratePage } from "./pages/GovernoratePage";
+import { HeritageMapPage } from "./pages/HeritageMapPage";
+import { CreateStoryPage } from "./pages/CreateStoryPage";
+import { MyStoryPage } from "./pages/MyStoryPage";
 import { LocationDetailsPage } from "./pages/LocationDetailsPage";
 import { MapPage } from "./pages/MapPage";
 
@@ -35,7 +40,16 @@ export default function App() {
       <BrowserRouter>
         <Routes>
           <Route element={<AppLayout />}>
-            <Route index element={<HomePage />} />
+            <Route index element={<PalestineHomePage />} />
+            <Route path="jerusalem" element={<HomePage />} />
+            <Route path="governorates/:governorateId" element={<GovernoratePage />} />
+            <Route path="governorates/:governorateId/map" element={<HeritageMapPage />} />
+            <Route path="governorates/:governorateId/create-story" element={<CreateStoryPage />} />
+            <Route path="governorates/:governorateId/connections" element={<ConstellationPage />} />
+            <Route path="palestine-connections" element={<ConstellationPage scope="all" />} />
+            <Route path="palestine-map" element={<HeritageMapPage />} />
+            <Route path="create-story" element={<CreateStoryPage />} />
+            <Route path="my-story" element={<MyStoryPage />} />
             <Route path="plan-tour" element={<PersonalizedTourModal />} />
             <Route path="map" element={<MapPage />} />
             <Route path="locations/:locationId" element={<LocationDetailsPage />} />

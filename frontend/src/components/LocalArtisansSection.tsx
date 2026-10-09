@@ -19,10 +19,16 @@ export const LocalArtisansSection: React.FC<{ locationId: string }> = ({ locatio
 
   const categoryLabel = (category: string) => {
     if (isArabic) {
-      return ({ food: "مأكولات محلية", craft: "حرفة مقدسية", market: "سوق ومجتمع" }[category] ?? category);
+      if (!items.length) return <p className="text-xs text-brand-muted">{isArabic ? "لم تُضف سجلات حرف ودكاكين مراجعة لهذا المكان بعد." : "No reviewed craft or shop records have been added for this place yet."}</p>;
+
+  return ({ food: "مأكولات محلية", craft: "حرفة مقدسية", market: "سوق ومجتمع" }[category] ?? category);
     }
-    return ({ food: "Local food", craft: "Jerusalem craft", market: "Market & community" }[category] ?? category);
+    if (!items.length) return <p className="text-xs text-brand-muted">{isArabic ? "لم تُضف سجلات حرف ودكاكين مراجعة لهذا المكان بعد." : "No reviewed craft or shop records have been added for this place yet."}</p>;
+
+  return ({ food: "Local food", craft: "Jerusalem craft", market: "Market & community" }[category] ?? category);
   };
+
+  if (!items.length) return <p className="text-xs text-brand-muted">{isArabic ? "لم تُضف سجلات حرف ودكاكين مراجعة لهذا المكان بعد." : "No reviewed craft or shop records have been added for this place yet."}</p>;
 
   return (
     <section className="space-y-5" dir={isArabic ? "rtl" : "ltr"}>
@@ -55,7 +61,9 @@ export const LocalArtisansSection: React.FC<{ locationId: string }> = ({ locatio
               ? (item.arabicLocationNote ?? `في نطاق ${neighbourhood?.arabicName ?? "هذا الحي"}`)
               : (item.locationNote ?? `In and around ${neighbourhood?.name ?? "this neighbourhood"}`);
 
-            return (
+            if (!items.length) return <p className="text-xs text-brand-muted">{isArabic ? "لم تُضف سجلات حرف ودكاكين مراجعة لهذا المكان بعد." : "No reviewed craft or shop records have been added for this place yet."}</p>;
+
+  return (
               <article
                 key={item.id}
                 className="group overflow-hidden rounded-3xl border border-brand-border bg-white shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-xl"
@@ -150,7 +158,7 @@ export const LocalArtisansSection: React.FC<{ locationId: string }> = ({ locatio
         <p className="text-sm text-brand-muted">
           {isArabic
             ? "لا توجد قائمة تجارية بالاسم لهذا الحي بعد؛ نتجنب اختلاق توصيات غير موثقة."
-            : "No named business list has been reviewed for this location yet, so Hikayat AlQuds does not invent recommendations."}
+            : "No named business list has been reviewed for this location yet, so Hikaya does not invent recommendations."}
         </p>
       )}
     </section>

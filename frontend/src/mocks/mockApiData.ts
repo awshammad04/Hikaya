@@ -1,5 +1,6 @@
 import { ApiContribution, ApiLocation, ApiStory, GeneratedStory, GuideAnswer } from "../types";
 import { locations } from "../locationsData";
+import { nationalRecord, catalog } from "../data/heritage";
 import { visitorWalkthrough } from "../visitorWalkthroughs";
 export { MOCK_MEDIA, MOCK_QUIZ, MOCK_TIMELINE } from "./generatedMockData";
 
@@ -12,7 +13,7 @@ export const MOCK_LOCATIONS: ApiLocation[] = locations.map((item) => ({
 
 export const MOCK_STORIES: ApiStory[] = MOCK_LOCATIONS.map((item) => ({
   id: `story-${item.id}`, locationId: item.id, title: `${item.name}: a Jerusalem walk`, summary: item.description,
-  simplifiedStory: `${item.name} (${item.arabicName}) is one of the eight focused Jerusalem places in Hikayat AlQuds. ${item.description} Open the reviewed timeline, gallery and memories to follow what the documentation supports; where the record has a gap, the guide will not guess.`,
+  simplifiedStory: `${item.name} (${item.arabicName}) is one of the eight focused Jerusalem places in Hikaya. ${item.description} Open the reviewed timeline, gallery and memories to follow what the documentation supports; where the record has a gap, the guide will not guess.`,
   audience: "general", language: "en", tone: "storytelling", source: item.contentFile,
   isAiGenerated: false, uncertaintyNotes: [], status: "published",
 }));
@@ -24,7 +25,23 @@ export const MOCK_CONTRIBUTIONS: ApiContribution[] = [
   { id: "contribution-silwan", referenceCode: "HQ-SILW26", locationId: "silwan", title: "ماء العين وبساتين سلوان", content: "تحكي جدتي عن الطريق إلى عين سلوان وعن سقاية الأشجار في البساتين. نسجلها هنا كذاكرة شخصية لا كإثبات تاريخي.", contributorName: "ذاكرة مقدسية", status: "approved", submittedAt: "2026-09-18T00:00:00.000Z" },
 ];
 
-export function mockGeneratedStory(location: ApiLocation, audience: string, language: "ar" | "en" = "en"): GeneratedStory {
+export function mockGeneratedStory(location: ApiLocation, audience: string, language: "ar" | "en" = "en", tone = "storytelling"): GeneratedStory {
+  const record = nationalRecord(location.id);
+  if (record) {
+    if (!record.reviewed || record.reviewStatus !== 'source_checked') throw new Error('Content is awaiting review.');
+    const arabic = language === 'ar';
+    const summary = arabic ? record.arabicDescription : record.description;
+    const facts = arabic ? record.arabicFacts : record.facts;
+    const tradition = arabic ? record.arabicTraditions : record.traditions;
+    let narrative = `${summary}\n\n${facts}`;
+    if (audience === 'short') narrative = summary;
+    if (audience === 'child') narrative = `${arabic ? 'هيا نتعرف إلى هذا المكان.' : 'Let us discover this place.'}\n\n${summary}`;
+    if (audience === 'student') narrative = `${arabic ? 'مدخل' : 'Overview'}\n${summary}\n\n${arabic ? 'حقائق موثقة' : 'Documented facts'}\n${facts}`;
+    if (audience === 'historian') narrative = `${arabic ? 'السجل الموثق' : 'Documented record'}\n${summary}\n\n${facts}${tradition ? `\n\n${arabic ? 'تقليد ديني منسوب' : 'Attributed religious tradition'}\n${tradition}` : ''}\n\n${arabic ? 'حدود السجل' : 'Limits of the record'}\n${arabic ? catalog.gaps.ar : catalog.gaps.en}`;
+    const heading = tone === 'educational' ? (arabic ? 'قراءة السجل' : 'Reading the record') : tone === 'emotional' ? (arabic ? 'لحظة للتأمل' : 'A moment to reflect') : tone === 'storytelling' ? (arabic ? 'حكاية المكان' : 'The story of this place') : '';
+    if (heading) narrative = `${heading}\n\n${narrative}`;
+    return {title:arabic?record.arabicName:record.name,summary,narrative,targetAudience:audience,language,tone,wordCount:narrative.split(/\s+/).length,uncertaintyNotes:[arabic?catalog.gaps.ar:catalog.gaps.en],warnings:[],source:{locationId:location.id,locationName:location.name,contentFile:location.contentFile,summaryFile:location.aiSummaryFile},generatedBy:'frontend-mock'};
+  }
   const profile = locations.find((item) => item.id === location.id);
   const walkthrough = visitorWalkthrough(location.id, language === "ar")
     ?? (language === "ar" ? profile?.arabicStory : profile?.story)

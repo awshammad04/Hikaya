@@ -1,11 +1,11 @@
--- Hikaya Quds seed. Run after schema.sql, then seed-generated.sql.
+-- Hikaya seed. Run after schema.sql, then seed-generated.sql.
 BEGIN;
 DELETE FROM quiz_questions; DELETE FROM timeline_events; DELETE FROM contributions; DELETE FROM media;
 DELETE FROM stories; DELETE FROM location_categories; DELETE FROM categories; DELETE FROM locations;
 DELETE FROM users WHERE email IN ('editor@hikaya.ps', 'content@hikaya.ps');
 
 INSERT INTO users (id, full_name, email, password_hash, role) VALUES
-('user-editor','Hikaya Quds Editorial Team','editor@hikaya.ps',NULL,'editor'),
+('user-editor','Hikaya Editorial Team','editor@hikaya.ps',NULL,'editor'),
 ('user-content','Jerusalem Content Documentation Team','content@hikaya.ps',NULL,'editor');
 
 INSERT INTO categories (id,name,description) VALUES
@@ -34,7 +34,7 @@ INSERT INTO location_categories VALUES
 
 INSERT INTO stories (id,location_id,author_id,title,summary,original_content,simplified_story,audience,language,tone,source,is_ai_generated,uncertainty_notes,status)
 SELECT 'story-'||id,id,'user-editor',name||': a Jerusalem walk',description,ai_summary_file,
-name||' ('||arabic_name||') is one of the eight focused Jerusalem places in Hikaya Quds. '||description||' Open the reviewed timeline, gallery and memories to follow what the documentation supports; where the record has a gap, the guide will not guess.',
+name||' ('||arabic_name||') is one of the eight focused Jerusalem places in Hikaya. '||description||' Open the reviewed timeline, gallery and memories to follow what the documentation supports; where the record has a gap, the guide will not guess.',
 'general','en','storytelling',content_file,FALSE,'{}','published' FROM locations;
 
 INSERT INTO contributions (id,reference_code,location_id,user_id,category_id,title,content,contributor_name,status,review_notes,reviewed_at,submitted_at) VALUES

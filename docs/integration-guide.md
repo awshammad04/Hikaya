@@ -1,4 +1,4 @@
-# Hikaya Quds — Integration Guide
+# Hikaya — Integration Guide
 
 How the five parts of Hikaya fit together, and how to run the whole thing.
 

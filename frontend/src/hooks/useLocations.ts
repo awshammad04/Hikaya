@@ -15,7 +15,7 @@ interface LocationsState {
  * Several pages need the same list, and each needs to know whether it is live
  * or sample data, so the fetch and the source flag travel together.
  */
-export function useLocations(): LocationsState {
+export function useLocations(scope = "jerusalem"): LocationsState {
   const [state, setState] = useState<LocationsState>({
     locations: [],
     loading: true,
@@ -25,7 +25,8 @@ export function useLocations(): LocationsState {
   useEffect(() => {
     let active = true;
 
-    getLocations()
+    setState((previous) => ({...previous,loading:true,locations:[]}));
+    getLocations(scope)
       .then((result) => {
         if (!active) return;
         setState({
@@ -49,7 +50,7 @@ export function useLocations(): LocationsState {
       // Stops a state update if the page unmounts mid-request.
       active = false;
     };
-  }, []);
+  }, [scope]);
 
   return state;
 }

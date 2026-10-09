@@ -1,3 +1,4 @@
+import { PALESTINE_STORIES } from '../seed/palestine-data';
 import { randomUUID } from 'crypto';
 import { Story, StoryStatus } from '../entities/story.entity';
 import { DatabaseService } from '../database.service';
@@ -142,7 +143,10 @@ export class PostgresStoriesRepository implements StoriesRepository {
 
 /** Serves database/seed.sql from memory when PostgreSQL is not configured. */
 export class InMemoryStoriesRepository implements StoriesRepository {
-  private readonly stories: Story[] = SEED_STORIES.map((story) => ({
+  private readonly stories: Story[] = [
+    ...SEED_STORIES,
+    ...PALESTINE_STORIES,
+  ].map((story) => ({
     ...story,
     uncertaintyNotes: [...story.uncertaintyNotes],
     createdAt: new Date(),

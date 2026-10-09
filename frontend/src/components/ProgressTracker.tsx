@@ -3,6 +3,7 @@ import { motion, useReducedMotion } from "motion/react";
 import { Award, Compass, RotateCcw, Sparkles } from "lucide-react";
 import { VisitedState } from "../hooks/useVisitedLocations";
 import { useInterfaceLanguage } from "../context/LanguageContext";
+import { governorateName } from "../data/heritage";
 import { openMyJerusalemStory } from "../services/progress";
 
 /**
@@ -13,7 +14,7 @@ import { openMyJerusalemStory } from "../services/progress";
  * explored" would be a nonsense claim - and the whole project rests on not
  * making claims the records do not support.
  */
-export const ProgressTracker: React.FC<{ state: VisitedState }> = ({ state }) => {
+export const ProgressTracker: React.FC<{ state: VisitedState; scope?: string; onOpenStory?: () => void }> = ({ state, scope = "jerusalem", onOpenStory }) => {
   const { isArabic } = useInterfaceLanguage();
   const reduced = useReducedMotion();
   const { visited, total, percentComplete, badges } = state;
@@ -26,7 +27,7 @@ export const ProgressTracker: React.FC<{ state: VisitedState }> = ({ state }) =>
         <div>
           <h3 className="font-serif font-black text-lg text-brand-olive flex items-center gap-2">
             <Compass className="w-4 h-4 text-brand-amber" />
-            {isArabic ? "استكشافك للقدس" : "Your exploration"}
+            {isArabic ? `استكشافك لـ${governorateName(scope,true)}` : "Your exploration"}
           </h3>
           <p className="text-xs text-brand-muted">
             {isArabic ? `فتحت ${visited.length} من ${total} أماكن في الدليل. يُحفظ التقدم على هذا الجهاز فقط.` : `${visited.length} of ${total} location${total === 1 ? "" : "s"} in the archive opened. Kept on this device only.`}
@@ -55,18 +56,18 @@ export const ProgressTracker: React.FC<{ state: VisitedState }> = ({ state }) =>
 
       <button
         type="button"
-        onClick={openMyJerusalemStory}
+        onClick={onOpenStory ?? openMyJerusalemStory}
         className="w-full rounded-2xl border border-brand-amber/35 bg-brand-amber/10 px-4 py-3 text-xs font-bold text-brand-olive transition hover:border-brand-amber hover:bg-brand-amber/15 inline-flex items-center justify-center gap-2"
       >
         <Sparkles className="h-4 w-4 text-brand-amber" />
-        {isArabic ? "إنشاء حكايتي في القدس" : "Generate My Jerusalem Story"}
+        {isArabic ? `إنشاء حكايتي في ${governorateName(scope,true)}` : `Create My Story in ${governorateName(scope,false)}`}
       </button>
 
       <div className="flex flex-wrap gap-2">
         {badges.map((badge) => (
           <span
             key={badge.id}
-            title={badge.description}
+            title={scope === 'jerusalem' ? badge.description : (isArabic ? `التقدم في أرشيف ${governorateName(scope,true)}` : `Progress through the ${governorateName(scope,false)} archive`)}
             className={`text-[10px] font-mono uppercase tracking-wider px-3 py-1.5 rounded-full border inline-flex items-center gap-1.5 transition-colors ${
               badge.earned
                 ? "bg-brand-amber/10 border-brand-amber/30 text-brand-amber"
@@ -74,7 +75,7 @@ export const ProgressTracker: React.FC<{ state: VisitedState }> = ({ state }) =>
             }`}
           >
             <Award className="w-3 h-3" />
-            {isArabic ? ({ "first-step": "الخطوة الأولى", wanderer: "راوي القدس", archivist: "حارس حكاية القدس" }[badge.id] ?? badge.label) : badge.label}
+            {scope === 'jerusalem' ? (isArabic ? ({ "first-step": "الخطوة الأولى", wanderer: "راوي القدس", archivist: "حارس حكاية" }[badge.id] ?? badge.label) : badge.label) : (isArabic ? ({'first-step':'الخطوة الأولى',wanderer:`راوي ${governorateName(scope,true)}`,archivist:'حارس حكاية'}[badge.id] ?? badge.label) : ({'first-step':'First step',wanderer:`${governorateName(scope,false)} storyteller`,archivist:'Hikaya archivist'}[badge.id] ?? badge.label))}
             {!badge.earned && ` · ${badge.threshold}`}
           </span>
         ))}

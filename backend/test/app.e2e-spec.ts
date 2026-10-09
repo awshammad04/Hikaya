@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { INestApplication } from '@nestjs/common';
-import * as request from 'supertest';
+import { INestApplication, ValidationPipe } from '@nestjs/common';
+import request from 'supertest';
 import { App } from 'supertest/types';
 import { AppModule } from './../src/app.module';
 
@@ -13,13 +13,94 @@ describe('AppController (e2e)', () => {
     }).compile();
 
     app = moduleFixture.createNestApplication();
+    app.setGlobalPrefix('api/v1');
+    app.useGlobalPipes(
+      new ValidationPipe({ whitelist: true, transform: true }),
+    );
     await app.init();
   });
 
-  it('/ (GET)', () => {
+  afterEach(async () => {
+    await app.close();
+  });
+
+  it('/api/v1 (GET) describes the branded API with the existing endpoints', () => {
     return request(app.getHttpServer())
-      .get('/')
+      .get('/api/v1')
       .expect(200)
-      .expect('Hello World!');
+      .expect(
+        ({
+          body,
+        }: {
+          body: { name: string; version: string; endpoints: string[] };
+        }) => {
+          expect(body.name).toBe('Hikaya API');
+          expect(body.version).toBe('v1');
+          expect(body.endpoints).toContain('GET  /api/v1/locations');
+        },
+      );
+  });
+
+  it('keeps the legacy location list at eight while offering fourteen nationally', async () => {
+    const legacy = await request(app.getHttpServer())
+      .get('/api/v1/locations')
+      .expect(200);
+    const national = await request(app.getHttpServer())
+      .get('/api/v1/locations?scope=all')
+      .expect(200);
+    expect(legacy.body).toHaveLength(8);
+    expect(
+      (legacy.body as { governorateId: string }[]).every(
+        (item: { governorateId: string }) => item.governorateId === 'jerusalem',
+      ),
+    ).toBe(true);
+    expect(national.body).toHaveLength(14);
+  });
+
+  it('lists four governorates and keeps their locations scoped', async () => {
+    const result = await request(app.getHttpServer())
+      .get('/api/v1/governorates')
+      .expect(200);
+    expect((result.body as { id: string }[]).map((item) => item.id)).toEqual([
+      'jerusalem',
+      'ramallah',
+      'hebron',
+      'gaza',
+    ]);
+    for (const id of ['ramallah', 'hebron', 'gaza']) {
+      const scoped = await request(app.getHttpServer())
+        .get(`/api/v1/governorates/${id}/locations`)
+        .expect(200);
+      expect(scoped.body).toHaveLength(2);
+      expect(
+        (scoped.body as { governorateId: string }[]).every(
+          (item: { governorateId: string }) => item.governorateId === id,
+        ),
+      ).toBe(true);
+    }
+  });
+
+  it('rejects invalid journey preferences and cross-governorate story retrieval', async () => {
+    await request(app.getHttpServer())
+      .post('/api/v1/journeys')
+      .send({
+        governorateIds: ['gaza'],
+        language: 'xx',
+        interests: ['invented'],
+        duration: 'express',
+      })
+      .expect(400);
+    await request(app.getHttpServer())
+      .post('/api/v1/ai/generate-story')
+      .send({ locationId: 'palestinian-museum', governorateId: 'gaza' })
+      .expect(400);
+    await request(app.getHttpServer())
+      .post('/api/v1/ai/ask-guide')
+      .send({
+        question: 'Tell me the history',
+        locationIds: ['palestinian-museum'],
+        governorateIds: ['gaza'],
+      })
+      .expect(400);
   });
 });

@@ -1,3 +1,4 @@
+import { PALESTINE_QUIZ } from '../seed/palestine-data';
 import { QuizQuestion } from '../entities/quiz-question.entity';
 import { DatabaseService } from '../database.service';
 import { SEED_QUIZ } from '../seed/generated-data';
@@ -44,7 +45,10 @@ export class PostgresQuizRepository implements QuizRepository {
 
 /** Serves database/seed-generated.sql from memory when PostgreSQL is absent. */
 export class InMemoryQuizRepository implements QuizRepository {
-  private readonly questions: QuizQuestion[] = SEED_QUIZ.map((question) => ({
+  private readonly questions: QuizQuestion[] = [
+    ...SEED_QUIZ,
+    ...PALESTINE_QUIZ,
+  ].map((question) => ({
     ...question,
     options: [...question.options],
   }));

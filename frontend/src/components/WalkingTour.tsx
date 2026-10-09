@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { Footprints, LocateFixed, Loader2 } from "lucide-react";
 import { ApiLocation } from "../types";
 import { useInterfaceLanguage } from "../context/LanguageContext";
-import { locationById } from "../locationsData";
+import { locationById } from "../data/heritage";
 
 /** Great-circle distance in kilometres. */
 function distanceKm(
@@ -93,7 +93,7 @@ export const WalkingTour: React.FC<{ locations: ApiLocation[] }> = ({ locations 
         {isArabic ? "هل أنت قريب؟" : "Are you nearby?"}
       </h3>
       <p className="text-xs text-brand-muted leading-relaxed">
-        {isArabic ? "إذا كنت قريباً من أحد هذه الأماكن، تجهّز لك حكاية القدس جولة مشي صوتية. يُفحص موقعك داخل المتصفح ولا يُرسل إلينا." : "If you are close to one of these sites, Hikaya can set you up with an audio walking tour. Your position is checked in your browser and never sent to us."}
+        {isArabic ? "إذا كنت قريباً من أحد هذه الأماكن، تجهّز لك حكاية جولة مشي صوتية. يُفحص موقعك داخل المتصفح ولا يُرسل إلينا." : "If you are close to one of these sites, Hikaya can set you up with an audio walking tour. Your position is checked in your browser and never sent to us."}
       </p>
 
       {state !== "done" && (

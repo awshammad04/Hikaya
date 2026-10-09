@@ -1,6 +1,7 @@
 import { HttpService } from '@nestjs/axios';
 import {
   Injectable,
+  BadRequestException,
   Logger,
   ServiceUnavailableException,
 } from '@nestjs/common';
@@ -16,6 +17,15 @@ import {
 import { Location } from '../database/entities/location.entity';
 import { LocationsService } from '../locations/locations.service';
 import { StoriesService } from '../stories/stories.service';
+import { catalog } from '../database/seed/palestine-data';
+
+const SCOPE_ERRORS = new Set([
+  'invalid_scope',
+  'content_not_reviewed',
+  'unreviewed_content',
+  'unknown_location',
+  'missing_content',
+]);
 
 /**
  * AiService
@@ -45,7 +55,29 @@ export class AiService {
     const location = dto.locationId
       ? await this.locationsService.findOne(dto.locationId)
       : null;
+    const scopedGovernorate =
+      dto.governorateId ??
+      (location?.governorateId !== 'jerusalem'
+        ? location?.governorateId
+        : undefined);
 
+    if (
+      location &&
+      dto.governorateId &&
+      (location.governorateId ?? 'jerusalem') !== dto.governorateId
+    )
+      throw new BadRequestException(
+        'Location is outside the requested governorate.',
+      );
+    if (scopedGovernorate && dto.historicalText)
+      throw new BadRequestException(
+        'Scoped requests must use the stored reviewed record.',
+      );
+    if (
+      location?.reviewStatus &&
+      !['legacy_reviewed', 'source_checked'].includes(location.reviewStatus)
+    )
+      throw new BadRequestException('Content is awaiting review.');
     const audience = dto.targetAudience ?? 'general';
     const tone = dto.tone ?? 'storytelling';
     const language = dto.language ?? 'en';
@@ -55,7 +87,13 @@ export class AiService {
       const { data } = await firstValueFrom(
         this.httpService.post<AiStoryResponse>('/generate-story', {
           location_id: dto.locationId,
-          location_name: location?.name,
+          governorate_id: scopedGovernorate,
+          location_name:
+            location?.governorateId &&
+            location.governorateId !== 'jerusalem' &&
+            language === 'ar'
+              ? location.arabicName
+              : location?.name,
           historical_text: dto.historicalText,
           target_audience: audience,
           language,
@@ -66,12 +104,29 @@ export class AiService {
       );
 
       if (data.status === 'error' || !data.narrative) {
+        if (scopedGovernorate && SCOPE_ERRORS.has(data.error?.code ?? '')) {
+          throw new BadRequestException(
+            data.error?.message ??
+              'No reviewed content is available for this scope.',
+          );
+        }
         throw new Error(
           data.error?.message ?? 'AI service returned no narrative',
         );
       }
       story = this.toGeneratedStory(data);
     } catch (error) {
+      if (error instanceof BadRequestException) throw error;
+      const rejection = (
+        error as {
+          response?: { data?: { error?: { code?: string; message?: string } } };
+        }
+      )?.response?.data?.error;
+      if (scopedGovernorate && SCOPE_ERRORS.has(rejection?.code ?? ''))
+        throw new BadRequestException(
+          rejection?.message ??
+            'No reviewed content is available for this scope.',
+        );
       const message = error instanceof Error ? error.message : String(error);
       this.logger.warn(
         `AI service unavailable (${message}) - using the local fallback simplifier.`,
@@ -92,10 +147,39 @@ export class AiService {
   }
 
   async askGuide(dto: AskGuideDto): Promise<GuideAnswer> {
+    let scopedRequest = Boolean(
+      dto.governorateIds?.length || dto.locationIds?.length,
+    );
+    const requestedIds = dto.locationId ? [dto.locationId] : dto.locationIds;
+    if (!requestedIds?.length && !dto.governorateIds?.length)
+      throw new BadRequestException('Choose locations or governorates.');
+    const knownGovs = new Set(catalog.governorates.map((item) => item.id));
+    if (dto.governorateIds?.some((id) => !knownGovs.has(id)))
+      throw new BadRequestException('Unknown governorate.');
+    if (requestedIds)
+      for (const id of requestedIds) {
+        const location = await this.locationsService.findOne(id);
+        if (location.governorateId && location.governorateId !== 'jerusalem')
+          scopedRequest = true;
+        if (
+          dto.governorateIds?.length &&
+          !dto.governorateIds.includes(location.governorateId ?? 'jerusalem')
+        )
+          throw new BadRequestException(
+            'Location is outside the requested governorates.',
+          );
+        if (
+          location.reviewStatus &&
+          !['legacy_reviewed', 'source_checked'].includes(location.reviewStatus)
+        )
+          throw new BadRequestException('Content is awaiting review.');
+      }
     try {
       const { data } = await firstValueFrom(
         this.httpService.post<AiGuideResponse>('/ask-guide', {
           question: dto.question,
+          governorate_ids: dto.governorateIds,
+          location_ids: dto.locationIds,
           location_id: dto.locationId,
           language: dto.language ?? 'en',
           // Without this a follow-up like "and when?" has no keywords of its
@@ -103,14 +187,36 @@ export class AiService {
           history: dto.history ?? [],
         }),
       );
+      if (data.status === 'error' || typeof data.answer !== 'string') {
+        if (scopedRequest && SCOPE_ERRORS.has(data.error?.code ?? ''))
+          throw new BadRequestException(
+            data.error?.message ??
+              'No reviewed content is available for this scope.',
+          );
+        throw new Error(
+          data.error?.message ?? 'AI service returned no guide answer',
+        );
+      }
       return {
         answer: data.answer,
         answeredFromSource: data.answered_from_source,
         excerpts: data.excerpts ?? [],
         uncertaintyNotes: data.uncertainty_notes ?? [],
         generatedBy: data.model?.provider ?? 'unknown',
+        sources: data.sources,
       };
     } catch (error) {
+      if (error instanceof BadRequestException) throw error;
+      const rejection = (
+        error as {
+          response?: { data?: { error?: { code?: string; message?: string } } };
+        }
+      )?.response?.data?.error;
+      if (scopedRequest && SCOPE_ERRORS.has(rejection?.code ?? ''))
+        throw new BadRequestException(
+          rejection?.message ??
+            'No reviewed content is available for this scope.',
+        );
       const message = error instanceof Error ? error.message : String(error);
       this.logger.warn(`AI service unavailable for ask-guide (${message}).`);
       return {
@@ -158,17 +264,27 @@ export class AiService {
     language: string,
     tone: string,
   ): GeneratedStory {
-    const description = location.description ?? '';
+    const record = catalog.locations.find((item) => item.id === location.id);
+    const description = record
+      ? language === 'ar'
+        ? `${record.arabicDescription} ${record.arabicFacts}`
+        : `${record.description} ${record.facts}`
+      : (location.description ?? '');
     const narrative = [
       `${location.name}${location.arabicName ? ` (${location.arabicName})` : ''}`,
       '',
       description,
       '',
-      'This fallback uses the stored, reviewed Palestinian heritage record for this location; the bibliography is shown in the source panel below.',
+      record && language === 'ar'
+        ? 'يعرض هذا النص البديل السجل الموثق لهذا المكان؛ تظهر المراجع في لوحة المصادر.'
+        : 'This fallback uses the stored, reviewed Palestinian heritage record for this location; the bibliography is shown in the source panel below.',
     ].join('\n');
 
     return {
-      title: location.name,
+      title:
+        language === 'ar'
+          ? (location.arabicName ?? location.name)
+          : location.name,
       summary: description.split('. ')[0] ?? location.name,
       narrative,
       targetAudience: audience,
@@ -176,7 +292,9 @@ export class AiService {
       tone,
       wordCount: narrative.split(/\s+/).filter(Boolean).length,
       uncertaintyNotes: [
-        'The AI service could not be reached, so this text is the stored location description rather than a generated narrative.',
+        record && language === 'ar'
+          ? 'تعذر الوصول إلى خدمة الذكاء الاصطناعي؛ يعرض هذا النص وصف المكان المحفوظ في السجل.'
+          : 'The AI service could not be reached, so this text is the stored location description rather than a generated narrative.',
       ],
       warnings: [],
       source: {

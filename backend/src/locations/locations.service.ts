@@ -52,8 +52,13 @@ export class LocationsService {
     private readonly contributions: ContributionsRepository,
   ) {}
 
-  findAll(): Promise<Location[]> {
-    return this.locations.findAll();
+  async findAll(governorateId = 'jerusalem'): Promise<Location[]> {
+    const all = await this.locations.findAll();
+    return governorateId === 'all'
+      ? all
+      : all.filter(
+          (item) => (item.governorateId ?? 'jerusalem') === governorateId,
+        );
   }
 
   async findOne(id: string): Promise<Location> {
@@ -71,10 +76,12 @@ export class LocationsService {
    * The counts come from four grouped queries rather than one per location, so
    * the cost does not grow with the number of locations.
    */
-  async findAllWithStats(): Promise<LocationWithStats[]> {
+  async findAllWithStats(
+    governorateId = 'jerusalem',
+  ): Promise<LocationWithStats[]> {
     const [locations, storyStats, imageCounts, timelineCounts, memoryCounts] =
       await Promise.all([
-        this.locations.findAll(),
+        this.findAll(governorateId),
         this.stories.statsByLocation(),
         this.media.countsByLocation(),
         this.timeline.countsByLocation(),
@@ -135,7 +142,12 @@ export class LocationsService {
     const all = await this.locations.findAll();
 
     return all
-      .filter((candidate) => candidate.id !== id)
+      .filter(
+        (candidate) =>
+          candidate.id !== id &&
+          (candidate.governorateId ?? 'jerusalem') ===
+            (location.governorateId ?? 'jerusalem'),
+      )
       .map((candidate) => ({
         candidate,
         shared: candidate.categories.filter((category) =>

@@ -1,7 +1,14 @@
 # AI Module
 
-Turns reviewed Jerusalem heritage content into simplified, engaging narratives,
+Turns reviewed Palestinian heritage content into simplified, engaging narratives,
 and answers visitor questions from the same material.
+
+Governorate scopes now cover Jerusalem, Ramallah, Hebron and Gaza. Story requests
+accept `governorate_id`; guide requests accept `governorate_ids` and `location_ids`.
+`POST /generate-journey` returns one narrative plus the scoped stories and source
+references. The original Jerusalem calls and factual safeguards remain available.
+See [Palestine expansion](../docs/palestine-expansion.md) for the added content,
+review boundaries and integration tests.
 
 ## The One Rule
 

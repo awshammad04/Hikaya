@@ -1,9 +1,17 @@
-# Hikaya Quds — AI ↔ Backend JSON Contract
+# Hikaya — AI ↔ Backend JSON Contract
 
-**Project:** Hikaya Quds — Q GUIDE 2026
+**Project:** Hikaya
 **Owners:** Software development team
 **Status:** v2 — updated in Sprint 2 alongside the working implementation in `ai/service/`
 **Companion documents:** [`narrative-generation-workflow.md`](narrative-generation-workflow.md), [`README.md`](README.md)
+
+Governorate-aware additions are documented in [Palestine expansion](../docs/palestine-expansion.md).
+Existing story and guide requests remain valid. Story requests may add
+`governorate_id`; guide requests may add `governorate_ids` and `location_ids`.
+`POST /generate-journey` accepts the guide's geographic scope and the story's
+`language`, `target_audience` and `tone`, returning `mode: cultural`, one joined
+`narrative`, scoped `stories`, `sources`, `warnings` and `uncertainty_notes`.
+All returned source objects may include `governorate_id` and `references`.
 
 ---
 

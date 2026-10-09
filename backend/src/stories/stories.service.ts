@@ -97,6 +97,14 @@ export class StoriesService {
    */
   private async orderedPublished(): Promise<Story[]> {
     const published = await this.stories.findAllPublished();
-    return published.sort((a, b) => a.id.localeCompare(b.id));
+    const locations = await this.locations.findAll();
+    const jerusalemIds = new Set(
+      locations
+        .filter((item) => (item.governorateId ?? 'jerusalem') === 'jerusalem')
+        .map((item) => item.id),
+    );
+    return published
+      .filter((item) => jerusalemIds.has(item.locationId))
+      .sort((a, b) => a.id.localeCompare(b.id));
   }
 }

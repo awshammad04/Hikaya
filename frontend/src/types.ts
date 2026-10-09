@@ -15,6 +15,10 @@ export interface LocationStats {
 }
 
 export interface ApiLocation {
+  governorateId?: string;
+  arabicDescription?: string;
+  reviewStatus?: string;
+  coordinateStatus?: string;
   id: string;
   name: string;
   arabicName?: string;
@@ -321,6 +325,8 @@ export interface MyJerusalemStory {
 
 /** A private journey memory stored only in this browser. */
 export interface UserJourneyMemory {
+  governorateId?: string;
+  governorateIds?: string[];
   id: string;
   photoDataUrl: string;
   locationTag: string;
@@ -350,4 +356,20 @@ export interface VoiceOption {
 export interface GroundingSource {
   title: string;
   uri: string;
+}
+
+export interface Governorate {
+  id: string; slug: string; name: string; arabicName: string; description: string; arabicDescription: string;
+  mapCenter: {latitude:number;longitude:number}; mapZoom:number;
+  bounds:{minLat:number;maxLat:number;minLng:number;maxLng:number};coverImageUrl?:string;locationCount?:number;
+}
+export interface JourneyPreferences {
+  governorateIds:string[];interests:TourInterest[];duration:TourDuration;language:'ar'|'en';targetAudience:AudienceMode;tone:StoryTone;
+}
+export interface CulturalJourney {
+  id:string;createdAt:string;title:string;mode:'cultural';preferences:JourneyPreferences;governorateIds:string[];
+  narrative:string;uncertaintyNotes:string[];source:DataSource;reviewStatus:string;
+  stops:{order:number;location:ApiLocation;matchedInterests:TourInterest[];narrative:GeneratedStory;
+    sourceLinks:{title:string;arabicTitle:string;url:string;publisher:string;arabicPublisher:string}[];
+    resources:{story:string;timeline:string;gallery:string;quiz:string;guide:string;contribute:string}}[];
 }

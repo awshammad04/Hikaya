@@ -1,6 +1,6 @@
 # Sprint 2 — Completion Report
 
-**Project:** Hikaya Quds — AI-Powered Personalized Guide to Jerusalem
+**Project:** Hikaya — AI-Powered Personalized Guide to Jerusalem
 **Team:** اوس حماد (Team lead), يزيد الحداد, امير الرشايدة, اسماء عبداللطيف (Software Developers), عبير شبانة (Marketing)
 **Sprint:** Sprint 2 — MVP Integration & First Working Prototype
 **Repository:** <https://github.com/nooretk/hikaya>
@@ -128,7 +128,7 @@ is reported, because a fake receipt for an unsaved memory would be worse than an
 **Task 3 — Frontend README.** Rewritten with framework, install, run commands, the
 page table and the integration status.
 
-### Content Documentation — Hikaya Quds Team
+### Content Documentation — Hikaya Team
 
 **Task 1 — AI-ready summaries.** `content/ai-ready/` holds one summary per MVP
 Jerusalem location with machine-readable frontmatter and fixed sections: overview,
@@ -226,5 +226,5 @@ Stated plainly, because they matter for Sprint 3:
 
 ---
 
-**Prepared by:** Hikaya Quds team
+**Prepared by:** Hikaya team
 **Sprint:** Sprint 2 — MVP Integration & First Working Prototype

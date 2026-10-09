@@ -11,7 +11,7 @@ import { PageTransition } from "../components/motion";
 import { ApiLocation, GeneratedItinerary, ItineraryStop, TourLanguage } from "../types";
 import { isGeneratedItinerary, ITINERARY_KEY } from "../components/PersonalizedTourModal";
 import { useInterfaceLanguage } from "../context/LanguageContext";
-import { locationById } from "../locationsData";
+import { locationById } from "../data/heritage";
 import { InAppWalkingRouteModal } from "../components/InAppWalkingRouteModal";
 import { openMyJerusalemStory } from "../services/progress";
 
@@ -106,7 +106,7 @@ export const MapPage: React.FC = () => {
               {itinerary && (
                 <section className="bg-brand-olive text-white rounded-3xl p-5 space-y-4" dir={tourLanguage === "ar" ? "rtl" : "ltr"}>
                   <div>
-                    <p className="text-[10px] text-brand-amber uppercase tracking-widest inline-flex items-center gap-1.5"><Route className="w-3 h-3" />{tourText("مسار Q GUIDE المخصص", "Personalized Q Guide route", "Itinéraire Q GUIDE personnalisé")}</p>
+                    <p className="text-[10px] text-brand-amber uppercase tracking-widest inline-flex items-center gap-1.5"><Route className="w-3 h-3" />{tourText("حكاية", "Hikaya", "Hikaya")}</p>
                     <h2 className="font-serif font-black text-xl">{itinerary.title}</h2>
                     <p className="text-xs text-stone-300">{tourText(`${itinerary.stops.length} محطات · نحو ${Math.round(itinerary.totalMinutes / 6) / 10} ساعة · ${itinerary.totalWalkingMinutes} دقيقة مشي`, `${itinerary.stops.length} stops · ~${Math.round(itinerary.totalMinutes / 6) / 10} h · ${itinerary.totalWalkingMinutes} min walking`, `${itinerary.stops.length} étapes · environ ${Math.round(itinerary.totalMinutes / 6) / 10} h · ${itinerary.totalWalkingMinutes} min à pied`)}</p>
                   </div>

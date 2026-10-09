@@ -3,12 +3,13 @@ import { Link } from "react-router-dom";
 import { motion } from "motion/react";
 import { HelpCircle, Loader2, PenLine, Quote, Send, Sparkles } from "lucide-react";
 import { ApiLocation, ChatTurn, GuideAnswer } from "../types";
-import { askGuide, localArabicGuideAnswer } from "../services/api";
+import { askGuide, localArabicGuideAnswer, ApiError } from "../services/api";
 import { useInterfaceLanguage } from "../context/LanguageContext";
-import { locationById } from "../locationsData";
+import { locationById } from "../data/heritage";
 
 interface HeritageChatProps {
   location: ApiLocation;
+  scope?: {governorateIds:string[];locationIds:string[]};
   /** Questions offered as a starting point, tailored per location. */
   suggestions?: string[];
 }
@@ -40,13 +41,13 @@ const DEFAULT_SUGGESTIONS = [
  */
 export const HeritageChat: React.FC<HeritageChatProps> = ({
   location,
-  suggestions = DEFAULT_SUGGESTIONS,
+  suggestions = DEFAULT_SUGGESTIONS, scope,
 }) => {
   const { isArabic, language } = useInterfaceLanguage();
   const profile = locationById(location.id);
   const displayName = isArabic ? (profile?.arabicName ?? location.arabicName ?? location.name) : location.name;
   const shownSuggestions = isArabic
-    ? ["ما أهم ما يمكنني رؤيته هنا؟", "ما تاريخ هذا المكان؟", "لماذا يُعد مهماً للقدس؟"]
+    ? ["ما أهم ما يمكنني رؤيته هنا؟", "ما تاريخ هذا المكان؟", scope || location.governorateId && location.governorateId !== "jerusalem" ? "ما أهميته الثقافية؟" : "لماذا يُعد مهماً للقدس؟"]
     : suggestions;
   const [messages, setMessages] = useState<Message[]>([]);
   const [draft, setDraft] = useState("");
@@ -75,12 +76,12 @@ export const HeritageChat: React.FC<HeritageChatProps> = ({
 
     let result: GuideAnswer;
     try {
-      result = (await askGuide(location.id, trimmed, history, language)).data;
-      if (isArabic && (result.generatedBy === "frontend-mock" || !/[\u0600-\u06ff]/.test(result.answer))) {
+      result = (await askGuide(location.id, trimmed, history, language, scope)).data;
+      if (!scope && isArabic && (result.generatedBy === "frontend-mock" || !/[\u0600-\u06ff]/.test(result.answer))) {
         result = localArabicGuideAnswer(location.id, trimmed);
       }
     } catch (error) {
-      result = isArabic ? localArabicGuideAnswer(location.id, trimmed) : {
+      result = isArabic && !scope && !(error instanceof ApiError && error.status && error.status < 500) ? localArabicGuideAnswer(location.id, trimmed) : {
         answer:
           error instanceof Error
             ? (isArabic ? `تعذر الوصول إلى الدليل: ${error.message}` : `The guide could not be reached: ${error.message}`)
@@ -188,7 +189,7 @@ export const HeritageChat: React.FC<HeritageChatProps> = ({
               {!message.answeredFromSource && (
                 <div className="pt-2 border-t border-brand-amber/20 space-y-2">
                   <p className="text-xs text-brand-text leading-relaxed">
-                    {isArabic ? "تفضّل حكاية القدس ترك فجوة على ملئها بمعلومة تبدو معقولة. إن كنت تعرف شيئاً من العائلة أو الحياة في المكان أو القراءة، فمكانه في الأرشيف." : "Hikaya would rather leave a gap than fill it with something plausible. If you know this — from family, from living here, from reading — it belongs in the archive."}
+                    {isArabic ? "تفضّل حكاية ترك فجوة على ملئها بمعلومة تبدو معقولة. إن كنت تعرف شيئاً من العائلة أو الحياة في المكان أو القراءة، فمكانه في الأرشيف." : "Hikaya would rather leave a gap than fill it with something plausible. If you know this — from family, from living here, from reading — it belongs in the archive."}
                   </p>
                   <Link
                     to={`/contribute?location=${location.id}`}

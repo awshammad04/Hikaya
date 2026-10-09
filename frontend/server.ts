@@ -784,7 +784,9 @@ app.get("/api/download-zip", (req, res) => {
     // Include files and directories recursively
     const itemsToZip = [
       "src",
+      "public",
       "package.json",
+      "package-lock.json",
       "vite.config.ts",
       "tsconfig.json",
       "index.html",
@@ -792,7 +794,9 @@ app.get("/api/download-zip", (req, res) => {
       ".env.example",
       ".gitignore",
       "server.ts",
-      "README.md"
+      "README.md",
+      "branding",
+      "scripts"
     ];
 
     itemsToZip.forEach(item => {
@@ -810,7 +814,7 @@ app.get("/api/download-zip", (req, res) => {
     const zipBuffer = zip.toBuffer();
 
     res.setHeader("Content-Type", "application/zip");
-    res.setHeader("Content-Disposition", "attachment; filename=\"hikaya-frontend-sprint1.zip\"");
+    res.setHeader("Content-Disposition", "attachment; filename=\"hikaya.zip\"");
     return res.send(zipBuffer);
   } catch (error: any) {
     console.error("ZIP Generation Error:", error);
@@ -821,11 +825,11 @@ app.get("/api/download-zip", (req, res) => {
 // Create a professional README file in the workspace if it doesn't exist
 const readmePath = path.join(process.cwd(), "README.md");
 if (!fs.existsSync(readmePath)) {
-  const readmeContent = "# Hikaya Quds — AI-Powered Guide to Jerusalem\n\n" +
+  const readmeContent = "# Hikaya — Palestinian Heritage Guide\n\n" +
     "A focused, offline-ready visitor guide to Jerusalem's Palestinian quarters, neighbourhoods, gates, markets and living memories.\n\n" +
     "## Core Features\n" +
     "1. Interactive Jerusalem Map: An offline illustrated map of the Old City and its surrounding Palestinian neighbourhoods.\n" +
-    "2. Fact-guarded Storytelling: Audience-specific narratives are composed only from reviewed Hikaya Quds source records.\n" +
+    "2. Fact-guarded Storytelling: Audience-specific narratives are composed only from reviewed Hikaya source records.\n" +
     "3. Voice Narration (TTS): Fully integrated audio guides for landmarks using Gemini 3.1 Flash Text-to-Speech.\n" +
     "4. Veo 3 Video Experience: Enables text-to-video loops and starting image-to-video cinematic loops with Veo 3.1 Fast Generate Preview.\n" +
     "5. Crowdsourced Living Archive: Interactive form for citizens and visitors to contribute personal memories, traditions, photos, and generated videos.\n" +

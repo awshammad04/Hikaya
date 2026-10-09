@@ -1,6 +1,6 @@
-# Hikayat AlQuds — Team Handoff
+# Hikaya — Team Handoff
 
-This archive contains the full editable project source: React frontend, NestJS backend, Python AI service, reviewed Jerusalem content, database seeds, documentation, public media and the official Hikayat AlQuds logo assets.
+This archive contains the full editable project source: React frontend, NestJS backend, Python AI service, reviewed Jerusalem content, database seeds, documentation, public media and the official Hikaya logo assets.
 
 ## What is intentionally not included
 

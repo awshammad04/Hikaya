@@ -1,7 +1,9 @@
 # Backend Module
 
 REST API for Hikaya: locations, stories, user contributions, and AI story
-generation.
+generation, governorate exploration and unified Palestinian cultural journeys.
+
+National scope and upgrade details: [Palestine expansion](../docs/palestine-expansion.md).
 
 ## Framework
 
@@ -32,6 +34,8 @@ createdb hikaya
 psql -d hikaya -f ../database/schema.sql
 psql -d hikaya -f ../database/seed.sql
 psql -d hikaya -f ../database/seed-generated.sql
+psql -d hikaya -f ../database/migrations/002-governorates.sql
+psql -d hikaya -f ../database/seed-palestine.sql
 ```
 
 then set `DATABASE_URL` in `.env`.
@@ -77,7 +81,10 @@ where the data came from.
 |---|---|---|
 | `GET` | `/api/v1` | API description and endpoint list |
 | `GET` | `/api/v1/health` | Data source and AI service in use |
-| `GET` | `/api/v1/locations` | All published locations, each with story/photo/timeline/memory counts and a reading time |
+| `GET` | `/api/v1/locations` | Original Jerusalem collection; `?scope=all` selects the national archive, `?governorateId=` selects a governorate |
+| `GET` | `/api/v1/governorates` | Governorate configuration and published location counts |
+| `GET` | `/api/v1/governorates/:id/locations` | Locations restricted to the chosen governorate |
+| `POST` | `/api/v1/journeys` | A unified cultural journey across selected governorates |
 | `GET` | `/api/v1/locations/:id` | One location by slug |
 | `GET` | `/api/v1/locations/:id/media` | Gallery images, each with credit and licence |
 | `GET` | `/api/v1/locations/:id/before-after` | Historical/present pair of the same subject, or `null` with a reason |

@@ -1,6 +1,6 @@
-# Hikaya Quds — AI Narrative Generation Workflow
+# Hikaya — AI Narrative Generation Workflow
 
-**Project:** Hikaya Quds — Q GUIDE 2026
+**Project:** Hikaya — Q GUIDE 2026
 **Owners:** Software development team
 **Sprint:** Sprint 1 — Technical Implementation & Task Assignment
 **Folder:** `ai/`

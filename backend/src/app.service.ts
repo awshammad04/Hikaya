@@ -19,13 +19,16 @@ export class AppService {
 
   getInfo() {
     return {
-      name: 'Hikaya Quds API',
+      name: 'Hikaya API',
       description:
-        'AI-powered personalized guide and living heritage archive for Jerusalem.',
+        'AI-powered personalized guide and living heritage archive across Palestine.',
       version: 'v1',
       endpoints: [
         'GET  /api/v1/health',
         'GET  /api/v1/locations',
+        'GET  /api/v1/governorates',
+        'GET  /api/v1/governorates/:id/locations',
+        'POST /api/v1/journeys',
         'GET  /api/v1/locations/:id',
         'GET  /api/v1/stories/:locationId',
         'GET  /api/v1/stories/detail/:id',

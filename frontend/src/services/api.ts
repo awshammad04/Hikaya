@@ -27,7 +27,7 @@ import {
   mockGeneratedStory,
   mockGuideAnswer,
 } from "../mocks/mockApiData";
-import { locationById } from "../locationsData";
+import { locationById, nationalLocations, nationalRecord, nationalTimeline, nationalQuiz } from "../data/heritage";
 
 /**
  * Client for the Hikaya backend (`/api/v1`, see backend/README.md).
@@ -157,10 +157,12 @@ function readErrorMessage(body: unknown, status: number): string {
 async function withFallback<T>(
   live: () => Promise<T>,
   fallback: () => T,
+  rejectClientErrors = false,
 ): Promise<ApiResult<T>> {
   try {
     return { data: await live(), source: "backend" };
   } catch (error) {
+    if (rejectClientErrors && error instanceof ApiError && error.status && error.status >= 400 && error.status < 500) throw error;
     const reason = error instanceof Error ? error.message : String(error);
     console.warn(`[hikaya] backend unavailable (${reason}) - showing sample data.`);
     return { data: fallback(), source: "mock", reason };
@@ -169,7 +171,11 @@ async function withFallback<T>(
 
 // --- Locations ---------------------------------------------------------------
 
-export function getLocations(): Promise<ApiResult<ApiLocation[]>> {
+export async function getLocations(scope = "jerusalem"): Promise<ApiResult<ApiLocation[]>> {
+  if (scope !== "jerusalem") return withFallback(
+    () => request<ApiLocation[]>(scope === "all" ? "/locations?scope=all" : `/governorates/${encodeURIComponent(scope)}/locations`),
+    () => [...MOCK_LOCATIONS.map((item) => ({...item,governorateId:"jerusalem"})),...nationalLocations].filter((item) => scope === "all" || item.governorateId === scope),
+  );
   return cachedRead(
     locationsCache,
     () =>
@@ -192,7 +198,7 @@ export async function getLocation(id: string): Promise<ApiResult<ApiLocation | n
     const reason = error instanceof Error ? error.message : String(error);
     console.warn(`[hikaya] backend unavailable (${reason}) - showing sample data.`);
     return {
-      data: MOCK_LOCATIONS.find((location) => location.id === id) ?? null,
+      data: [...MOCK_LOCATIONS,...nationalLocations].find((location) => location.id === id) ?? null,
       source: "mock",
       reason,
     };
@@ -231,14 +237,14 @@ export function getTimeline(
 ): Promise<ApiResult<ApiTimelineEvent[]>> {
   return withFallback(
     () => request<ApiTimelineEvent[]>(`/locations/${locationId}/timeline`),
-    () => MOCK_TIMELINE.filter((event) => event.locationId === locationId),
+    () => [...MOCK_TIMELINE,...nationalTimeline].filter((event) => event.locationId === locationId),
   );
 }
 
 export function getQuiz(locationId: string): Promise<ApiResult<ApiQuizQuestion[]>> {
   return withFallback(
     () => request<ApiQuizQuestion[]>(`/locations/${locationId}/quiz`),
-    () => MOCK_QUIZ.filter((question) => question.locationId === locationId),
+    () => [...MOCK_QUIZ,...nationalQuiz].filter((question) => question.locationId === locationId),
   );
 }
 
@@ -246,9 +252,10 @@ export function getRelated(locationId: string): Promise<ApiResult<ApiLocation[]>
   return withFallback(
     () => request<ApiLocation[]>(`/locations/${locationId}/related`),
     () => {
-      const location = MOCK_LOCATIONS.find((item) => item.id === locationId);
+      const location = [...MOCK_LOCATIONS,...nationalLocations].find((item) => item.id === locationId);
       if (!location) return [];
       const categories = new Set(location.categories);
+      if (location.governorateId && location.governorateId !== "jerusalem") return nationalLocations.filter((candidate)=>candidate.id!==locationId && candidate.governorateId===location.governorateId && candidate.categories.some((category)=>categories.has(category)));
       return MOCK_LOCATIONS.filter(
         (candidate) =>
           candidate.id !== locationId &&
@@ -263,7 +270,10 @@ export function getRelated(locationId: string): Promise<ApiResult<ApiLocation[]>
 export function getStories(locationId: string): Promise<ApiResult<ApiStory[]>> {
   return withFallback(
     () => request<ApiStory[]>(`/stories/${locationId}`),
-    () => MOCK_STORIES.filter((story) => story.locationId === locationId),
+    () => {
+      const record = nationalRecord(locationId);
+      return record ? [{id:`record-${record.id}`,locationId:record.id,title:record.name,summary:record.description,simplifiedStory:`${record.description} ${record.facts}`,audience:"general",language:"en",tone:"neutral",source:`content/ai-ready/${record.id}-summary.md`,isAiGenerated:false,uncertaintyNotes:[],status:"published"}] : MOCK_STORIES.filter((story) => story.locationId === locationId);
+    },
   );
 }
 
@@ -361,21 +371,22 @@ export function generateStory(
         "/ai/generate-story",
         {
           method: "POST",
-          body: JSON.stringify({ locationId, targetAudience, tone, language }),
+          body: JSON.stringify({ locationId, governorateId:nationalRecord(locationId)?.governorateId, targetAudience, tone, language }),
         },
         GENERATION_TIMEOUT_MS,
       ).then((story) => {
         if (story.generatedBy !== "backend-fallback") return story;
-        const location = MOCK_LOCATIONS.find((item) => item.id === locationId);
-        return location ? mockGeneratedStory(location, targetAudience, language) : story;
+        const location = [...MOCK_LOCATIONS,...nationalLocations].find((item) => item.id === locationId);
+        return location ? mockGeneratedStory(location, targetAudience, language, tone) : story;
       }),
     () => {
-      const location = MOCK_LOCATIONS.find((item) => item.id === locationId);
+      const location = [...MOCK_LOCATIONS,...nationalLocations].find((item) => item.id === locationId);
       if (!location) {
         throw new ApiError(`No sample content for location "${locationId}".`);
       }
-      return mockGeneratedStory(location, targetAudience, language);
+      return mockGeneratedStory(location, targetAudience, language, tone);
     },
+    Boolean(nationalRecord(locationId)),
   );
 }
 
@@ -384,6 +395,7 @@ export function askGuide(
   question: string,
   history: ChatTurn[] = [],
   language: "ar" | "en" = "en",
+  scope?: {governorateIds:string[];locationIds:string[]},
 ): Promise<ApiResult<GuideAnswer>> {
   return withFallback(
     () =>
@@ -391,15 +403,22 @@ export function askGuide(
         "/ai/ask-guide",
         {
           method: "POST",
-          body: JSON.stringify({ locationId, question, history, language }),
+          body: JSON.stringify({ locationId:scope?undefined:locationId, question, history, language,...scope }),
         },
         GENERATION_TIMEOUT_MS,
       ),
     () => mockGuideAnswer(locationId, question, language),
+    Boolean(scope || nationalRecord(locationId)),
   );
 }
 
 export function localArabicGuideAnswer(locationId: string, question: string): GuideAnswer {
+  const record = nationalRecord(locationId);
+  if (record && record.reviewed && record.reviewStatus === 'source_checked') {
+    const covered = /تاريخ|متى|أهمية|أهميته|ثقاف|حكاية|قصة/.test(question) && !/زيارة|الوصول|مفتوح|ساعة|ساعات|آمن|مش[يي]|طريق|حافلة|نقل/.test(question);
+    const answer = covered ? `${record.arabicDescription} ${record.arabicFacts}` : "لا يغطي السجل الموثّق هذا السؤال، لذلك لن أخمّن.";
+    return {answer,answeredFromSource:covered,excerpts:covered?[answer]:[],uncertaintyNotes:covered?[]:["معلومات الوصول والحالة الراهنة غير موثّقة هنا."],generatedBy:"arabic-reviewed-fallback"};
+  }
   const profile = locationById(locationId);
   if (!profile) return { answer: "لا تتوفر معلومات مراجعة لهذا المكان بعد.", answeredFromSource: false, excerpts: [], uncertaintyNotes: ["لا يغطي السجل المراجع هذا السؤال."], generatedBy: "arabic-reviewed-fallback" };
   const normalized = question.replace(/[؟?]/g, "").trim();

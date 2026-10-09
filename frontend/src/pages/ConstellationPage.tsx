@@ -7,9 +7,9 @@ import { PageTransition } from "../components/motion";
 import { getContributions } from "../services/api";
 import { ApiContribution } from "../types";
 import { useInterfaceLanguage } from "../context/LanguageContext";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { PenLine } from "lucide-react";
-import { locationById } from "../locationsData";
+import { locationById } from "../data/heritage";
 
 /**
  * The archive as a web instead of a list.
@@ -19,9 +19,10 @@ import { locationById } from "../locationsData";
  * dense and where it is thin - which is the more useful thing to know, and the
  * more honest picture of how much is still missing.
  */
-export const ConstellationPage: React.FC = () => {
+export const ConstellationPage: React.FC<{scope?: string}> = ({scope}) => {
+  const {governorateId}=useParams();
   const { isArabic } = useInterfaceLanguage();
-  const { locations, loading, source, reason } = useLocations();
+  const { locations, loading, source, reason } = useLocations(scope ?? governorateId ?? "jerusalem");
   const [memories, setMemories] = useState<ApiContribution[]>([]);
   const [memoriesLoading, setMemoriesLoading] = useState(true);
 

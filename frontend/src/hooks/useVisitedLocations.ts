@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
+import { locations as jerusalemLocations } from "../locationsData";
 
 const STORAGE_KEY = "hikaya.visited";
 const PROGRESS_EVENT = "hikaya-quds:progress";
@@ -32,7 +33,7 @@ export interface VisitedState {
  * "Progress" is progress through the locations currently in this Jerusalem
  * guide, not a claim about how much of the city itself someone has explored.
  */
-export function useVisitedLocations(totalLocations: number): VisitedState {
+export function useVisitedLocations(totalLocations: number, locationIds: string[] = jerusalemLocations.map((item) => item.id)): VisitedState {
   const [visited, setVisited] = useState<string[]>(() => read());
 
   // Keep multiple open tabs in step.
@@ -54,25 +55,27 @@ export function useVisitedLocations(totalLocations: number): VisitedState {
     });
   }, []);
 
+  const scopeKey = locationIds.join("|");
   const reset = useCallback(() => {
-    write([]);
-    setVisited([]);
+    const remaining = read().filter((id) => !locationIds.includes(id));
+    write(remaining);
+    setVisited(remaining);
     window.dispatchEvent(new CustomEvent(PROGRESS_EVENT));
-  }, []);
+  }, [scopeKey]);
 
   const hasVisited = useCallback(
     (locationId: string) => visited.includes(locationId),
     [visited],
   );
 
-  const percentComplete =
-    totalLocations > 0 ? Math.round((visited.length / totalLocations) * 100) : 0;
+  const scopedVisited = visited.filter((id) => locationIds.includes(id));
+  const percentComplete = totalLocations > 0 ? Math.min(100, Math.round((scopedVisited.length / totalLocations) * 100)) : 0;
 
   return {
-    visited,
+    visited: scopedVisited,
     total: totalLocations,
     percentComplete,
-    badges: buildBadges(visited.length, totalLocations),
+    badges: buildBadges(scopedVisited.length, totalLocations),
     markVisited,
     reset,
     hasVisited,
@@ -115,7 +118,7 @@ function buildBadges(count: number, total: number): Badge[] {
     },
     {
       id: "archivist",
-      label: "حارس حكاية القدس",
+      label: "حارس حكاية",
       description: "Opened every Jerusalem location in the guide.",
       threshold: Math.max(total, 1),
     },

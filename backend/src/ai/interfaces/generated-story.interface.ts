@@ -10,6 +10,8 @@ export interface AiSourceInfo {
   content_file?: string | null;
   summary_file?: string | null;
   provided_inline?: boolean;
+  governorate_id?: string | null;
+  references?: { title: string; url: string }[];
 }
 
 export interface AiModelInfo {
@@ -42,6 +44,7 @@ export interface AiGuideResponse {
   excerpts: string[];
   uncertainty_notes: string[];
   source: AiSourceInfo;
+  sources?: AiSourceInfo[];
   model: AiModelInfo;
   error?: { code: string; message: string } | null;
 }
@@ -77,4 +80,5 @@ export interface GuideAnswer {
   excerpts: string[];
   uncertaintyNotes: string[];
   generatedBy: string;
+  sources?: AiSourceInfo[];
 }

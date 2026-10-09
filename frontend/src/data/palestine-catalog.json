@@ -1,0 +1,425 @@
+{
+  "version": 1,
+  "sourceCheckedAt": "2026-10-09",
+  "governorates": [
+    {
+      "id": "jerusalem",
+      "slug": "jerusalem",
+      "name": "Jerusalem",
+      "arabicName": "القدس",
+      "description": "Gates, quarters and living memory.",
+      "arabicDescription": "الأبواب والحارات والذاكرة الحيّة.",
+      "mapCenter": {
+        "latitude": 31.7815,
+        "longitude": 35.235
+      },
+      "mapZoom": 14,
+      "bounds": {
+        "minLat": 31.765,
+        "maxLat": 31.798,
+        "minLng": 35.215,
+        "maxLng": 35.255
+      },
+      "coverImageUrl": "/images/jerusalem/bab-al-amud.jpg"
+    },
+    {
+      "id": "ramallah",
+      "slug": "ramallah",
+      "name": "Ramallah",
+      "arabicName": "رام الله",
+      "description": "Museums, cultural archives and contemporary memory.",
+      "arabicDescription": "المتاحف والأرشيف الثقافي والذاكرة المعاصرة.",
+      "mapCenter": {
+        "latitude": 31.93,
+        "longitude": 35.2
+      },
+      "mapZoom": 11,
+      "bounds": {
+        "minLat": 31.88,
+        "maxLat": 31.98,
+        "minLng": 35.15,
+        "maxLng": 35.25
+      }
+    },
+    {
+      "id": "hebron",
+      "slug": "hebron",
+      "name": "Hebron",
+      "arabicName": "الخليل",
+      "description": "Historic urban fabric and sacred heritage.",
+      "arabicDescription": "النسيج العمراني التاريخي والتراث الديني.",
+      "mapCenter": {
+        "latitude": 31.5244,
+        "longitude": 35.1083
+      },
+      "mapZoom": 14,
+      "bounds": {
+        "minLat": 31.518,
+        "maxLat": 31.535,
+        "minLng": 35.099,
+        "maxLng": 35.118
+      }
+    },
+    {
+      "id": "gaza",
+      "slug": "gaza",
+      "name": "Gaza",
+      "arabicName": "غزة",
+      "description": "The historic city's layered architectural heritage.",
+      "arabicDescription": "التراث المعماري المتراكم للمدينة التاريخية.",
+      "mapCenter": {
+        "latitude": 31.504,
+        "longitude": 34.464
+      },
+      "mapZoom": 14,
+      "bounds": {
+        "minLat": 31.498,
+        "maxLat": 31.511,
+        "minLng": 34.457,
+        "maxLng": 34.471
+      }
+    }
+  ],
+  "locations": [
+    {
+      "id": "palestinian-museum",
+      "governorateId": "ramallah",
+      "name": "The Palestinian Museum",
+      "arabicName": "المتحف الفلسطيني",
+      "city": "Birzeit",
+      "arabicCity": "بيرزيت",
+      "description": "A cultural institution in Birzeit beside Birzeit University, documenting Palestinian history and culture.",
+      "arabicDescription": "مؤسسة ثقافية في بيرزيت بجوار جامعة بيرزيت توثّق التاريخ والثقافة الفلسطينية.",
+      "facts": "The museum's first building phase was completed in 2016. Its terraced design draws on the surrounding landscape.",
+      "arabicFacts": "اكتملت المرحلة الأولى من مبنى المتحف عام 2016. يستلهم تصميمه المدرّج المشهد المحيط.",
+      "categories": [
+        "متحف",
+        "تراث ثقافي"
+      ],
+      "interests": [
+        "history",
+        "architecture"
+      ],
+      "reviewStatus": "source_checked",
+      "reviewed": true,
+      "coordinateStatus": "official_embedded_map_reference",
+      "sources": [
+        {
+          "title": "The Palestinian Museum — Q & A",
+          "arabicTitle": "المتحف الفلسطيني — أسئلة وأجوبة",
+          "publisher": "The Palestinian Museum",
+          "arabicPublisher": "المتحف الفلسطيني",
+          "url": "https://palmuseum.org/en/node/3720"
+        },
+        {
+          "title": "How to find us ? official embedded map",
+          "arabicTitle": "الوصول إلى المتحف — الخريطة الرسمية",
+          "publisher": "The Palestinian Museum",
+          "arabicPublisher": "المتحف الفلسطيني",
+          "url": "https://palmuseum.org/en/visits/how-to-find-us"
+        }
+      ],
+      "timeline": [
+        {
+          "year": 2016,
+          "label": "2016",
+          "description": "Completion of the first building phase.",
+          "arabicDescription": "اكتمال المرحلة الأولى من المبنى."
+        }
+      ],
+      "quiz": {
+        "question": "In which town is the Palestinian Museum?",
+        "arabicQuestion": "في أي بلدة يقع المتحف الفلسطيني؟",
+        "options": [
+          "Birzeit",
+          "Hebron",
+          "Gaza"
+        ],
+        "arabicOptions": [
+          "بيرزيت",
+          "الخليل",
+          "غزة"
+        ],
+        "answerIndex": 0
+      },
+      "traditions": "",
+      "arabicTraditions": "",
+      "latitude": 31.962977,
+      "longitude": 35.181261
+    },
+    {
+      "id": "yasser-arafat-museum",
+      "governorateId": "ramallah",
+      "name": "Yasser Arafat Museum",
+      "arabicName": "متحف ياسر عرفات",
+      "city": "Ramallah",
+      "arabicCity": "رام الله",
+      "description": "A museum of contemporary Palestinian national memory at Al-Muqata'a in Ramallah.",
+      "arabicDescription": "متحف للذاكرة الوطنية الفلسطينية المعاصرة في المقاطعة برام الله.",
+      "facts": "The museum is connected to Arafat's former office and headquarters. Its resource centre includes a specialised library.",
+      "arabicFacts": "يتصل المتحف بمكتب عرفات ومقره السابق. ويضم مركز مصادره مكتبة متخصصة.",
+      "categories": [
+        "متحف",
+        "تراث ثقافي"
+      ],
+      "interests": [
+        "history"
+      ],
+      "reviewStatus": "source_checked",
+      "reviewed": true,
+      "coordinateStatus": "pending_verification",
+      "sources": [
+        {
+          "title": "Yasser Arafat Museum — official introduction",
+          "arabicTitle": "متحف ياسر عرفات — التعريف الرسمي",
+          "publisher": "Yasser Arafat Foundation",
+          "arabicPublisher": "مؤسسة ياسر عرفات",
+          "url": "https://www.yam.ps/index-en.html"
+        }
+      ],
+      "timeline": [],
+      "quiz": {
+        "question": "Which place houses this museum?",
+        "arabicQuestion": "أين يقع هذا المتحف؟",
+        "options": [
+          "Al-Muqata'a, Ramallah",
+          "Jerusalem's Old City",
+          "Gaza harbour"
+        ],
+        "arabicOptions": [
+          "المقاطعة، رام الله",
+          "البلدة القديمة بالقدس",
+          "ميناء غزة"
+        ],
+        "answerIndex": 0
+      },
+      "traditions": "",
+      "arabicTraditions": ""
+    },
+    {
+      "id": "hebron-old-town",
+      "governorateId": "hebron",
+      "name": "Hebron / Al-Khalil Old Town",
+      "arabicName": "البلدة القديمة في الخليل",
+      "city": "Hebron",
+      "arabicCity": "الخليل",
+      "latitude": 31.524444,
+      "longitude": 35.108333,
+      "coordinateStatus": "unesco_property_reference",
+      "description": "A historic urban ensemble shaped by Mamluk and Ottoman building traditions.",
+      "arabicDescription": "نسيج عمراني تاريخي شكّلته تقاليد البناء المملوكية والعثمانية.",
+      "facts": "UNESCO inscribed the old town in 2017. Its courtyard housing forms part of the historic urban fabric.",
+      "arabicFacts": "أدرجت اليونسكو البلدة القديمة عام 2017. وتشكّل بيوت الأحواش جزءاً من نسيجها التاريخي.",
+      "categories": [
+        "حارة تاريخية",
+        "سوق تراثي"
+      ],
+      "interests": [
+        "history",
+        "architecture",
+        "food_markets"
+      ],
+      "reviewStatus": "source_checked",
+      "reviewed": true,
+      "sources": [
+        {
+          "title": "Hebron / Al-Khalil Old Town",
+          "arabicTitle": "البلدة القديمة في الخليل",
+          "publisher": "UNESCO World Heritage Centre",
+          "arabicPublisher": "مركز التراث العالمي لليونسكو",
+          "url": "https://whc.unesco.org/en/list/1565/"
+        }
+      ],
+      "timeline": [
+        {
+          "year": 2017,
+          "label": "2017",
+          "description": "Inscribed on the World Heritage List.",
+          "arabicDescription": "الإدراج على قائمة التراث العالمي."
+        }
+      ],
+      "quiz": {
+        "question": "When was Hebron Old Town inscribed on the World Heritage List?",
+        "arabicQuestion": "متى أُدرجت البلدة القديمة في الخليل على قائمة التراث العالمي؟",
+        "options": [
+          "2017",
+          "1917",
+          "1517"
+        ],
+        "arabicOptions": [
+          "2017",
+          "1917",
+          "1517"
+        ],
+        "answerIndex": 0
+      },
+      "traditions": "",
+      "arabicTraditions": ""
+    },
+    {
+      "id": "ibrahimi-mosque",
+      "governorateId": "hebron",
+      "name": "Al-Haram Al-Ibrahimi",
+      "arabicName": "الحرم الإبراهيمي",
+      "city": "Hebron",
+      "arabicCity": "الخليل",
+      "coordinateStatus": "pending_verification",
+      "description": "A sacred architectural complex at the heart of Hebron's old town.",
+      "arabicDescription": "مجمّع معماري ديني في قلب البلدة القديمة بالخليل.",
+      "facts": "The Hebron Rehabilitation Committee documents successive Byzantine, Islamic and Crusader architectural layers.",
+      "arabicFacts": "توثّق لجنة إعمار الخليل طبقات معمارية بيزنطية وإسلامية وصليبية متعاقبة.",
+      "traditions": "Religious tradition associates the site with Ibrahim / Abraham and his family; this is presented as belief, not archaeological proof.",
+      "arabicTraditions": "يربط التقليد الديني الموقع بإبراهيم وعائلته؛ ويُعرض ذلك بوصفه معتقداً لا إثباتاً أثرياً.",
+      "categories": [
+        "معلم ديني"
+      ],
+      "interests": [
+        "history",
+        "architecture",
+        "religious"
+      ],
+      "reviewStatus": "source_checked",
+      "reviewed": true,
+      "sources": [
+        {
+          "title": "Al-Haram Al-Ibrahimi",
+          "arabicTitle": "الحرم الإبراهيمي",
+          "publisher": "Hebron Rehabilitation Committee",
+          "arabicPublisher": "لجنة إعمار الخليل",
+          "url": "https://www.hebronrc.ps/xindex.php/en/node/275"
+        }
+      ],
+      "timeline": [],
+      "quiz": {
+        "question": "How should the association with Ibrahim / Abraham be understood here?",
+        "arabicQuestion": "كيف يُعرض ارتباط الموقع بإبراهيم هنا؟",
+        "options": [
+          "As religious tradition",
+          "As a verified excavation result",
+          "As a transport instruction"
+        ],
+        "arabicOptions": [
+          "بوصفه تقليداً دينياً",
+          "بوصفه نتيجة تنقيب مثبتة",
+          "بوصفه إرشادات نقل"
+        ],
+        "answerIndex": 0
+      }
+    },
+    {
+      "id": "gaza-omari-mosque",
+      "governorateId": "gaza",
+      "name": "Great Omari Mosque",
+      "arabicName": "المسجد العمري الكبير",
+      "city": "Gaza",
+      "arabicCity": "غزة",
+      "latitude": 31.504333,
+      "longitude": 34.464639,
+      "coordinateStatus": "unesco_site_reference",
+      "description": "A layered religious monument in Gaza's historic centre, incorporating a Crusader basilica.",
+      "arabicDescription": "معلم ديني متعدد الطبقات في مركز غزة التاريخي يضم عناصر من كنيسة صليبية.",
+      "facts": "The Mamluks and Ottomans enlarged the mosque. The historic-centre nomination was submitted in 2026; it is a Tentative List entry, not World Heritage inscription.",
+      "arabicFacts": "وسّع المماليك والعثمانيون المسجد. قُدّم ترشيح المركز التاريخي عام 2026 إلى القائمة التمهيدية، وليس إدراجاً على قائمة التراث العالمي.",
+      "categories": [
+        "معلم ديني"
+      ],
+      "interests": [
+        "history",
+        "architecture",
+        "religious"
+      ],
+      "reviewStatus": "source_checked",
+      "reviewed": true,
+      "sources": [
+        {
+          "title": "Historic Centre of Gaza — Tentative List",
+          "arabicTitle": "المركز التاريخي لغزة — القائمة التمهيدية",
+          "publisher": "UNESCO World Heritage Centre / State of Palestine nomination",
+          "arabicPublisher": "مركز التراث العالمي / ترشيح دولة فلسطين",
+          "url": "https://whc.unesco.org/en/tentativelists/6955/"
+        }
+      ],
+      "timeline": [
+        {
+          "year": 2026,
+          "label": "2026",
+          "description": "Historic-centre Tentative List submission, not inscription.",
+          "arabicDescription": "تقديم المركز التاريخي إلى القائمة التمهيدية، وليس الإدراج."
+        }
+      ],
+      "quiz": {
+        "question": "What is the status of the 2026 historic-centre submission?",
+        "arabicQuestion": "ما صفة تقديم المركز التاريخي عام 2026؟",
+        "options": [
+          "Tentative List",
+          "World Heritage inscription",
+          "An opening-hours notice"
+        ],
+        "arabicOptions": [
+          "القائمة التمهيدية",
+          "إدراج على قائمة التراث العالمي",
+          "إعلان ساعات زيارة"
+        ],
+        "answerIndex": 0
+      },
+      "traditions": "",
+      "arabicTraditions": ""
+    },
+    {
+      "id": "gaza-porphyrius-church",
+      "governorateId": "gaza",
+      "name": "Church of Saint Porphyrius",
+      "arabicName": "كنيسة القديس برفيريوس",
+      "city": "Gaza",
+      "arabicCity": "غزة",
+      "latitude": 31.503333,
+      "longitude": 34.462222,
+      "coordinateStatus": "unesco_site_reference",
+      "description": "A church in Gaza's historic centre with Byzantine origins and later architectural layers.",
+      "arabicDescription": "كنيسة في مركز غزة التاريخي ذات أصول بيزنطية وطبقات معمارية لاحقة.",
+      "facts": "The historic-centre nomination includes the church alongside the Omari Mosque.",
+      "arabicFacts": "يشمل ترشيح المركز التاريخي الكنيسة إلى جانب المسجد العمري.",
+      "categories": [
+        "معلم ديني"
+      ],
+      "interests": [
+        "history",
+        "architecture",
+        "religious"
+      ],
+      "reviewStatus": "source_checked",
+      "reviewed": true,
+      "sources": [
+        {
+          "title": "Historic Centre of Gaza — Tentative List",
+          "arabicTitle": "المركز التاريخي لغزة — القائمة التمهيدية",
+          "publisher": "UNESCO World Heritage Centre / State of Palestine nomination",
+          "arabicPublisher": "مركز التراث العالمي / ترشيح دولة فلسطين",
+          "url": "https://whc.unesco.org/en/tentativelists/6955/"
+        }
+      ],
+      "timeline": [],
+      "quiz": {
+        "question": "Which mosque is included alongside the church in the historic-centre nomination?",
+        "arabicQuestion": "أي مسجد يرد إلى جانب الكنيسة في ترشيح المركز التاريخي؟",
+        "options": [
+          "Great Omari Mosque",
+          "Al-Aqsa Mosque",
+          "Al-Haram Al-Ibrahimi"
+        ],
+        "arabicOptions": [
+          "المسجد العمري الكبير",
+          "المسجد الأقصى",
+          "الحرم الإبراهيمي"
+        ],
+        "answerIndex": 0
+      },
+      "traditions": "",
+      "arabicTraditions": ""
+    }
+  ],
+  "gaps": {
+    "en": "This initial record contains source-checked factual summaries. No reviewed photographs, before/after pairs, local oral accounts or current access information have been added. Coordinates, when available, are reference points, not entrances. This is a cultural reading journey; it does not establish a physical route, travel time, accessibility or permission to visit.",
+    "ar": "يحتوي هذا السجل الأولي على ملخصات حقائق تحقّقنا من مصادرها. لم تُضف صور مراجعة أو مقارنات قبل/بعد أو روايات محلية أو معلومات وصول حالية. الإحداثيات المتاحة نقاط مرجعية وليست مداخل. هذه رحلة قراءة ثقافية لا تثبت مساراً ميدانياً أو وقت انتقال أو إمكانية الوصول أو إذناً بالزيارة."
+  }
+}

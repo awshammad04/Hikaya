@@ -43,6 +43,10 @@ export class GenerateStoryDto {
 
   @IsOptional()
   @IsString()
+  governorateId?: string;
+
+  @IsOptional()
+  @IsString()
   @MaxLength(60000)
   historicalText?: string;
 

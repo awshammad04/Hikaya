@@ -1,3 +1,5 @@
+import { nationalRecord } from "./data/heritage";
+
 export interface SourceCitation {
   title: string;
   arabicTitle: string;
@@ -180,6 +182,8 @@ function locationFromInternalId(value?: string | null) {
 }
 
 export function sourceCitations(sourceId?: string | null, locationId?: string | null): SourceCitation[] {
+  const national = nationalRecord(locationId ?? locationFromInternalId(sourceId) ?? "");
+  if (national) return national.sources;
   const resolved = locationId && SOURCES[locationId] ? locationId : locationFromInternalId(sourceId);
   // Unknown internal IDs never reach the screen. A general Palestinian
   // bibliography is safer and more useful than exposing a repository path.

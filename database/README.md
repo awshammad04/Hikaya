@@ -7,6 +7,8 @@ PostgreSQL implementation of the Hikaya data model.
 | File | Purpose |
 |---|---|
 | `schema.sql` | The PostgreSQL implementation — tables, keys, constraints, indexes, triggers. Run this first. |
+| `migrations/002-governorates.sql` | Non-destructive governorate upgrade for existing databases. |
+| `seed-palestine.sql` | Additive national configuration and six source-checked location records. |
 | `seed.sql` | Hand-written seed: users, categories, locations, stories, contributions. Run this second. |
 | `seed-generated.sql` | **Generated** seed: timeline, media and quiz rows. Run this third. Produced by `python3 ai/scripts/export_seed_data.py` from the content files — do not edit it. |
 | `schema-draft.md` | The Sprint 1 design draft that `schema.sql` implements. Kept for reference. |
@@ -23,6 +25,8 @@ createdb hikaya
 psql -d hikaya -f database/schema.sql
 psql -d hikaya -f database/seed.sql
 psql -d hikaya -f database/seed-generated.sql
+psql -d hikaya -f database/migrations/002-governorates.sql
+psql -d hikaya -f database/seed-palestine.sql
 ```
 
 Then point the backend at it in `backend/.env`:
@@ -34,6 +38,10 @@ DATABASE_URL=postgresql://<user>:<password>@localhost:5432/hikaya
 All three scripts are re-runnable. `schema.sql` drops and recreates the MVP tables, so
 running it again resets everything — do not run it against a database holding real
 user contributions.
+
+Upgrade an existing database with **only** `migrations/002-governorates.sql` and
+`seed-palestine.sql`; these preserve existing heritage and user rows and may be
+repeated safely. See [upgrade and validation details](../docs/palestine-expansion.md).
 
 Verify the seed:
 

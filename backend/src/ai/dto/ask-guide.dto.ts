@@ -44,6 +44,18 @@ export class AskGuideDto {
   locationId?: string;
 
   @IsOptional()
+  @IsArray()
+  @ArrayMaxSize(20)
+  @IsString({ each: true })
+  governorateIds?: string[];
+
+  @IsOptional()
+  @IsArray()
+  @ArrayMaxSize(20)
+  @IsString({ each: true })
+  locationIds?: string[];
+
+  @IsOptional()
   @IsString()
   language?: string;
 

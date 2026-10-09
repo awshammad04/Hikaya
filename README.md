@@ -1,7 +1,8 @@
-# Hikaya Quds · حكاية القدس
+# Hikaya · حكاية
 
-An AI-powered personalized guide and living-memory archive focused exclusively on
-Jerusalem’s historic quarters, gates, souqs and surrounding neighbourhoods. The
+An AI-powered personalized guide and living-memory archive covering Jerusalem,
+Ramallah, Hebron and Gaza. The original Jerusalem experience is preserved inside
+the national platform. The
 Arabic-first interface supports smart walking itineraries, grounded storytelling,
 natural narration, exact-place photography, community memories and offline fallback.
 
@@ -22,7 +23,8 @@ npm run dev
 ```
 
 Open <http://localhost:5173>. If the backend is not running, the interface clearly
-switches to the bundled Jerusalem data; the map, stories, quiz and planner still work.
+switches to bundled heritage data; governorate maps, stories, quizzes and cultural
+journeys still work.
 
 For the complete stack, use three terminals from the repository root:
 
@@ -30,7 +32,7 @@ For the complete stack, use three terminals from the repository root:
 # Terminal 1 — grounded AI module
 cd ai && python3 -m service.server --port 8001
 
-# Terminal 2 — API (uses the in-memory Jerusalem seed when PostgreSQL is absent)
+# Terminal 2 — API (uses the in-memory national seed when PostgreSQL is absent)
 cd backend && npm install && cp -n .env.example .env && npm run start:dev
 
 # Terminal 3 — web app
@@ -49,10 +51,16 @@ createdb hikaya
 psql -d hikaya -f database/schema.sql
 psql -d hikaya -f database/seed.sql
 psql -d hikaya -f database/seed-generated.sql
+psql -d hikaya -f database/migrations/002-governorates.sql
+psql -d hikaya -f database/seed-palestine.sql
 echo 'DATABASE_URL=postgresql://user:password@localhost:5432/hikaya' >> backend/.env
 ```
 
 Full setup and troubleshooting: [`docs/integration-guide.md`](docs/integration-guide.md).
+
+For an existing populated database, apply only the governorate migration and
+national seed above. See [`docs/palestine-expansion.md`](docs/palestine-expansion.md)
+for the new routes, content sources, preservation checks and upgrade details.
 
 ---
 
@@ -73,6 +81,11 @@ Each folder has its own README.
 
 ## Features
 
+- National home and data-driven exploration of Jerusalem, Ramallah, Hebron and Gaza
+- A unified “Create My Story in Palestine” journey across selected governorates,
+  with narration, map, sourced chapters and a guide scoped to the selection
+- Six new bilingual sourced location records, with explicit missing-media and
+  coordinate states
 - Illustrated Jerusalem map with Old City walls, four named gates, surrounding
   neighbourhoods, route numbering, category filters and visited-site markers
 - Arabic-first interface with full RTL behavior and the local Thmanyah font family

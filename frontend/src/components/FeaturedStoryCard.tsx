@@ -4,7 +4,7 @@ import { ArrowRight, CalendarDays, Shuffle } from "lucide-react";
 import { FeaturedStory } from "../types";
 import { CoverImage } from "./CoverImage";
 import { useInterfaceLanguage } from "../context/LanguageContext";
-import { locationById } from "../locationsData";
+import { locationById } from "../data/heritage";
 import { visitorWalkthrough } from "../visitorWalkthroughs";
 import { SourceCitationLine } from "./SourceCitationLine";
 

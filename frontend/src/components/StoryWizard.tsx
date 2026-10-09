@@ -14,7 +14,7 @@ import { StoryNarrator } from "./StoryNarrator";
 import { TransparencyPanel } from "./TransparencyPanel";
 import { SourceCitationLine } from "./SourceCitationLine";
 import { useInterfaceLanguage } from "../context/LanguageContext";
-import { locationById } from "../locationsData";
+import { locationById } from "../data/heritage";
 import { visitorWalkthrough } from "../visitorWalkthroughs";
 
 interface StoryWizardProps {

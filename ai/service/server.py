@@ -30,6 +30,7 @@ except ImportError:  # pragma: no cover
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 
 _CLIENT_ERRORS = {
+    "invalid_scope",
     "missing_content",
     "content_not_reviewed",
     "unsupported_audience",
@@ -118,6 +119,11 @@ class Handler(BaseHTTPRequestHandler):
                                        "message": "Request body is not valid JSON."}})
             return
 
+        if path == '/generate-journey':
+            from .journeys import generate_journey
+            response = generate_journey(payload)
+            self._send(status_code_for(response), response)
+            return
         if path == "/generate-story":
             builder, runner = StoryRequest, generate_story
         elif path == "/ask-guide":

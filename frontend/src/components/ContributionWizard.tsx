@@ -15,7 +15,7 @@ import {
 import { ApiLocation, NewContribution } from "../types";
 import { submitContribution } from "../services/api";
 import { useInterfaceLanguage } from "../context/LanguageContext";
-import { locationById } from "../locationsData";
+import { locationById } from "../data/heritage";
 
 interface ContributionWizardProps {
   locations: ApiLocation[];
@@ -96,7 +96,7 @@ export const ContributionWizard: React.FC<ContributionWizardProps> = ({
         mediaUrl: form.mediaUrl?.trim() || undefined,
         mediaType: form.mediaUrl?.trim() ? form.mediaType : undefined,
       });
-      setReceipt({ message: isArabic ? "وصلت مساهمتك إلى حكاية القدس. يراجعها عضو من فريق التوثيق قبل نشرها، حفاظاً على الدقة وخصوصية أصحاب الذكريات." : response.message, code: response.referenceCode });
+      setReceipt({ message: isArabic ? "وصلت مساهمتك إلى حكاية. يراجعها عضو من فريق التوثيق قبل نشرها، حفاظاً على الدقة وخصوصية أصحاب الذكريات." : response.message, code: response.referenceCode });
       setStep("done");
     } catch (caught) {
       setError(isArabic

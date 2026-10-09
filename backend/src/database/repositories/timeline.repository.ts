@@ -1,3 +1,4 @@
+import { PALESTINE_TIMELINE } from '../seed/palestine-data';
 import { TimelineEvent } from '../entities/timeline-event.entity';
 import { DatabaseService } from '../database.service';
 import { SEED_TIMELINE } from '../seed/generated-data';
@@ -56,7 +57,10 @@ export class PostgresTimelineRepository implements TimelineRepository {
 
 /** Serves database/seed-generated.sql from memory when PostgreSQL is absent. */
 export class InMemoryTimelineRepository implements TimelineRepository {
-  private readonly events: TimelineEvent[] = SEED_TIMELINE.map((event) => ({
+  private readonly events: TimelineEvent[] = [
+    ...SEED_TIMELINE,
+    ...PALESTINE_TIMELINE,
+  ].map((event) => ({
     ...event,
   }));
 

@@ -10,6 +10,8 @@ Planning documents, architecture notes and sprint reports for Hikaya.
 | [`system-architecture.md`](system-architecture.md) | The component-level design and data flow |
 | [`mvp-plan.md`](mvp-plan.md) | MVP scope |
 | [`team-roles.md`](team-roles.md) | Sub-teams and responsibilities |
+| [`rebranding.md`](rebranding.md) | Hikaya identity changes, assets and verification |
+| [`palestine-expansion.md`](palestine-expansion.md) | Four governorates, cultural journeys, sourcing, migration and preservation checks |
 
 ## Sprint Records
 

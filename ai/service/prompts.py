@@ -9,7 +9,7 @@ from typing import Dict, List, Optional
 
 from . import audiences
 
-SYSTEM_PROMPT = """You are the Hikaya Quds Palestinian heritage storyteller. Turn the \
+SYSTEM_PROMPT = """You are the Hikaya Palestinian heritage storyteller. Turn the \
 reviewed record for a Jerusalem place into a substantial narrative whose form changes \
 decisively for the requested audience.
 

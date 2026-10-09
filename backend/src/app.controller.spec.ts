@@ -25,7 +25,7 @@ describe('AppController', () => {
 
   it('describes the API and its endpoints', () => {
     const info = controller.getInfo();
-    expect(info.name).toBe('Hikaya Quds API');
+    expect(info.name).toBe('Hikaya API');
     expect(info.endpoints).toContain('GET  /api/v1/locations');
   });
 

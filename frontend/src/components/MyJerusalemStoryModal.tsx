@@ -12,7 +12,8 @@ import {
   Sparkles,
   X,
 } from "lucide-react";
-import { locations } from "../locationsData";
+import { locations as jerusalemLocations } from "../locationsData";
+import { scopedProfiles, governorateName, nationalRecord } from "../data/heritage";
 import type { MyJerusalemStory, UserJourneyMemory } from "../types";
 import {
   PROGRESS_EVENT,
@@ -46,15 +47,15 @@ function readTourProgress() {
   }
 }
 
-function buildStory(isArabic: boolean, memories: UserJourneyMemory[]): MyJerusalemStory {
+function buildStory(isArabic: boolean, memories: UserJourneyMemory[], locations = jerusalemLocations, scope = "jerusalem"): MyJerusalemStory {
   const exploredLocationIds = readVisited().filter((id) => locations.some((location) => location.id === id));
   const tour = readTourProgress();
-  const completedQuizLocationIds = readQuizCompleted();
-  const listenedLocationIds = readAudioListened();
+  const completedQuizLocationIds = readQuizCompleted().filter((id) => locations.some((location) => location.id === id));
+  const listenedLocationIds = readAudioListened().filter((id) => locations.some((location) => location.id === id));
   const heritageSitesDiscovered = new Set([...exploredLocationIds, ...completedQuizLocationIds, ...listenedLocationIds])
     .size;
   const count = exploredLocationIds.length;
-  return {
+  const story: MyJerusalemStory = {
     generatedAt: new Date().toISOString(),
     exploredLocationIds,
     completedQuizLocationIds,
@@ -65,12 +66,15 @@ function buildStory(isArabic: boolean, memories: UserJourneyMemory[]): MyJerusal
     personalPhotosCaptured: memories.filter((memory) => memory.photoDataUrl).length,
     personalMemoriesWritten: memories.filter((memory) => memory.note.trim()).length,
     badge: isArabic
-      ? count >= locations.length && readQuizCompleted().length >= 4 ? "حارس حكاية القدس" : count >= 3 ? "راوي القدس" : "خطوة في القدس"
-      : count >= locations.length && readQuizCompleted().length >= 4 ? "Guardian of Jerusalem’s Story" : count >= 3 ? "Jerusalem Storyteller" : "A Step into Jerusalem",
+      ? count >= locations.length && completedQuizLocationIds.length >= 4 ? "حارس حكاية" : count >= 3 ? "راوي القدس" : "خطوة في القدس"
+      : count >= locations.length && completedQuizLocationIds.length >= 4 ? "Guardian of Jerusalem’s Story" : count >= 3 ? "Jerusalem Storyteller" : "A Step into Jerusalem",
     reflection: isArabic
       ? count === 0 ? "كل حكاية تبدأ من باب؛ اختر أول حي لتبدأ حكايتك." : count >= locations.length ? "عبرت أبواب القدس وحاراتها؛ صارت الخريطة ذاكرةً تمشي معك." : `استكشفت ${count} من حارات القدس؛ وكل موقع حفظته يفتح طريقاً جديداً للحكاية.`
       : count === 0 ? "Every story begins at a gate; choose your first neighbourhood to begin." : count >= locations.length ? "You crossed Jerusalem’s gates and quarters; the map has become a memory you carry." : `You explored ${count} Jerusalem places; every site remembered opens another path into the story.`,
   };
+  return scope === 'jerusalem' ? story : {...story,oralMemoriesUncovered:0,totalWalkingMinutes:0,
+    badge:isArabic?'راوي حكاية':'Hikaya storyteller',
+    reflection:isArabic?`استكشفت ${count} أماكن من أرشيف ${scope === 'all'?'فلسطين':governorateName(scope,true)}. تحمل هذه الحكاية تقدّمك وذكرياتك الشخصية.`:`You explored ${count} places in the ${scope === 'all'?'Palestine':governorateName(scope,false)} archive. This story carries your progress and personal memories.`};
 }
 
 function escapeHtml(value: string) {
@@ -109,7 +113,8 @@ const DEFAULT_MEMORIES = [
   },
 ];
 
-export const MyJerusalemStoryModal: React.FC<{ open: boolean; onClose: () => void }> = ({ open, onClose }) => {
+export const MyJerusalemStoryModal: React.FC<{ open: boolean; onClose: () => void; scope?: string; locationIds?: string[] }> = ({ open, onClose, scope = "jerusalem", locationIds }) => {
+  const locations = scopedProfiles(scope).filter((item) => !locationIds || locationIds.includes(item.id));
   const { isArabic } = useInterfaceLanguage();
   const { memories, addMemory } = useUserMemories();
   const [, refresh] = useState(0);
@@ -152,21 +157,27 @@ export const MyJerusalemStoryModal: React.FC<{ open: boolean; onClose: () => voi
     };
   }, [open]);
 
-  const defaultMemories = useMemo<UserJourneyMemory[]>(() => DEFAULT_MEMORIES.map((memory, index) => ({
+  const defaultMemories = useMemo<UserJourneyMemory[]>(() => (scope === "jerusalem" ? DEFAULT_MEMORIES : []).map((memory, index) => ({
     id: `jerusalem-memory-${index + 1}`,
     photoDataUrl: memory.photo,
     locationTag: isArabic ? memory.locationAr : memory.locationEn,
     note: isArabic ? memory.noteAr : memory.noteEn,
     createdAt: memory.createdAt,
-  })), [isArabic]);
-  const displayedMemories = useMemo(() => [...memories, ...defaultMemories], [memories, defaultMemories]);
-  const story = buildStory(isArabic, displayedMemories);
+  })), [isArabic,scope]);
+  const includedGovernorates = [...new Set(locations.map((item)=>nationalRecord(item.id)?.governorateId ?? 'jerusalem'))];
+  const displayedMemories = [...memories.filter((item) => scope === "all"
+    ? (item.governorateId === 'all' ? item.governorateIds?.some((id)=>includedGovernorates.includes(id)) : includedGovernorates.includes(item.governorateId ?? 'jerusalem'))
+    : (item.governorateId ?? "jerusalem") === scope), ...defaultMemories];
+  const story = buildStory(isArabic, displayedMemories, locations, scope);
+  const scopeName = scope === "all" ? (isArabic ? "فلسطين" : "Palestine") : governorateName(scope,isArabic);
+  const storyTitle = isArabic ? `حكايتي في ${scopeName}` : scope === "jerusalem" ? "My Jerusalem Story" : `My ${scopeName} Story`;
+  const albumTitle = isArabic ? `ألبوم ذكرياتي ولحظاتي في ${scopeName}` : `My ${scopeName} Journey Memories`;
   const explored = locations.filter((location) => story.exploredLocationIds.includes(location.id));
   const exploredNames = explored.map((item) => isArabic ? item.arabicName : item.name);
   const locationSuggestions = useMemo(() => [
     ...locations.map((location) => isArabic ? location.arabicName : location.name),
-    ...EXTRA_LOCATION_SUGGESTIONS.map((location) => isArabic ? location.ar : location.en),
-  ], [isArabic]);
+    ...(scope === "jerusalem" ? EXTRA_LOCATION_SUGGESTIONS : []).map((location) => isArabic ? location.ar : location.en),
+  ], [isArabic,scope]);
 
   if (!open) return null;
 
@@ -198,6 +209,8 @@ export const MyJerusalemStoryModal: React.FC<{ open: boolean; onClose: () => voi
     try {
       addMemory({
         photoDataUrl,
+        governorateId: scope,
+        governorateIds: scope === 'all' ? includedGovernorates : undefined,
         locationTag: locationTag.trim(),
         note: note.trim(),
       });
@@ -210,7 +223,7 @@ export const MyJerusalemStoryModal: React.FC<{ open: boolean; onClose: () => voi
   };
 
   const share = async () => {
-    const title = isArabic ? "حكايتي في القدس" : "My Jerusalem Story";
+    const title = storyTitle;
     const memoryLine = isArabic
       ? `${story.personalPhotosCaptured} صور · ${story.personalMemoriesWritten} ذكريات شخصية`
       : `${story.personalPhotosCaptured} photos · ${story.personalMemoriesWritten} personal memories`;
@@ -221,35 +234,37 @@ export const MyJerusalemStoryModal: React.FC<{ open: boolean; onClose: () => voi
 
   const download = () => {
     const lang = isArabic ? "ar" : "en";
-    const title = isArabic ? "حكايتي في القدس" : "My Jerusalem Story";
+    const title = storyTitle;
     const exploredLabel = isArabic ? "الحارات التي استكشفتها" : "Places explored";
-    const memoriesLabel = isArabic ? "ألبوم ذكرياتي ولحظاتي في القدس" : "My Jerusalem Journey Memories";
+    const memoriesLabel = albumTitle;
     const empty = isArabic ? "ستبدأ قريباً" : "Your journey will begin soon";
     const stats = isArabic
-      ? `مواقع مكتشفة: ${story.heritageSitesDiscovered} · مشي مخطط: ${story.totalWalkingMinutes} دقيقة · صور ملتقطة: ${story.personalPhotosCaptured} · ذكريات مدونة: ${story.personalMemoriesWritten}`
-      : `Heritage sites discovered: ${story.heritageSitesDiscovered} · Planned walking: ${story.totalWalkingMinutes} min · Photos captured: ${story.personalPhotosCaptured} · Memories written: ${story.personalMemoriesWritten}`;
+      ? `مواقع مكتشفة: ${story.heritageSitesDiscovered}${scope === 'jerusalem' ? ` · مشي مخطط: ${story.totalWalkingMinutes} دقيقة` : ''} · صور ملتقطة: ${story.personalPhotosCaptured} · ذكريات مدونة: ${story.personalMemoriesWritten}`
+      : `Heritage sites discovered: ${story.heritageSitesDiscovered}${scope === 'jerusalem' ? ` · Planned walking: ${story.totalWalkingMinutes} min` : ''} · Photos captured: ${story.personalPhotosCaptured} · Memories written: ${story.personalMemoriesWritten}`;
     const album = displayedMemories.length > 0
       ? displayedMemories.map((memory) => `<figure><img src="${memory.photoDataUrl}" alt=""><figcaption><b>${escapeHtml(memory.locationTag)}</b><p>${escapeHtml(memory.note)}</p></figcaption></figure>`).join("")
       : `<p>${empty}</p>`;
-    const html = `<!doctype html><html lang="${lang}" dir="${isArabic ? "rtl" : "ltr"}"><meta charset="utf-8"><meta name="viewport" content="width=device-width"><title>${title}</title><style>@font-face{font-family:Thmanyah;src:url('/fonts/thmanyah-sans-regular.woff2')}*{box-sizing:border-box}body{font-family:Thmanyah,serif;background:#f5f5f0;color:#2d2d2a;padding:24px}.card{max-width:820px;margin:auto;border:2px solid #d97706;border-radius:28px;padding:32px;background:white}h1,h2{color:#5a5a40}small{color:#8a8a80}.album{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:18px}figure{margin:0;padding:9px 9px 18px;background:#fff;border:1px solid #ddd8ca;box-shadow:0 10px 24px #352f2022}figure img{width:100%;aspect-ratio:4/3;object-fit:cover}figcaption{padding:10px 4px 0}figcaption p{white-space:pre-wrap}.outro{margin-top:28px;padding:38px 24px;border-radius:22px;color:white;background:linear-gradient(120deg,#3f412dcc,#16170dcc),url('/images/jerusalem/at-tur.jpg') center/cover}.outro h2{color:white}</style><div class="card"><small>HIKAYAT ALQUDS · Q GUIDE 2026</small><h1>${title}</h1><h2>${escapeHtml(story.badge)}</h2><p>${escapeHtml(story.reflection)}</p><h3>${exploredLabel}</h3><p>${exploredNames.map(escapeHtml).join(" · ") || empty}</p><p>${stats}</p><h3>${memoriesLabel}</h3><div class="album">${album}</div><div class="outro"><small>${isArabic ? "المشهد الختامي · جبل الزيتون" : "FINAL SCENE · MOUNT OF OLIVES"}</small><h2>${isArabic ? "تنتهي الجولة، وتبدأ حكايتك" : "The tour ends. Your story begins."}</h2><p>${isArabic ? "القدس ليست مكاناً نزوره فقط؛ إنها حكاية نحملها معنا." : "Jerusalem is not only a place we visit; it is a story we carry with us."}</p></div></div></html>`;
+    const html = `<!doctype html><html lang="${lang}" dir="${isArabic ? "rtl" : "ltr"}"><meta charset="utf-8"><meta name="viewport" content="width=device-width"><title>${title}</title><style>@font-face{font-family:Thmanyah;src:url('/fonts/thmanyah-sans-regular.woff2')}*{box-sizing:border-box}body{font-family:Thmanyah,serif;background:#f5f5f0;color:#2d2d2a;padding:24px}.card{max-width:820px;margin:auto;border:2px solid #d97706;border-radius:28px;padding:32px;background:white}h1,h2{color:#5a5a40}small{color:#8a8a80}.album{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:18px}figure{margin:0;padding:9px 9px 18px;background:#fff;border:1px solid #ddd8ca;box-shadow:0 10px 24px #352f2022}figure img{width:100%;aspect-ratio:4/3;object-fit:cover}figcaption{padding:10px 4px 0}figcaption p{white-space:pre-wrap}.outro{margin-top:28px;padding:38px 24px;border-radius:22px;color:white;background:linear-gradient(120deg,#3f412dcc,#16170dcc),${scope === 'jerusalem' ? "url('/images/jerusalem/at-tur.jpg') center/cover" : '#5a5a40'}}.outro h2{color:white}</style><div class="card"><small>Hikaya</small><h1>${title}</h1><h2>${escapeHtml(story.badge)}</h2><p>${escapeHtml(story.reflection)}</p><h3>${exploredLabel}</h3><p>${exploredNames.map(escapeHtml).join(" · ") || empty}</p><p>${stats}</p><h3>${memoriesLabel}</h3><div class="album">${album}</div><div class="outro"><small>${scope === "jerusalem" ? (isArabic ? "المشهد الختامي · جبل الزيتون" : "FINAL SCENE · MOUNT OF OLIVES") : scopeName}</small><h2>${isArabic ? "تنتهي الجولة، وتبدأ حكايتك" : "The tour ends. Your story begins."}</h2><p>${scope === "jerusalem" ? (isArabic ? "القدس ليست مكاناً نزوره فقط؛ إنها حكاية نحملها معنا." : "Jerusalem is not only a place we visit; it is a story we carry with us.") : escapeHtml(story.reflection)}</p></div></div></html>`;
     const url = URL.createObjectURL(new Blob([html], { type: "text/html;charset=utf-8" }));
     const anchor = document.createElement("a");
     anchor.href = url;
-    anchor.download = "hikayat-alquds-story.html";
+    anchor.download = "Hikaya-story.html";
     anchor.click();
     URL.revokeObjectURL(url);
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-end justify-center overflow-hidden bg-black/70 p-3 backdrop-blur-md sm:items-center sm:p-8" role="dialog" aria-modal="true" aria-label={isArabic ? "حكايتي في القدس" : "My Jerusalem Story"}>
+    <div className="fixed inset-0 z-50 flex items-end justify-center overflow-hidden bg-black/70 p-3 backdrop-blur-md sm:items-center sm:p-8" role="dialog" aria-modal="true" aria-label={storyTitle}>
       <div className="jerusalem-story-dialog flex w-full max-w-2xl min-h-0 flex-col overflow-hidden rounded-[1.75rem] border border-brand-amber/80 bg-white shadow-[0_28px_90px_rgba(0,0,0,0.45)] sm:rounded-3xl" dir={isArabic ? "rtl" : "ltr"}>
         <header className="relative z-30 shrink-0 overflow-hidden bg-brand-olive px-5 py-4 text-white shadow-md sm:px-6 sm:py-5">
           <div className="absolute inset-0 opacity-15 [background-image:radial-gradient(circle_at_20%_20%,white_0,transparent_35%),radial-gradient(circle_at_80%_80%,#d97706_0,transparent_32%)]" />
           <div className="relative flex items-center gap-3">
-            <img src="/logo-icon.png" alt="Hikayat AlQuds" className="h-10 w-10 rounded-xl bg-white/90 object-contain p-1 mix-blend-screen" />
+            <span className="h-10 w-10 shrink-0 rounded-xl bg-brand-bg p-1">
+              <img src="/logo-icon.png" alt="Hikaya" className="h-full w-full object-contain mix-blend-multiply" />
+            </span>
             <div className="min-w-0">
-              <p className="text-[9px] font-bold uppercase tracking-[0.16em] text-brand-amber sm:text-[10px]">{isArabic ? "تذكار جولتك الرقمية · HIKAYAT ALQUDS" : "Your digital tour keepsake · HIKAYAT ALQUDS"}</p>
-              <h2 className="truncate font-serif text-2xl font-black sm:text-3xl">{isArabic ? "حكايتي في القدس" : "My Jerusalem Story"}</h2>
+              <p className="text-[9px] font-bold uppercase tracking-[0.16em] text-brand-amber sm:text-[10px]">{isArabic ? "تذكار جولتك الرقمية · Hikaya" : "Your digital tour keepsake · Hikaya"}</p>
+              <h2 className="truncate font-serif text-2xl font-black sm:text-3xl">{storyTitle}</h2>
             </div>
             <button type="button" onClick={onClose} className="ms-auto shrink-0 rounded-full border border-white/25 bg-black/15 p-2 shadow-sm transition hover:bg-white/20" aria-label={isArabic ? "إغلاق" : "Close"}><X className="h-4 w-4" /></button>
           </div>
@@ -272,7 +287,7 @@ export const MyJerusalemStoryModal: React.FC<{ open: boolean; onClose: () => voi
           <section className="space-y-2">
             <div className="grid grid-cols-2 gap-2 text-center text-[11px] sm:grid-cols-4">
               <Stat value={story.heritageSitesDiscovered} label={isArabic ? "مواقع مكتشفة" : "Sites discovered"} icon={<MapPin className="h-3 w-3" />} />
-              <Stat value={story.totalWalkingMinutes} label={isArabic ? "دقائق مشي" : "Walking min"} icon={<Footprints className="h-3 w-3" />} />
+              {scope === "jerusalem" && <Stat value={story.totalWalkingMinutes} label={isArabic ? "دقائق مشي" : "Walking min"} icon={<Footprints className="h-3 w-3" />} />}
               <Stat value={story.personalPhotosCaptured} label={isArabic ? "صور ملتقطة" : "Photos captured"} icon={<Camera className="h-3 w-3" />} />
               <Stat value={story.personalMemoriesWritten} label={isArabic ? "ذكريات مدونة" : "Memories written"} icon={<PenLine className="h-3 w-3" />} />
             </div>
@@ -288,7 +303,7 @@ export const MyJerusalemStoryModal: React.FC<{ open: boolean; onClose: () => voi
             <div className="flex items-center justify-between gap-3 border-b border-brand-border/60 pb-3">
               <div className="min-w-0">
                 <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-brand-amber">{isArabic ? "من دفتر الطريق" : "From your travel journal"}</p>
-                <h3 id="journey-memories-title" className="font-serif text-lg font-black leading-tight text-brand-olive sm:text-xl">{isArabic ? "ألبوم ذكرياتي ولحظاتي في القدس" : "My Jerusalem Journey Memories"}</h3>
+                <h3 id="journey-memories-title" className="font-serif text-lg font-black leading-tight text-brand-olive sm:text-xl">{albumTitle}</h3>
                 <p className="mt-1 text-[11px] text-brand-muted">{isArabic ? "صور وكلمات من تفاصيل الجولة." : "Photos and words from moments along the way."}</p>
               </div>
               <div className="flex shrink-0 items-center gap-2">
@@ -349,14 +364,14 @@ export const MyJerusalemStoryModal: React.FC<{ open: boolean; onClose: () => voi
             )}
           </section>
 
-          <section className="relative min-h-[210px] overflow-hidden rounded-3xl bg-brand-olive text-white shadow-lg" aria-label={isArabic ? "المشهد الختامي من جبل الزيتون" : "Closing scene from the Mount of Olives"}>
-            <img src="/images/jerusalem/at-tur.jpg" alt="" className="absolute inset-0 h-full w-full object-cover" />
+          <section className="relative min-h-[210px] overflow-hidden rounded-3xl bg-brand-olive text-white shadow-lg" aria-label={scope === "jerusalem" ? (isArabic ? "المشهد الختامي من جبل الزيتون" : "Closing scene from the Mount of Olives") : storyTitle}>
+            {scope === "jerusalem" && <img src="/images/jerusalem/at-tur.jpg" alt="" className="absolute inset-0 h-full w-full object-cover" />}
             <div className="absolute inset-0 bg-gradient-to-t from-[#27291b] via-[#3f412dcc] to-[#3f412d55]" />
             <div className="relative flex min-h-[210px] flex-col justify-end p-5 sm:p-7">
-              <span className="mb-auto inline-flex w-fit items-center gap-1.5 rounded-full border border-white/25 bg-black/25 px-3 py-1 text-[9px] font-bold uppercase tracking-[0.18em] backdrop-blur"><Sparkles className="h-3 w-3 text-brand-amber" />{isArabic ? "المشهد الختامي · جبل الزيتون" : "Final scene · Mount of Olives"}</span>
-              <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-brand-amber">HIKAYAT ALQUDS · Q GUIDE 2026</p>
+              <span className="mb-auto inline-flex w-fit items-center gap-1.5 rounded-full border border-white/25 bg-black/25 px-3 py-1 text-[9px] font-bold uppercase tracking-[0.18em] backdrop-blur"><Sparkles className="h-3 w-3 text-brand-amber" />{scope === "jerusalem" ? (isArabic ? "المشهد الختامي · جبل الزيتون" : "Final scene · Mount of Olives") : scopeName}</span>
+              <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-brand-amber">Hikaya</p>
               <h3 className="mt-1 font-serif text-2xl font-black sm:text-3xl">{isArabic ? "تنتهي الجولة، وتبدأ حكايتك" : "The tour ends. Your story begins."}</h3>
-              <p className="mt-2 max-w-xl text-sm leading-relaxed text-white/85">{isArabic ? "من مطلّة جبل الزيتون، تصبح القدس أكثر من مكان زرته؛ تصبح حكايةً تحملها معك." : "From the Mount of Olives, Jerusalem becomes more than a place you visited—it becomes a story you carry with you."}</p>
+              <p className="mt-2 max-w-xl text-sm leading-relaxed text-white/85">{scope === "jerusalem" ? (isArabic ? "من مطلّة جبل الزيتون، تصبح القدس أكثر من مكان زرته؛ تصبح حكايةً تحملها معك." : "From the Mount of Olives, Jerusalem becomes more than a place you visited—it becomes a story you carry with you.") : story.reflection}</p>
             </div>
           </section>
 

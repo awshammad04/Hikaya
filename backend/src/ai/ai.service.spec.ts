@@ -157,4 +157,22 @@ describe('AiService', () => {
     expect(answer.answeredFromSource).toBe(false);
     expect(answer.answer).toContain('not available');
   });
+
+  it.each(['ramallah', undefined])('refuses review failures with explicit or derived governorate %s', async (governorateId) => {
+    post.mockReturnValue(of({ data: { ...aiResponse, status: 'error', narrative: '', error: { code: 'content_not_reviewed', message: 'Awaiting source review.' } } }));
+    await expect(service.generateStory({ locationId: 'palestinian-museum', governorateId })).rejects.toThrow('Awaiting source review.');
+  });
+
+  it('uses only the Arabic record when a new governorate story needs a fallback', async () => {
+    post.mockReturnValue(throwError(() => new Error('ECONNREFUSED')));
+    const story = await service.generateStory({ locationId: 'palestinian-museum', governorateId: 'ramallah', language: 'ar', persist: false });
+    expect(story.narrative).toContain('2016');
+    expect(story.narrative).not.toContain('Old City');
+    expect(story.source.locationId).toBe('palestinian-museum');
+  });
+
+  it('handles guide error payloads as unavailable rather than undefined answers', async () => {
+    post.mockReturnValue(of({ data: { status: 'error', error: { code: 'missing_content', message: 'No approved record.' } } }));
+    await expect(service.askGuide({ locationIds: ['palestinian-museum'], governorateIds: ['ramallah'], question: 'When was it completed?' })).rejects.toThrow('No approved record.');
+  });
 });
