@@ -111,6 +111,7 @@ export const LocationDetailsPage: React.FC = () => {
   useEffect(() => {
     let active = true;
     setLoading(true);
+    setReason(undefined);
     setData(EMPTY);
 
     Promise.all([
@@ -154,6 +155,7 @@ export const LocationDetailsPage: React.FC = () => {
 
         if (location.data) markVisited(location.data.id);
       })
+      .catch((error) => { if (active) setReason(error instanceof Error ? error.message : "Location service unavailable."); })
       .finally(() => {
         if (active) setLoading(false);
       });
@@ -185,6 +187,10 @@ export const LocationDetailsPage: React.FC = () => {
   }
 
   const { location } = data;
+
+  if (import.meta.env.PROD && reason && !location) return (
+    <PageTransition><DataSourceBanner source="backend" reason={reason} /></PageTransition>
+  );
 
   if (!location) {
     return (

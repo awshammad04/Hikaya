@@ -18,6 +18,9 @@ Both servers speak the same JSON, so the backend does not care which one runs.
 """
 
 from typing import Any, Dict
+import os
+import secrets
+from contextlib import asynccontextmanager
 
 try:
     from fastapi import FastAPI
@@ -33,7 +36,22 @@ from . import audiences, content_loader, llm
 from .generator import answer_question, generate_story
 from .models import GuideRequest, StoryRequest, ValidationError
 
+@asynccontextmanager
+async def lifespan(_app):
+    if os.environ.get("NODE_ENV") == "production":
+        if not os.environ.get("AI_INTERNAL_TOKEN"):
+            raise RuntimeError("AI_INTERNAL_TOKEN is required in production.")
+        if len(content_loader.available_locations()) < 14:
+            raise RuntimeError("Reviewed Jerusalem and Palestine content must be available.")
+        if os.environ.get("ANTHROPIC_API_KEY") and not llm.is_configured():
+            raise RuntimeError("Anthropic SDK is unavailable.")
+    yield
+
+
 app = FastAPI(
+    lifespan=lifespan,
+    docs_url=None if os.environ.get("NODE_ENV") == "production" else "/docs",
+    redoc_url=None if os.environ.get("NODE_ENV") == "production" else "/redoc",
     title="Hikaya AI Module",
     description="Narrative generation and heritage Q&A from reviewed Palestinian "
                 "heritage content.",
@@ -42,12 +60,26 @@ app = FastAPI(
 
 # The NestJS backend is the only intended caller, but CORS is open in the MVP so
 # the frontend can also hit the service directly during development.
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
+if os.environ.get("NODE_ENV") != "production":
+    app.add_middleware(CORSMiddleware, allow_origins=["http://localhost:5173"],
+                       allow_methods=["GET", "POST"], allow_headers=["Content-Type"])
+
+
+@app.middleware("http")
+async def internal_access(request, call_next):
+    if os.environ.get("NODE_ENV") == "production" and request.url.path != "/health":
+        expected = os.environ.get("AI_INTERNAL_TOKEN", "")
+        supplied = request.headers.get("x-hikaya-ai-token", "")
+        if not expected or not secrets.compare_digest(expected, supplied):
+            return JSONResponse(status_code=401, content={"message": "Unauthorized"})
+        length = request.headers.get("content-length", "0")
+        if not length.isdigit() or int(length) > 262144:
+            return JSONResponse(status_code=413, content={"message": "Request too large"})
+    try:
+        return await call_next(request)
+    except llm.LLMUnavailable:
+        return JSONResponse(status_code=503, content={"status": "error", "error": {
+            "code": "provider_unavailable", "message": "The AI provider is temporarily unavailable."}})
 
 # Contract error codes that mean "the caller asked for something impossible",
 # as opposed to a server-side failure.
@@ -76,6 +108,8 @@ def _status_code(payload):
 def health():
     # type: () -> Dict[str, Any]
     locations = content_loader.available_locations()
+    if os.environ.get("NODE_ENV") == "production" and len(locations) < 14:
+        return JSONResponse(status_code=503, content={"status": "error", "message": "Reviewed content is unavailable."})
     return {
         "status": "ok",
         "version": app.version,

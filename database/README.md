@@ -1,5 +1,18 @@
 # Database Module
 
+## Production initialization
+
+For Render, follow [the production guide](../docs/render-deployment.md).
+From a complete checkout with `backend` dependencies installed, securely set
+`DATABASE_URL` and run `node backend/scripts/database.mjs initialize` only for a
+new empty database. It refuses a populated public schema and commits all data
+atomically. Later use `node backend/scripts/database.mjs migrate`.
+
+The manual development setup below resets data. **Both `schema.sql` and
+`seed.sql`/`seed-generated.sql` contain destructive statements. Do not run them
+directly against production.** In-memory repositories are development-only;
+production refuses startup without a reachable, initialized PostgreSQL database.
+
 PostgreSQL implementation of the Hikaya data model.
 
 ## Files

@@ -1,5 +1,11 @@
 # Hikaya · حكاية
 
+## Production deployment
+
+Use [the Render deployment guide](docs/render-deployment.md) and the root
+`render.yaml`. The guide includes service setup, safe PostgreSQL initialization,
+custom-domain DNS, verification, and outstanding live checks.
+
 An AI-powered personalized guide and living-memory archive covering Jerusalem,
 Ramallah, Hebron and Gaza. The original Jerusalem experience is preserved inside
 the national platform. The

@@ -14,7 +14,9 @@ export class AppController {
 
   /** GET /api/v1/health - which data source and AI service are in use. */
   @Get('health')
-  getHealth(): ServiceStatus {
-    return this.appService.getHealth();
+  getHealth(): ServiceStatus | Promise<ServiceStatus> {
+    return process.env.NODE_ENV === 'production'
+      ? this.appService.checkReadiness()
+      : this.appService.getHealth();
   }
 }

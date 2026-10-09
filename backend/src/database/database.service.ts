@@ -21,6 +21,8 @@ export class DatabaseService implements OnModuleDestroy {
 
   async connect(connectionString?: string): Promise<void> {
     if (!connectionString) {
+      if (process.env.NODE_ENV === 'production')
+        throw new Error('DATABASE_URL is required in production.');
       this.logger.warn(
         'DATABASE_URL is not set - serving seeded in-memory data. ' +
           'Run database/schema.sql and database/seed.sql, then set DATABASE_URL, to use PostgreSQL.',
@@ -30,8 +32,8 @@ export class DatabaseService implements OnModuleDestroy {
 
     const pool = new Pool({
       connectionString,
-      max: 10,
-      connectionTimeoutMillis: 3000,
+      max: Number(process.env.PG_POOL_MAX || 10),
+      connectionTimeoutMillis: 10000,
       idleTimeoutMillis: 30000,
     });
 
@@ -43,6 +45,18 @@ export class DatabaseService implements OnModuleDestroy {
 
     try {
       await pool.query('SELECT 1');
+      if (process.env.NODE_ENV === 'production') {
+        await pool.query(
+          'SELECT l.governorate_id, l.review_status, c.reference_code FROM locations l LEFT JOIN contributions c ON false LIMIT 0',
+        );
+        const result = await pool.query<{ count: string }>(
+          'SELECT COUNT(*)::text AS count FROM locations WHERE is_published',
+        );
+        if (Number(result.rows[0].count) < 14)
+          throw new Error(
+            'Initialize the new database with all Jerusalem and Palestine data before starting production.',
+          );
+      }
       this.pool = pool;
       this.available = true;
       this.logger.log('Connected to PostgreSQL.');
@@ -52,11 +66,21 @@ export class DatabaseService implements OnModuleDestroy {
         `Could not reach PostgreSQL (${message}) - serving seeded in-memory data instead.`,
       );
       await pool.end().catch(() => undefined);
+      if (process.env.NODE_ENV === 'production')
+        throw new Error(
+          'Production PostgreSQL is unavailable or uninitialized. See the database initialization instructions.',
+        );
     }
   }
 
   isAvailable(): boolean {
     return this.available;
+  }
+
+  async checkHealth(): Promise<void> {
+    if (this.pool) await this.pool.query('SELECT 1');
+    else if (process.env.NODE_ENV === 'production')
+      throw new Error('PostgreSQL is unavailable.');
   }
 
   async query<T extends QueryResultRow>(

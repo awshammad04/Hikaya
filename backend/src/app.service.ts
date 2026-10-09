@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, ServiceUnavailableException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { DatabaseService } from './database/database.service';
 
@@ -46,8 +46,20 @@ export class AppService {
       status: 'ok',
       dataSource: this.database.isAvailable() ? 'postgres' : 'in-memory-seed',
       aiServiceUrl:
-        this.config.get<string>('AI_SERVICE_URL') ?? 'http://localhost:8001',
+        process.env.NODE_ENV === 'production'
+          ? 'internal'
+          : (this.config.get<string>('AI_SERVICE_URL') ??
+            'http://localhost:8001'),
       timestamp: new Date().toISOString(),
     };
+  }
+
+  async checkReadiness(): Promise<ServiceStatus> {
+    try {
+      await this.database.checkHealth();
+    } catch {
+      throw new ServiceUnavailableException('PostgreSQL is unavailable.');
+    }
+    return this.getHealth();
   }
 }

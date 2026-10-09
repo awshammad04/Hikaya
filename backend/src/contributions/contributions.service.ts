@@ -82,12 +82,25 @@ export class ContributionsService {
     return contribution;
   }
 
-  findApprovedByLocation(locationId: string): Promise<Contribution[]> {
-    return this.contributions.findApprovedByLocation(locationId);
+  async findApprovedByLocation(locationId: string): Promise<Contribution[]> {
+    return this.publicContributions(
+      await this.contributions.findApprovedByLocation(locationId),
+    );
   }
 
-  findApproved(): Promise<Contribution[]> {
-    return this.contributions.findApproved();
+  async findApproved(): Promise<Contribution[]> {
+    return this.publicContributions(await this.contributions.findApproved());
+  }
+
+  private publicContributions(items: Contribution[]): Contribution[] {
+    if (process.env.NODE_ENV !== 'production') return items;
+    return items.map((item) => {
+      const publicItem = { ...item };
+      delete publicItem.contributorEmail;
+      delete publicItem.referenceCode;
+      delete publicItem.reviewNotes;
+      return publicItem;
+    });
   }
 
   /**

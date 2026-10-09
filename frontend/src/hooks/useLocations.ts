@@ -42,8 +42,9 @@ export function useLocations(scope = "jerusalem"): LocationsState {
             : result.reason ?? "The location collection returned no usable records.",
         });
       })
-      .catch(() => {
-        if (active) setState((previous) => ({ ...previous, loading: false }));
+      .catch((error) => {
+        if (active) setState((previous) => ({ ...previous, loading: false,
+          reason: error instanceof Error ? error.message : "The location service is unavailable." }));
       });
 
     return () => {

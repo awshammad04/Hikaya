@@ -5,6 +5,7 @@ import { AiController } from './ai.controller';
 import { AiService } from './ai.service';
 import { LocationsModule } from '../locations/locations.module';
 import { StoriesModule } from '../stories/stories.module';
+import { aiServiceUrl } from '../production';
 
 /**
  * AiModule
@@ -23,9 +24,11 @@ import { StoriesModule } from '../stories/stories.module';
       inject: [ConfigService],
       useFactory: (config: ConfigService) => ({
         // Generation is slower than a normal request, so the timeout is generous.
-        timeout: config.get<number>('AI_SERVICE_TIMEOUT_MS') ?? 30000,
-        baseURL:
-          config.get<string>('AI_SERVICE_URL') ?? 'http://localhost:8001',
+        timeout: Number(config.get<string>('AI_SERVICE_TIMEOUT_MS') ?? 150000),
+        baseURL: aiServiceUrl(),
+        headers: {
+          'x-hikaya-ai-token': config.get<string>('AI_INTERNAL_TOKEN') ?? '',
+        },
       }),
     }),
   ],

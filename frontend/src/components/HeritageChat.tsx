@@ -81,7 +81,7 @@ export const HeritageChat: React.FC<HeritageChatProps> = ({
         result = localArabicGuideAnswer(location.id, trimmed);
       }
     } catch (error) {
-      result = isArabic && !scope && !(error instanceof ApiError && error.status && error.status < 500) ? localArabicGuideAnswer(location.id, trimmed) : {
+      result = !import.meta.env.PROD && isArabic && !scope && !(error instanceof ApiError && error.status && error.status < 500) ? localArabicGuideAnswer(location.id, trimmed) : {
         answer:
           error instanceof Error
             ? (isArabic ? `تعذر الوصول إلى الدليل: ${error.message}` : `The guide could not be reached: ${error.message}`)

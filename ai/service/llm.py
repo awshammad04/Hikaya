@@ -48,7 +48,7 @@ def complete(system_prompt, user_prompt, max_tokens=None, temperature=0.4):
             "The 'anthropic' package is not installed. Run: pip install -r ai/requirements.txt"
         )
 
-    client = anthropic.Anthropic()
+    client = anthropic.Anthropic(timeout=120.0, max_retries=0)
     try:
         message = client.messages.create(
             model=DEFAULT_MODEL,

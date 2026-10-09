@@ -16,8 +16,13 @@ interface DataSourceBannerProps {
  * database, which makes it easy to mistake for live data - so the UI says so
  * outright rather than letting the reader assume.
  */
-export const DataSourceBanner: React.FC<DataSourceBannerProps> = ({ source }) => {
+export const DataSourceBanner: React.FC<DataSourceBannerProps> = ({ source, reason }) => {
   const { isArabic } = useInterfaceLanguage();
+  if (import.meta.env.PROD && reason) return (
+    <div role="alert" className="mb-6 rounded-2xl border border-brand-amber/30 bg-brand-amber/10 px-4 py-3 text-sm">
+      {isArabic ? "الخدمة غير متاحة مؤقتاً. يرجى إعادة المحاولة." : "The service is temporarily unavailable. Please try again."}
+    </div>
+  );
   if (source === "backend") return null;
 
   return (

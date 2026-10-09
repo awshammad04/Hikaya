@@ -25,6 +25,7 @@ export const HomePage: React.FC = () => {
   const [featured, setFeatured] = useState<FeaturedStory | null>(null);
   const [featuredLoading, setFeaturedLoading] = useState(true);
   const [shuffling, setShuffling] = useState(false);
+  const [featuredError, setFeaturedError] = useState<string | undefined>();
 
   useEffect(() => {
     let active = true;
@@ -32,6 +33,7 @@ export const HomePage: React.FC = () => {
       .then((result) => {
         if (active) setFeatured(result.data);
       })
+      .catch((error) => { if (active) setFeaturedError(error instanceof Error ? error.message : "Story service unavailable."); })
       .finally(() => {
         if (active) setFeaturedLoading(false);
       });
@@ -45,6 +47,9 @@ export const HomePage: React.FC = () => {
     try {
       const result = await getRandomStory(featured?.story.id);
       setFeatured(result.data);
+      setFeaturedError(undefined);
+    } catch (error) {
+      setFeaturedError(error instanceof Error ? error.message : "Story service unavailable.");
     } finally {
       setShuffling(false);
     }
@@ -54,7 +59,7 @@ export const HomePage: React.FC = () => {
     <PageTransition>
       <div className="space-y-14">
         <Link to="/" className="text-xs text-brand-muted hover:text-brand-olive">{isArabic ? "فلسطين / القدس" : "Palestine / Jerusalem"}</Link>
-        <DataSourceBanner source={source} reason={reason} />
+        <DataSourceBanner source={source} reason={reason || featuredError} />
 
         {/* --- Hero -------------------------------------------------------- */}
         <JerusalemPulse>

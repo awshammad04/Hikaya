@@ -52,6 +52,14 @@ export class AiService {
   ) {}
 
   async generateStory(dto: GenerateStoryDto): Promise<GeneratedStory> {
+    if (
+      process.env.NODE_ENV === 'production' &&
+      (!dto.locationId || dto.historicalText)
+    ) {
+      throw new BadRequestException(
+        'Public generation must use a stored reviewed location.',
+      );
+    }
     const location = dto.locationId
       ? await this.locationsService.findOne(dto.locationId)
       : null;
@@ -117,6 +125,10 @@ export class AiService {
       story = this.toGeneratedStory(data);
     } catch (error) {
       if (error instanceof BadRequestException) throw error;
+      if (process.env.NODE_ENV === 'production')
+        throw new ServiceUnavailableException(
+          'Reviewed story generation is temporarily unavailable.',
+        );
       const rejection = (
         error as {
           response?: { data?: { error?: { code?: string; message?: string } } };
@@ -219,6 +231,10 @@ export class AiService {
         );
       const message = error instanceof Error ? error.message : String(error);
       this.logger.warn(`AI service unavailable for ask-guide (${message}).`);
+      if (process.env.NODE_ENV === 'production')
+        throw new ServiceUnavailableException(
+          'The heritage guide is temporarily unavailable.',
+        );
       return {
         answer:
           'The heritage guide is temporarily unavailable. The reviewed content for this location is still readable on the location page.',
@@ -333,6 +349,10 @@ export class AiService {
       // Storing is a bonus; failing to store must not fail the request.
       const message = error instanceof Error ? error.message : String(error);
       this.logger.warn(`Could not store the generated story: ${message}`);
+      if (process.env.NODE_ENV === 'production')
+        throw new ServiceUnavailableException(
+          'The generated story could not be saved for review.',
+        );
       return undefined;
     }
   }

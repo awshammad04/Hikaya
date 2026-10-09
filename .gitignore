@@ -24,3 +24,9 @@ __pycache__/
 .idea/
 .vscode/
 *.zip
+.cache/
+**/.cache/
+coverage/
+**/coverage/
+.deployment-test/
+frontend/runtime/

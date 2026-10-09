@@ -8,6 +8,7 @@ import dotenv from "dotenv";
 import { GoogleGenAI, GenerateVideosOperation } from "@google/genai";
 import AdmZip from "adm-zip";
 import { locations } from "./src/locationsData";
+import { backendUrl, installProductionControls, isProduction } from "./production";
 
 dotenv.config();
 
@@ -15,14 +16,15 @@ const app = express();
 // 5173 by default so the frontend does not collide with the Hikaya backend,
 // which serves the API on 3000.
 const PORT = Number(process.env.PORT ?? 5173);
-const HIKAYA_API_UPSTREAM = (
-  process.env.HIKAYA_API_BASE_URL ?? "http://127.0.0.1:3000/api/v1"
-).replace(/\/+$/, "");
-const API_PROXY_TIMEOUT_MS = 6000;
+const HIKAYA_API_UPSTREAM = backendUrl();
+const API_PROXY_TIMEOUT_MS = Number(process.env.API_PROXY_TIMEOUT_MS || 180000);
+if (!Number.isInteger(API_PROXY_TIMEOUT_MS) || API_PROXY_TIMEOUT_MS < 1000) throw new Error("Invalid API_PROXY_TIMEOUT_MS");
+installProductionControls(app);
+app.get("/health", (_req, res) => res.json({ status: "ok" }));
 
 // Body parser
-app.use(express.json({ limit: "50mb" }));
-app.use(express.urlencoded({ limit: "50mb", extended: true }));
+app.use(express.json({ limit: isProduction ? "8mb" : "50mb" }));
+app.use(express.urlencoded({ limit: isProduction ? "8mb" : "50mb", extended: true }));
 
 /**
  * Same-origin API bridge.
@@ -44,11 +46,14 @@ app.use("/api/v1", async (req, res) => {
       headers: {
         accept: req.get("accept") ?? "application/json",
         "content-type": req.get("content-type") ?? "application/json",
+        "x-hikaya-internal-token": process.env.HIKAYA_INTERNAL_TOKEN || "",
       },
       body: hasBody ? JSON.stringify(req.body) : undefined,
     });
 
     const contentType = upstream.headers.get("content-type");
+    const retryAfter = upstream.headers.get("retry-after");
+    if (retryAfter) res.setHeader("Retry-After", retryAfter);
     if (contentType) res.setHeader("Content-Type", contentType);
     const payload = Buffer.from(await upstream.arrayBuffer());
     return res.status(upstream.status).send(payload);
@@ -103,8 +108,9 @@ function getAI() {
   if (!aiInstance) {
     aiInstance = new GoogleGenAI({
       apiKey,
-      vertexai: true,
+      vertexai: process.env.GEMINI_API_MODE === "vertex" || (!process.env.GEMINI_API_MODE && apiKey.startsWith("AQ.")),
       httpOptions: {
+        timeout: 120000,
         headers: {
           "User-Agent": "aistudio-build",
         },
@@ -148,7 +154,8 @@ app.post("/api/generate-story", async (req, res) => {
       : "storytelling";
     const response = await fetch(`${HIKAYA_API_UPSTREAM}/ai/generate-story`, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: { "Content-Type": "application/json", "x-hikaya-internal-token": process.env.HIKAYA_INTERNAL_TOKEN || "" },
+      signal: AbortSignal.timeout(API_PROXY_TIMEOUT_MS),
       body: JSON.stringify({
         locationId: location.id,
         targetAudience: targetMode,
@@ -164,7 +171,7 @@ app.post("/api/generate-story", async (req, res) => {
     return res.json({ narrative: data.narrative, sources: [], generatedBy: data.generatedBy });
   } catch (error: any) {
     console.error("Reviewed story generation error:", error);
-    return res.status(503).json({ error: error.message || "Reviewed story generation is unavailable." });
+    return res.status(503).json({ error: isProduction ? "Reviewed story generation is unavailable." : error.message });
   }
 });
 
@@ -616,6 +623,10 @@ app.post("/api/tts", async (req, res) => {
 app.post("/api/generate-video", async (req, res) => {
   try {
     const { prompt, imageBase64, aspectRatio } = req.body;
+    if ((prompt !== undefined && (typeof prompt !== "string" || prompt.length > 4000)) ||
+        (imageBase64 !== undefined && (typeof imageBase64 !== "string" || imageBase64.length > 7_000_000))) {
+      return res.status(400).json({ error: "Invalid video prompt or image." });
+    }
     const ai = getAI();
 
     const selectedPrompt = prompt || "Cinematic aerial view of ancient stone arches and olive orchards in Palestine, warm sunset, 4k, photorealistic";
@@ -645,6 +656,7 @@ app.post("/api/generate-video", async (req, res) => {
     
     return res.json({ operationName: operation.name });
   } catch (error: any) {
+    if (isProduction) return res.status(503).json({ error: "Video generation is temporarily unavailable." });
     console.error("Video Generation Error, activating beautiful scenic fallback operation:", error);
     return res.json({ 
       operationName: "fallback-operation-scenic", 
@@ -662,7 +674,10 @@ app.post("/api/video-status", async (req, res) => {
       return res.status(400).json({ error: "operationName is required." });
     }
 
+    if (typeof operationName !== "string" || operationName.length > 512) return res.status(400).json({ error: "Invalid operation name." });
+
     if (operationName === "fallback-operation-scenic") {
+      if (isProduction) return res.status(400).json({ error: "Invalid production operation." });
       return res.json({ done: true });
     }
 
@@ -674,6 +689,7 @@ app.post("/api/video-status", async (req, res) => {
     return res.json({ done: updated.done });
   } catch (error: any) {
     console.error("Video Status Error:", error);
+    if (isProduction) return res.status(503).json({ error: "Video status is temporarily unavailable." });
     return res.json({ done: true, isFallback: true });
   }
 });
@@ -687,7 +703,10 @@ app.post("/api/video-download", async (req, res) => {
       return res.status(400).json({ error: "operationName is required." });
     }
 
+    if (typeof operationName !== "string" || operationName.length > 512) return res.status(400).json({ error: "Invalid operation name." });
+
     if (operationName === "fallback-operation-scenic") {
+      if (isProduction) return res.status(400).json({ error: "Invalid production operation." });
       try {
         const videoRes = await fetch(fallbackVideoUrl);
         if (videoRes.ok) {
@@ -713,8 +732,14 @@ app.post("/api/video-download", async (req, res) => {
     }
 
     const apiKey = process.env.GEMINI_API_KEY;
+    const videoUrl = new URL(uri);
+    if (videoUrl.protocol !== "https:" || !["generativelanguage.googleapis.com", "storage.googleapis.com", "aiplatform.googleapis.com"].includes(videoUrl.hostname) && !videoUrl.hostname.endsWith(".aiplatform.googleapis.com")) {
+      throw new Error("Unexpected video download host.");
+    }
     const videoRes = await fetch(uri, {
       headers: { "x-goog-api-key": apiKey || "" },
+      redirect: "error",
+      signal: AbortSignal.timeout(120000),
     });
 
     if (!videoRes.ok) {
@@ -729,6 +754,7 @@ app.post("/api/video-download", async (req, res) => {
     const buffer = Buffer.from(arrayBuffer);
     return res.send(buffer);
   } catch (error: any) {
+    if (isProduction) return res.status(503).json({ error: "Video download is temporarily unavailable." });
     console.error("Video Download Error, streaming high-quality fallback video instead:", error);
     try {
       const videoRes = await fetch(fallbackVideoUrl);
@@ -746,13 +772,27 @@ app.post("/api/video-download", async (req, res) => {
 });
 
 // 6. API: Add User Memory Contribution
-app.post("/api/contribute", (req, res) => {
+app.post("/api/contribute", async (req, res) => {
   const { location, title, author, narrative, imageUrl, videoUrl, category } = req.body;
   if (!location || !title || !narrative || !author) {
     return res.status(400).json({ error: "Location, title, author, and narrative are required." });
   }
   const reviewedLocation = locations.find((item) => item.id === location || item.name === location || item.arabicName === location);
   if (!reviewedLocation) return res.status(400).json({ error: "Choose a reviewed Jerusalem location." });
+  if (isProduction) {
+    try {
+      const upstream = await fetch(`${HIKAYA_API_UPSTREAM}/contributions`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json", "x-hikaya-internal-token": process.env.HIKAYA_INTERNAL_TOKEN || "" },
+        signal: AbortSignal.timeout(API_PROXY_TIMEOUT_MS),
+        body: JSON.stringify({ locationId: reviewedLocation.id, title, content: narrative, contributorName: author,
+          mediaUrl: imageUrl || videoUrl || undefined, mediaType: imageUrl ? "image" : videoUrl ? "video" : undefined }),
+      });
+      return res.status(upstream.status).json(await upstream.json());
+    } catch {
+      return res.status(503).json({ error: "Your contribution could not be saved. Please try again." });
+    }
+  }
 
   const newContribution = {
     id: `contribution-${Date.now()}`,
@@ -771,12 +811,22 @@ app.post("/api/contribute", (req, res) => {
 });
 
 // 7. API: Fetch All Contributions
-app.get("/api/contributions", (req, res) => {
+app.get("/api/contributions", async (req, res) => {
+  if (isProduction) {
+    try {
+      const upstream = await fetch(`${HIKAYA_API_UPSTREAM}/contributions`, {
+        headers: { "x-hikaya-internal-token": process.env.HIKAYA_INTERNAL_TOKEN || "" },
+        signal: AbortSignal.timeout(API_PROXY_TIMEOUT_MS),
+      });
+      return res.status(upstream.status).json(await upstream.json());
+    } catch { return res.status(503).json({ error: "Contributions are temporarily unavailable." }); }
+  }
   return res.json(userContributions);
 });
 
 // 8. API: Pack and Download Project ZIP (Frontend & Code Files)
 app.get("/api/download-zip", (req, res) => {
+  if (isProduction) return res.status(404).json({ error: "Not found." });
   try {
     const zip = new AdmZip();
     const workspaceRoot = process.cwd();
@@ -845,7 +895,8 @@ if (!fs.existsSync(readmePath)) {
 }
 
 // Serve Vite build in production, or mount Vite middleware in development
-const isProd = process.env.NODE_ENV === "production";
+const isProd = isProduction;
+app.use("/api", (_req, res) => res.status(404).json({ error: "API route not found." }));
 if (!isProd) {
   import("vite").then(async (viteModule) => {
     const vite = await viteModule.createServer({
@@ -856,7 +907,11 @@ if (!isProd) {
   });
 } else {
   const distPath = path.join(process.cwd(), "dist");
-  app.use(express.static(distPath));
+  app.use((req, res, next) => {
+    if (/\.(?:cjs|map)$/i.test(req.path)) return res.status(404).end();
+    next();
+  });
+  app.use(express.static(distPath, { dotfiles: "deny" }));
   app.get("*", (req, res) => {
     res.sendFile(path.join(distPath, "index.html"));
   });
@@ -916,11 +971,12 @@ async function resolvePort(preferred: number, attempts = 10): Promise<number> {
 }
 
 void (async () => {
-  const port = await resolvePort(PORT);
+  const port = isProduction ? PORT : await resolvePort(PORT);
 
   // No host argument: Node binds dual-stack, so `localhost` reaches this
   // server whether it resolves to 127.0.0.1 or ::1.
-  app.listen(port, () => {
+  const server = app.listen(port, "0.0.0.0", () => {
     console.log(`[Hikaya Server] Running on http://localhost:${port}`);
   });
+  process.on("SIGTERM", () => server.close(() => process.exit(0)));
 })();

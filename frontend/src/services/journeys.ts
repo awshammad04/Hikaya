@@ -60,7 +60,7 @@ export async function createJourney(
   preferences: JourneyPreferences,
 ): Promise<CulturalJourney> {
   const controller = new AbortController();
-  const timer = setTimeout(() => controller.abort(), 60000);
+  const timer = setTimeout(() => controller.abort(), import.meta.env.PROD ? 190000 : 60000);
   try {
     const response = await fetch(`${apiBaseUrl}/journeys`, {
       method: "POST",
@@ -78,6 +78,7 @@ export async function createJourney(
       );
     return { ...data, source: "backend" };
   } catch (error) {
+    if (import.meta.env.PROD) throw error;
     if (error instanceof ApiError && error.status && error.status < 500)
       throw error;
     const all = (await getLocations("all")).data;

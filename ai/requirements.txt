@@ -5,10 +5,10 @@
 # The core module runs on a plain Python 3.8+ install.
 
 # --- HTTP service (service/app.py) -------------------------------------------
-fastapi>=0.110
-uvicorn[standard]>=0.27
+fastapi==0.143.0
+uvicorn[standard]==0.54.0
 
 # --- Language-model backend (service/llm.py) ---------------------------------
 # Only used when ANTHROPIC_API_KEY is set. Without it the module falls back to
 # the offline extractive generator, which never calls out to a network.
-anthropic>=0.40
+anthropic==1.13.0

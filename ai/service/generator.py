@@ -21,6 +21,7 @@ Either way the output goes through the fact guard before being returned.
 """
 
 import re
+import os
 from typing import List, Optional
 
 from . import audiences, content_loader, fact_guard, llm, prompts, textutils
@@ -200,6 +201,8 @@ def answer_question(request, content_dir=None):
                 model=ModelInfo(provider=llm.PROVIDER_NAME, name=llm.DEFAULT_MODEL),
             )
         except llm.LLMUnavailable:
+            if os.environ.get("NODE_ENV") == "production":
+                raise
             pass  # fall through to the offline retrieval below
 
     # A follow-up like "and when was that?" carries almost no keywords of its
@@ -302,6 +305,8 @@ def _generate_with_model(request, content, source_text, location_name, mode):
     try:
         raw = llm.complete(prompts.SYSTEM_PROMPT, prompt)
     except llm.LLMUnavailable:
+        if os.environ.get("NODE_ENV") == "production":
+            raise
         # A model failure must never take the feature down - fall back to the
         # extractive backend, which needs nothing external.
         return _generate_offline(request, content, location_name, mode)
