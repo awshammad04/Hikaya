@@ -1,0 +1,6 @@
+{
+  "name": "Hikaya | حكاية",
+  "description": "AI-powered, source-grounded personal guide to Palestinian heritage across Jerusalem, Ramallah, Hebron and Gaza for Hikaya",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

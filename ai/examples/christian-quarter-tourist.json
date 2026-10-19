@@ -1,0 +1,35 @@
+{
+  "request": {
+    "location_id": "christian-quarter",
+    "target_audience": "tourist",
+    "language": "en",
+    "tone": "storytelling",
+    "is_reviewed": true
+  },
+  "response": {
+    "status": "ok",
+    "title": "Visiting Christian Quarter",
+    "summary": "The Christian Quarter occupies the north-western Old City and is centred on the Church of the Holy Sepulchre, alongside monasteries, hospices, schools, homes and markets.",
+    "narrative": "The Christian Quarter occupies the north-western Old City and is centred on the Church of the Holy Sepulchre, alongside monasteries, hospices, schools, homes and markets.\n\nThings to look for:\n- Church of the Holy Sepulchre.\n- Latin Patriarchate.\n- Greek Orthodox Patriarchate.\n- Souq al-Bazaar.\n\nByzantine era (4th century CE): The first Church of the Holy Sepulchre complex was built under Emperor Constantine.\nCrusader era (12th century CE): The church was substantially rebuilt into much of the form visible today.\nOttoman era (1517-1917 CE): Christian institutions and the commercial streets around them continued under regulated communal arrangements.",
+    "target_audience": "tourist",
+    "language": "en",
+    "tone": "storytelling",
+    "word_count": 97,
+    "uncertainty_notes": [
+      "Gaps the AI must not fill: miraculous claims, exact congregation numbers and unreviewed biographies."
+    ],
+    "warnings": [],
+    "source": {
+      "location_id": "christian-quarter",
+      "location_name": "Christian Quarter",
+      "content_file": "content/ai-ready/christian-quarter-summary.md",
+      "summary_file": "content/ai-ready/christian-quarter-summary.md",
+      "provided_inline": false
+    },
+    "model": {
+      "provider": "offline-extractive",
+      "name": "hikaya-extractive-v1"
+    },
+    "error": null
+  }
+}

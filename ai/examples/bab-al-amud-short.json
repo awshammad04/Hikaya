@@ -1,0 +1,35 @@
+{
+  "request": {
+    "location_id": "bab-al-amud",
+    "target_audience": "short",
+    "language": "en",
+    "tone": "neutral",
+    "is_reviewed": true
+  },
+  "response": {
+    "status": "ok",
+    "title": "Bab al-Amud in brief",
+    "summary": "Bab al-Amud, also known as Damascus Gate, is the monumental northern entrance to the Old City and a major civic gathering place opening toward Khan al-Zeit.",
+    "narrative": "Bab al-Amud, also known as Damascus Gate, is the monumental northern entrance to the Old City and a major civic gathering place opening toward Khan al-Zeit.\n\nA few facts:\n- The current monumental façade is Ottoman, while the site includes earlier archaeological layers.",
+    "target_audience": "short",
+    "language": "en",
+    "tone": "neutral",
+    "word_count": 43,
+    "uncertainty_notes": [
+      "Gaps the AI must not fill: exact dates for every construction phase and real-time access or crowd conditions."
+    ],
+    "warnings": [],
+    "source": {
+      "location_id": "bab-al-amud",
+      "location_name": "Bab al-Amud",
+      "content_file": "content/ai-ready/bab-al-amud-summary.md",
+      "summary_file": "content/ai-ready/bab-al-amud-summary.md",
+      "provided_inline": false
+    },
+    "model": {
+      "provider": "offline-extractive",
+      "name": "hikaya-extractive-v1"
+    },
+    "error": null
+  }
+}

@@ -1,0 +1,189 @@
+@import "tailwindcss";
+
+@font-face {
+  font-family: "Thmanyah Sans";
+  src: url("/fonts/thmanyah-sans-regular.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Thmanyah Sans";
+  src: url("/fonts/thmanyah-sans-medium.woff2") format("woff2");
+  font-weight: 500 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Thmanyah Sans";
+  src: url("/fonts/thmanyah-sans-bold.woff2") format("woff2");
+  font-weight: 700 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Thmanyah Serif Text";
+  src: url("/fonts/thmanyah-serif-text-regular.woff2") format("woff2");
+  font-weight: 400 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Thmanyah Serif Text";
+  src: url("/fonts/thmanyah-serif-text-bold.woff2") format("woff2");
+  font-weight: 700 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Thmanyah Serif Display";
+  src: url("/fonts/thmanyah-serif-display-regular.woff2") format("woff2");
+  font-weight: 400 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Thmanyah Serif Display";
+  src: url("/fonts/thmanyah-serif-display-bold.woff2") format("woff2");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Thmanyah Serif Display";
+  src: url("/fonts/thmanyah-serif-display-black.woff2") format("woff2");
+  font-weight: 800 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@theme {
+  --font-sans: "Thmanyah Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-serif: "Thmanyah Serif Text", Georgia, serif;
+  --font-display: "Thmanyah Serif Display", "Thmanyah Serif Text", serif;
+  --font-mono: "Thmanyah Sans", ui-monospace, SFMono-Regular, monospace;
+  
+  --color-brand-olive: #5A5A40;
+  --color-brand-amber: #D97706;
+  --color-brand-bg: #f5f5f0;
+  --color-brand-text: #2d2d2a;
+  --color-brand-border: #d1d1ca;
+  --color-brand-border-light: #e2e2da;
+  --color-brand-muted: #8a8a80;
+}
+
+html {
+  font-family: "Thmanyah Sans", system-ui, sans-serif;
+  text-rendering: optimizeLegibility;
+}
+
+html[dir="rtl"] body {
+  letter-spacing: 0;
+  line-height: 1.65;
+}
+
+html[dir="rtl"] .font-serif {
+  font-family: "Thmanyah Serif Text", serif;
+}
+
+html[dir="rtl"] .tracking-wide,
+html[dir="rtl"] .tracking-wider,
+html[dir="rtl"] .tracking-widest {
+  letter-spacing: 0;
+}
+
+button,
+a,
+input,
+select,
+textarea {
+  -webkit-tap-highlight-color: transparent;
+}
+
+:focus-visible {
+  outline: 2px solid #d97706;
+  outline-offset: 3px;
+}
+
+.font-display {
+  font-family: "Thmanyah Serif Display", "Thmanyah Serif Text", serif;
+}
+
+/*
+ * Keep the story dialog scrollable on older iOS Safari versions that do not
+ * understand dynamic viewport units. `vh` is the fallback; browsers with
+ * `dvh` support use the visible viewport instead.
+ */
+.jerusalem-story-dialog {
+  height: calc(100vh - 1.5rem);
+  max-height: calc(100vh - 1.5rem);
+}
+
+@supports (height: 100dvh) {
+  .jerusalem-story-dialog {
+    height: calc(100dvh - 1.5rem);
+    max-height: calc(100dvh - 1.5rem);
+  }
+}
+
+@media (min-width: 640px) {
+  .jerusalem-story-dialog {
+    height: 610px;
+    max-height: calc(100vh - 6rem);
+  }
+}
+
+/* Custom scrollbars matching the Bold Typography theme */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #f5f5f0;
+}
+::-webkit-scrollbar-thumb {
+  background: #5A5A40;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #4a4a35;
+}
+
+/* Traditional Palestinian Embroidery (Tatreez) & Grid motif backdrops */
+.tatreez-grid {
+  background-image: radial-gradient(circle, #5A5A40 1.5px, transparent 1.5px);
+  background-size: 24px 24px;
+  opacity: 0.12;
+}
+
+.bold-radial-grid {
+  background-image: radial-gradient(#5A5A40 1px, transparent 1px);
+  background-size: 32px 32px;
+}
+
+/* Custom animation for visual ripple */
+@keyframes pulse-ripple {
+  0% {
+    transform: scale(0.95);
+    opacity: 0.8;
+  }
+  50% {
+    transform: scale(1.15);
+    opacity: 0.4;
+  }
+  100% {
+    transform: scale(1.35);
+    opacity: 0;
+  }
+}
+
+.animate-ripple {
+  animation: pulse-ripple 2s infinite ease-out;
+}

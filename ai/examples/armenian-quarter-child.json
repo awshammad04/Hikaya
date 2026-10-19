@@ -1,0 +1,36 @@
+{
+  "request": {
+    "location_id": "armenian-quarter",
+    "target_audience": "child",
+    "language": "en",
+    "tone": "emotional",
+    "is_reviewed": true
+  },
+  "response": {
+    "status": "ok",
+    "title": "The story of Armenian Quarter",
+    "summary": "The Armenian Quarter is a compact Old City quarter organised around the Armenian Patriarchate and Cathedral of St James, with religious, residential, educational and cultural institutions.",
+    "narrative": "The Armenian Quarter is a compact Old City quarter organised around the Armenian Patriarchate and Cathedral of St James, with religious, residential, educational and cultural institutions.\n\nThings to look for:\n- Cathedral of St James.\n- Armenian Museum.\n- Armenian Patriarchate.\n\nA few facts:\n- Armenian ceramics are a modern Jerusalem craft tradition rooted in Armenian artistic practice.",
+    "target_audience": "child",
+    "language": "en",
+    "tone": "emotional",
+    "word_count": 58,
+    "uncertainty_notes": [
+      "Gaps the AI must not fill: private monastic areas, individual artisan histories and exact community population.",
+      "Periods describing sieges, destruction or war were left out of the child-friendly version; they are present in the reviewed source."
+    ],
+    "warnings": [],
+    "source": {
+      "location_id": "armenian-quarter",
+      "location_name": "Armenian Quarter",
+      "content_file": "content/ai-ready/armenian-quarter-summary.md",
+      "summary_file": "content/ai-ready/armenian-quarter-summary.md",
+      "provided_inline": false
+    },
+    "model": {
+      "provider": "offline-extractive",
+      "name": "hikaya-extractive-v1"
+    },
+    "error": null
+  }
+}

@@ -1,0 +1,35 @@
+{
+  "request": {
+    "location_id": "muslim-quarter",
+    "target_audience": "student",
+    "language": "en",
+    "tone": "storytelling",
+    "is_reviewed": true
+  },
+  "response": {
+    "status": "ok",
+    "title": "Muslim Quarter: a short history",
+    "summary": "The Muslim Quarter is the largest of the Old City's four traditional quarters.",
+    "narrative": "The Muslim Quarter is the largest of the Old City's four traditional quarters. Its residential lanes, schools, places of worship and markets extend from Bab al-Amud toward the Haram al-Sharif/Al-Aqsa compound.\n\nMamluk era (1250-1517 CE): Major madrasas, ribats, markets and residential buildings were endowed and constructed along approaches to Al-Aqsa.\nOttoman era (1517-1917 CE): Existing religious and commercial institutions continued, while the quarter remained a major centre of Old City life.\n\nMain landmarks:\n- Bab Hutta.\n- Via Dolorosa.\n- Souq al-Qattanin.\n- Mamluk madrasas along the western edge of Al-Aqsa.",
+    "target_audience": "student",
+    "language": "en",
+    "tone": "storytelling",
+    "word_count": 91,
+    "uncertainty_notes": [
+      "Gaps the AI must not fill: individual shop histories, exact family genealogies and unreviewed claims about particular buildings."
+    ],
+    "warnings": [],
+    "source": {
+      "location_id": "muslim-quarter",
+      "location_name": "Muslim Quarter",
+      "content_file": "content/ai-ready/muslim-quarter-summary.md",
+      "summary_file": "content/ai-ready/muslim-quarter-summary.md",
+      "provided_inline": false
+    },
+    "model": {
+      "provider": "offline-extractive",
+      "name": "hikaya-extractive-v1"
+    },
+    "error": null
+  }
+}

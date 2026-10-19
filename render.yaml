@@ -1,0 +1,101 @@
+# Paid production resources. Review the cost estimate before creating the Blueprint.
+services:
+  - type: web
+    name: hikaya-frontend
+    runtime: node
+    region: frankfurt
+    plan: 0.5c-512mb
+    rootDir: frontend
+    buildCommand: npm ci && npm run build
+    startCommand: npm start
+    healthCheckPath: /health
+    autoDeployTrigger: commit
+    domains:
+      - hikayapalestine.tech
+    envVars:
+      - key: NODE_VERSION
+        value: 24.19.0
+      - key: NODE_ENV
+        value: production
+      - key: APP_URL
+        value: https://hikayapalestine.tech
+      - key: HIKAYA_API_HOSTPORT
+        fromService:
+          type: web
+          name: hikaya-backend
+          property: hostport
+      - key: HIKAYA_INTERNAL_TOKEN
+        fromService:
+          type: web
+          name: hikaya-backend
+          envVarKey: HIKAYA_INTERNAL_TOKEN
+      - key: API_PROXY_TIMEOUT_MS
+        value: '180000'
+      - key: GEMINI_API_KEY
+        sync: false
+      - key: GOOGLE_MAPS_PLATFORM_KEY
+        sync: false
+  - type: web
+    name: hikaya-backend
+    runtime: node
+    region: frankfurt
+    plan: 0.5c-512mb
+    rootDir: backend
+    buildCommand: npm ci && npm run build
+    startCommand: npm run start:prod
+    healthCheckPath: /api/v1/health
+    autoDeployTrigger: commit
+    envVars:
+      - key: NODE_VERSION
+        value: 24.19.0
+      - key: NODE_ENV
+        value: production
+      - key: DATABASE_URL
+        fromDatabase:
+          name: hikaya-postgres
+          property: connectionString
+      - key: HIKAYA_INTERNAL_TOKEN
+        generateValue: true
+      - key: AI_SERVICE_HOSTPORT
+        fromService:
+          type: pserv
+          name: hikaya-ai
+          property: hostport
+      - key: AI_INTERNAL_TOKEN
+        fromService:
+          type: pserv
+          name: hikaya-ai
+          envVarKey: AI_INTERNAL_TOKEN
+      - key: AI_SERVICE_TIMEOUT_MS
+        value: '150000'
+  - type: pserv
+    name: hikaya-ai
+    runtime: python
+    region: frankfurt
+    plan: 0.5c-512mb
+    # Repository root deliberately retained so content/ is available at runtime.
+    buildCommand: pip install -r ai/requirements.txt
+    startCommand: uvicorn service.app:app --app-dir ai --host 0.0.0.0 --port $PORT
+    autoDeployTrigger: commit
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.13.12
+      - key: PORT
+        value: '10000'
+      - key: NODE_ENV
+        value: production
+      - key: AI_INTERNAL_TOKEN
+        generateValue: true
+      - key: ANTHROPIC_API_KEY
+        sync: false
+      - key: HIKAYA_AI_MODEL
+        value: claude-sonnet-5
+databases:
+  - name: hikaya-postgres
+    region: frankfurt
+    plan: 0.1c-256mb
+    databaseName: hikaya
+    user: hikaya
+    postgresMajorVersion: '17'
+    diskSizeGB: 5
+    ipAllowList: []

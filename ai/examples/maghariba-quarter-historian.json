@@ -1,0 +1,35 @@
+{
+  "request": {
+    "location_id": "maghariba-quarter",
+    "target_audience": "historian",
+    "language": "en",
+    "tone": "neutral",
+    "is_reviewed": true
+  },
+  "response": {
+    "status": "ok",
+    "title": "Maghariba Quarter",
+    "summary": "The historic Maghariba Quarter stood in the south-eastern Old City beside Bab al-Maghariba and al-Buraq Wall.",
+    "narrative": "The historic Maghariba Quarter stood in the south-eastern Old City beside Bab al-Maghariba and al-Buraq Wall. It was a residential and endowed community associated with people from the Maghreb.\n\nAyyubid era (late 12th century CE): A charitable endowment is associated with accommodating Maghrebi pilgrims and residents in this area.\nOttoman era (1517-1917 CE): The quarter continued as a residential and religious urban community.\nJune 1967: Most of the quarter's buildings were demolished and its residents displaced; the physical urban fabric was largely erased.\n\nMain landmarks:\n- Bab al-Maghariba.\n- Al-Buraq Wall.\n- Site of the historic Maghariba Quarter.\n\nA few facts:\n- The name refers to the Maghrebi communities connected to the quarter.\n- The surviving urban setting differs radically from that before June 1967.",
+    "target_audience": "historian",
+    "language": "en",
+    "tone": "neutral",
+    "word_count": 125,
+    "uncertainty_notes": [
+      "Gaps the AI must not fill: a complete property list, precise demolition chronology for every building and unverified family accounts."
+    ],
+    "warnings": [],
+    "source": {
+      "location_id": "maghariba-quarter",
+      "location_name": "Maghariba Quarter",
+      "content_file": "content/ai-ready/maghariba-quarter-summary.md",
+      "summary_file": "content/ai-ready/maghariba-quarter-summary.md",
+      "provided_inline": false
+    },
+    "model": {
+      "provider": "offline-extractive",
+      "name": "hikaya-extractive-v1"
+    },
+    "error": null
+  }
+}
