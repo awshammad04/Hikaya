@@ -312,6 +312,7 @@ export const StoryWizard: React.FC<StoryWizardProps> = ({ location, autoPlay }) 
 
                   <StoryNarrator
                     text={story.narrative}
+                    summary={story.summary}
                     timestamps={story.timestamps}
                     typing
                     autoPlay={autoPlay}

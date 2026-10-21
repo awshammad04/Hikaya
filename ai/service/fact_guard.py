@@ -34,6 +34,10 @@ _COMMON_STARTERS = {
     "things", "main", "facts", "historical", "chronology", "living",
     "attributed", "key", "takeaway",
 }
+_NON_FACTUAL_ARABIC_LABELS = (
+    "اكتشاف مبسط", "ما يوثقه السجل", "حقائق موثقة", "التسلسل التاريخي",
+    "تقاليد منسوبة", "خلاصة", "المعالم",
+)
 
 _NUMBER_RE = re.compile(r"\b\d[\d,.]*\b")
 _ENTITY_RE = re.compile(r"\b[A-Z][a-z'’\-]+(?:\s+(?:of|the|al|ibn|bin)\s+)?(?:\s?[A-Z][a-z'’\-]+)*")
@@ -86,7 +90,15 @@ def check_narrative(narrative, source_text):
             )
 
     source_arabic_terms = retrieval.arabic_terms(source_text)
-    for term in sorted(retrieval.arabic_terms(narrative) - source_arabic_terms):
+    label_free_narrative = retrieval.normalize_arabic(narrative)
+    for label in _NON_FACTUAL_ARABIC_LABELS:
+        label_free_narrative = re.sub(
+            re.escape(retrieval.normalize_arabic(label)),
+            " ",
+            label_free_narrative,
+        )
+    narrative_arabic_terms = retrieval.arabic_terms(label_free_narrative)
+    for term in sorted(narrative_arabic_terms - source_arabic_terms):
         warnings.append(
             "unsupported_arabic_term: '%s' appears in the narrative but not in the "
             "reviewed source." % term

@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "sourceCheckedAt": "2026-10-09",
+  "sourceCheckedAt": "2026-10-21",
   "governorates": [
     {
       "id": "jerusalem",
@@ -154,10 +154,30 @@
       "arabicName": "متحف ياسر عرفات",
       "city": "Ramallah",
       "arabicCity": "رام الله",
-      "description": "A museum of contemporary Palestinian national memory at Al-Muqata'a in Ramallah.",
-      "arabicDescription": "متحف للذاكرة الوطنية الفلسطينية المعاصرة في المقاطعة برام الله.",
-      "facts": "The museum is connected to Arafat's former office and headquarters. Its resource centre includes a specialised library.",
-      "arabicFacts": "يتصل المتحف بمكتب عرفات ومقره السابق. ويضم مركز مصادره مكتبة متخصصة.",
+      "description": "The Yasser Arafat Museum at Al-Muqata'a in Ramallah presents contemporary Palestinian national memory through Arafat's life and the Palestinian national movement. It is connected to the historic compound associated with his headquarters, office and residence, and overlooks his temporary mausoleum and the square where Palestinians gathered for his farewell.",
+      "arabicDescription": "يقع متحف ياسر عرفات في المقاطعة برام الله، ويعرض الذاكرة الوطنية الفلسطينية المعاصرة من خلال سيرة عرفات والحركة الوطنية الفلسطينية. يرتبط المتحف بالمبنى التاريخي الذي ضم مقر القيادة والمكتب والإقامة، ويطل على ضريحه المؤقت وساحة المقاطعة التي شهدت وداعه.",
+      "facts": "Designed by Palestinian architect Ja'far Touqan, the museum stands on a 1,350-square-metre plot and has about 2,600 square metres of built area, according to the museum. Four ascending ramps form the main exhibition route, followed by a bridge to the historic Muqata'a building. The museum says the preserved headquarters area is presented as it was when Arafat left after a 34-month siege. Its Resource Centre includes a specialized library and a bilingual Arabic-English electronic archive covering Arafat and Palestinian history from the early twentieth century through 2004. The site also describes a 100-seat forum theatre and a rotating exhibition hall.",
+      "arabicFacts": "صمّم المتحف المعماري الفلسطيني جعفر طوقان، وأُقيم على أرض مساحتها ١٣٥٠ متراً مربعاً، بمساحة بناء تقارب ٢٦٠٠ متر مربع، وفقاً للمتحف. يتكوّن مسار العرض الأساسي من أربعة مماشٍ صاعدة، يعقبها جسر يصل المبنى الجديد بمبنى المقاطعة التاريخي. ويقول المتحف إن مساحة مقر القيادة المحفوظة عُرضت كما كانت عند مغادرة عرفات بعد حصار دام ٣٤ شهراً. يضم مركز المصادر مكتبة متخصصة وأرشيفاً إلكترونياً بالعربية والإنجليزية لمواد عن عرفات والقضية الفلسطينية من مطلع القرن العشرين حتى عام ٢٠٠٤. ويذكر الموقع أيضاً قاعة منتدى بمسرح يتسع لمئة شخص وقاعة معارض تستضيف معارض دورية.",
+      "importance": "The museum describes itself as a cultural and educational institution dedicated to preserving Arafat's legacy and presenting the history of the Palestinian national movement through his life. Its collections, programs and research facilities connect personal biography with contemporary national memory.",
+      "arabicImportance": "يعرّف المتحف نفسه مؤسسةً ثقافية وتعليمية تُعنى بحفظ إرث ياسر عرفات وعرض تاريخ الحركة الوطنية الفلسطينية من خلال سيرته. وتربط مقتنياته وبرامجه ومرافق البحث بين السيرة الشخصية والذاكرة الوطنية المعاصرة.",
+      "landmarks": [
+        "The main exhibition route of four ascending ramps",
+        "The bridge linking the new museum building to the historic Muqata'a building",
+        "The preserved former headquarters, office and residence area",
+        "The Resource Centre and its library and bilingual electronic archive",
+        "The forum hall and rotating exhibition hall"
+      ],
+      "arabicLandmarks": [
+        "مسار العرض الأساسي المؤلف من أربعة مماشٍ صاعدة",
+        "الجسر الواصل بين مبنى المتحف الجديد ومبنى المقاطعة التاريخي",
+        "مساحة مقر القيادة والمكتب والإقامة المحفوظة",
+        "مركز المصادر ومكتبته وأرشيفه الإلكتروني ثنائي اللغة",
+        "قاعة المنتدى وقاعة المعارض الدورية"
+      ],
+      "walkthrough": "Read the museum as a sequence joining two buildings: the main exhibition space rises along four ramps, then a bridge leads toward the historic Muqata'a building associated with the former Palestinian presidency and Arafat's office and residence. The museum says the preserved headquarters area shows the conditions left at the end of the 34-month siege. Its design page gives a site area of 1,350 square metres and about 2,600 square metres of built space; the new building is clad in the Palestinian stone also used on the mausoleum, mosque and minaret. The Resource Centre includes a specialized printed library and a bilingual Arabic-English electronic archive whose documented coverage extends from the early twentieth century through 2004. The official site also describes a forum hall with a small 100-seat theatre and a hall for rotating thematic exhibitions. This is a guide to the documented design and facilities, not a claim about current opening or access.",
+      "arabicWalkthrough": "يمكن قراءة المتحف بوصفه مساراً يصل بين مبنيين: يصعد العرض الأساسي عبر أربعة مماشٍ، ثم يقود جسر إلى مبنى المقاطعة التاريخي المرتبط بالرئاسة الفلسطينية السابقة ومكتب عرفات ومقر إقامته. ويقول المتحف إن مساحة مقر القيادة المحفوظة تعرض الظروف التي بقيت عند نهاية الحصار الذي دام ٣٤ شهراً. وتذكر صفحة التصميم أن مساحة الأرض ١٣٥٠ متراً مربعاً، وأن مساحة البناء تقارب ٢٦٠٠ متر مربع؛ وقد كُسي المبنى الجديد بالحجر الفلسطيني المستخدم أيضاً في الضريح والمسجد والمنارة. يضم مركز المصادر مكتبة ورقية متخصصة وأرشيفاً إلكترونياً بالعربية والإنجليزية تمتد مواده الموثقة من مطلع القرن العشرين حتى عام ٢٠٠٤. ويذكر الموقع كذلك قاعة منتدى تضم مسرحاً صغيراً يتسع لمئة شخص وقاعة لمعارض موضوعية دورية. هذا وصف للتصميم والمرافق الموثقة، وليس تأكيداً لمواعيد الزيارة أو إمكانية الوصول الحالية.",
+      "gaps": "This record does not verify current opening hours, site condition, entrance details, or present access; it therefore cannot establish that a visit or a particular route is currently possible.",
+      "arabicGaps": "لا يوثّق هذا السجل ساعات الزيارة الحالية أو حالة الموقع أو تفاصيل المداخل وإمكانية الوصول الراهنة؛ لذلك لا يؤكد إمكان الزيارة الآن أو صلاحية مسار بعينه.",
       "categories": [
         "متحف",
         "تراث ثقافي"
@@ -174,7 +194,42 @@
           "arabicTitle": "متحف ياسر عرفات — التعريف الرسمي",
           "publisher": "Yasser Arafat Foundation",
           "arabicPublisher": "مؤسسة ياسر عرفات",
-          "url": "https://www.yam.ps/index-en.html"
+          "url": "https://www.yam.ps/"
+        },
+        {
+          "title": "Museum mission, vision and design",
+          "arabicTitle": "مهمة المتحف ورؤيته وتصميمه",
+          "publisher": "Yasser Arafat Foundation",
+          "arabicPublisher": "مؤسسة ياسر عرفات",
+          "url": "https://www.yam.ps/page-1-ar.html"
+        },
+        {
+          "title": "Museum design",
+          "arabicTitle": "تصميم المتحف",
+          "publisher": "Yasser Arafat Foundation",
+          "arabicPublisher": "مؤسسة ياسر عرفات",
+          "url": "https://www.yam.ps/page-12176-ar.html"
+        },
+        {
+          "title": "Resource Centre",
+          "arabicTitle": "مركز المصادر",
+          "publisher": "Yasser Arafat Foundation",
+          "arabicPublisher": "مؤسسة ياسر عرفات",
+          "url": "https://www.yam.ps/page-12184-ar.html"
+        },
+        {
+          "title": "Forum Hall",
+          "arabicTitle": "قاعة المنتدى",
+          "publisher": "Yasser Arafat Foundation",
+          "arabicPublisher": "مؤسسة ياسر عرفات",
+          "url": "https://www.yam.ps/page-12185-ar.html"
+        },
+        {
+          "title": "Exhibition Hall",
+          "arabicTitle": "قاعة المعارض",
+          "publisher": "Yasser Arafat Foundation",
+          "arabicPublisher": "مؤسسة ياسر عرفات",
+          "url": "https://www.yam.ps/page-12186-ar.html"
         }
       ],
       "timeline": [],

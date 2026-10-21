@@ -37,7 +37,12 @@ def localized(content, language):
     if not item:
         return content
     sections = dict(content.sections)
-    sections.update(overview=item['arabicDescription'], facts='- '+item['arabicFacts'],
+    sections.update(
+                    overview=item['arabicDescription'],
+                    importance=item.get('arabicImportance', ''),
+                    landmarks='\n'.join('- '+value for value in item.get('arabicLandmarks', [])),
+                    walkthrough=item.get('arabicWalkthrough', ''),
+                    facts='- '+item['arabicFacts'],
                     timeline=('| الفترة | الحدث |\n| --- | --- |\n'+'\n'.join('| '+event['label']+' | '+event['arabicDescription']+' |' for event in item['timeline']) if item['timeline'] else ''),
                     traditions=('- '+item['arabicTraditions'] if item['arabicTraditions'] else ''))
     meta = dict(content.meta, name=item['arabicName'])

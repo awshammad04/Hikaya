@@ -100,6 +100,15 @@ class ArabicRetrievalTests(unittest.TestCase):
             [],
         )
 
+    def test_arabic_fact_guard_ignores_non_factual_narrative_labels(self):
+        self.assertEqual(
+            fact_guard.check_narrative(
+                "اكتشاف مبسط: ما يوثقه السجل عن المعالم. حقائق موثقة وخلاصة.",
+                "المتحف يعرض سجلاً موثقاً عن المكان.",
+            ),
+            [],
+        )
+
     def test_arabic_religious_traditions_are_attributed(self):
         response = answer_question(GuideRequest(
             location_id="at-tur",
