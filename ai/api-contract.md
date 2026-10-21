@@ -172,6 +172,12 @@ one shape either way.
 six. It exists so a short follow-up can be understood — it is **never** a source
 of facts, and answers still come only from the reviewed content.
 
+`location_id`, `location_ids` and `governorate_ids` are optional. With no scope,
+the guide routes the question across every reviewed location. A location-specific
+request searches that location first and routes elsewhere only when the question
+explicitly names another reviewed location. Explicit location and governorate
+scopes remain isolated.
+
 ### 4.2 Response
 
 ```json
@@ -180,6 +186,15 @@ of facts, and answers still come only from the reviewed content.
   "answer": "Dome of the Rock - completed 691-692 CE; one of the oldest Islamic buildings still standing ...",
   "answered_from_source": true,
   "excerpts": ["Dome of the Rock - completed 691-692 CE; ..."],
+  "citations": [{
+    "location_id": "jerusalem",
+    "location_name": "Old City of Jerusalem",
+    "section": "timeline",
+    "content_type": "fact",
+    "language": "en",
+    "excerpt": "Dome of the Rock - completed 691-692 CE; ...",
+    "references": [{"title": "Reviewed source", "url": "https://example.org/source"}]
+  }],
   "uncertainty_notes": [],
   "source": { "location_id": "jerusalem", "...": "..." },
   "model": { "provider": "offline-extractive", "name": "hikaya-extractive-v1" },
@@ -190,6 +205,13 @@ of facts, and answers still come only from the reviewed content.
 `answered_from_source: false` means the reviewed records do not hold the answer.
 The `answer` field then carries a plain refusal, and the frontend should show it
 as-is rather than treating it as a failure.
+
+`citations` identifies each excerpt's location, reviewed section, fact/tradition
+category, language and bibliography links. Offline retrieval uses section-level
+chunks, Arabic normalization, curated cross-language aliases and BM25 ranking.
+It does not require an embedding model or vector database. Arabic excerpts are
+returned where reviewed Arabic guide text exists; other records may still use
+the frontend's reviewed Arabic summaries for the offline fallback.
 
 ---
 

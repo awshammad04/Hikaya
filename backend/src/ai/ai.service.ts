@@ -163,8 +163,6 @@ export class AiService {
       dto.governorateIds?.length || dto.locationIds?.length,
     );
     const requestedIds = dto.locationId ? [dto.locationId] : dto.locationIds;
-    if (!requestedIds?.length && !dto.governorateIds?.length)
-      throw new BadRequestException('Choose locations or governorates.');
     const knownGovs = new Set(catalog.governorates.map((item) => item.id));
     if (dto.governorateIds?.some((id) => !knownGovs.has(id)))
       throw new BadRequestException('Unknown governorate.');
@@ -213,6 +211,7 @@ export class AiService {
         answer: data.answer,
         answeredFromSource: data.answered_from_source,
         excerpts: data.excerpts ?? [],
+        citations: data.citations ?? [],
         uncertaintyNotes: data.uncertainty_notes ?? [],
         generatedBy: data.model?.provider ?? 'unknown',
         sources: data.sources,

@@ -16,7 +16,7 @@ export const locations: JerusalemLocationData[] = [
     id: "muslim-quarter", name: "Muslim Quarter", arabicName: "حارة المسلمين", lat: 31.7806, lng: 35.2339,
     coverImage: "/images/jerusalem/muslim-quarter.jpg",
     summary: "The Old City’s largest quarter, shaped by Mamluk architecture, living markets and routes leading toward Al-Aqsa.",
-    arabicSummary: "أكبر حارات البلدة القديمة، تنسج بين عمارتها المملوكية وأسواقها الحيّة والطرق المؤدية إلى المسجد الأقصى.",
+    arabicSummary: "أكبر حارات البلدة القديمة، وتمتد أزقتها السكنية الكثيفة من باب العامود باتجاه الحرم الشريف ومجمع المسجد الأقصى.",
     culturalImportance: "A dense living quarter where worship, commerce, schools, khans and family life meet.",
     arabicCulturalImportance: "حارة حيّة تتجاور فيها العبادة والتجارة والمدارس والخانات وذاكرة العائلات المقدسية.",
     historicalSummary: "Its lanes preserve major Mamluk and Ottoman urban layers. Bab Hutta, the Via Dolorosa and Souq al-Qattanin connect sacred space with daily city life.",

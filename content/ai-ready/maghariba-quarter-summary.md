@@ -56,3 +56,13 @@ This remains a highly active sacred and security-sensitive area. Dress respectfu
 - PASSIA, *The Moroccan Quarter and its Waqf*: https://passia.org/media/filer_public/a9/8d/a98d60b9-5db2-4a23-86e6-d64e8f02fd0d/waqf_book_english_-_final.pdf
 - *Jerusalem 1967: Palestinian municipal and religious records*, Journal of Palestine Studies, Institute for Palestine Studies: https://www.palestine-studies.org/sites/default/files/attachments/jps-articles/jps.2007.37.1.88.pdf
 - Thomas Abowd, *The Moroccan Quarter: A History of the Present*, Jerusalem Quarterly 7, Institute for Palestine Studies: https://www.palestine-studies.org/sites/default/files/jq-articles/7_the_moroccan_2_0.pdf
+
+## Arabic Overview
+حارة مقدسية قرب باب المغاربة وحائط البراق، عُرفت مجتمعاً عمرانياً ووقفاً لخدمة القادمين من بلاد المغرب.
+
+## Arabic History
+ارتبطت الحارة بوقف من العصر الأيوبي لخدمة حجاج بلاد المغرب.
+هُدم معظم نسيجها العمراني في حزيران 1967، وبقيت ذاكرتها جزءاً مركزياً من تاريخ القدس الحضري.
+
+## Arabic Landmarks
+من معالمها باب المغاربة وحائط البراق وموضع الحارة التاريخية.

@@ -57,3 +57,15 @@ The ceramic tradition is easiest to read in workshop windows. Compare hand-drawn
 - Graham Usher, *Fifteen Centuries and Still Counting—the Old City Armenians*, Jerusalem Quarterly 9, Institute for Palestine Studies: https://www.palestine-studies.org/sites/default/files/jq-articles/9_fifteen_centuries_1_0.pdf
 - *The Battle for Armenian Jerusalem*, Jerusalem Quarterly 100, Institute for Palestine Studies: https://www.palestine-studies.org/sites/default/files/jq-articles/The%20Battle%20for%20Armenian%20Jerusalem.pdf
 - Mustafa Murad al-Dabbagh, *Biladuna Filastin*, Jerusalem district, Institute for Palestine Studies: https://www.palestine-studies.org/en/node/1648296/1000
+
+## Arabic Overview
+حارة تاريخية متماسكة تُعرف بكاتدرائية مار يعقوب ومؤسساتها الأرمنية وتقليد الخزف المقدسي المميّز.
+
+## Arabic History
+نمت الحارة حول دير وكاتدرائية مار يعقوب، ثم جعلت الورشات من الخزف الأرمني المرسوم يدوياً علامة مميزة للحرفة المقدسية.
+
+## Arabic Importance
+حافظ المجتمع الأرمني عبر قرون على العبادة والتعليم والطباعة والحرفة والذاكرة في القدس.
+
+## Arabic Landmarks
+من معالمها كاتدرائية مار يعقوب ومتحف الأرمن وورش الخزف الأرمني.

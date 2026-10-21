@@ -58,3 +58,15 @@ Outside, continue through the Muristan and Souq al-Bazaar. Listen for bells abov
 - Journal of the Society of Architectural Historians, Crusader reconstruction study: https://online.ucpress.edu/jsah/article-abstract/62/1/4/59568/
 - Jerusalem Quarterly, *Music-Making in the Heart of the Christian Quarter*, Institute for Palestine Studies: https://www.palestine-studies.org/en/journals/explorer?f%5B0%5D=field_digital_sections%3A3242&f%5B1%5D=field_is_fulltext_filled_interna%3A1
 - PASSIA, *The Old City, 1944 & 1966*: https://maps.passia.org/the-old-city-1944-1966/
+
+## Arabic Overview
+حارة النصارى حارة من حارات البلدة القديمة، وتتمحور مسارات الكنائس والأديرة والبيوت والأسواق فيها حول كنيسة القيامة.
+
+## Arabic History
+تعكس مؤسسات الحارة طبقات بيزنطية وصليبية ومملوكية وعثمانية، فيما تظل أزقتها جزءاً من مدينة حج نابضة بالحياة.
+
+## Arabic Importance
+تحافظ الطوائف المسيحية والعائلات المقدسية على حضور ديني واجتماعي وتجاري متواصل في الحارة.
+
+## Arabic Landmarks
+من معالمها كنيسة القيامة ودير اللاتين وسوق البازار.

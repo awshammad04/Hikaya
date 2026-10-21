@@ -5,9 +5,9 @@ no reviewed summary, generation fails with ``unknown_location`` rather than
 falling back to whatever the model happens to know.
 
 The summaries follow the fixed layout documented in ``content/README.md``:
-YAML-ish frontmatter, then eight numbered ``## n. Title`` sections. The parser
-is deliberately small and dependency-free (no PyYAML) so the core module runs on
-a plain Python install.
+YAML-ish frontmatter, ten numbered ``## n. Title`` sections, and optional
+reviewed Arabic retrieval sections. The parser is deliberately small and
+dependency-free (no PyYAML) so the core module runs on a plain Python install.
 """
 
 import os
@@ -31,6 +31,13 @@ _SECTION_KEYS = {
     "source notes": "source_notes",
     "visitor walkthrough": "walkthrough",
     "reviewed references": "references",
+    "arabic guide text": "arabic_guide",
+    "arabic overview": "arabic_overview",
+    "arabic history": "arabic_history",
+    "arabic historical context": "arabic_history",
+    "arabic importance": "arabic_importance",
+    "arabic landmarks": "arabic_landmarks",
+    "arabic religious traditions": "arabic_traditions",
 }
 
 _HEADING_RE = re.compile(r"^##\s+(?:\d+\.\s*)?(.+?)\s*$")

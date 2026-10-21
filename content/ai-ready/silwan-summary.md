@@ -58,3 +58,15 @@ The living neighbourhood is just as important as the ancient landscape. You may 
 - Jerusalem Platform, *Jerusalem Neighbourhoods and Villages: Silwan*, Institute for Palestine Studies: https://documentjerusalem.palestine-studies.org/en/Locaities_villages
 - Mustafa Murad al-Dabbagh, *Biladuna Filastin*, Jerusalem district, Institute for Palestine Studies: https://www.palestine-studies.org/en/node/1648296/1000
 - Al-Muqaddasi's geographic descriptions should be consulted through a cited Arabic scholarly edition before quoting.
+
+## Arabic Overview
+سلوان بلدة مقدسية على السفح الجنوبي للبلدة القديمة، ترتبط بعين سلوان والبساتين المدرّجة وذاكرة شفوية غنية.
+
+## Arabic History
+يرتبط تاريخ الاستقرار في سلوان بعين سلوان ووادي قدرون، ويحمل وادي حلوة وبساتين البلدة طبقات من التاريخ الأثري والذاكرة الشفوية.
+
+## Arabic Importance
+يجمع مشهدها بين الماء والزراعة وحكايات العائلات والحياة اليومية لمجتمع مقدسي عريق.
+
+## Arabic Landmarks
+من معالمها عين سلوان ووادي حلوة وبساتين سلوان.

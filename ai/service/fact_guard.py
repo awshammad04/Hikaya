@@ -14,6 +14,7 @@ import re
 from typing import List, Set
 
 from . import audiences
+from . import retrieval
 
 # Capitalised words that routinely start a sentence and are not proper nouns.
 _COMMON_STARTERS = {
@@ -83,6 +84,13 @@ def check_narrative(narrative, source_text):
                 "unsupported_entity: '%s' appears in the narrative but not in the "
                 "reviewed source." % entity
             )
+
+    source_arabic_terms = retrieval.arabic_terms(source_text)
+    for term in sorted(retrieval.arabic_terms(narrative) - source_arabic_terms):
+        warnings.append(
+            "unsupported_arabic_term: '%s' appears in the narrative but not in the "
+            "reviewed source." % term
+        )
 
     return warnings
 

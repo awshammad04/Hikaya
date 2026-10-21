@@ -13,7 +13,7 @@ _BOLD_RE = re.compile(r"\*\*([^*]+)\*\*")
 _ITALIC_RE = re.compile(r"(?<!\*)\*([^*]+)\*(?!\*)")
 _CODE_RE = re.compile(r"`([^`]+)`")
 _ANGLE_URL_RE = re.compile(r"<https?://[^>]+>")
-_SENTENCE_SPLIT_RE = re.compile(r"(?<=[.!?])\s+(?=[A-Z\"'(])")
+_SENTENCE_SPLIT_RE = re.compile(r"(?<=[.!?؟])\s+(?=[A-Z\u0600-\u06ff\"'(])")
 
 
 def clean(text):

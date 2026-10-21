@@ -201,8 +201,6 @@ class GuideRequest:
                 ERR_UNSUPPORTED_LANGUAGE,
                 "Unsupported language '%s'." % self.language,
             )
-        if not self.location_id and not self.historical_text and not self.governorate_ids and not self.location_ids:
-            raise ValidationError(ERR_MISSING_CONTENT, "Choose a location or retrieval scope.")
         if len(self.history) > MAX_HISTORY_TURNS:
             # Keeping the tail is enough for pronoun resolution and bounds the
             # prompt an untrusted caller can build.
@@ -212,6 +210,7 @@ class GuideRequest:
 @dataclass
 class GuideResponse:
     sources: List[SourceInfo] = field(default_factory=list)
+    citations: List[Dict[str, Any]] = field(default_factory=list)
     status: str = STATUS_OK
     answer: str = ""
     answered_from_source: bool = True

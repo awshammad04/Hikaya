@@ -57,3 +57,15 @@ Do not miss At-Tur as a neighbourhood. Step away from the viewpoint long enough 
 - Custody of the Holy Land, *Gethsemane – Basilica of the Agony*: https://www.custodia.org/en/sanctuaries/gethsemane-basilica-agony/
 - Jerusalem Platform, *Jerusalem Neighbourhoods and Villages: At-Tur / Mount of Olives*, Institute for Palestine Studies: https://documentjerusalem.palestine-studies.org/en/Locaities_villages
 - Mustafa Murad al-Dabbagh, *Biladuna Filastin*, Jerusalem district, Institute for Palestine Studies: https://www.palestine-studies.org/en/node/1648296/1000
+
+## Arabic Overview
+يقع حي الطور وجبل الزيتون على السفح الشرقي للبلدة القديمة، حيث تتجاور المطلّات والمقامات والمقابر والكنائس وحياة الحي.
+
+## Arabic History
+كان جبل الزيتون عبر عصور طويلة مكاناً للعبادة والدفن وطريقاً للاقتراب من القدس، فيما تطور الطور حياً فلسطينياً مأهولاً على امتداد السفح.
+
+## Arabic Religious Traditions
+تتقاسم التقاليد الدينية وحياة المجتمع المقدسي السفح نفسه ومسارات المشي عليه.
+
+## Arabic Landmarks
+من معالمه المطلّة البانورامية على القدس ومدافن الأنبياء والجثمانية.
