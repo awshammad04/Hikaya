@@ -33,3 +33,6 @@ lerna-debug.log*
 
 # tsc
 *.tsbuildinfo
+
+# voice recordings (private, never commit)
+/uploads

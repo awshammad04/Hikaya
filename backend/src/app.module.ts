@@ -9,6 +9,7 @@ import { ContributionsModule } from './contributions/contributions.module';
 import { AiModule } from './ai/ai.module';
 import { GovernoratesModule } from './governorates/governorates.module';
 import { JourneysModule } from './journeys/journeys.module';
+import { VoiceModule } from './voice/voice.module';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { JourneysModule } from './journeys/journeys.module';
     AiModule,
     GovernoratesModule,
     JourneysModule,
+    VoiceModule,
   ],
   controllers: [AppController],
   providers: [AppService],

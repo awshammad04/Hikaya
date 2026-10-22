@@ -37,7 +37,7 @@ export function installProductionControls(app: Express) {
   app.use((req, res, next) => {
     if (req.method !== "POST") return next();
     if (req.path === "/api/generate-video") return videoLimit(req, res, next);
-    if (/^\/api\/(tts(?:-stream)?|generate-story|v1\/(ai\/.*|journeys))$/.test(req.path)) return aiLimit(req, res, next);
+    if (/^\/api\/(tts(?:-stream)?|generate-story|v1\/(ai\/.*|journeys|voice\/transcribe))$/.test(req.path)) return aiLimit(req, res, next);
     if (["/api/contribute", "/api/v1/contributions"].includes(req.path)) return contributionLimit(req, res, next);
     next();
   });

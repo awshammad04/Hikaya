@@ -27,6 +27,51 @@ app.use(express.json({ limit: isProduction ? "8mb" : "50mb" }));
 app.use(express.urlencoded({ limit: isProduction ? "8mb" : "50mb", extended: true }));
 
 /**
+ * Voice recordings are multipart. The JSON bridge below would re-serialise the
+ * body and corrupt it, so this route forwards the raw bytes untouched. It must
+ * stay above the generic bridge. 11mb leaves room for the form framing around
+ * the backend's 10mb audio limit.
+ */
+app.post(
+  "/api/v1/voice/transcribe",
+  express.raw({ type: "multipart/form-data", limit: "11mb" }),
+  async (req, res) => {
+    if (!Buffer.isBuffer(req.body) || !req.body.length) {
+      return res.status(400).json({ message: "Please attach an audio file." });
+    }
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), API_PROXY_TIMEOUT_MS);
+    try {
+      const upstream = await fetch(`${HIKAYA_API_UPSTREAM}/voice/transcribe`, {
+        method: "POST",
+        signal: controller.signal,
+        headers: {
+          accept: "application/json",
+          "content-type": req.get("content-type") as string,
+          "x-hikaya-internal-token": process.env.HIKAYA_INTERNAL_TOKEN || "",
+        },
+        body: new Uint8Array(req.body),
+      });
+      const contentType = upstream.headers.get("content-type");
+      if (contentType) res.setHeader("Content-Type", contentType);
+      return res
+        .status(upstream.status)
+        .send(Buffer.from(await upstream.arrayBuffer()));
+    } catch (error) {
+      const timedOut = error instanceof DOMException && error.name === "AbortError";
+      console.error("[Hikaya voice proxy]", error);
+      return res.status(502).json({
+        message: timedOut
+          ? "The Hikaya API did not respond in time."
+          : "The Hikaya API is temporarily unavailable.",
+      });
+    } finally {
+      clearTimeout(timer);
+    }
+  },
+);
+
+/**
  * Same-origin API bridge.
  *
  * The browser always talks to the host that served the page (`/api/v1`). The

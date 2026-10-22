@@ -8,6 +8,7 @@ import {
   QUIZ_REPOSITORY,
   STORIES_REPOSITORY,
   TIMELINE_REPOSITORY,
+  VOICE_REPOSITORY,
 } from './repositories/tokens';
 import {
   InMemoryLocationsRepository,
@@ -33,6 +34,10 @@ import {
   InMemoryQuizRepository,
   PostgresQuizRepository,
 } from './repositories/quiz.repository';
+import {
+  InMemoryVoiceRepository,
+  PostgresVoiceRepository,
+} from './repositories/voice.repository';
 
 /**
  * DatabaseModule
@@ -106,6 +111,14 @@ import {
           : new InMemoryQuizRepository(),
       inject: [DatabaseService],
     },
+    {
+      provide: VOICE_REPOSITORY,
+      useFactory: (db: DatabaseService) =>
+        db.isAvailable()
+          ? new PostgresVoiceRepository(db)
+          : new InMemoryVoiceRepository(),
+      inject: [DatabaseService],
+    },
   ],
   exports: [
     DatabaseService,
@@ -115,6 +128,7 @@ import {
     MEDIA_REPOSITORY,
     TIMELINE_REPOSITORY,
     QUIZ_REPOSITORY,
+    VOICE_REPOSITORY,
   ],
 })
 export class DatabaseModule {}
