@@ -415,17 +415,29 @@ export function askGuide(
 }
 
 export function localArabicGuideAnswer(locationId: string, question: string): GuideAnswer {
+  const normalized = question
+    .normalize("NFKC")
+    .replace(/[\u064B-\u065F\u0670\u06D6-\u06ED]/g, "")
+    .replace(/[أإآٱ]/g, "ا")
+    .replace(/ى/g, "ي")
+    .replace(/[؟?]/g, "")
+    .trim();
+  const locationQuestion = /اين|وين|موقع|تقع|مكان/.test(normalized);
   const record = nationalRecord(locationId);
   if (record && record.reviewed && record.reviewStatus === 'source_checked') {
-    const covered = /تاريخ|متى|أهمية|أهميته|ثقاف|حكاية|قصة/.test(question) && !/زيارة|الوصول|مفتوح|ساعة|ساعات|آمن|مش[يي]|طريق|حافلة|نقل/.test(question);
-    const answer = covered ? `${record.arabicDescription} ${record.arabicFacts}` : "لا يغطي السجل الموثّق هذا السؤال، لذلك لن أخمّن.";
+    const covered = locationQuestion || (/تاريخ|متى|أهمية|أهميته|ثقاف|حكاية|قصة/.test(normalized) && !/زيارة|الوصول|مفتوح|ساعة|ساعات|آمن|مشي|طريق|حافلة|نقل/.test(normalized));
+    const answer = locationQuestion
+      ? record.arabicDescription
+      : covered
+        ? `${record.arabicDescription} ${record.arabicFacts}`
+        : "لا يغطي السجل الموثّق هذا السؤال، لذلك لن أخمّن.";
     return {answer,answeredFromSource:covered,excerpts:covered?[answer]:[],uncertaintyNotes:covered?[]:["معلومات الوصول والحالة الراهنة غير موثّقة هنا."],generatedBy:"arabic-reviewed-fallback"};
   }
   const profile = locationById(locationId);
   if (!profile) return { answer: "لا تتوفر معلومات مراجعة لهذا المكان بعد.", answeredFromSource: false, excerpts: [], uncertaintyNotes: ["لا يغطي السجل المراجع هذا السؤال."], generatedBy: "arabic-reviewed-fallback" };
-  const normalized = question.replace(/[؟?]/g, "").trim();
   let answer: string | null = null;
-  if (/أقدم|تاريخ|متى|عصر|بنى|بني/.test(normalized)) answer = profile.arabicHistoricalSummary;
+  if (locationQuestion) answer = profile.arabicSummary;
+  else if (/اقدم|تاريخ|متي|عصر|بني|بني/.test(normalized)) answer = profile.arabicHistoricalSummary;
   else if (/أرى|ازور|أزور|معالم|أماكن|الموجود/.test(normalized)) answer = `يمكنك تتبّع: ${profile.arabicLandmarks.join("، ")}.`;
   else if (/أهم|أهمية|ثقاف|لماذا/.test(normalized)) answer = profile.arabicCulturalImportance;
   else if (/حكاية|قصة|احك/.test(normalized)) answer = profile.arabicStory;

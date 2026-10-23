@@ -70,12 +70,12 @@ Backend story requests accept `governorateId`; guide requests accept `governorat
 
 ## Sources and review limits
 
-The six new records are deliberately bounded factual extracts, checked against these primary sources on 9 October 2026. `source_checked` describes the factual record; it does not approve an AI-generated narrative.
+The six new records are deliberately bounded factual extracts, checked against these primary sources on 21 October 2026. The Yasser Arafat Museum record includes its official architectural description, preserved headquarters area, archive and public facilities. `source_checked` describes the factual record; it does not approve an AI-generated narrative.
 
 | Governorate | Place | Primary source |
 | --- | --- | --- |
 | Ramallah | Palestinian Museum, Birzeit | [Museum questions and answers](https://palmuseum.org/en/node/3720), [official location map](https://palmuseum.org/en/visits/how-to-find-us) |
-| Ramallah | Yasser Arafat Museum | [Official museum introduction and library](https://www.yam.ps/index-en.html) |
+| Ramallah | Yasser Arafat Museum | [Official introduction](https://www.yam.ps/), [museum mission and design](https://www.yam.ps/page-1-ar.html), [Resource Centre](https://www.yam.ps/page-12184-ar.html), [Forum Hall](https://www.yam.ps/page-12185-ar.html), [Exhibition Hall](https://www.yam.ps/page-12186-ar.html) |
 | Hebron | Old Town | [UNESCO property 1565](https://whc.unesco.org/en/list/1565/) |
 | Hebron | Ibrahimi Mosque | [Hebron Rehabilitation Committee](https://www.hebronrc.ps/xindex.php/en/node/275) |
 | Gaza | Great Omari Mosque | [UNESCO tentative-list entry 6955](https://whc.unesco.org/en/tentativelists/6955/) |

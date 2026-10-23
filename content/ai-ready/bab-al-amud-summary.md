@@ -57,3 +57,15 @@ Inside, notice that the passage bends. The turn controls movement and prevents a
 - Jerusalem Quarterly 77, photographic and spatial study of Bab al-Amud, Institute for Palestine Studies: https://www.palestine-studies.org/sites/default/files/jqpdf/JQ%2077%20-%20Full%20Issue%20with%20Covers_0.pdf
 - *Reflections of a Returning Daughter of Jerusalem*, Jerusalem Quarterly 91, Institute for Palestine Studies: https://www.palestine-studies.org/sites/default/files/jq-articles/Reflections%20of%20a%20Returning%20Daughter%20of%20Jerusalem.pdf
 - PASSIA, *The Old City, 1944 & 1966*: https://maps.passia.org/the-old-city-1944-1966/
+
+## Arabic Overview
+باب العامود بوابة القدس الشمالية وساحة اجتماعية تفتح الطريق نحو سوق خان الزيت.
+
+## Arabic History
+تعود الواجهة القائمة إلى الأسوار العثمانية التي بُنيت في عهد السلطان سليمان في القرن السادس عشر، فوق بقايا أقدم من العصر الروماني.
+
+## Arabic Importance
+تمثّل الدرجات والساحة نقطة لقاء وفضاءً للأداء وبوابةً إلى تجارة البلدة القديمة وأماكن العبادة.
+
+## Arabic Landmarks
+من معالمه باب العامود والساحة التاريخية وسوق خان الزيت.

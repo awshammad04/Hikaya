@@ -57,3 +57,15 @@ The living atmosphere is residential. Expect school traffic, conversations at en
 - United Nations record of the 1954 housing agreement: https://www.un.org/unispal/document/auto-insert-178254/
 - United Nations record noting completion of 28 units in 1956: https://www.un.org/unispal/document/auto-insert-186768/
 - Jerusalem Platform, *Jerusalem Neighbourhoods and Villages: Sheikh Jarrah*, Institute for Palestine Studies: https://documentjerusalem.palestine-studies.org/en/Locaities_villages
+
+## Arabic Overview
+يقع حي الشيخ جراح شمال البلدة القديمة، ويُعرف ببيوته التاريخية ومؤسساته الثقافية وصمود مجتمعه المحلي.
+
+## Arabic History
+توسّع الحي خارج الأسوار في أواخر العهد العثماني، ويضم تراثه العمراني قصر إسعاف النشاشيبي وبيوتاً وحدائق تاريخية أخرى.
+
+## Arabic Importance
+تجعل البيوت العائلية والفضاءات الثقافية من الحي سجلاً حياً للقدس الفلسطينية الحديثة.
+
+## Arabic Landmarks
+من معالمه قصر إسعاف النشاشيبي وكرم المفتي وبيوت العائلات المقدسية.

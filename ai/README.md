@@ -105,6 +105,7 @@ ai/
 │   ├── generator.py                   # the story generation function
 │   ├── fact_guard.py                  # post-generation check
 │   ├── textutils.py                   # markdown cleaning and splitting
+│   ├── retrieval.py                   # Arabic-aware tokenization and BM25 guide search
 │   ├── llm.py                         # optional model backend
 │   ├── app.py                         # FastAPI service
 │   ├── server.py                      # dependency-free HTTP service
@@ -114,7 +115,8 @@ ai/
 │   └── export_seed_data.py            # generates + validates the database, backend
 │                                      # and frontend seeds from content/
 ├── examples/                          # sample stories, one per MVP location
-└── tests/test_generator.py            # 30 tests, standard library only
+├── tests/test_generator.py            # story and core guide tests
+└── tests/test_guide_retrieval.py      # Arabic/English regression and 40-question eval
 ```
 
 ## Using It From Python
@@ -144,24 +146,28 @@ information. They are regenerated, never hand-edited:
 cd ai && python3 scripts/generate_examples.py
 ```
 
-## Planned Features Not Yet Built
+## Remaining Generation Features
 
-- Arabic output. The content files are Arabic; the summaries and generator are
-  English-only so far, and `language: "ar"` currently returns
-  `unsupported_language`.
+- Full Arabic story generation. Guide retrieval supports reviewed Arabic
+  excerpts where available, but not every location record has full Arabic source
+  sections yet; story-generation output is still primarily English.
 - Contribution analysis — summarising user submissions and suggesting a category
   before human review.
 
 ## The Heritage Guide's Offline Limits
 
-Without a model configured, `ask-guide` is a keyword retriever. It never invents -
-it returns sentences that exist in the reviewed content - but it can still return
-a loosely related passage. Two rules keep it honest:
+Without a model configured, `ask-guide` uses Arabic-aware tokenization and
+section-level BM25 search. It returns reviewed source sentences with section and
+bibliography citations; normalization handles common alef/yaa/taa-marbuta
+variants and diacritics. Unscoped questions route across reviewed locations,
+while explicit geographic scopes remain isolated.
 
-- a question whose content words are mostly absent from the records gets a refusal
-  rather than an answer ("the best falafel shop here" used to come back with the
-  city gates, because *best* appears in *best known*);
-- when only part of a question matched, the response says which words were missing.
+Questions that only partially match or ask about documented gaps such as current
+opening conditions still receive a refusal. The regression evaluation includes
+20 supported English/Arabic questions and 20 unsupported questions. Embeddings
+are not required for the current corpus: BM25 avoids a large model download and
+works offline. Full Arabic source sections and multilingual embeddings remain
+future improvements for a reviewed-content pass.
 
 A follow-up question is understood by folding the previous question into it. Earlier
 turns are context for reading the question and never a source of facts - there is a

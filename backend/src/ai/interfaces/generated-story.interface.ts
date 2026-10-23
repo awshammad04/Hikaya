@@ -42,6 +42,15 @@ export interface AiGuideResponse {
   answer: string;
   answered_from_source: boolean;
   excerpts: string[];
+  citations?: {
+    location_id?: string | null;
+    location_name?: string | null;
+    section: string;
+    content_type: 'fact' | 'tradition' | 'oral_heritage';
+    language: string;
+    excerpt: string;
+    references: { title: string; url: string }[];
+  }[];
   uncertainty_notes: string[];
   source: AiSourceInfo;
   sources?: AiSourceInfo[];
@@ -78,6 +87,7 @@ export interface GuideAnswer {
   answer: string;
   answeredFromSource: boolean;
   excerpts: string[];
+  citations?: NonNullable<AiGuideResponse['citations']>;
   uncertaintyNotes: string[];
   generatedBy: string;
   sources?: AiSourceInfo[];

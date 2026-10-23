@@ -176,8 +176,19 @@ export interface GuideAnswer {
   /** False means the records do not cover the question - not an error. */
   answeredFromSource: boolean;
   excerpts: string[];
+  citations?: GuideCitation[];
   uncertaintyNotes: string[];
   generatedBy: string;
+}
+
+export interface GuideCitation {
+  location_id?: string | null;
+  location_name?: string | null;
+  section: string;
+  content_type: "fact" | "tradition" | "oral_heritage";
+  language: string;
+  excerpt: string;
+  references: { title: string; url: string }[];
 }
 
 export interface ChatTurn {

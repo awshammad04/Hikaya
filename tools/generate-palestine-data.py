@@ -41,8 +41,9 @@ def outputs():
             sql.append(insert('categories', ['id','name'], [quote(category_id),quote(category)]))
             sql.append(f"INSERT INTO location_categories (location_id,category_id) SELECT {quote(id)},id FROM categories WHERE name={quote(category)} ON CONFLICT DO NOTHING;")
         # Only the bounded, source-checked factual record is published. Generated narratives stay pending_review.
+        gap_note = location.get('gaps', data['gaps']['en'])
         sql.append(insert('stories',['id','location_id','title','summary','simplified_story','audience','language','tone','source','is_ai_generated','status','uncertainty_notes'],
-            [quote('record-'+id),quote(id),quote(location['name']),quote(location['description']),quote(location['description']+' '+location['facts']),'\'general\'','\'en\'','\'neutral\'',quote(source),'FALSE',quote('published' if approved else 'pending_review'),array([data['gaps']['en']])]))
+            [quote('record-'+id),quote(id),quote(location['name']),quote(location['description']),quote(location['description']+' '+location['facts']),'\'general\'','\'en\'','\'neutral\'',quote(source),'FALSE',quote('published' if approved else 'pending_review'),array([gap_note])]))
         for index, event in enumerate(location['timeline']):
             sql.append(insert('timeline_events',['id','location_id','period_label','description','sort_year','sort_order','is_tradition','source_file'],
                 [quote(f'palestine-timeline-{id}-{index}'),quote(id),quote(event['label']),quote(event['description']),str(event['year']),str(index),'FALSE',quote(source)]))
@@ -51,7 +52,22 @@ def outputs():
             [quote('palestine-quiz-'+id),quote(id),quote(quiz['question']),array(quiz['options']),str(quiz['answerIndex']),quote(location['description']+' '+location['facts']+' '+location['traditions']),quote(location['sources'][0]['url']),'0']))
         summary = f'---\nlocation_id: {id}\nname: {location["name"]}\narabic_name: {location["arabicName"]}\ngovernorate_id: {location["governorateId"]}\nsource_file: content/palestine/catalog.json\nreviewed: {str(approved).lower()}\nreview_status: {location["reviewStatus"]}\n---\n\n'
         summary += f'## 1. Short overview\n{location["description"]}\n\n## 2. Key historical timeline\n' + ('| Period | Event |\n| --- | --- |\n'+'\n'.join('| '+event['label']+' | '+event['description']+' |' for event in location['timeline']) if location['timeline'] else '')
-        summary += f'\n\n## 5. Important facts\n- {location["facts"]}\n\n## 6. Religious traditions\n{("- " + location["traditions"]) if location["traditions"] else ""}\n\n## 8. Source notes\n- Gaps the AI must not fill: current access, travel, site condition, precise entrances, unreviewed photos and oral accounts.\n\n## 10. Reviewed references\n'
+        importance = location.get('importance', '')
+        landmarks = location.get('landmarks', [])
+        walkthrough = location.get('walkthrough', '')
+        summary_gaps = location.get(
+            'gaps',
+            'current access, travel, site condition, precise entrances, unreviewed photos and oral accounts.',
+        )
+        if importance:
+            summary += f'\n\n## 3. Cultural and religious importance\n{importance}\n'
+        if landmarks:
+            summary += '\n## 4. Main landmarks\n' + '\n'.join('- '+item for item in landmarks) + '\n'
+        summary += f'\n\n## 5. Important facts\n- {location["facts"]}\n\n## 6. Religious traditions\n{("- " + location["traditions"]) if location["traditions"] else ""}\n'
+        summary += f'\n## 8. Source notes\n- Gaps the AI must not fill: {summary_gaps}\n'
+        if walkthrough:
+            summary += f'\n## 9. Visitor walkthrough\n{walkthrough}\n'
+        summary += '\n## 10. Reviewed references\n'
         summary += '\n'.join('- '+s['title']+' — '+s['url'] for s in location['sources'])+'\n'
         result[ROOT / f'content/ai-ready/{id}-summary.md'] = summary
     sql += ['COMMIT;', '']

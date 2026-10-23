@@ -59,3 +59,9 @@ Continue slowly toward Bab Hutta and the northern edge of Al-Aqsa. Watch for Mam
 - Al-Quds University Jerusalem Studies, *Khan Tankaz*: https://jerusalem-studies.alquds.edu/en/jerusalem/khan-tankaz.html
 - PASSIA, *The Old City, 1944 & 1966*: https://maps.passia.org/the-old-city-1944-1966/
 - Mustafa Murad al-Dabbagh, *Biladuna Filastin*, Jerusalem district, Institute for Palestine Studies: https://www.palestine-studies.org/en/node/1648296/1000
+
+## Arabic Overview
+حارة المسلمين أكبر حارات البلدة القديمة، وتضم أزقة سكنية ومدارس وأماكن عبادة وأسواقاً تمتد من باب العامود باتجاه الحرم الشريف ومجمع المسجد الأقصى.
+
+## Arabic Historical Context
+اكتمل سوق القطانين عام 1336–1337 ميلادية في عهد تنكيز الناصري، ويضم ممراً مقبباً تتكرر على امتداده الأقواس المدببة والحوانيت الصغيرة.

@@ -14,8 +14,21 @@ export type { WordTimestamp } from "../types";
  */
 export interface StoryNarratorProps extends NarrativeReaderProps {
   timestamps?: readonly WordTimestamp[];
+  summary?: string;
 }
 
-export const StoryNarrator: React.FC<StoryNarratorProps> = (props) => (
-  <NarrativeReader {...props} />
-);
+export const StoryNarrator: React.FC<StoryNarratorProps> = ({
+  summary,
+  ...props
+}) => {
+  let text = props.text;
+  const summaryIndex = summary ? text.indexOf(summary) : -1;
+  if (summaryIndex >= 0 && summaryIndex <= 120) {
+    const withoutSummary =
+      `${text.slice(0, summaryIndex)}${text.slice(summaryIndex + summary.length)}`
+        .replace(/\n{3,}/g, "\n\n")
+        .trim();
+    if (withoutSummary) text = withoutSummary;
+  }
+  return <NarrativeReader {...props} text={text} />;
+};

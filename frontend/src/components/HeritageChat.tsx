@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { motion } from "motion/react";
 import { HelpCircle, Loader2, PenLine, Quote, Send, Sparkles } from "lucide-react";
-import { ApiLocation, ChatTurn, GuideAnswer } from "../types";
+import { ApiLocation, ChatTurn, GuideAnswer, GuideCitation } from "../types";
 import { askGuide, localArabicGuideAnswer, ApiError } from "../services/api";
 import { useInterfaceLanguage } from "../context/LanguageContext";
 import { locationById } from "../data/heritage";
@@ -18,6 +18,7 @@ interface Message extends ChatTurn {
   id: string;
   answeredFromSource: boolean;
   excerpts: string[];
+  citations: GuideCitation[];
   notes: string[];
 }
 
@@ -101,6 +102,7 @@ export const HeritageChat: React.FC<HeritageChatProps> = ({
         answer: result.answer,
         answeredFromSource: result.answeredFromSource,
         excerpts: result.excerpts,
+        citations: result.citations ?? [],
         notes: result.uncertaintyNotes,
       },
     ]);
@@ -168,7 +170,31 @@ export const HeritageChat: React.FC<HeritageChatProps> = ({
                         className="text-xs text-brand-muted leading-relaxed flex gap-1.5"
                       >
                         <Quote className="w-3 h-3 shrink-0 mt-0.5 text-brand-amber" />
-                        {excerpt}
+                        <span>
+                          {message.citations[index] && (
+                            <span className="block text-[10px] font-semibold text-brand-olive">
+                              {message.citations[index].location_name
+                                ? `${message.citations[index].location_name} · `
+                                : ""}
+                              {message.citations[index].section}
+                              {message.citations[index].content_type !== "fact"
+                                ? ` · ${message.citations[index].content_type}`
+                                : ""}
+                            </span>
+                          )}
+                          {excerpt}
+                          {message.citations[index]?.references.map((reference) => (
+                            <a
+                              key={reference.url}
+                              href={reference.url}
+                              target="_blank"
+                              rel="noreferrer"
+                              className="block mt-1 text-brand-olive underline"
+                            >
+                              {reference.title}
+                            </a>
+                          ))}
+                        </span>
                       </li>
                     ))}
                   </ul>

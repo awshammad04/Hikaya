@@ -218,6 +218,9 @@ export const LocationDetailsPage: React.FC = () => {
   const profile = locationById(location.id);
   const governorateId = location.governorateId ?? "jerusalem";
   const isJerusalem = governorateId === "jerusalem";
+  const nationalEntry = nationalRecord(location.id);
+  const recordGap = (isArabic ? nationalEntry?.arabicGaps : nationalEntry?.gaps)
+    || (isArabic ? catalog.gaps.ar : catalog.gaps.en);
   const mapPath = isJerusalem ? "/map" : `/governorates/${governorateId}/map`;
   const displayName = isArabic ? (profile?.arabicName ?? location.arabicName ?? location.name) : location.name;
   const secondaryName = isArabic ? location.name : (location.arabicName ?? profile?.arabicName);
@@ -281,7 +284,7 @@ export const LocationDetailsPage: React.FC = () => {
           </div>
         </header>
 
-        {!isJerusalem && <p className="rounded-2xl bg-brand-amber/10 p-4 text-xs leading-relaxed text-brand-muted">{isArabic ? catalog.gaps.ar : catalog.gaps.en}</p>}
+        {!isJerusalem && <p className="rounded-2xl bg-brand-amber/10 p-4 text-xs leading-relaxed text-brand-muted">{recordGap}</p>}
         <div className="space-y-5">
           {/* --- Facts ----------------------------------------------------- */}
           <section className="rounded-3xl border border-brand-border bg-white p-5 shadow-sm md:p-6">
@@ -387,6 +390,7 @@ export const LocationDetailsPage: React.FC = () => {
                     )}
                     <StoryNarrator
                       text={reviewedWalkthrough ?? (isArabic ? (profile?.arabicStory ?? story.simplifiedStory) : (profile?.story ?? story.simplifiedStory))}
+                      summary={isArabic ? (profile?.arabicSummary ?? story.summary) : (profile?.summary ?? story.summary)}
                       timestamps={
                         !reviewedWalkthrough
                         && (isArabic ? !profile?.arabicStory : !profile?.story)

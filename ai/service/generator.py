@@ -20,11 +20,10 @@ generation backends:
 Either way the output goes through the fact guard before being returned.
 """
 
-import re
 import os
-from typing import List, Optional
+from typing import Dict, List, Optional, Tuple
 
-from . import audiences, content_loader, fact_guard, llm, prompts, textutils
+from . import audiences, content_loader, fact_guard, llm, prompts, retrieval, textutils
 from .content_loader import ReviewedContent
 from .models import (
     ERR_GENERATION_FAILED,
@@ -149,8 +148,12 @@ def answer_question(request, content_dir=None):
         supported = [answer for answer in answers if answer.answered_from_source and not answer.error]
         return GuideResponse(answer='\n\n'.join(answer.source.location_name+': '+answer.answer for answer in supported) if supported else _not_in_records(request.language),
                              answered_from_source=bool(supported), excerpts=[excerpt for answer in supported for excerpt in answer.excerpts],
+                             citations=[citation for answer in supported for citation in answer.citations],
                              sources=[answer.source for answer in supported],
                              uncertainty_notes=[] if supported else [_not_in_records(request.language)], model=OFFLINE_MODEL)
+
+    if not request.location_id and not request.historical_text:
+        return _answer_across_locations(request, content_dir)
 
     story_like = StoryRequest(
         location_id=request.location_id,
@@ -165,51 +168,36 @@ def answer_question(request, content_dir=None):
         response.error = {"code": exc.code, "message": exc.message}
         return response
 
-    source_text = content.prompt_text() if content else (request.historical_text or "")
     location_name = (content.name if content else None) or request.location_id or "this location"
 
-    # Offline retrieval searches the content itself, not the source notes: the
-    # notes describe what is *missing*, and matching against them would let the
-    # guide "answer" precisely the questions the records cannot answer.
-    if content is not None:
-        retrieval_text = "\n".join(
-            part for part in (content.factual_text(), content.tradition_text()) if part
-        )
-    else:
-        retrieval_text = request.historical_text or ""
-
-    if llm.is_configured():
-        try:
-            raw = llm.complete(
-                prompts.GUIDE_SYSTEM_PROMPT,
-                prompts.build_guide_prompt(
-                    source_text, location_name, request.question, request.language,
-                    history=request.history,
-                ),
-            )
-            blocks = llm.parse_labelled_blocks(raw, ["ANSWER", "FROM_SOURCE", "EXCERPT"])
-            answer = blocks["ANSWER"].strip() or _not_in_records(request.language)
-            from_source = blocks["FROM_SOURCE"].strip().upper().startswith("Y")
-            excerpt = blocks["EXCERPT"].strip()
-            return GuideResponse(
-                status=STATUS_OK,
-                answer=answer,
-                answered_from_source=from_source,
-                excerpts=[excerpt] if excerpt and excerpt.upper() != "NONE" else [],
-                uncertainty_notes=[] if from_source else [_not_in_records(request.language)],
-                source=source,
-                model=ModelInfo(provider=llm.PROVIDER_NAME, name=llm.DEFAULT_MODEL),
-            )
-        except llm.LLMUnavailable:
-            if os.environ.get("NODE_ENV") == "production":
-                raise
-            pass  # fall through to the offline retrieval below
-
-    # A follow-up like "and when was that?" carries almost no keywords of its
-    # own, so the previous question is folded in before retrieval.
+    chunks = _content_chunks(content, source, request.language) if content else [
+        {
+            "text": unit,
+            "section": "provided content",
+            "content_type": "fact",
+            "language": "ar" if retrieval.has_arabic(unit) else "en",
+            "source": source,
+        }
+        for unit in textutils.statements(request.historical_text or "")
+    ]
     query = _expand_with_history(request.question, request.history)
-    excerpts, coverage_notes = _retrieve(query, retrieval_text, location_name)
-    if not excerpts:
+    if _mentions_other_location(request.question, request.location_id, content_dir):
+        routed = _answer_across_locations(request, content_dir)
+        if routed.answered_from_source:
+            return routed
+    selected, coverage_notes = _rank_chunks(
+        query, chunks, location_name,
+        limit=1 if _is_location_question(query) else 3,
+    )
+
+    if not selected:
+        # A location-specific chat can still answer a clearly cross-location
+        # question, but only from another reviewed record that independently
+        # passes the relevance threshold.
+        if _mentions_other_location(request.question, request.location_id, content_dir):
+            routed = _answer_across_locations(request, content_dir)
+            if routed.answered_from_source:
+                return routed
         return GuideResponse(
             status=STATUS_OK,
             answer=_not_in_records(request.language),
@@ -224,11 +212,46 @@ def answer_question(request, content_dir=None):
             model=OFFLINE_MODEL,
         )
 
+    if llm.is_configured():
+        try:
+            raw = llm.complete(
+                prompts.GUIDE_SYSTEM_PROMPT,
+                prompts.build_guide_prompt(
+                    "\n\n".join(
+                        "[%s | %s] %s" % (
+                            item["section"], item["content_type"], item["text"]
+                        )
+                        for item in selected
+                    ),
+                    location_name, request.question, request.language,
+                    history=request.history,
+                ),
+            )
+            blocks = llm.parse_labelled_blocks(raw, ["ANSWER", "FROM_SOURCE", "EXCERPT"])
+            answer = blocks["ANSWER"].strip() or _not_in_records(request.language)
+            from_source = blocks["FROM_SOURCE"].strip().upper().startswith("Y")
+            excerpt = blocks["EXCERPT"].strip()
+            return GuideResponse(
+                status=STATUS_OK,
+                answer=answer,
+                answered_from_source=from_source,
+                excerpts=[excerpt] if excerpt and excerpt.upper() != "NONE" else [],
+                citations=_citations(selected),
+                uncertainty_notes=[] if from_source else [_not_in_records(request.language)],
+                source=source,
+                model=ModelInfo(provider=llm.PROVIDER_NAME, name=llm.DEFAULT_MODEL),
+            )
+        except llm.LLMUnavailable:
+            if os.environ.get("NODE_ENV") == "production":
+                raise
+            pass  # fall through to the offline retrieval below
+
     return GuideResponse(
         status=STATUS_OK,
-        answer=" ".join(excerpts),
+        answer=" ".join(_format_chunk(item, request.language) for item in selected),
         answered_from_source=True,
-        excerpts=excerpts,
+        excerpts=[item["text"] for item in selected],
+        citations=_citations(selected),
         uncertainty_notes=coverage_notes,
         source=source,
         model=OFFLINE_MODEL,
@@ -560,87 +583,293 @@ _STOPWORDS = {
     "the", "their", "there", "they", "this", "to", "today", "was", "were", "what",
     "when", "where", "which", "who", "why", "will", "with", "you", "your",
     "here", "near", "nearby", "some", "something", "anything",
+    "ا", "الى", "ان", "انا", "انت", "انتم", "او", "اي", "اين", "الذي",
+    "التي", "الذين", "ما", "ماذا", "متى", "من", "هل", "هو", "هي", "هم",
+    "هن", "هذا", "هذه", "هناك", "ذلك", "تلك", "في", "عن", "على", "مع",
+    "بين", "بعد", "قبل", "كان", "كانت", "يكون", "تكون", "كم", "كيف",
+    "لماذا", "ماهو", "ماهي", "الي", "ال", "و", "يا",
 }
 
-# A keyword occurring in more than this share of the source statements is too
-# common to prove relevance - "Jerusalem" matches every line of the Jerusalem file.
-_COMMON_KEYWORD_RATIO = 0.3
-
-# At least this share of a question's content words must appear in the records
-# before an answer is offered at all. Below it, one incidental word match was
-# enough to return a confidently irrelevant passage: "the best falafel shop
-# here" came back with the list of city gates, because "best" appears in
-# "best known". Refusing is the more useful answer.
-_MIN_COVERAGE = 0.5
+_MIN_COVERAGE = 0.6
 
 
 def _retrieve(question, source_text, location_name="", limit=3):
     # type: (str, str, str, int) -> tuple
-    """Find the source statements that bear on the question.
+    """Find relevant source statements with Arabic-aware BM25 ranking."""
+    chunks = [
+        {"text": unit, "section": "reviewed content", "content_type": "fact"}
+        for unit in textutils.statements(source_text)
+    ]
+    ranked, notes = _rank_chunks(question, chunks, location_name, limit)
+    return [item["text"] for item in ranked], notes
 
-    Returns ``(excerpts, notes)``. An empty excerpt list is a valid and
-    important outcome: it is what makes the guide say "not available in the
-    records" instead of stitching together loosely-related sentences.
 
-    This is a keyword retriever, not a reader. It never writes a sentence - it
-    only selects sentences that are already in the reviewed source, so a poor
-    match produces an unhelpful answer rather than an invented one. When only
-    part of the question matched, that is reported in the notes.
-    """
-    units = textutils.statements(source_text)
-    if not units:
+def _words(text):
+    # type: (str) -> set
+    return set(retrieval.tokens(text))
+
+
+def _content_chunks(content, source, language):
+    # type: (ReviewedContent, SourceInfo, str) -> List[dict]
+    """Split reviewed records into citeable fact/tradition section statements."""
+    chunks = []  # type: List[dict]
+    if language == "ar":
+        sections = []
+        for key, content_type in (
+            ("arabic_overview", "fact"),
+            ("arabic_history", "fact"),
+            ("arabic_importance", "fact"),
+            ("arabic_landmarks", "fact"),
+            ("arabic_traditions", "tradition"),
+            ("arabic_guide", "fact"),
+        ):
+            section = content.section(key)
+            if section:
+                sections.append((key, section, content_type))
+        if not sections:
+            sections = _english_content_sections(content, language)
+    else:
+        sections = _english_content_sections(content, language)
+
+    for section_key, body, content_type in sections:
+        for statement in textutils.statements(body):
+            chunks.append({
+                "text": statement,
+                "section": section_key,
+                "content_type": content_type,
+                "language": "ar" if retrieval.has_arabic(statement) else "en",
+                "source": source,
+            })
+    return chunks
+
+
+def _english_content_sections(content, language):
+    # type: (ReviewedContent, str) -> List[Tuple[str, str, str]]
+    sections = []
+    for key in ("overview", "timeline", "importance", "landmarks", "facts", "walkthrough"):
+        section = content.section(key)
+        if section and (language != "ar" or retrieval.has_arabic(section)):
+            sections.append((key, section, "fact"))
+    for key in ("traditions", "oral_heritage"):
+        section = content.section(key)
+        if section and (language != "ar" or retrieval.has_arabic(section)):
+            sections.append((key, section, "tradition" if key == "traditions" else "oral_heritage"))
+    if not sections and language == "ar":
+        return _english_content_sections(content, "en")
+    return sections
+
+
+def _rank_chunks(question, chunks, location_name="", limit=3):
+    # type: (str, List[dict], str, int) -> tuple
+    if not chunks:
         return [], []
-    unit_words = [(unit, _words(unit)) for unit in units]
-
-    # Words of the location's own name carry no information here: every
-    # statement in the Jerusalem file mentions Jerusalem.
-    ignored = _STOPWORDS | _words(location_name)
-    keywords = {
-        word for word in _words(question) if word not in ignored and len(word) > 2
-    }
-    if not keywords:
+    base_terms = retrieval.query_terms(question, location_name, include_synonyms=False)
+    expanded_terms = retrieval.query_terms(question, location_name)
+    if retrieval.has_arabic(question) and any(
+        item.get("language") == "ar" for item in chunks
+    ):
+        base_terms = retrieval.arabic_terms(question)
+    if not base_terms or not expanded_terms:
         return [], []
-
-    frequencies = dict(
-        (word, sum(1 for _, words in unit_words if word in words)) for word in keywords
+    question_words = set(retrieval.tokens(question))
+    location_question = bool(
+        question_words
+        & {
+            "where", "located", "location", "town", "city", "village", "address",
+            "situated", "اين", "وين", "تقع", "موقع", "بلده", "مدينه",
+        }
     )
-    present = {word for word in keywords if frequencies[word] > 0}
-    if not present:
-        # Nothing the question asks about is mentioned in the records at all.
+
+    document_tokens = [
+        retrieval.tokens(
+            (
+                (item.get("source").location_name or "")
+                + " "
+                + (item.get("source").location_id or "")
+                + " "
+            )
+            if item.get("source") else ""
+        ) + retrieval.tokens(item["text"])
+        for item in chunks
+    ]
+    present = set()
+    for term in base_terms:
+        if any(retrieval.term_matches(term, document) for document in document_tokens):
+            present.add(term)
+    minimum_coverage = 0.5 if location_question else _MIN_COVERAGE
+    if not present or len(present) / len(base_terms) < minimum_coverage:
         return [], []
 
-    # Most of what was asked about is missing, so whatever did match is
-    # incidental. Saying so beats answering a different question convincingly.
-    if len(present) / len(keywords) < _MIN_COVERAGE:
-        return [], []
+    scores = retrieval.bm25_scores(expanded_terms, document_tokens)
+    ranked = []
+    for index, score in enumerate(scores):
+        if score > 0:
+            item = dict(chunks[index])
+            item["score"] = score
+            ranked.append(item)
+    ranked.sort(key=lambda item: (-item["score"], len(item["text"])))
+    if location_question:
+        location_chunks = [
+            item for item in ranked
+            if item["section"] in ("overview", "arabic_overview", "arabic_guide")
+        ]
+        if location_chunks:
+            ranked = location_chunks
 
-    # Keywords that occur nearly everywhere cannot prove relevance on their own.
-    common_ceiling = max(1, int(len(unit_words) * _COMMON_KEYWORD_RATIO))
-    distinctive = {word for word in present if frequencies[word] <= common_ceiling}
-    ranking_set = distinctive or present
+    selected = []  # type: List[dict]
+    seen = set()
+    for item in ranked:
+        identity = (
+            item.get("source").location_id if item.get("source") else None,
+            item["text"],
+        )
+        if identity in seen:
+            continue
+        selected.append(item)
+        seen.add(identity)
+        if len(selected) == limit:
+            break
 
-    scored = []
-    for unit, words in unit_words:
-        strong = len(ranking_set & words)
-        if strong:
-            # Common keywords still break ties, they just cannot carry a match.
-            scored.append((strong * 10 + len(present & words), len(unit), unit))
-    if not scored:
-        return [], []
-
-    # Best score first; shorter statements win ties.
-    scored.sort(key=lambda item: (-item[0], item[1]))
-
+    missing = sorted(base_terms - present)
     notes = []  # type: List[str]
-    missing = sorted(keywords - present)
     if missing:
         notes.append(
             "The reviewed records do not mention %s, so the answer below covers only "
             "part of the question." % ", ".join("'%s'" % word for word in missing)
         )
-    return [unit for _, _, unit in scored[:limit]], notes
+    return selected, notes
 
 
-def _words(text):
-    # type: (str) -> set
-    return set(re.findall(r"[a-z']+", text.lower()))
+def _citations(chunks):
+    # type: (List[dict]) -> List[dict]
+    citations = []
+    for item in chunks:
+        source = item.get("source")
+        citations.append({
+            "location_id": source.location_id if source else None,
+            "location_name": source.location_name if source else None,
+            "section": item.get("section", "reviewed content"),
+            "content_type": item.get("content_type", "fact"),
+            "language": item.get("language", "en"),
+            "excerpt": item["text"],
+            "references": source.references if source else [],
+        })
+    return citations
+
+
+def _format_chunk(chunk, language):
+    # type: (dict, str) -> str
+    if chunk.get("content_type") == "tradition":
+        prefix = "وفق التقليد الديني: " if language == "ar" else "Religious tradition: "
+        return prefix + chunk["text"]
+    if chunk.get("content_type") == "oral_heritage":
+        prefix = "وفقاً للتراث الشفوي: " if language == "ar" else "Oral heritage: "
+        return prefix + chunk["text"]
+    return chunk["text"]
+
+
+def _answer_across_locations(request, content_dir):
+    # type: (GuideRequest, Optional[str]) -> GuideResponse
+    """Route an unscoped or unanswered question across reviewed location chunks."""
+    chunks = []  # type: List[dict]
+    sources = {}  # type: Dict[str, SourceInfo]
+    mentioned_ids = _mentioned_location_ids(request.question, content_dir)
+    records = content_loader.available_locations(content_dir)
+    if mentioned_ids:
+        records = [item for item in records if item["location_id"] in mentioned_ids]
+    for item in records:
+        if str(item.get("reviewed", "false")).lower() != "true":
+            continue
+        try:
+            content, source = _resolve_source(
+                StoryRequest(location_id=item["location_id"], language=request.language),
+                content_dir,
+            )
+        except ValidationError:
+            continue
+        if content is None:
+            continue
+        sources[source.location_id or item["location_id"]] = source
+        chunks.extend(_content_chunks(content, source, request.language))
+
+    if mentioned_ids and _is_location_question(request.question):
+        location_chunks = [
+            item for item in chunks
+            if item["section"] in ("overview", "arabic_overview", "arabic_guide")
+        ]
+        if location_chunks:
+            chunks = location_chunks
+
+    query = _expand_with_history(request.question, request.history)
+    selected, notes = _rank_chunks(query, chunks, limit=1 if mentioned_ids else 3)
+    if not selected:
+        return GuideResponse(
+            status=STATUS_OK,
+            answer=_not_in_records(request.language),
+            answered_from_source=False,
+            uncertainty_notes=[_not_in_records(request.language)],
+            model=OFFLINE_MODEL,
+        )
+    selected_sources = []
+    seen_sources = set()
+    for chunk in selected:
+        source = chunk.get("source")
+        if source and source.location_id not in seen_sources:
+            selected_sources.append(source)
+            seen_sources.add(source.location_id)
+    named_excerpts = []
+    for chunk in selected:
+        source = chunk.get("source")
+        prefix = (source.location_name + ": ") if source else ""
+        named_excerpts.append(prefix + _format_chunk(chunk, request.language))
+    return GuideResponse(
+        status=STATUS_OK,
+        answer=" ".join(named_excerpts),
+        answered_from_source=True,
+        excerpts=[item["text"] for item in selected],
+        citations=_citations(selected),
+        sources=selected_sources,
+        source=selected_sources[0] if selected_sources else SourceInfo(),
+        uncertainty_notes=notes,
+        model=OFFLINE_MODEL,
+    )
+
+
+def _mentions_other_location(question, current_location_id, content_dir):
+    # type: (str, Optional[str], Optional[str]) -> bool
+    return bool(
+        _mentioned_location_ids(question, content_dir) - {current_location_id}
+    )
+
+
+def _mentioned_location_ids(question, content_dir):
+    # type: (str, Optional[str]) -> set
+    question_words = set(retrieval.tokens(question))
+    if not question_words:
+        return set()
+    mentioned = set()
+    for item in content_loader.available_locations(content_dir):
+        content = content_loader.load(item["location_id"], content_dir)
+        if not content or not content.is_reviewed:
+            continue
+        for name in (
+            content.name,
+            content.arabic_name,
+            item["location_id"].replace("-", " "),
+        ):
+            name_words = set(retrieval.tokens(name))
+            if name_words and name_words.issubset(question_words):
+                mentioned.add(item["location_id"])
+                break
+    return mentioned
+
+
+def _is_location_question(question):
+    # type: (str) -> bool
+    return bool(
+        set(retrieval.tokens(question))
+        & {
+            "where", "located", "location", "town", "city", "village", "address",
+            "situated", "اين", "وين", "تقع", "موقع", "بلده", "مدينه",
+        }
+    )

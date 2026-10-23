@@ -33,14 +33,41 @@ export function mockGeneratedStory(location: ApiLocation, audience: string, lang
     const summary = arabic ? record.arabicDescription : record.description;
     const facts = arabic ? record.arabicFacts : record.facts;
     const tradition = arabic ? record.arabicTraditions : record.traditions;
-    let narrative = `${summary}\n\n${facts}`;
-    if (audience === 'short') narrative = summary;
-    if (audience === 'child') narrative = `${arabic ? 'هيا نتعرف إلى هذا المكان.' : 'Let us discover this place.'}\n\n${summary}`;
-    if (audience === 'student') narrative = `${arabic ? 'مدخل' : 'Overview'}\n${summary}\n\n${arabic ? 'حقائق موثقة' : 'Documented facts'}\n${facts}`;
-    if (audience === 'historian') narrative = `${arabic ? 'السجل الموثق' : 'Documented record'}\n${summary}\n\n${facts}${tradition ? `\n\n${arabic ? 'تقليد ديني منسوب' : 'Attributed religious tradition'}\n${tradition}` : ''}\n\n${arabic ? 'حدود السجل' : 'Limits of the record'}\n${arabic ? catalog.gaps.ar : catalog.gaps.en}`;
+    const importance = arabic ? record.arabicImportance : record.importance;
+    const landmarks = arabic ? record.arabicLandmarks : record.landmarks;
+    const walkthrough = arabic ? record.arabicWalkthrough : record.walkthrough;
+    const gaps = arabic ? record.arabicGaps : record.gaps;
+    const factsLabel = arabic ? 'حقائق موثقة' : 'Documented facts';
+    const placeLabel = arabic ? 'قراءة المكان' : 'Reading the place';
+    let narrative = [summary, walkthrough, importance, facts].filter(Boolean).join('\n\n');
+    if (audience === 'short') {
+      narrative = [summary, importance, facts]
+        .filter(Boolean)
+        .join(' ')
+        .split(/(?<=[.!?؟])\s+/)
+        .slice(0, 5)
+        .join(' ');
+    }
+    if (audience === 'child') {
+      narrative = arabic
+        ? `هيا نكتشف هذا المتحف. ${summary}\n\n${placeLabel}\n${walkthrough}\n\n${importance}`
+        : `Let us discover this museum. ${summary}\n\n${placeLabel}\n${walkthrough}\n\n${importance}`;
+    }
+    if (audience === 'student') {
+      const landmarkList = Array.isArray(landmarks) && landmarks.length
+        ? `\n\n${arabic ? 'عناصر موثقة في المكان' : 'Documented features'}\n- ${landmarks.join('\n- ')}`
+        : '';
+      narrative = `${arabic ? 'مدخل' : 'Overview'}\n${summary}\n\n${placeLabel}\n${walkthrough}\n\n${arabic ? 'لماذا يهمّ المتحف؟' : 'Why the museum matters'}\n${importance}${landmarkList}\n\n${factsLabel}\n${facts}`;
+    }
+    if (audience === 'tourist') {
+      narrative = `${placeLabel}\n${walkthrough}\n\n${importance}`;
+    }
+    if (audience === 'historian') {
+      narrative = `${arabic ? 'السجل الموثق' : 'Documented record'}\n${summary}\n\n${placeLabel}\n${walkthrough}\n\n${factsLabel}\n${facts}${tradition ? `\n\n${arabic ? 'تقليد ديني منسوب' : 'Attributed religious tradition'}\n${tradition}` : ''}\n\n${arabic ? 'حدود السجل' : 'Limits of the record'}\n${gaps}`;
+    }
     const heading = tone === 'educational' ? (arabic ? 'قراءة السجل' : 'Reading the record') : tone === 'emotional' ? (arabic ? 'لحظة للتأمل' : 'A moment to reflect') : tone === 'storytelling' ? (arabic ? 'حكاية المكان' : 'The story of this place') : '';
     if (heading) narrative = `${heading}\n\n${narrative}`;
-    return {title:arabic?record.arabicName:record.name,summary,narrative,targetAudience:audience,language,tone,wordCount:narrative.split(/\s+/).length,uncertaintyNotes:[arabic?catalog.gaps.ar:catalog.gaps.en],warnings:[],source:{locationId:location.id,locationName:location.name,contentFile:location.contentFile,summaryFile:location.aiSummaryFile},generatedBy:'frontend-mock'};
+    return {title:arabic?record.arabicName:record.name,summary,narrative,targetAudience:audience,language,tone,wordCount:narrative.split(/\s+/).length,uncertaintyNotes:[gaps || (arabic?catalog.gaps.ar:catalog.gaps.en)],warnings:[],source:{locationId:location.id,locationName:location.name,contentFile:location.contentFile,summaryFile:location.aiSummaryFile},generatedBy:'frontend-mock'};
   }
   const profile = locations.find((item) => item.id === location.id);
   const walkthrough = visitorWalkthrough(location.id, language === "ar")

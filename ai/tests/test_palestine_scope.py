@@ -31,6 +31,40 @@ class PalestineScopeTests(unittest.TestCase):
                     self.assertIn(story.source.governorate_id,['ramallah','hebron','gaza'])
                     if language=='ar': self.assertTrue(any('\u0600'<=c<='\u06ff' for c in story.narrative))
 
+    def test_yasser_arafat_museum_story_uses_documented_design_and_archive_details(self):
+        expected_by_language = {
+            'en': ['four ramps', 'bridge', '34-month siege', 'bilingual Arabic-English electronic archive'],
+            'ar': ['أربعة مماشٍ', 'جسر', '٣٤ شهراً', 'أرشيفاً إلكترونياً بالعربية والإنجليزية'],
+        }
+        for language, expected_phrases in expected_by_language.items():
+            with self.subTest(language=language), patch('service.llm.is_configured',return_value=False):
+                story = generate_story(StoryRequest(
+                    location_id='yasser-arafat-museum',
+                    language=language,
+                    target_audience='general',
+                ))
+                self.assertFalse(story.error)
+                self.assertGreater(story.word_count, 100)
+                self.assertTrue(story.source.references)
+                self.assertEqual(story.warnings, [])
+                for phrase in expected_phrases:
+                    self.assertIn(phrase, story.narrative)
+                self.assertTrue(any('مداخل' in note or 'access' in note.lower()
+                                    for note in story.uncertainty_notes))
+
+    def test_yasser_arafat_museum_fact_guard_accepts_all_audience_modes(self):
+        for language in ('ar', 'en'):
+            for audience in ('short', 'child', 'student', 'tourist', 'historian', 'general'):
+                with self.subTest(language=language, audience=audience), patch(
+                    'service.llm.is_configured', return_value=False
+                ):
+                    story = generate_story(StoryRequest(
+                        location_id='yasser-arafat-museum',
+                        language=language,
+                        target_audience=audience,
+                    ))
+                    self.assertEqual(story.warnings, [])
+
     def test_multi_governorate_journey_has_one_integrated_narrative(self):
         with patch('service.llm.is_configured',return_value=False):
             result = generate_journey({'governorate_ids':['jerusalem','hebron'],'location_ids':['bab-al-amud','hebron-old-town'],'language':'en'})

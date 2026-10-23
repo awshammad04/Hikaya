@@ -53,6 +53,13 @@ Each summary has a fixed shape so the AI service can parse it:
 - `6. Religious Traditions` — *never to be presented as historical fact*
 - `7. Oral Heritage and Popular Stories` — *never to be presented as historical fact*
 - `8. Source Notes` — including the explicit list of gaps the AI must not fill
+- `9. Visitor Walkthrough`
+- `10. Reviewed References`
+- Optional reviewed Arabic retrieval sections: `Arabic Overview`, `Arabic History`
+  (or `Arabic Historical Context`), `Arabic Importance`, `Arabic Landmarks`, and
+  `Arabic Religious Traditions`. Legacy `Arabic Guide Text` remains supported.
+  Every passage must faithfully reflect the reviewed record; religious traditions
+  are attributed and never presented as historical fact.
 
 `location_id` must match the `id` used in `database/seed.sql` and in the backend API
 (`muslim-quarter`, `christian-quarter`, `armenian-quarter`, `maghariba-quarter`,
