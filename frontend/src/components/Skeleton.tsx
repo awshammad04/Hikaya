@@ -30,7 +30,7 @@ export const SkeletonText: React.FC<{ lines?: number }> = ({ lines = 3 }) => (
 export const SkeletonCard: React.FC = () => (
   <div
     aria-hidden="true"
-    className="bg-white rounded-3xl border border-brand-border overflow-hidden"
+    className="bg-brand-surface rounded-3xl border border-brand-border overflow-hidden"
   >
     <SkeletonLine className="h-44 w-full rounded-none" />
     <div className="p-5 space-y-3">

@@ -47,7 +47,7 @@ export const BeforeAfterSlider: React.FC<BeforeAfterSliderProps> = ({ data, fall
               className="h-full w-full object-cover"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/10 to-transparent" aria-hidden="true" />
-            <div className="absolute start-4 top-4 inline-flex items-center gap-2 rounded-full border border-white/35 bg-black/35 px-3 py-1.5 text-[10px] font-mono font-bold tracking-wider text-white backdrop-blur-sm">
+            <div className="absolute start-4 top-4 inline-flex items-center gap-2 rounded-full border border-white/35 bg-black/35 px-3 py-1.5 text-xs font-mono font-bold tracking-wider text-white backdrop-blur-sm">
               <Camera className="h-3.5 w-3.5 text-brand-amber" />
               {isArabic ? "صورة أرشيفية توثيقية للمعلم" : "Documentary archival photograph"}
             </div>
@@ -56,7 +56,7 @@ export const BeforeAfterSlider: React.FC<BeforeAfterSliderProps> = ({ data, fall
               {fallbackDescription && <p className="max-w-3xl text-xs leading-6 text-white/90">{fallbackDescription}</p>}
             </figcaption>
           </div>
-          <div className="flex flex-wrap items-center justify-between gap-2 bg-white px-5 py-3 text-[10px] text-brand-muted" dir={isArabic ? "rtl" : "ltr"}>
+          <div className="flex flex-wrap items-center justify-between gap-2 bg-brand-surface px-5 py-3 text-xs text-brand-muted" dir={isArabic ? "rtl" : "ltr"}>
             <span>
               <bdi>{fallbackImage.credit}</bdi>
               {fallbackImage.license ? ` · ${fallbackImage.license}` : ""}
@@ -67,7 +67,7 @@ export const BeforeAfterSlider: React.FC<BeforeAfterSliderProps> = ({ data, fall
               </a>
             )}
           </div>
-          <p className="border-t border-brand-border-light bg-brand-bg px-5 py-3 text-[11px] leading-5 text-brand-muted">
+          <p className="border-t border-brand-border-light bg-brand-bg px-5 py-3 text-xs leading-5 text-brand-muted">
             {isArabic
               ? "لا توجد بعد صورتان موثقتان للزاوية نفسها، لذلك نعرض هذه الصورة وحدها ولا نصنع مقارنة قد توحي بتغيّر غير مثبت."
               : "The archive does not yet hold two verified views of the same angle, so this photograph is shown on its own rather than implying an unverified comparison."}
@@ -142,20 +142,20 @@ export const BeforeAfterSlider: React.FC<BeforeAfterSliderProps> = ({ data, fall
             className="absolute inset-0 h-full max-w-none object-cover"
             draggable={false}
           />
-          <span className="absolute top-3 left-3 bg-white/90 text-brand-olive text-[10px] font-mono uppercase tracking-wider px-2 py-1 rounded-full">
+          <span className="absolute top-3 left-3 bg-white/90 text-brand-olive text-xs font-mono uppercase tracking-wider px-2 py-1 rounded-full">
             {before.capturedAt || (isArabic ? "تاريخية" : "Historical")}
           </span>
         </div>
 
-        <span className="absolute top-3 right-3 bg-white/90 text-brand-olive text-[10px] font-mono uppercase tracking-wider px-2 py-1 rounded-full">
+        <span className="absolute top-3 right-3 bg-white/90 text-brand-olive text-xs font-mono uppercase tracking-wider px-2 py-1 rounded-full">
           {after.capturedAt || (isArabic ? "اليوم" : "Today")}
         </span>
 
         <div
-          className="absolute inset-y-0 w-0.5 bg-white shadow-lg pointer-events-none"
+          className="absolute inset-y-0 w-0.5 bg-brand-surface shadow-lg pointer-events-none"
           style={{ left: `${position}%` }}
         >
-          <span className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white rounded-full p-2 shadow-lg">
+          <span className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-brand-surface rounded-full p-2 shadow-lg">
             <MoveHorizontal className="w-4 h-4 text-brand-olive" />
           </span>
         </div>
@@ -171,7 +171,7 @@ export const BeforeAfterSlider: React.FC<BeforeAfterSliderProps> = ({ data, fall
         />
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-[10px] font-mono text-brand-muted">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs font-mono text-brand-muted">
         <p>
           <span className="font-bold text-brand-olive">{isArabic ? "الماضي:" : "Then:"}</span> {before.credit}
           {before.license ? ` · ${before.license}` : ""}

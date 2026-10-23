@@ -19,6 +19,8 @@ export interface NarrativeReaderProps {
   /** Start reading aloud as soon as the text arrives (used by the walking tour). */
   autoPlay?: boolean;
   locationId?: string;
+  /** Show only the listening controls; the text is rendered elsewhere. */
+  controlsOnly?: boolean;
 }
 
 /** Returns the word being spoken at `currentTime`, or -1 during a gap. */
@@ -70,6 +72,17 @@ function tokenise(text: string) {
 }
 
 /**
+ * Short first lines without closing punctuation ("What to notice",
+ * "Chronology:") are section headings in the reviewed stories.
+ */
+function isHeadingLine(line: string) {
+  const text = line.trim();
+  if (!text || text.startsWith("-") || text.length > 60) return false;
+  if (text.split(/\s+/).length > 8) return false;
+  return text.endsWith(":") || !/[.؟?!،,;؛…]$/.test(text);
+}
+
+/**
  * Displays a narrative, optionally revealing it as it is "written", with
  * independent read-aloud controls. When exact word timestamps are supplied,
  * highlighting follows the audio playback clock rather than a flat timer.
@@ -81,6 +94,7 @@ export const NarrativeReader: React.FC<NarrativeReaderProps> = ({
   narration = true,
   autoPlay = false,
   locationId,
+  controlsOnly = false,
 }) => {
   const reduced = useReducedMotion();
   const { language, isArabic } = useInterfaceLanguage();
@@ -104,6 +118,7 @@ export const NarrativeReader: React.FC<NarrativeReaderProps> = ({
     typing && !reduced ? 0 : totalWords,
   );
   const [loadingSeconds, setLoadingSeconds] = useState(0);
+  const [settingsOpen, setSettingsOpen] = useState(false);
   const autoPlayedFor = useRef<string | null>(null);
 
   useEffect(() => {
@@ -161,21 +176,21 @@ export const NarrativeReader: React.FC<NarrativeReaderProps> = ({
                 speech.speak(text);
                 if (locationId) markAudioListened(locationId);
               }}
-              className="border border-brand-border hover:border-brand-amber text-brand-olive text-[10px] font-mono uppercase tracking-wider px-4 py-2 rounded-full inline-flex items-center gap-1.5 transition-colors"
+              className="bg-brand-olive hover:bg-brand-olive-deep text-white text-sm font-bold px-5 py-2 rounded-full inline-flex items-center gap-2 transition-colors"
             >
-              <Volume2 className="w-3 h-3" />
-              {isArabic ? "استمع" : "Listen"}
+              <Volume2 className="w-4 h-4" />
+              {isArabic ? "استمع للحكاية" : "Listen to the story"}
             </button>
           ) : speech.loading ? (
             <>
-              <span className="text-[10px] text-brand-olive font-bold px-3 py-2 inline-flex items-center gap-2" role="status" aria-live="polite">
+              <span className="text-xs text-brand-olive font-bold px-3 py-2 inline-flex items-center gap-2" role="status" aria-live="polite">
                 <span className="w-3.5 h-3.5 rounded-full border-2 border-brand-amber border-t-transparent animate-spin" />
                 {isArabic ? `نحضّر صوتاً طبيعياً… ${loadingSeconds}ث` : `Preparing natural voice… ${loadingSeconds}s`}
               </span>
               <button
                 type="button"
                 onClick={speech.stop}
-                className="border border-brand-border hover:border-brand-amber text-brand-olive text-[10px] font-mono uppercase tracking-wider px-4 py-2 rounded-full inline-flex items-center gap-1.5 transition-colors"
+                className="border border-brand-border hover:border-brand-amber text-brand-olive text-xs font-mono uppercase tracking-wider px-4 py-2 rounded-full inline-flex items-center gap-1.5 transition-colors"
               >
                 <Square className="w-3 h-3" />
                 {isArabic ? "إلغاء" : "Cancel"}
@@ -189,7 +204,7 @@ export const NarrativeReader: React.FC<NarrativeReaderProps> = ({
               <button
                 type="button"
                 onClick={speech.paused ? speech.resume : speech.pause}
-                className="border border-brand-border hover:border-brand-amber text-brand-olive text-[10px] font-mono uppercase tracking-wider px-4 py-2 rounded-full inline-flex items-center gap-1.5 transition-colors"
+                className="border border-brand-border hover:border-brand-amber text-brand-olive text-xs font-mono uppercase tracking-wider px-4 py-2 rounded-full inline-flex items-center gap-1.5 transition-colors"
               >
                 {speech.paused ? (
                   <Play className="w-3 h-3" />
@@ -201,7 +216,7 @@ export const NarrativeReader: React.FC<NarrativeReaderProps> = ({
               <button
                 type="button"
                 onClick={speech.stop}
-                className="border border-brand-border hover:border-brand-amber text-brand-olive text-[10px] font-mono uppercase tracking-wider px-4 py-2 rounded-full inline-flex items-center gap-1.5 transition-colors"
+                className="border border-brand-border hover:border-brand-amber text-brand-olive text-xs font-mono uppercase tracking-wider px-4 py-2 rounded-full inline-flex items-center gap-1.5 transition-colors"
               >
                 <Square className="w-3 h-3" />
                 {isArabic ? "إيقاف" : "Stop"}
@@ -213,25 +228,37 @@ export const NarrativeReader: React.FC<NarrativeReaderProps> = ({
             <button
               type="button"
               onClick={() => setTypedCount(totalWords)}
-              className="text-[10px] font-mono uppercase tracking-wider text-brand-muted hover:text-brand-olive underline underline-offset-2"
+              className="text-xs font-mono uppercase tracking-wider text-brand-muted hover:text-brand-olive underline underline-offset-2"
             >
               {isArabic ? "أظهر النص كاملاً" : "Show it all"}
             </button>
           )}
 
           {!speech.speaking && !speech.loading && (
-            <>
-              <label className="text-[10px] text-brand-muted inline-flex items-center gap-1.5">
+            <button
+              type="button"
+              onClick={() => setSettingsOpen((open) => !open)}
+              aria-expanded={settingsOpen}
+              className="ms-auto inline-flex items-center gap-1.5 rounded-full px-3 py-2 text-xs font-bold text-brand-muted transition-colors hover:text-brand-olive"
+            >
+              <SlidersHorizontal className="w-3.5 h-3.5" />
+              {isArabic ? "إعدادات الصوت" : "Voice settings"}
+            </button>
+          )}
+
+          {settingsOpen && !speech.speaking && !speech.loading && (
+            <div className="basis-full flex flex-wrap items-center gap-2 border-t border-brand-border-light pt-2.5">
+              <label className="text-xs text-brand-muted inline-flex items-center gap-1.5">
                 <Sparkles className="w-3 h-3 text-brand-amber" />
                 <span className="sr-only">{isArabic ? "نوع الصوت" : "Voice mode"}</span>
                 <select
                   value={speech.mode}
                   onChange={(event) => speech.setMode(event.target.value as "natural" | "device")}
-                  className="bg-white border border-brand-border rounded-full px-3 py-1.5 text-[10px] text-brand-olive focus:outline-none focus:border-brand-amber"
+                  className="bg-brand-surface border border-brand-border rounded-full px-3 py-1.5 text-xs text-brand-olive focus:outline-none focus:border-brand-amber"
                   aria-label={isArabic ? "نوع الصوت" : "Voice mode"}
                 >
-                  <option value="natural">{isArabic ? "صوت طبيعي عبر الإنترنت" : "Natural online voice"}</option>
-                  <option value="device">{isArabic ? "صوت الجهاز دون اتصال" : "Offline device voice"}</option>
+                  <option value="natural">{isArabic ? "صوت الراوي" : "Narrator voice"}</option>
+                  <option value="device">{isArabic ? "صوت الجهاز (دون إنترنت)" : "Device voice (offline)"}</option>
                 </select>
               </label>
 
@@ -239,7 +266,7 @@ export const NarrativeReader: React.FC<NarrativeReaderProps> = ({
                 <select
                   value={speech.selectedVoice}
                   onChange={(event) => speech.setSelectedVoice(event.target.value)}
-                  className="max-w-48 bg-white border border-brand-border rounded-full px-3 py-1.5 text-[10px] text-brand-olive focus:outline-none focus:border-brand-amber"
+                  className="max-w-48 bg-brand-surface border border-brand-border rounded-full px-3 py-1.5 text-xs text-brand-olive focus:outline-none focus:border-brand-amber"
                   aria-label={isArabic ? "اختر صوت الجهاز" : "Choose device voice"}
                 >
                   {speech.voices
@@ -252,7 +279,7 @@ export const NarrativeReader: React.FC<NarrativeReaderProps> = ({
                 <select
                   value={speech.naturalVoice}
                   onChange={(event) => speech.setNaturalVoice(event.target.value as "Kore" | "Charon")}
-                  className="bg-white border border-brand-border rounded-full px-3 py-1.5 text-[10px] text-brand-olive focus:outline-none focus:border-brand-amber"
+                  className="bg-brand-surface border border-brand-border rounded-full px-3 py-1.5 text-xs text-brand-olive focus:outline-none focus:border-brand-amber"
                   aria-label={isArabic ? "اختر نبرة المرشد" : "Choose guide voice"}
                 >
                   <option value="Kore">{isArabic ? "ليلى · دافئة وواضحة" : "Layla · warm and clear"}</option>
@@ -260,12 +287,12 @@ export const NarrativeReader: React.FC<NarrativeReaderProps> = ({
                 </select>
               )}
 
-              <label className="text-[10px] text-brand-muted inline-flex items-center gap-1.5">
-                <SlidersHorizontal className="w-3 h-3" />
+              <label className="text-xs text-brand-muted inline-flex items-center gap-1.5">
+                <span>{isArabic ? "السرعة" : "Speed"}</span>
                 <select
                   value={speech.rate}
                   onChange={(event) => speech.setRate(Number(event.target.value))}
-                  className="bg-white border border-brand-border rounded-full px-3 py-1.5 text-[10px] text-brand-olive focus:outline-none focus:border-brand-amber"
+                  className="bg-brand-surface border border-brand-border rounded-full px-3 py-1.5 text-xs text-brand-olive focus:outline-none focus:border-brand-amber"
                   aria-label={isArabic ? "سرعة القراءة" : "Reading speed"}
                 >
                   <option value={0.78}>{isArabic ? "هادئة" : "Slow"}</option>
@@ -273,27 +300,27 @@ export const NarrativeReader: React.FC<NarrativeReaderProps> = ({
                   <option value={1.05}>{isArabic ? "سريعة" : "Fast"}</option>
                 </select>
               </label>
-            </>
+            </div>
           )}
         </div>
       )}
 
       {speech.notice && (
-        <p className="text-[10px] text-brand-muted bg-brand-amber/10 border border-brand-amber/20 rounded-xl px-3 py-2" role="status">
+        <p className="text-xs text-brand-muted bg-brand-amber/10 border border-brand-amber/20 rounded-xl px-3 py-2" role="status">
           {speech.notice}
         </p>
       )}
 
-      <div
+      {!controlsOnly && <div
         className="mx-auto max-w-prose space-y-5 px-1 text-[15px] leading-[1.85] text-brand-text sm:px-3 sm:text-base"
         dir={isArabic ? "rtl" : "ltr"}
       >
-        {paragraphs.map((lines, paragraphIndex) => (
-          <p key={paragraphIndex} className="whitespace-pre-line">
-            {lines.map((line, lineIndex) => (
-              <React.Fragment key={lineIndex}>
-                {lineIndex > 0 && "\n"}
-                {line.map((entry, entryIndex) => {
+        {paragraphs.map((lines, paragraphIndex) => {
+          const headed = lines.length > 1 && isHeadingLine(lines[0].map((entry) => entry.token).join(""));
+          return (
+          <p key={paragraphIndex} className="whitespace-pre-line" dir="auto">
+            {lines.map((line, lineIndex) => {
+              const words = line.map((entry, entryIndex) => {
                   if (entry.index === -1) {
                     return <React.Fragment key={entryIndex}>{entry.token}</React.Fragment>;
                   }
@@ -311,19 +338,32 @@ export const NarrativeReader: React.FC<NarrativeReaderProps> = ({
                       {entry.token}
                     </span>
                   );
-                })}
-              </React.Fragment>
-            ))}
+                });
+              if (headed && lineIndex === 0) {
+                return (
+                  <span key={lineIndex} className="block mb-1 font-serif text-lg font-black text-brand-olive">
+                    {words}
+                  </span>
+                );
+              }
+              return (
+                <React.Fragment key={lineIndex}>
+                  {lineIndex > 0 && !(headed && lineIndex === 1) && "\n"}
+                  {words}
+                </React.Fragment>
+              );
+            })}
             {/* Cursor, only on the paragraph currently being revealed. */}
             {isTyping && paragraphIndex === paragraphs.length - 1 && (
-              <span className="inline-block w-1.5 h-4 bg-brand-amber align-middle animate-pulse ml-0.5" />
+              <span className="inline-block w-1.5 h-4 bg-brand-amber align-middle animate-pulse ms-0.5" />
             )}
           </p>
-        ))}
-      </div>
+          );
+        })}
+      </div>}
 
       {narration && !speech.supported && (
-        <p className="text-[10px] font-mono text-brand-muted">
+        <p className="text-xs font-mono text-brand-muted">
           {isArabic ? "القراءة الصوتية غير متاحة في هذا المتصفح." : "Read-aloud is not available in this browser."}
         </p>
       )}

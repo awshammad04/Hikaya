@@ -106,13 +106,13 @@ export const MapPage: React.FC = () => {
               {itinerary && (
                 <section className="bg-brand-olive text-white rounded-3xl p-5 space-y-4" dir={tourLanguage === "ar" ? "rtl" : "ltr"}>
                   <div>
-                    <p className="text-[10px] text-brand-amber uppercase tracking-widest inline-flex items-center gap-1.5"><Route className="w-3 h-3" />{tourText("حكاية", "Hikaya", "Hikaya")}</p>
+                    <p className="text-xs text-brand-amber-light uppercase tracking-widest inline-flex items-center gap-1.5"><Route className="w-3 h-3" />{tourText("جولتك", "Your tour", "Votre visite")}</p>
                     <h2 className="font-serif font-black text-xl">{itinerary.title}</h2>
                     <p className="text-xs text-stone-300">{tourText(`${itinerary.stops.length} محطات · نحو ${Math.round(itinerary.totalMinutes / 6) / 10} ساعة · ${itinerary.totalWalkingMinutes} دقيقة مشي`, `${itinerary.stops.length} stops · ~${Math.round(itinerary.totalMinutes / 6) / 10} h · ${itinerary.totalWalkingMinutes} min walking`, `${itinerary.stops.length} étapes · environ ${Math.round(itinerary.totalMinutes / 6) / 10} h · ${itinerary.totalWalkingMinutes} min à pied`)}</p>
                   </div>
 
                   <div className="grid grid-cols-[1fr_auto] gap-2">
-                    <a href={fullRouteUrl(itinerary.stops)} target="_blank" rel="noreferrer" className="bg-brand-amber hover:bg-[#b45f05] text-white rounded-xl px-4 py-3 text-xs font-bold inline-flex items-center justify-center gap-2 transition-colors">
+                    <a href={fullRouteUrl(itinerary.stops)} target="_blank" rel="noreferrer" className="bg-brand-amber hover:bg-brand-amber-deep text-white rounded-xl px-4 py-3 text-xs font-bold inline-flex items-center justify-center gap-2 transition-colors">
                       <Navigation2 className="w-4 h-4" />{tourText("افتح المسار كاملاً", "Open complete route", "Ouvrir l’itinéraire")}<ExternalLink className="w-3 h-3" />
                     </a>
                     <Link to="/plan-tour" className="rounded-xl border border-white/25 px-3 grid place-items-center hover:bg-white/10" aria-label={tourText("عدّل الجولة", "Edit tour", "Modifier le parcours")} title={tourText("عدّل الجولة", "Edit tour", "Modifier le parcours")}><Pencil className="w-4 h-4" /></Link>
@@ -128,25 +128,25 @@ export const MapPage: React.FC = () => {
                       const stopName = tourLanguage === "ar" ? (profile?.arabicName ?? stop.arabicName ?? stop.locationName) : stop.locationName;
                       const stopGuidance = tourLanguage === "ar" ? stop.arabicGuidance : tourLanguage === "fr" ? stop.frenchGuidance : stop.guidance;
                       return <React.Fragment key={stop.locationId}>
-                        {dayStarts && <li className="pt-2 first:pt-0 text-[10px] uppercase tracking-widest text-brand-amber inline-flex items-center gap-1.5"><CalendarDays className="w-3 h-3" />{tourText(`اليوم ${stop.day}`, `Day ${stop.day}`, `Jour ${stop.day}`)}</li>}
+                        {dayStarts && <li className="pt-2 first:pt-0 text-xs uppercase tracking-widest text-brand-amber inline-flex items-center gap-1.5"><CalendarDays className="w-3 h-3" />{tourText(`اليوم ${stop.day}`, `Day ${stop.day}`, `Jour ${stop.day}`)}</li>}
                         <li className="bg-white/10 rounded-xl p-3 text-xs space-y-2">
                         <div className="flex gap-3">
                           <button type="button" onClick={() => setSelected(locations.find((item) => item.id === stop.locationId) ?? null)} className="w-7 h-7 rounded-full bg-brand-amber flex items-center justify-center font-bold shrink-0">{stop.order}</button>
                           <div className="min-w-0">
                             <Link to={`/locations/${stop.locationId}?tour=1`} className="font-bold hover:text-brand-amber">{stopName}</Link>
                             <p className="text-stone-300 mt-1">{stopGuidance}</p>
-                            {stop.matchedInterests.length > 0 && <div className="flex flex-wrap gap-1 mt-2">{stop.matchedInterests.map((interest) => <span key={interest} className="rounded-full bg-white/10 px-2 py-0.5 text-[9px] text-stone-200">{interestName(interest, tourLanguage)}</span>)}</div>}
+                            {stop.matchedInterests.length > 0 && <div className="flex flex-wrap gap-1 mt-2">{stop.matchedInterests.map((interest) => <span key={interest} className="rounded-full bg-white/10 px-2 py-0.5 text-xs text-stone-200">{interestName(interest, tourLanguage)}</span>)}</div>}
                           </div>
                         </div>
                         <div className="flex items-center justify-between gap-2 border-t border-white/10 pt-2">
-                          <span className="text-[10px] text-stone-300 inline-flex items-center gap-1"><Footprints className="w-3 h-3" />{previous ? tourText(`${stop.walkFromPreviousMinutes} د · ${distance ? `${distance} م · ` : ""}${direction}`, `${stop.walkFromPreviousMinutes} min · ${distance ? `${distance} m · ` : ""}${direction}`, `${stop.walkFromPreviousMinutes} min · ${distance ? `${distance} m · ` : ""}${direction}`) : tourText("نقطة البداية", "Starting point", "Point de départ")}</span>
+                          <span className="text-xs text-stone-300 inline-flex items-center gap-1"><Footprints className="w-3 h-3" />{previous ? tourText(`${stop.walkFromPreviousMinutes} د · ${distance ? `${distance} م · ` : ""}${direction}`, `${stop.walkFromPreviousMinutes} min · ${distance ? `${distance} m · ` : ""}${direction}`, `${stop.walkFromPreviousMinutes} min · ${distance ? `${distance} m · ` : ""}${direction}`) : tourText("نقطة البداية", "Starting point", "Point de départ")}</span>
                           <button type="button" onClick={() => { setSelected(locations.find((item) => item.id === stop.locationId) ?? null); setRouteOpen(true); }} className="text-brand-amber hover:text-white inline-flex items-center gap-1 font-bold"><Navigation2 className="w-3 h-3" />{tourText("إرشادات", "Guide", "Guide")}</button>
                         </div>
                         </li>
                       </React.Fragment>;
                     })}
                   </ol>
-                  <p className="text-[10px] text-stone-300 border-t border-white/10 pt-3">{itinerary.uncertaintyNotes[0]}</p>
+                  <p className="text-xs text-stone-300 border-t border-white/10 pt-3">{itinerary.uncertaintyNotes[0]}</p>
                   <button type="button" onClick={openMyJerusalemStory} className="w-full rounded-xl border border-brand-amber/50 bg-brand-amber/15 px-4 py-3 text-xs font-bold text-white transition hover:bg-brand-amber/25 inline-flex items-center justify-center gap-2">
                     <Sparkles className="h-4 w-4 text-brand-amber" />{tourText("إنشاء حكايتي في القدس", "Generate My Jerusalem Story", "Créer mon histoire de Jérusalem")}
                   </button>
@@ -157,7 +157,7 @@ export const MapPage: React.FC = () => {
                 <>
                   <LocationCard location={selected} visited={visitedState.hasVisited(selected.id)} />
                   <div className="grid grid-cols-2 gap-2">
-                    <button type="button" onClick={() => navigate(`/locations/${selected.id}`)} className="bg-brand-olive hover:bg-[#4a4a35] text-white text-xs font-bold px-4 py-3 rounded-full transition-colors">{isArabic ? "افتح المكان" : `Open ${selected.name}`}</button>
+                    <button type="button" onClick={() => navigate(`/locations/${selected.id}`)} className="bg-brand-olive hover:bg-brand-olive-deep text-white text-xs font-bold px-4 py-3 rounded-full transition-colors">{isArabic ? "افتح المكان" : `Open ${selected.name}`}</button>
                     {selected.latitude != null && selected.longitude != null && <button type="button" onClick={() => setRouteOpen(true)} className="border border-brand-border hover:border-brand-amber text-brand-olive text-xs font-bold px-4 py-3 rounded-full transition-colors inline-flex items-center justify-center gap-1.5"><Navigation2 className="w-4 h-4 text-brand-amber" />{isArabic ? "إرشادات المشي" : "Walking guide"}</button>}
                   </div>
                 </>

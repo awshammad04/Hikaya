@@ -58,21 +58,12 @@ export const HomePage: React.FC = () => {
   return (
     <PageTransition>
       <div className="space-y-14">
-        <Link to="/" className="text-xs text-brand-muted hover:text-brand-olive">{isArabic ? "فلسطين / القدس" : "Palestine / Jerusalem"}</Link>
+        <Link to="/" className="inline-block text-sm text-brand-muted hover:text-brand-olive">{isArabic ? "فلسطين / القدس" : "Palestine / Jerusalem"}</Link>
         <DataSourceBanner source={source} reason={reason || featuredError} />
 
         {/* --- Hero -------------------------------------------------------- */}
         <JerusalemPulse>
             <div className="lg:col-span-7 space-y-5">
-              <motion.p
-                className="text-[10px] font-mono uppercase tracking-widest text-brand-amber"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: reduced ? 0 : 0.1 }}
-              >
-                Hikaya
-              </motion.p>
-
               <motion.h1
                 className="max-w-3xl font-serif font-black text-4xl sm:text-5xl leading-tight text-white [text-shadow:0_2px_22px_rgba(0,0,0,0.45)]"
                 initial={{ opacity: 0, y: reduced ? 0 : 14 }}
@@ -94,33 +85,33 @@ export const HomePage: React.FC = () => {
               </motion.p>
 
               <motion.div
-                className="grid grid-cols-2 gap-2 pt-1 sm:flex sm:flex-wrap sm:items-center sm:gap-3 sm:pt-2"
+                className="space-y-4 pt-1 sm:pt-2"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: reduced ? 0 : 0.35 }}
               >
-                <Link
-                  to="/plan-tour"
-                  className="min-h-11 justify-center rounded-2xl bg-brand-olive px-2 py-2 text-center text-[9px] font-serif font-black uppercase tracking-[0.07em] text-brand-bg transition-colors hover:bg-[#4a4a35] inline-flex items-center gap-1.5 sm:min-h-12 sm:w-auto sm:rounded-full sm:px-6 sm:py-3 sm:text-xs sm:tracking-widest sm:gap-2"
-                >
-                  <Route className="w-3.5 h-3.5 text-brand-amber" />
-                  <span className="sm:hidden">{isArabic ? "صمّم جولتك" : "Plan your tour"}</span>
-                  <span className="hidden sm:inline">{isArabic ? "صمّم جولتك الذكية في القدس" : "Plan Your Tour"}</span>
-                </Link>
-                <Link
-                  to={`/locations/${locations[0]?.id ?? "muslim-quarter"}?ask=1`}
-                  className="min-h-11 justify-center rounded-2xl bg-brand-amber px-2 py-2 text-center text-[9px] font-serif font-black uppercase tracking-[0.07em] text-white transition-colors hover:bg-[#b45f05] inline-flex items-center gap-1.5 sm:min-h-12 sm:w-auto sm:rounded-full sm:px-6 sm:py-3 sm:text-xs sm:tracking-widest sm:gap-2"
-                >
-                  <Sparkles className="w-3.5 h-3.5" />
-                  <span className="sm:hidden">{isArabic ? "اسأل الدليل" : "Ask the guide"}</span>
-                  <span className="hidden sm:inline">{isArabic ? "اسأل حكاية" : "Ask Hikaya"}</span>
-                </Link>
+                <div className="flex flex-wrap items-center gap-3">
+                  <Link
+                    to="/plan-tour"
+                    className="min-h-12 rounded-full bg-brand-amber px-6 py-3 text-sm font-bold text-white transition-colors hover:bg-brand-amber-deep inline-flex items-center gap-2"
+                  >
+                    <Route className="w-4 h-4" />
+                    {isArabic ? "صمّم جولتك في القدس" : "Plan your tour"}
+                  </Link>
+                  <Link
+                    to={`/locations/${locations[0]?.id ?? "muslim-quarter"}?ask=1`}
+                    className="min-h-12 rounded-full border border-white/50 bg-black/20 px-6 py-3 text-sm font-bold text-white backdrop-blur-md transition-colors hover:bg-black/35 inline-flex items-center gap-2"
+                  >
+                    <Sparkles className="w-4 h-4 text-brand-amber-light" />
+                    {isArabic ? "اسأل حكاية" : "Ask Hikaya"}
+                  </Link>
+                </div>
                 <Link
                   to="/contribute"
-                  className="col-span-2 min-h-10 justify-center rounded-2xl border border-white/45 bg-black/15 px-3 py-2 text-center text-[9px] font-serif font-black uppercase tracking-[0.1em] text-white backdrop-blur-md transition-colors hover:border-brand-amber hover:bg-black/30 inline-flex items-center gap-1.5 sm:min-h-12 sm:w-auto sm:rounded-full sm:px-6 sm:py-3 sm:text-xs sm:tracking-widest sm:gap-2"
+                  className="inline-flex items-center gap-1.5 text-sm font-bold text-white/85 underline-offset-4 hover:text-white hover:underline"
                 >
-                  <PenLine className="w-3.5 h-3.5" />
-                  {isArabic ? "شارك ذكرى" : "Share a memory"}
+                  <PenLine className="w-4 h-4" />
+                  {isArabic ? "لديك ذكرى من القدس؟ شاركها" : "Have a Jerusalem memory? Share it"}
                 </Link>
               </motion.div>
             </div>
@@ -132,7 +123,7 @@ export const HomePage: React.FC = () => {
             {isArabic ? "حكاية اليوم" : "Story of the day"}
           </h2>
           {featuredLoading ? (
-            <div className="bg-white rounded-3xl border border-brand-border overflow-hidden grid grid-cols-1 md:grid-cols-5">
+            <div className="bg-brand-surface rounded-3xl border border-brand-border overflow-hidden grid grid-cols-1 md:grid-cols-5">
               <SkeletonLine className="h-48 md:col-span-2 rounded-none" />
               <div className="md:col-span-3 p-6 space-y-3">
                 <SkeletonLine className="h-3 w-28" />
@@ -160,13 +151,13 @@ export const HomePage: React.FC = () => {
               <h2 className="font-serif font-black text-2xl text-brand-olive">
                 {isArabic ? "أحياء وحارات القدس" : "Jerusalem quarters & neighbourhoods"}
               </h2>
-              <p className="text-xs text-brand-muted font-serif italic">
+              <p className="text-sm text-brand-muted">
                 {isArabic ? "ثماني بوابات لفهم تراث المدينة الحي." : "Eight focused gateways into the city’s living heritage."}
               </p>
             </div>
             <Link
               to="/constellation"
-              className="text-xs font-serif font-bold uppercase tracking-widest text-brand-olive hover:text-brand-amber transition-colors inline-flex items-center gap-1.5"
+              className="text-sm font-bold text-brand-olive hover:text-brand-amber transition-colors inline-flex items-center gap-1.5"
             >
               <Waypoints className="w-3.5 h-3.5" />
               {isArabic ? "شاهد كيف تتصل الأماكن" : "See how they connect"}

@@ -137,17 +137,16 @@ export const JerusalemPulse: React.FC<JerusalemPulseProps> = ({ children }) => {
         />
       </AnimatePresence>
 
-      <div className="absolute inset-0 bg-[#172019]/35" aria-hidden="true" />
       <div
         className="absolute inset-0"
         style={{
           background: isArabic
-            ? "linear-gradient(to left, rgba(20,25,18,.9) 0%, rgba(20,25,18,.52) 55%, rgba(20,25,18,.35) 100%)"
-            : "linear-gradient(to right, rgba(20,25,18,.9) 0%, rgba(20,25,18,.52) 55%, rgba(20,25,18,.35) 100%)",
+            ? "linear-gradient(to left, rgba(20,25,18,.82) 0%, rgba(20,25,18,.4) 50%, rgba(20,25,18,.05) 100%)"
+            : "linear-gradient(to right, rgba(20,25,18,.82) 0%, rgba(20,25,18,.4) 50%, rgba(20,25,18,.05) 100%)",
         }}
         aria-hidden="true"
       />
-      <div className="absolute inset-0 bg-gradient-to-t from-[#172019]/75 via-transparent to-black/20" aria-hidden="true" />
+      <div className="absolute inset-0 bg-gradient-to-t from-[#172019]/60 via-transparent to-transparent" aria-hidden="true" />
 
       <div className="relative z-10 grid min-h-[690px] grid-cols-1 items-center gap-8 p-7 sm:min-h-[640px] sm:p-10 lg:min-h-[570px] lg:grid-cols-12 lg:p-12">
         {children}
@@ -155,14 +154,14 @@ export const JerusalemPulse: React.FC<JerusalemPulseProps> = ({ children }) => {
         <div className="self-end lg:col-span-5">
           <div className="max-w-md rounded-2xl border border-white/20 bg-black/25 p-5 shadow-2xl backdrop-blur-md sm:p-6">
             <div className="mb-4 flex items-center justify-between gap-3">
-              <span className="inline-flex items-center gap-2 text-[9px] font-mono font-bold uppercase tracking-[0.18em] text-white/85">
-                <Camera className="h-3 w-3 text-brand-amber" aria-hidden="true" />
+              <span className="inline-flex items-center gap-2 text-xs font-mono font-bold uppercase tracking-[0.18em] text-white/85">
+                <Camera className="h-3 w-3 text-brand-amber-light" aria-hidden="true" />
                 {isArabic ? "مشاهد من القدس" : "Scenes from Jerusalem"}
               </span>
               <button
                 type="button"
                 onClick={() => setPlaying((current) => !current)}
-                className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-white/25 text-white transition-colors hover:bg-white hover:text-brand-olive focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-amber"
+                className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-white/25 text-white transition-colors hover:bg-brand-surface hover:text-brand-olive focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-amber"
                 aria-label={playing ? (isArabic ? "إيقاف العرض التلقائي" : "Pause slideshow") : (isArabic ? "تشغيل العرض التلقائي" : "Play slideshow")}
               >
                 {playing ? <Pause className="h-3.5 w-3.5" /> : <Play className="h-3.5 w-3.5" />}
@@ -177,7 +176,7 @@ export const JerusalemPulse: React.FC<JerusalemPulseProps> = ({ children }) => {
                 exit={{ opacity: 0, y: reducedMotion ? 0 : -8 }}
                 transition={{ duration: 0.35 }}
               >
-                <p className="mb-2 text-[9px] font-mono font-bold uppercase tracking-[0.18em] text-brand-amber">
+                <p className="mb-2 text-xs font-mono font-bold uppercase tracking-[0.18em] text-brand-amber-light">
                   {String(activeIndex + 1).padStart(2, "0")} — {String(SCENES.length).padStart(2, "0")}
                 </p>
                 <h2 className="font-serif text-2xl font-black leading-tight text-white sm:text-3xl">
@@ -188,7 +187,7 @@ export const JerusalemPulse: React.FC<JerusalemPulseProps> = ({ children }) => {
                 </p>
                 <Link
                   to={`/locations/${active.id}`}
-                  className="mt-4 inline-flex items-center gap-1.5 border-b border-brand-amber pb-1 text-[10px] font-bold uppercase tracking-widest text-white transition-colors hover:text-brand-amber"
+                  className="mt-4 inline-flex items-center gap-1.5 border-b border-brand-amber-light pb-1 text-xs font-bold uppercase tracking-widest text-white transition-colors hover:text-brand-amber-light"
                 >
                   {isArabic ? "اكتشف الحكاية" : "Discover the story"}
                   <ArrowUpLeft className="h-3 w-3" aria-hidden="true" />
@@ -204,7 +203,7 @@ export const JerusalemPulse: React.FC<JerusalemPulseProps> = ({ children }) => {
                     key={scene.id}
                     onClick={() => setActiveIndex(index)}
                     className={`h-0.5 rounded-full transition-all duration-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-amber ${
-                      index === activeIndex ? "w-8 bg-brand-amber" : "w-4 bg-white/40 hover:bg-white/80"
+                      index === activeIndex ? "w-8 bg-brand-amber-light" : "w-4 bg-white/40 hover:bg-white/80"
                     }`}
                     aria-label={isArabic ? scene.arTitle : scene.enTitle}
                     aria-current={index === activeIndex ? "true" : undefined}

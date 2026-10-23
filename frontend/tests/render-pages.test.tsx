@@ -58,8 +58,8 @@ for (const language of ["ar", "en"]) {
   assert.ok(
     home.includes(
       language === "ar"
-        ? "إنشاء حكايتي في فلسطين"
-        : "Create My Story in Palestine",
+        ? "أنشئ حكايتك في فلسطين"
+        : "Create your Palestine story",
     ),
   );
   for (const governorate of governorates) {
@@ -90,8 +90,8 @@ for (const language of ["ar", "en"]) {
     assert.ok(
       wizard.includes(
         language === "ar"
-          ? `إنشاء حكايتي في ${governorate.arabicName}`
-          : `Create My Story in ${governorate.name}`,
+          ? `أنشئ حكايتك في ${governorate.arabicName}`
+          : `Create your ${governorate.name} story`,
       ),
     );
     const album = render(

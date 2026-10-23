@@ -20,7 +20,7 @@ export const SourceCitationLine: React.FC<SourceCitationLineProps> = ({
   const citations = sourceCitations(sourceId, locationId);
 
   return (
-    <div className={`text-[10px] text-brand-muted flex items-start gap-1.5 ${className}`}>
+    <div className={`text-xs text-brand-muted flex items-start gap-1.5 ${className}`}>
       <BookOpen className="w-3 h-3 shrink-0 mt-0.5 text-brand-amber" />
       <div className="leading-relaxed">
         <span className="font-mono uppercase tracking-wide">

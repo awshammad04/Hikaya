@@ -52,7 +52,7 @@ export const InAppWalkingRouteModal: React.FC<InAppWalkingRouteModalProps> = ({ 
   return (
     <div className="fixed inset-0 z-[70] flex items-end justify-center bg-black/55 p-0 backdrop-blur-sm sm:items-center sm:p-5" role="dialog" aria-modal="true" aria-label={isArabic ? "إرشادات المشي داخل الدليل" : "In-guide walking directions"}>
       <button type="button" aria-label={isArabic ? "إغلاق" : "Close"} onClick={onClose} className="absolute inset-0 cursor-default" />
-      <section className="relative z-10 max-h-[92vh] w-full max-w-xl overflow-y-auto rounded-t-3xl border border-brand-border bg-white shadow-2xl sm:rounded-3xl" dir={isArabic ? "rtl" : "ltr"}>
+      <section className="relative z-10 max-h-[92vh] w-full max-w-xl overflow-y-auto rounded-t-3xl border border-brand-border bg-brand-surface shadow-2xl sm:rounded-3xl" dir={isArabic ? "rtl" : "ltr"}>
         <header className="relative overflow-hidden bg-brand-olive p-6 text-white">
           <div className="absolute inset-0 tatreez-grid opacity-[0.07]" aria-hidden="true" />
           <button type="button" onClick={onClose} className="absolute end-4 top-4 rounded-full bg-white/10 p-2 transition hover:bg-white/20" aria-label={isArabic ? "إغلاق" : "Close"}>
@@ -61,7 +61,7 @@ export const InAppWalkingRouteModal: React.FC<InAppWalkingRouteModalProps> = ({ 
           <div className="relative flex items-start gap-3">
             <span className="grid h-11 w-11 shrink-0 place-items-center rounded-2xl bg-brand-amber text-white shadow-lg"><Route className="h-5 w-5" /></span>
             <div>
-              <p className="text-[10px] font-mono font-bold uppercase tracking-[0.18em] text-brand-amber">{isArabic ? "داخل حكاية" : "Inside Hikaya"}</p>
+              <p className="text-xs font-mono font-bold uppercase tracking-[0.18em] text-brand-amber">{isArabic ? "داخل حكاية" : "Inside Hikaya"}</p>
               <h2 className="mt-1 font-serif text-2xl font-black">{isArabic ? `طريق المشي إلى ${name}` : `Walk to ${name}`}</h2>
             </div>
           </div>
@@ -89,8 +89,8 @@ export const InAppWalkingRouteModal: React.FC<InAppWalkingRouteModalProps> = ({ 
           </div>
 
           <div className="grid gap-2 sm:grid-cols-2">
-            <Link to={`/map?focus=${encodeURIComponent(location.id)}`} onClick={onClose} className="inline-flex items-center justify-center gap-2 rounded-xl bg-brand-olive px-4 py-3 text-xs font-bold text-white transition hover:bg-[#4a4a35]">
-              <MapPin className="h-4 w-4 text-brand-amber" />{isArabic ? "اعرضه على خريطة الدليل" : "Show on guide map"}
+            <Link to={`/map?focus=${encodeURIComponent(location.id)}`} onClick={onClose} className="inline-flex items-center justify-center gap-2 rounded-xl bg-brand-olive px-4 py-3 text-xs font-bold text-white transition hover:bg-brand-olive-deep">
+              <MapPin className="h-4 w-4 text-brand-amber-light" />{isArabic ? "اعرضه على خريطة الدليل" : "Show on guide map"}
             </Link>
             {externalUrl && <a href={externalUrl} target="_blank" rel="noreferrer" className="inline-flex items-center justify-center gap-2 rounded-xl border border-brand-border px-4 py-3 text-xs font-bold text-brand-olive transition hover:border-brand-amber">
               <Navigation2 className="h-4 w-4 text-brand-amber" />{isArabic ? "الاتجاهات الحية (اختياري)" : "Live directions (optional)"}<ExternalLink className="h-3 w-3" />

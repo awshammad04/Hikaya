@@ -14,7 +14,7 @@ interface MemoryConstellationProps {
 const SIZE = 720;
 const CENTRE = SIZE / 2;
 const LOCATION_RADIUS = 210;
-const CATEGORY_RADIUS = 92;
+const CATEGORY_RADIUS = 120;
 
 interface Node {
   id: string;
@@ -55,10 +55,37 @@ export const MemoryConstellation: React.FC<MemoryConstellationProps> = ({
     locations.forEach((location) =>
       location.categories.forEach((category) => categorySet.add(category)),
     );
-    const categories: string[] = [...categorySet].sort();
+    const sortedCategories: string[] = [...categorySet].sort();
+
+    // Places that share a primary theme sit next to each other on the ring,
+    // and each theme is placed towards its places, so edges stay short and
+    // cross less often than with alphabetical placement.
+    const primaryRank = (location: ApiLocation) =>
+      Math.min(...location.categories.map((category) => sortedCategories.indexOf(category)), sortedCategories.length);
+    const ordered = [...locations].sort((a, b) => primaryRank(a) - primaryRank(b) || a.id.localeCompare(b.id));
+    const ringAngle = (index: number) => (index / Math.max(ordered.length, 1)) * Math.PI * 2 - Math.PI / 2;
+
+    const meanAngle = (category: string) => {
+      let sin = 0;
+      let cos = 0;
+      ordered.forEach((location, index) => {
+        if (!location.categories.includes(category)) return;
+        sin += Math.sin(ringAngle(index));
+        cos += Math.cos(ringAngle(index));
+      });
+      return Math.atan2(sin, cos);
+    };
+    const means = new Map(sortedCategories.map((category) => [category, meanAngle(category)]));
+    const categories = [...sortedCategories].sort((a, b) => means.get(a)! - means.get(b)!);
+    const step = (Math.PI * 2) / Math.max(categories.length, 1);
+    // Rotate the evenly spaced theme ring to sit as close as it can to the means.
+    const offset = Math.atan2(
+      categories.reduce((total, category, index) => total + Math.sin(means.get(category)! - index * step), 0),
+      categories.reduce((total, category, index) => total + Math.cos(means.get(category)! - index * step), 0),
+    );
 
     categories.forEach((category, index) => {
-      const angle = (index / Math.max(categories.length, 1)) * Math.PI * 2 - Math.PI / 2;
+      const angle = offset + index * step;
       nodeList.push({
         id: `category:${category}`,
         label: category,
@@ -68,9 +95,8 @@ export const MemoryConstellation: React.FC<MemoryConstellationProps> = ({
       });
     });
 
-    locations.forEach((location, index) => {
-      const angle =
-        (index / Math.max(locations.length, 1)) * Math.PI * 2 - Math.PI / 2;
+    ordered.forEach((location, index) => {
+      const angle = ringAngle(index);
       const x = CENTRE + Math.cos(angle) * LOCATION_RADIUS;
       const y = CENTRE + Math.sin(angle) * LOCATION_RADIUS;
       nodeList.push({
@@ -145,7 +171,7 @@ export const MemoryConstellation: React.FC<MemoryConstellationProps> = ({
   };
 
   return (
-    <div className="bg-white rounded-3xl border border-brand-border overflow-hidden">
+    <div className="bg-brand-surface rounded-3xl border border-brand-border overflow-hidden">
       <svg
         viewBox={`0 0 ${SIZE} ${SIZE}`}
         className="w-full h-auto"
@@ -283,20 +309,20 @@ export const MemoryConstellation: React.FC<MemoryConstellationProps> = ({
         <article className="mx-4 mb-4 rounded-2xl border border-brand-amber/30 bg-brand-amber/5 p-4 space-y-2" dir={isArabic ? "rtl" : "ltr"} aria-live="polite">
           <div className="flex items-start justify-between gap-3">
             <div>
-              <p className="text-[10px] uppercase tracking-widest text-brand-amber inline-flex items-center gap-1.5"><MessageSquareText className="w-3 h-3" />{isArabic ? "ذاكرة منشورة ومراجعة" : "Published, reviewed memory"}</p>
+              <p className="text-xs uppercase tracking-widest text-brand-amber inline-flex items-center gap-1.5"><MessageSquareText className="w-3 h-3" />{isArabic ? "ذاكرة منشورة ومراجعة" : "Published, reviewed memory"}</p>
               <h3 className="font-serif font-black text-lg text-brand-olive">{selectedMemory.title}</h3>
             </div>
             <button type="button" onClick={() => setSelectedMemoryId(null)} className="p-1.5 text-brand-muted hover:text-brand-olive" aria-label={isArabic ? "إغلاق الذكرى" : "Close memory"}><X className="w-4 h-4" /></button>
           </div>
           <p className="text-sm leading-7 text-brand-text">{selectedMemory.content}</p>
-          <div className="flex flex-wrap items-center justify-between gap-2 border-t border-brand-amber/20 pt-2 text-[10px] text-brand-muted">
+          <div className="flex flex-wrap items-center justify-between gap-2 border-t border-brand-amber/20 pt-2 text-xs text-brand-muted">
             <span>{selectedMemory.contributorName ?? (isArabic ? "مساهمة مجهولة الاسم" : "Anonymous contribution")}</span>
             {selectedLocation && <button type="button" onClick={() => navigate(`/locations/${selectedLocation.id}?tab=memories`)} className="font-bold text-brand-olive hover:text-brand-amber inline-flex items-center gap-1">{isArabic ? `افتح ${selectedLocation.arabicName ?? selectedLocation.name}` : `Open ${selectedLocation.name}`}<ArrowUpLeft className="w-3 h-3" /></button>}
           </div>
         </article>
       )}
 
-      <div className="px-5 py-4 border-t border-brand-border-light flex flex-wrap items-center gap-x-5 gap-y-1.5 text-[10px] font-mono text-brand-muted">
+      <div className="px-5 py-4 border-t border-brand-border-light flex flex-wrap items-center gap-x-5 gap-y-1.5 text-xs font-mono text-brand-muted">
         <span className="inline-flex items-center gap-1.5">
           <span className="w-3 h-3 rounded-full bg-brand-olive" />
           {isArabic ? "مكان — اضغط لفتحه" : "Location — click to open"}

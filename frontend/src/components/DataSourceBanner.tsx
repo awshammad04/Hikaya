@@ -29,7 +29,7 @@ export const DataSourceBanner: React.FC<DataSourceBannerProps> = ({ source, reas
     <div className="mb-6 flex items-start gap-3 rounded-2xl border border-brand-amber/30 bg-brand-amber/10 px-4 py-3">
       <CloudOff className="w-4 h-4 text-brand-amber shrink-0 mt-0.5" />
       <div className="text-xs text-brand-text leading-relaxed">
-        <p className="font-bold text-brand-amber uppercase tracking-wider text-[10px] font-mono">
+        <p className="font-bold text-brand-amber uppercase tracking-wider text-xs font-mono">
           {isArabic ? "وضع عدم الاتصال" : "Offline sample data"}
         </p>
         <p>

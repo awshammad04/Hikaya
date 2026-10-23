@@ -9,13 +9,11 @@ import { useInterfaceLanguage } from "../context/LanguageContext";
 import { governorates, governorateById } from "../data/heritage";
 import { ApiLocation } from "../types";
 import { PageTransition } from "../components/motion";
+import { OVERVIEW_BOUNDS } from "../components/PalestineGeography";
+import { placesCount } from "../utils/plural";
 
-export const NATIONAL_BOUNDS = {
-  minLat: Math.min(...governorates.map((item) => item.bounds.minLat)) - 0.06,
-  maxLat: Math.max(...governorates.map((item) => item.bounds.maxLat)) + 0.06,
-  minLng: Math.min(...governorates.map((item) => item.bounds.minLng)) - 0.1,
-  maxLng: Math.max(...governorates.map((item) => item.bounds.maxLng)) + 0.1,
-};
+// Wide enough to show the coast and the Jordan valley for orientation.
+export const NATIONAL_BOUNDS = OVERVIEW_BOUNDS;
 export const HeritageMapPage: React.FC = () => {
   const { governorateId } = useParams();
   const governorate = governorateId ? governorateById(governorateId) : null;
@@ -39,6 +37,8 @@ export const HeritageMapPage: React.FC = () => {
     : governorate
       ? `${governorate.name} map`
       : "Palestine map";
+  const toggleClass = (on: boolean) =>
+    `rounded-full px-5 py-2 text-sm font-bold transition-colors ${on ? "bg-brand-olive text-white" : "text-brand-olive hover:bg-brand-bg"}`;
   const governorateMarkers: ApiLocation[] = governorates.map((item) => ({
     id: item.id,
     name: item.name,
@@ -57,30 +57,32 @@ export const HeritageMapPage: React.FC = () => {
         <h1 className="font-serif text-3xl font-black text-brand-olive">
           {title}
         </h1>
-        <p className="text-xs text-brand-muted">
+        <p className="text-sm text-brand-muted">
           {isArabic
             ? "اختر محافظة أو مكاناً لقراءة سجله. الخريطة للاستكشاف الثقافي."
             : "Select a governorate or place to read its record. This map supports cultural exploration."}
         </p>
         {!governorate && (
-          <div className="flex flex-wrap gap-3">
+          <div className="inline-flex gap-1 rounded-full border border-brand-border bg-brand-surface p-1">
             <button
+              type="button"
               aria-pressed={!showSites}
               onClick={() => {
                 setShowSites(false);
                 setSelected(null);
               }}
-              className="rounded-full border border-brand-border bg-white px-5 py-2 text-xs font-bold text-brand-olive"
+              className={toggleClass(!showSites)}
             >
               {isArabic ? "المحافظات" : "Governorates"}
             </button>
             <button
+              type="button"
               aria-pressed={showSites}
               onClick={() => {
                 setShowSites(true);
                 setSelected(null);
               }}
-              className="rounded-full border border-brand-border bg-white px-5 py-2 text-xs font-bold text-brand-olive"
+              className={toggleClass(showSites)}
             >
               {isArabic ? "أماكن التراث" : "Heritage sites"}
             </button>
@@ -101,6 +103,7 @@ export const HeritageMapPage: React.FC = () => {
                 mapLabel={title}
                 jerusalem={false}
                 drawRoute={false}
+                markerKind={governorate || showSites ? "places" : "governorates"}
               />
             </div>
             <div className="lg:col-span-4 space-y-3">
@@ -113,17 +116,20 @@ export const HeritageMapPage: React.FC = () => {
                 ) : (
                   <Link
                     to={`/governorates/${selected.id}`}
-                    className="block rounded-3xl border border-brand-border bg-white p-6 text-xl font-serif font-black text-brand-olive"
+                    className="flex items-center justify-between rounded-3xl border border-brand-amber bg-brand-surface p-6 text-xl font-serif font-black text-brand-olive"
                   >
-                    {isArabic ? selected.arabicName : selected.name} →
+                    {isArabic ? selected.arabicName : selected.name}
+                    <span className="text-sm font-sans font-bold text-brand-amber">{isArabic ? "افتح المحافظة ←" : "Open →"}</span>
                   </Link>
                 ))}
               {governorate || showSites
                 ? locations.map((item) => (
                     <button
+                      type="button"
                       key={item.id}
                       onClick={() => setSelected(item)}
-                      className="block w-full rounded-2xl border border-brand-border bg-white p-4 text-start text-sm text-brand-olive"
+                      aria-pressed={selected?.id === item.id}
+                      className={`block w-full rounded-2xl border bg-brand-surface p-4 text-start text-sm font-bold text-brand-olive transition-colors hover:border-brand-amber ${selected?.id === item.id ? "border-brand-amber" : "border-brand-border"}`}
                     >
                       {isArabic ? item.arabicName : item.name}
                       {item.latitude == null && (
@@ -139,9 +145,12 @@ export const HeritageMapPage: React.FC = () => {
                     <Link
                       key={item.id}
                       to={`/governorates/${item.id}/map`}
-                      className="block rounded-2xl border border-brand-border bg-white p-4 text-sm text-brand-olive"
+                      className="flex items-center justify-between rounded-2xl border border-brand-border bg-brand-surface p-4 text-sm font-bold text-brand-olive transition-colors hover:border-brand-amber"
                     >
-                      {isArabic ? item.arabicName : item.name} →
+                      <span>{isArabic ? item.arabicName : item.name}</span>
+                      <span className="text-xs font-normal text-brand-muted">
+                        {placesCount(locations.filter((place) => (place.governorateId ?? "jerusalem") === item.id).length, isArabic)}
+                      </span>
                     </Link>
                   ))}
             </div>

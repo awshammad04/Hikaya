@@ -22,12 +22,12 @@ export const ProgressTracker: React.FC<{ state: VisitedState; scope?: string; on
   if (total === 0) return null;
 
   return (
-    <section className="bg-white rounded-3xl border border-brand-border p-5 space-y-4">
+    <section className="bg-brand-surface rounded-3xl border border-brand-border p-5 space-y-4">
       <div className="flex items-start justify-between gap-4 flex-wrap">
         <div>
           <h3 className="font-serif font-black text-lg text-brand-olive flex items-center gap-2">
             <Compass className="w-4 h-4 text-brand-amber" />
-            {isArabic ? `استكشافك لـ${governorateName(scope,true)}` : "Your exploration"}
+            {isArabic ? `رحلتك في ${governorateName(scope,true)}` : `Your ${governorateName(scope,false)} journey`}
           </h3>
           <p className="text-xs text-brand-muted">
             {isArabic ? `فتحت ${visited.length} من ${total} أماكن في الدليل. يُحفظ التقدم على هذا الجهاز فقط.` : `${visited.length} of ${total} location${total === 1 ? "" : "s"} in the archive opened. Kept on this device only.`}
@@ -60,7 +60,7 @@ export const ProgressTracker: React.FC<{ state: VisitedState; scope?: string; on
         className="w-full rounded-2xl border border-brand-amber/35 bg-brand-amber/10 px-4 py-3 text-xs font-bold text-brand-olive transition hover:border-brand-amber hover:bg-brand-amber/15 inline-flex items-center justify-center gap-2"
       >
         <Sparkles className="h-4 w-4 text-brand-amber" />
-        {isArabic ? `إنشاء حكايتي في ${governorateName(scope,true)}` : `Create My Story in ${governorateName(scope,false)}`}
+        {isArabic ? `تذكار رحلتي في ${governorateName(scope,true)}` : `My ${governorateName(scope,false)} keepsake`}
       </button>
 
       <div className="flex flex-wrap gap-2">
@@ -68,7 +68,7 @@ export const ProgressTracker: React.FC<{ state: VisitedState; scope?: string; on
           <span
             key={badge.id}
             title={scope === 'jerusalem' ? badge.description : (isArabic ? `التقدم في أرشيف ${governorateName(scope,true)}` : `Progress through the ${governorateName(scope,false)} archive`)}
-            className={`text-[10px] font-mono uppercase tracking-wider px-3 py-1.5 rounded-full border inline-flex items-center gap-1.5 transition-colors ${
+            className={`text-xs font-mono uppercase tracking-wider px-3 py-1.5 rounded-full border inline-flex items-center gap-1.5 transition-colors ${
               badge.earned
                 ? "bg-brand-amber/10 border-brand-amber/30 text-brand-amber"
                 : "bg-brand-bg border-brand-border-light text-brand-muted opacity-70"
@@ -84,7 +84,7 @@ export const ProgressTracker: React.FC<{ state: VisitedState; scope?: string; on
           <button
             type="button"
             onClick={state.reset}
-            className="text-[10px] font-mono uppercase tracking-wider px-3 py-1.5 rounded-full border border-brand-border-light text-brand-muted hover:text-brand-olive hover:border-brand-olive inline-flex items-center gap-1.5 transition-colors"
+            className="text-xs font-mono uppercase tracking-wider px-3 py-1.5 rounded-full border border-brand-border-light text-brand-muted hover:text-brand-olive hover:border-brand-olive inline-flex items-center gap-1.5 transition-colors"
           >
             <RotateCcw className="w-3 h-3" />
             {isArabic ? "إعادة التعيين" : "Reset"}

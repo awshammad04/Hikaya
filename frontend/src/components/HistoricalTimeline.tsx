@@ -175,14 +175,14 @@ const TimelineMilestone: React.FC<TimelineMilestoneProps> = ({
         />
       </motion.span>
 
-      <div className="relative overflow-hidden rounded-2xl border border-s-[3px] border-brand-border-light border-s-brand-amber/70 bg-white p-4 shadow-[0_8px_24px_rgba(73,70,45,0.09)]">
+      <div className="relative overflow-hidden rounded-2xl border border-s-[3px] border-brand-border-light border-s-brand-amber/70 bg-brand-surface p-4 shadow-[0_8px_24px_rgba(73,70,45,0.09)]">
         <div className="flex flex-wrap items-center gap-2">
           <h4 className="inline-flex items-center gap-1.5 rounded-full border border-brand-amber/30 bg-brand-amber/10 px-2.5 py-1 font-serif text-xs font-bold text-brand-olive">
             <CalendarDays className="h-3.5 w-3.5 text-brand-amber" aria-hidden="true" />
             {event.periodLabel}
           </h4>
           {event.isTradition && (
-            <span className="inline-flex items-center gap-1 rounded-full border border-brand-amber/30 bg-brand-amber/10 px-2 py-1 font-mono text-[9px] uppercase tracking-wider text-brand-amber shadow-[0_0_16px_rgba(217,119,6,0.16)]">
+            <span className="inline-flex items-center gap-1 rounded-full border border-brand-amber/30 bg-brand-amber/10 px-2 py-1 font-mono text-xs uppercase tracking-wider text-brand-amber shadow-[0_0_16px_rgba(217,119,6,0.16)]">
               <BookMarked className="h-3 w-3" aria-hidden="true" />
               {isArabic ? "رواية تقليدية" : "Tradition"}
             </span>

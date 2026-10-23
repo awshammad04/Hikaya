@@ -1,5 +1,17 @@
 @import "tailwindcss";
 
+/* `dark:` follows the visitor's choice (data-theme) and otherwise the system. */
+@custom-variant dark {
+  &:where([data-theme="dark"], [data-theme="dark"] *) {
+    @slot;
+  }
+  @media (prefers-color-scheme: dark) {
+    &:where(:root:not([data-theme="light"]), :root:not([data-theme="light"]) *) {
+      @slot;
+    }
+  }
+}
+
 @font-face {
   font-family: "Thmanyah Sans";
   src: url("/fonts/thmanyah-sans-regular.woff2") format("woff2");
@@ -70,18 +82,32 @@
   --font-display: "Thmanyah Serif Display", "Thmanyah Serif Text", serif;
   --font-mono: "Thmanyah Sans", ui-monospace, SFMono-Regular, monospace;
   
+  /*
+   * Text colours meet WCAG AA (4.5:1) on the page background and on white:
+   * muted #6b6b62 is 4.9:1, amber #b45309 is 4.6:1 and carries white button
+   * text at 5.0:1. Use `amber-light` for amber text on olive or photo heroes.
+   */
   --color-brand-olive: #5A5A40;
-  --color-brand-amber: #D97706;
+  --color-brand-olive-deep: #4a4a35;
+  --color-brand-amber: #B45309;
+  --color-brand-amber-deep: #92400e;
+  --color-brand-amber-light: #FBBF24;
   --color-brand-bg: #f5f5f0;
+  --color-brand-surface: #ffffff;
   --color-brand-text: #2d2d2a;
   --color-brand-border: #d1d1ca;
   --color-brand-border-light: #e2e2da;
-  --color-brand-muted: #8a8a80;
+  --color-brand-muted: #6b6b62;
 }
 
 html {
   font-family: "Thmanyah Sans", system-ui, sans-serif;
   text-rendering: optimizeLegibility;
+  color-scheme: light;
+}
+
+body {
+  background: var(--color-brand-bg);
 }
 
 html[dir="rtl"] body {
@@ -91,6 +117,108 @@ html[dir="rtl"] body {
 
 html[dir="rtl"] .font-serif {
   font-family: "Thmanyah Serif Text", serif;
+}
+
+/* Arabic has no true italic; browsers fake a slant, so keep it upright. */
+html[dir="rtl"] .italic {
+  font-style: normal;
+}
+
+/* Horizontal tab strips scroll instead of wrapping on small screens. */
+.scrollbar-none {
+  scrollbar-width: none;
+}
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
+}
+
+/*
+ * Dark theme. Follows the system setting unless the visitor picks a theme
+ * (stored as data-theme on <html>). Brand tokens are redefined, and the few
+ * utilities whose colour must differ between light and dark surfaces are
+ * overridden here so components keep their light-mode class names.
+ */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --color-brand-bg: #15160f;
+    --color-brand-surface: #1f2018;
+    --color-brand-text: #e9e7dc;
+    --color-brand-border: #3b3c30;
+    --color-brand-border-light: #2d2e24;
+    --color-brand-muted: #a8a798;
+    --color-brand-olive: #55553b;
+    --color-brand-olive-deep: #64644a;
+    --color-brand-amber: #F59E0B;
+    --color-brand-amber-deep: #92400e;
+  }
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --color-brand-bg: #15160f;
+  --color-brand-surface: #1f2018;
+  --color-brand-text: #e9e7dc;
+  --color-brand-border: #3b3c30;
+  --color-brand-border-light: #2d2e24;
+  --color-brand-muted: #a8a798;
+  --color-brand-olive: #55553b;
+  --color-brand-olive-deep: #64644a;
+  --color-brand-amber: #F59E0B;
+  --color-brand-amber-deep: #92400e;
+}
+
+/*
+ * Olive and amber serve as both text and fill colours. On dark surfaces the
+ * text needs a lighter tint while filled buttons keep white-safe fills, and
+ * cream text always sits on olive fills. `:where()` keeps these at plain
+ * utility specificity so hover and state variants still win.
+ */
+@layer utilities {
+  @media (prefers-color-scheme: dark) {
+    :where(:root:not([data-theme="light"])) .text-brand-olive {
+      color: var(--brand-olive-text, #d8d6ad);
+    }
+    :where(:root:not([data-theme="light"])) .border-brand-olive {
+      border-color: var(--brand-olive-border, #8c8b62);
+    }
+    :where(:root:not([data-theme="light"])) .bg-brand-amber {
+      background-color: var(--brand-amber-fill, #b45309);
+    }
+    :where(:root:not([data-theme="light"])) .text-brand-bg {
+      color: #f5f5f0;
+    }
+  }
+  :where(:root[data-theme="dark"]) .text-brand-olive {
+    color: var(--brand-olive-text, #d8d6ad);
+  }
+  :where(:root[data-theme="dark"]) .border-brand-olive {
+    border-color: var(--brand-olive-border, #8c8b62);
+  }
+  :where(:root[data-theme="dark"]) .bg-brand-amber {
+    background-color: var(--brand-amber-fill, #b45309);
+  }
+  :where(:root[data-theme="dark"]) .text-brand-bg {
+    color: #f5f5f0;
+  }
+}
+
+/*
+ * Paper surfaces (the illustrated maps, the memory album) keep their light
+ * palette in both themes.
+ */
+.paper-scope {
+  --color-brand-bg: #f5f5f0;
+  --color-brand-surface: #ffffff;
+  --color-brand-text: #2d2d2a;
+  --color-brand-border: #d1d1ca;
+  --color-brand-border-light: #e2e2da;
+  --color-brand-muted: #6b6b62;
+  --color-brand-olive: #5a5a40;
+  --color-brand-amber: #b45309;
+  --brand-olive-text: #5a5a40;
+  --brand-olive-border: #5a5a40;
+  color: var(--color-brand-text);
+  color-scheme: light;
 }
 
 html[dir="rtl"] .tracking-wide,
@@ -146,7 +274,7 @@ textarea {
   height: 8px;
 }
 ::-webkit-scrollbar-track {
-  background: #f5f5f0;
+  background: var(--color-brand-bg);
 }
 ::-webkit-scrollbar-thumb {
   background: #5A5A40;

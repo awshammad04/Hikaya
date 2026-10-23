@@ -17,6 +17,8 @@ import {
 import { ApiLocation } from "../types";
 import { useInterfaceLanguage } from "../context/LanguageContext";
 import { locationById } from "../data/heritage";
+import { GeographyLayer } from "./PalestineGeography";
+import { documentedPlacesCount, governoratesCount } from "../utils/plural";
 
 interface MvpLocationMapProps {
   locations: ApiLocation[];
@@ -28,6 +30,8 @@ interface MvpLocationMapProps {
   mapLabel?: string;
   jerusalem?: boolean;
   drawRoute?: boolean;
+  /** What the markers are, for the count in the map card. */
+  markerKind?: "places" | "governorates";
 }
 
 const BOUNDS = { minLng: 35.215, maxLng: 35.255, minLat: 31.765, maxLat: 31.798 };
@@ -85,7 +89,7 @@ const LABEL_PLACEMENT: Record<string, string> = {
   "christian-quarter": "top-1/2 -translate-y-1/2 right-full mr-1",
   "armenian-quarter": "top-full mt-1 right-1",
   "maghariba-quarter": "top-full mt-1 left-1",
-  "bab-al-amud": "bottom-full mb-1 right-0",
+  "bab-al-amud": "top-1/2 -translate-y-1/2 right-full mr-1",
   "sheikh-jarrah": "bottom-full mb-1 left-1/2 -translate-x-1/2",
   "silwan": "top-full mt-1 left-1/2 -translate-x-1/2",
   "at-tur": "bottom-full mb-1 left-1/2 -translate-x-1/2",
@@ -108,7 +112,7 @@ export const MvpLocationMap: React.FC<MvpLocationMapProps> = ({
   onSelect,
   visited = [],
   routeIds = [],
-  bounds = BOUNDS, mapLabel, jerusalem = true, drawRoute = true,
+  bounds = BOUNDS, mapLabel, jerusalem = true, drawRoute = true, markerKind = "places",
 }) => {
   const { isArabic } = useInterfaceLanguage();
   const reduced = useReducedMotion();
@@ -298,18 +302,18 @@ export const MvpLocationMap: React.FC<MvpLocationMapProps> = ({
   return (
     <div className="space-y-3">
       <div className="flex flex-wrap items-center gap-2">
-        <span className="text-[10px] uppercase tracking-widest text-brand-muted inline-flex items-center gap-1.5"><Filter className="w-3 h-3" />{isArabic ? "تصفية" : "Filter"}</span>
+        <span className="text-xs uppercase tracking-widest text-brand-muted inline-flex items-center gap-1.5"><Filter className="w-3 h-3" />{isArabic ? "تصفية" : "Filter"}</span>
         {available.map((category) => {
           const style = CATEGORY_STYLE[category];
           const on = active.includes(category);
-          return <button key={category} type="button" onClick={() => toggle(category)} aria-pressed={on} className={`text-[10px] px-3 py-1.5 rounded-full border inline-flex items-center gap-1.5 transition-colors ${on ? "bg-brand-olive text-white border-brand-olive" : "bg-white text-brand-muted border-brand-border hover:border-brand-amber"}`}><span className="w-2 h-2 rounded-full" style={{ backgroundColor: style.color }} />{isArabic ? style.ar : style.en}</button>;
+          return <button key={category} type="button" onClick={() => toggle(category)} aria-pressed={on} className={`text-xs px-3 py-1.5 rounded-full border inline-flex items-center gap-1.5 transition-colors ${on ? "bg-brand-olive text-white border-brand-olive" : "bg-brand-surface text-brand-muted border-brand-border hover:border-brand-amber"}`}><span className="w-2 h-2 rounded-full" style={{ backgroundColor: style.color }} />{isArabic ? style.ar : style.en}</button>;
         })}
-        {active.length > 0 && <button type="button" onClick={() => setActive([])} className="text-[10px] text-brand-muted hover:text-brand-olive underline underline-offset-2">{isArabic ? "إلغاء التصفية" : "Clear"}</button>}
+        {active.length > 0 && <button type="button" onClick={() => setActive([])} className="text-xs text-brand-muted hover:text-brand-olive underline underline-offset-2">{isArabic ? "إلغاء التصفية" : "Clear"}</button>}
       </div>
 
       <div
         ref={viewportRef}
-        className={`relative w-full h-[500px] sm:h-[610px] rounded-3xl border border-brand-border overflow-hidden shadow-xl bg-[#eae3d3] select-none ${zoom > MIN_ZOOM ? "cursor-grab active:cursor-grabbing" : "cursor-zoom-in"}`}
+        className={`paper-scope relative w-full h-[500px] sm:h-[610px] rounded-3xl border border-brand-border overflow-hidden shadow-xl bg-[#eae3d3] select-none ${zoom > MIN_ZOOM ? "cursor-grab active:cursor-grabbing" : "cursor-zoom-in"}`}
         style={{ touchAction: "none" }}
         onPointerDown={handlePointerDown}
         onPointerMove={handlePointerMove}
@@ -333,6 +337,8 @@ export const MvpLocationMap: React.FC<MvpLocationMapProps> = ({
           </defs>
           <rect width="1000" height="760" fill="url(#mapPaper)" />
           <rect width="1000" height="760" fill="url(#mapGrain)" />
+
+          {!jerusalem && <GeographyLayer project={project} labelSize={20 / zoom} />}
 
           {jerusalem && <>
           {/* Terrain contours: a quiet geographic backdrop rather than an empty grid. */}
@@ -396,7 +402,7 @@ export const MvpLocationMap: React.FC<MvpLocationMapProps> = ({
           {drawRoute && routePoints.length > 1 && <polyline points={routePoints.map((p) => `${p.x},${p.y}`).join(" ")} fill="none" stroke="#fffaf0" strokeWidth="7" opacity=".82" strokeLinecap="round" strokeLinejoin="round" vectorEffect="non-scaling-stroke" />}
           {drawRoute && routePoints.length > 1 && <polyline points={routePoints.map((p) => `${p.x},${p.y}`).join(" ")} fill="none" stroke="#d97706" strokeWidth="3" strokeDasharray={`${7 / zoom} ${7 / zoom}`} strokeLinecap="round" strokeLinejoin="round" vectorEffect="non-scaling-stroke" />}
 
-          <g transform="translate(895 90)" fill="#5a5a40"><path d="M0 30 L12 0 L24 30 L12 24 Z" fill="#d97706" /><text x="12" y="48" textAnchor="middle" fontSize={14 / zoom} fontWeight="800">{isArabic ? "ش" : "N"}</text></g>
+          <g transform="translate(895 90)" fill="#5a5a40" aria-label={isArabic ? "اتجاه الشمال" : "North"}><circle cx="12" cy="18" r="24" fill="#fffaf0" opacity=".75" /><path d="M0 30 L12 0 L24 30 L12 24 Z" fill="#b45309" /><text x="12" y="56" textAnchor="middle" fontSize={13 / zoom} fontWeight="800">{isArabic ? "الشمال" : "N"}</text></g>
           {jerusalem && <g transform="translate(65 710)" stroke="#5a5a40" strokeWidth="4"><path d="M0 0 H80" /><path d="M0 -5 V5 M80 -5 V5" /><text x="40" y="20" textAnchor="middle" stroke="none" fill="#5a5a40" fontSize={12 / zoom}>{isArabic ? "≈ ١ كم" : "≈ 1 km"}</text></g>}
         </svg>
 
@@ -414,7 +420,7 @@ export const MvpLocationMap: React.FC<MvpLocationMapProps> = ({
           const displayLabel = useCompactName
             ? (isArabic ? compactName.ar : compactName.en)
             : label;
-          const labelFontSize = zoom < 1.4 ? 8.5 : zoom < 2.25 ? 9.25 : 10;
+          const labelFontSize = zoom < 1.4 ? 11 : zoom < 2.25 ? 11.5 : 12;
           const labelPaddingX = zoom < 1.4 ? 6 : zoom < 2.25 ? 7.5 : 9;
           const labelPaddingY = zoom < 1.4 ? 2.5 : 3;
           const routeIndex = routeIds.indexOf(location.id);
@@ -449,8 +455,8 @@ export const MvpLocationMap: React.FC<MvpLocationMapProps> = ({
         </div>
 
         <div className="absolute top-5 start-5 z-30 max-w-[calc(100%-6.5rem)] rounded-2xl bg-[#fffaf0]/92 backdrop-blur px-4 py-3 border border-white/70 shadow-sm pointer-events-none">
-          <p className="text-[10px] uppercase tracking-widest text-brand-muted inline-flex items-center gap-1.5"><Compass className="w-3 h-3 text-brand-amber" />{mapLabel ?? (isArabic ? "القدس وضواحي البلدة القديمة" : "Jerusalem & Old City approaches")}</p>
-          <p className="font-serif font-black text-lg text-brand-olive">{isArabic ? `${shown.length} أماكن موثقة` : `${shown.length} documented places`}</p>
+          <p className="text-xs uppercase tracking-widest text-brand-muted inline-flex items-center gap-1.5"><Compass className="w-3 h-3 text-brand-amber" />{mapLabel ?? (isArabic ? "القدس وضواحي البلدة القديمة" : "Jerusalem & Old City approaches")}</p>
+          <p className="font-serif font-black text-lg text-brand-olive">{markerKind === "governorates" ? governoratesCount(shown.length, isArabic) : documentedPlacesCount(shown.length, isArabic)}</p>
         </div>
 
         <div data-map-control className="absolute top-5 end-5 z-40 flex flex-col items-center gap-2">
@@ -465,7 +471,7 @@ export const MvpLocationMap: React.FC<MvpLocationMapProps> = ({
             >
               <Plus className="h-4 w-4" />
             </button>
-            <span className="block border-y border-brand-border-light py-1 text-center font-mono text-[9px] text-brand-muted" aria-live="polite">{zoomPercent}%</span>
+            <span className="block border-y border-brand-border-light py-1 text-center font-mono text-xs text-brand-muted" aria-live="polite">{zoomPercent}%</span>
             <button
               type="button"
               onClick={() => zoomBy(-ZOOM_STEP)}
@@ -492,7 +498,7 @@ export const MvpLocationMap: React.FC<MvpLocationMapProps> = ({
             <button
               type="button"
               onClick={fitRoute}
-              className="grid h-10 w-11 place-items-center rounded-xl border border-white/80 bg-brand-amber text-white shadow-md transition hover:bg-[#b45f05]"
+              className="grid h-10 w-11 place-items-center rounded-xl border border-white/80 bg-brand-amber text-white shadow-md transition hover:bg-brand-amber-deep"
               aria-label={jerusalem ? (isArabic ? "ملاءمة المسار داخل الخريطة" : "Fit route in the map") : (isArabic ? "إظهار أماكن الحكاية في الخريطة" : "Fit story chapters in the map")}
               title={jerusalem ? (isArabic ? "ركّز على المسار" : "Fit route") : (isArabic ? "أماكن الحكاية" : "Fit chapters")}
             >
@@ -526,14 +532,14 @@ export const MvpLocationMap: React.FC<MvpLocationMapProps> = ({
 
         {shown.length === 0 && <p className="absolute inset-0 flex items-center justify-center text-sm text-brand-muted font-serif italic px-8 text-center z-20">{isArabic ? "لا توجد أماكن تطابق خيارات التصفية." : "No sites match the selected filters."}</p>}
 
-        <div className="absolute bottom-4 end-5 z-30 rounded-xl bg-[#fffaf0]/90 backdrop-blur px-3 py-2 border border-white/70 text-[10px] text-brand-muted inline-flex items-center gap-1.5 pointer-events-none"><Navigation2 className="w-3 h-3 text-brand-amber" />{isArabic ? "اسحب للتحريك · قرّب بإصبعين · اضغط العلامة" : "Drag to pan · pinch to zoom · select a marker"}</div>
+        <div className="absolute bottom-4 end-5 z-30 rounded-xl bg-[#fffaf0]/90 backdrop-blur px-3 py-2 border border-white/70 text-xs text-brand-muted inline-flex items-center gap-1.5 pointer-events-none"><Navigation2 className="w-3 h-3 text-brand-amber" />{isArabic ? "اسحب للتحريك · قرّب بإصبعين · اضغط العلامة" : "Drag to pan · pinch to zoom · select a marker"}</div>
       </div>
 
       <div className="flex flex-wrap gap-x-4 gap-y-1">
-        {available.map((category) => <span key={category} className="text-[10px] text-brand-muted inline-flex items-center gap-1.5"><span className="w-2 h-2 rounded-full" style={{ backgroundColor: CATEGORY_STYLE[category].color }} />{isArabic ? CATEGORY_STYLE[category].ar : CATEGORY_STYLE[category].en}</span>)}
-        {drawRoute && routeIds.length > 1 && <span className="text-[10px] text-brand-amber inline-flex items-center gap-1"><span className="w-5 border-t-2 border-dashed border-brand-amber" />{isArabic ? "المسار المقترح" : "Suggested route"}</span>}
+        {available.map((category) => <span key={category} className="text-xs text-brand-muted inline-flex items-center gap-1.5"><span className="w-2 h-2 rounded-full" style={{ backgroundColor: CATEGORY_STYLE[category].color }} />{isArabic ? CATEGORY_STYLE[category].ar : CATEGORY_STYLE[category].en}</span>)}
+        {drawRoute && routeIds.length > 1 && <span className="text-xs text-brand-amber inline-flex items-center gap-1"><span className="w-5 border-t-2 border-dashed border-brand-amber" />{isArabic ? "المسار المقترح" : "Suggested route"}</span>}
       </div>
-      <p className="text-[10px] text-brand-muted">{!jerusalem ? (isArabic ? "خريطة نقاط مرجعية دون اتصال؛ لا تعرض حدوداً أو طرقاً أو مداخل مؤكدة. الأماكن التي لم تُوثّق إحداثياتها متاحة في القائمة." : "Offline reference-point map; no boundaries, roads or verified entrances are implied. Places awaiting coordinate verification remain available in the list.") : isArabic ? "خريطة توضيحية تعمل دون اتصال. اتبع زر الاتجاهات لكل محطة للحصول على مسار مشي حي، وتحقق محلياً من الوصول وساعات الفتح والظروف الراهنة." : "Offline illustrated map. Use each stop’s directions button for live walking navigation, and verify current access, opening hours and local conditions."}</p>
+      <p className="text-xs text-brand-muted">{!jerusalem ? (isArabic ? "خريطة نقاط مرجعية دون اتصال؛ لا تعرض حدوداً أو طرقاً أو مداخل مؤكدة. الأماكن التي لم تُوثّق إحداثياتها متاحة في القائمة." : "Offline reference-point map; no boundaries, roads or verified entrances are implied. Places awaiting coordinate verification remain available in the list.") : isArabic ? "خريطة توضيحية تعمل دون اتصال. اتبع زر الاتجاهات لكل محطة للحصول على مسار مشي حي، وتحقق محلياً من الوصول وساعات الفتح والظروف الراهنة." : "Offline illustrated map. Use each stop’s directions button for live walking navigation, and verify current access, opening hours and local conditions."}</p>
     </div>
   );
 };

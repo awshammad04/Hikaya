@@ -110,7 +110,7 @@ export const HeritageChat: React.FC<HeritageChatProps> = ({
   };
 
   return (
-    <section className="bg-white rounded-3xl border border-brand-border p-6 space-y-4 shadow-sm">
+    <section className="bg-brand-surface rounded-3xl border border-brand-border p-6 space-y-4 shadow-sm">
       <div>
         <h3 className="font-serif font-black text-xl text-brand-olive flex items-center gap-2">
           <Sparkles className="w-4 h-4 text-brand-amber" />
@@ -160,7 +160,7 @@ export const HeritageChat: React.FC<HeritageChatProps> = ({
 
               {message.excerpts.length > 0 && (
                 <details className="pt-1">
-                  <summary className="text-[10px] font-mono uppercase tracking-wider text-brand-muted cursor-pointer hover:text-brand-olive">
+                  <summary className="text-xs font-mono uppercase tracking-wider text-brand-muted cursor-pointer hover:text-brand-olive">
                     {isArabic ? `من السجلات (${message.excerpts.length})` : `From the records (${message.excerpts.length})`}
                   </summary>
                   <ul className="mt-2 space-y-1.5">
@@ -172,7 +172,7 @@ export const HeritageChat: React.FC<HeritageChatProps> = ({
                         <Quote className="w-3 h-3 shrink-0 mt-0.5 text-brand-amber" />
                         <span>
                           {message.citations[index] && (
-                            <span className="block text-[10px] font-semibold text-brand-olive">
+                            <span className="block text-xs font-semibold text-brand-olive">
                               {message.citations[index].location_name
                                 ? `${message.citations[index].location_name} · `
                                 : ""}
@@ -202,7 +202,7 @@ export const HeritageChat: React.FC<HeritageChatProps> = ({
               )}
 
               {message.notes.map((note, index) => (
-                <p key={index} className="text-[10px] font-mono text-brand-muted">
+                <p key={index} className="text-xs font-mono text-brand-muted">
                   {note}
                 </p>
               ))}
@@ -219,7 +219,7 @@ export const HeritageChat: React.FC<HeritageChatProps> = ({
                   </p>
                   <Link
                     to={`/contribute?location=${location.id}`}
-                    className="bg-brand-amber hover:bg-[#b45f05] text-white text-[10px] font-serif font-black tracking-widest uppercase px-4 py-2 rounded-full inline-flex items-center gap-1.5 transition-colors"
+                    className="bg-brand-amber hover:bg-brand-amber-deep text-white text-xs font-serif font-black tracking-widest uppercase px-4 py-2 rounded-full inline-flex items-center gap-1.5 transition-colors"
                   >
                     <PenLine className="w-3 h-3" />
                     {isArabic ? "أضف ما تعرفه" : "Add what you know"}
@@ -250,7 +250,7 @@ export const HeritageChat: React.FC<HeritageChatProps> = ({
           type="submit"
           disabled={asking || !draft.trim()}
           aria-label={isArabic ? "إرسال السؤال" : "Send question"}
-          className="bg-brand-olive hover:bg-[#4a4a35] disabled:opacity-50 text-brand-bg rounded-full p-3 transition-colors"
+          className="bg-brand-olive hover:bg-brand-olive-deep disabled:opacity-50 text-brand-bg rounded-full p-3 transition-colors"
         >
           {asking ? (
             <Loader2 className="w-4 h-4 animate-spin" />

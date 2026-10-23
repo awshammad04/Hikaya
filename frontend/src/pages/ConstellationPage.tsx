@@ -68,9 +68,9 @@ export const ConstellationPage: React.FC<{scope?: string}> = ({scope}) => {
           <>
             <MemoryConstellation locations={locations} memories={memories} />
             {uncoveredLocations.length > 0 && (
-              <section className="rounded-3xl border border-brand-border bg-white p-5 sm:p-6 space-y-4">
+              <section className="rounded-3xl border border-brand-border bg-brand-surface p-5 sm:p-6 space-y-4">
                 <div>
-                  <p className="text-[10px] uppercase tracking-widest text-brand-amber font-bold">{isArabic ? "فجوات الذاكرة" : "Memory gaps"}</p>
+                  <p className="text-xs uppercase tracking-widest text-brand-amber font-bold">{isArabic ? "فجوات الذاكرة" : "Memory gaps"}</p>
                   <h2 className="font-serif font-black text-xl text-brand-olive">{isArabic ? "أماكن تنتظر حكايات أهلها" : "Places waiting for community stories"}</h2>
                   <p className="text-xs text-brand-muted mt-1 max-w-2xl">{isArabic ? "لا نملأ هذه المساحات بنصوص مخترعة. إذا كانت لديك ذكرى شخصية من أحد هذه الأماكن، شاركها وسيحفظها فريق التوثيق بوصفها ذاكرة شفوية منسوبة لصاحبها." : "These spaces are not filled with invented copy. If you hold a personal memory of one of these places, submit it for review as clearly attributed oral heritage."}</p>
                 </div>

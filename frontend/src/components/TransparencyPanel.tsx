@@ -48,7 +48,7 @@ export const TransparencyPanel: React.FC<TransparencyPanelProps> = ({
   return (
     <section className="border border-brand-border-light rounded-2xl overflow-hidden">
       <div className="bg-brand-bg px-4 py-3 space-y-2">
-        <p className="text-[10px] font-mono uppercase tracking-widest text-brand-olive flex items-center gap-1.5">
+        <p className="text-xs font-mono uppercase tracking-widest text-brand-olive flex items-center gap-1.5">
           <ShieldCheck className="w-3 h-3 text-brand-amber" />
           {isArabic ? "من أين جاءت هذه الحكاية؟" : "Where this came from"}
         </p>
@@ -60,7 +60,7 @@ export const TransparencyPanel: React.FC<TransparencyPanelProps> = ({
 
       {uncertaintyNotes.length > 0 && (
         <div className="px-4 py-3 border-t border-brand-border-light space-y-1.5">
-          <p className="text-[10px] font-mono uppercase tracking-widest text-brand-muted">
+          <p className="text-xs font-mono uppercase tracking-widest text-brand-muted">
             {isArabic ? "ما لا تغطيه السجلات" : "What the records do not cover"}
           </p>
           <ul className="text-xs text-brand-text leading-relaxed list-disc ps-4 space-y-1">
@@ -75,7 +75,7 @@ export const TransparencyPanel: React.FC<TransparencyPanelProps> = ({
         type="button"
         onClick={() => setOpen((current) => !current)}
         aria-expanded={open}
-        className="w-full px-4 py-2 border-t border-brand-border-light text-[10px] font-mono uppercase tracking-wider text-brand-muted hover:text-brand-olive flex items-center justify-between transition-colors"
+        className="w-full px-4 py-2 border-t border-brand-border-light text-xs font-mono uppercase tracking-wider text-brand-muted hover:text-brand-olive flex items-center justify-between transition-colors"
       >
         {isArabic ? "تفاصيل تقنية" : "Technical detail"}
         <ChevronDown
@@ -84,7 +84,7 @@ export const TransparencyPanel: React.FC<TransparencyPanelProps> = ({
       </button>
 
       {open && (
-        <dl className="px-4 pb-3 grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-1.5 text-[10px] font-mono text-brand-muted">
+        <dl className="px-4 pb-3 grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-1.5 text-xs font-mono text-brand-muted">
           {summaryFile && (
             <div className="sm:col-span-2 flex items-start gap-1.5">
               <FileText className="w-3 h-3 shrink-0 mt-0.5" />

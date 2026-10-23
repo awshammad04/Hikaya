@@ -13,7 +13,8 @@ import {
 import { ApiLocation } from "../types";
 import { CoverImage } from "./CoverImage";
 import { useInterfaceLanguage } from "../context/LanguageContext";
-import { locationById } from "../data/heritage";
+import { governorateName, locationById } from "../data/heritage";
+import { arabicCount, ArabicForms } from "../utils/plural";
 
 interface LocationCardProps {
   location: ApiLocation;
@@ -21,24 +22,42 @@ interface LocationCardProps {
   visited?: boolean;
 }
 
-/** One count with its icon, hidden entirely when there is nothing to count. */
+/** One count with its icon and a readable label; hidden when it is zero. */
 const Stat: React.FC<{
   icon: React.ElementType;
   value: number;
-  label: string;
-  suffix?: string;
-}> = ({ icon: Icon, value, label, suffix }) => {
+  text: string;
+}> = ({ icon: Icon, value, text }) => {
   if (!value) return null;
   return (
-    <span
-      className="inline-flex items-center gap-1 text-[10px] font-mono text-brand-muted"
-      title={`${value} ${label}`}
-    >
-      <Icon className="w-3 h-3 text-brand-amber" />
-      {value}
-      {suffix}
+    <span className="inline-flex items-center gap-1 text-xs text-brand-muted">
+      <Icon className="w-3.5 h-3.5 text-brand-amber" aria-hidden="true" />
+      {text}
     </span>
   );
+};
+
+const COUNT_FORMS: Record<string, { ar: ArabicForms; en: (n: number) => string }> = {
+  stories: {
+    ar: { one: "حكاية واحدة", two: "حكايتان", few: (n) => `${n} حكايات`, many: (n) => `${n} حكاية` },
+    en: (n) => `${n} ${n === 1 ? "story" : "stories"}`,
+  },
+  timeline: {
+    ar: { one: "محطة زمنية", two: "محطتان زمنيتان", few: (n) => `${n} محطات زمنية`, many: (n) => `${n} محطة زمنية` },
+    en: (n) => `${n} timeline ${n === 1 ? "entry" : "entries"}`,
+  },
+  images: {
+    ar: { one: "صورة واحدة", two: "صورتان", few: (n) => `${n} صور`, many: (n) => `${n} صورة` },
+    en: (n) => `${n} photo${n === 1 ? "" : "s"}`,
+  },
+  memories: {
+    ar: { one: "ذكرى واحدة", two: "ذكريان", few: (n) => `${n} ذكريات`, many: (n) => `${n} ذكرى` },
+    en: (n) => `${n} ${n === 1 ? "memory" : "memories"}`,
+  },
+  minutes: {
+    ar: { one: "دقيقة قراءة", two: "دقيقتا قراءة", few: (n) => `${n} دقائق قراءة`, many: (n) => `${n} دقيقة قراءة` },
+    en: (n) => `${n} min read`,
+  },
 };
 
 /**
@@ -55,10 +74,13 @@ export const LocationCard: React.FC<LocationCardProps> = ({ location, visited })
   const secondaryName = isArabic ? location.name : (location.arabicName ?? profile?.arabicName);
   const description = isArabic ? (profile?.arabicSummary ?? location.description) : (profile?.summary ?? location.description);
   const image = profile?.coverImage ?? location.coverImageUrl;
+  const count = (kind: keyof typeof COUNT_FORMS, n: number) =>
+    isArabic ? arabicCount(n, COUNT_FORMS[kind].ar) : COUNT_FORMS[kind].en(n);
+  const place = governorateName(location.governorateId ?? "jerusalem", isArabic);
 
   return <Link
     to={`/locations/${location.id}`}
-    className="group bg-white rounded-3xl border border-brand-border overflow-hidden shadow-sm hover:shadow-xl hover:border-brand-amber/40 transition-all flex flex-col focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-amber"
+    className="group bg-brand-surface rounded-3xl border border-brand-border overflow-hidden shadow-sm hover:shadow-xl hover:border-brand-amber/40 transition-all flex flex-col focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-amber"
   >
     <div className="relative h-44 bg-brand-olive overflow-hidden">
       <CoverImage
@@ -69,7 +91,7 @@ export const LocationCard: React.FC<LocationCardProps> = ({ location, visited })
       <div className="absolute inset-0 bg-gradient-to-t from-brand-olive/90 via-brand-olive/10 to-transparent" />
 
       {visited && (
-        <span className="absolute top-3 right-3 bg-white/90 text-brand-olive text-[10px] font-mono uppercase tracking-wider px-2 py-1 rounded-full inline-flex items-center gap-1">
+        <span className="absolute top-3 end-3 bg-white/90 text-brand-olive text-xs font-mono uppercase tracking-wider px-2 py-1 rounded-full inline-flex items-center gap-1">
           <Check className="w-3 h-3" />
           {isArabic ? "تمّت زيارتها" : "Visited"}
         </span>
@@ -89,28 +111,23 @@ export const LocationCard: React.FC<LocationCardProps> = ({ location, visited })
 
     <div className="p-5 space-y-3 flex-1 flex flex-col">
       {location.city && (
-        <p className="text-[10px] font-mono uppercase tracking-widest text-brand-muted flex items-center gap-1.5">
+        <p className="text-xs font-mono uppercase tracking-widest text-brand-muted flex items-center gap-1.5">
           <MapPin className="w-3 h-3 text-brand-amber" />
-          {isArabic ? "القدس، فلسطين" : `${location.city}, ${location.country}`}
+          {isArabic ? `${place}، فلسطين` : `${place}, ${location.country}`}
         </p>
       )}
 
-      <p className="text-xs text-brand-text leading-relaxed line-clamp-4 flex-1">
+      <p className="text-sm text-brand-text leading-relaxed line-clamp-4 flex-1">
         {description}
       </p>
 
       {location.stats && (
         <div className="flex flex-wrap items-center gap-x-3 gap-y-1 pt-1">
-          <Stat icon={BookOpen} value={location.stats.storyCount} label={isArabic ? "حكايات" : "stories"} />
-          <Stat icon={Milestone} value={location.stats.timelineEventCount} label={isArabic ? "محطات زمنية" : "timeline entries"} />
-          <Stat icon={ImageIcon} value={location.stats.imageCount} label={isArabic ? "صور" : "photographs"} />
-          <Stat icon={MessageSquare} value={location.stats.memoryCount} label={isArabic ? "ذكريات" : "memories"} />
-          <Stat
-            icon={Clock}
-            value={location.stats.readingTimeMinutes}
-            label={isArabic ? "دقائق قراءة" : "minutes of reading"}
-            suffix={isArabic ? " د قراءة" : " min read"}
-          />
+          <Stat icon={BookOpen} value={location.stats.storyCount} text={count("stories", location.stats.storyCount)} />
+          <Stat icon={Milestone} value={location.stats.timelineEventCount} text={count("timeline", location.stats.timelineEventCount)} />
+          <Stat icon={ImageIcon} value={location.stats.imageCount} text={count("images", location.stats.imageCount)} />
+          <Stat icon={MessageSquare} value={location.stats.memoryCount} text={count("memories", location.stats.memoryCount)} />
+          <Stat icon={Clock} value={location.stats.readingTimeMinutes} text={count("minutes", location.stats.readingTimeMinutes)} />
         </div>
       )}
 
@@ -118,14 +135,14 @@ export const LocationCard: React.FC<LocationCardProps> = ({ location, visited })
         {location.categories.map((category) => (
           <span
             key={category}
-            className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-brand-bg border border-brand-border-light text-brand-muted"
+            className="text-xs font-mono px-2 py-0.5 rounded-full bg-brand-bg border border-brand-border-light text-brand-muted"
           >
             {category}
           </span>
         ))}
       </div>
 
-      <span className="text-xs font-serif font-bold uppercase tracking-widest text-brand-olive flex items-center gap-1.5 group-hover:text-brand-amber transition-colors">
+      <span className="text-sm font-bold text-brand-olive flex items-center gap-1.5 group-hover:text-brand-amber transition-colors">
         {isArabic ? "افتح المكان" : "Open location"}
         <ArrowRight className={`w-3.5 h-3.5 transition-transform ${isArabic ? "rotate-180 group-hover:-translate-x-0.5" : "group-hover:translate-x-0.5"}`} />
       </span>
