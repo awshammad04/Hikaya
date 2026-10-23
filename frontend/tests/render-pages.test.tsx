@@ -3,6 +3,7 @@ import React from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { MemoryRouter, Route, Routes } from "react-router-dom";
 import { LanguageProvider } from "../src/context/LanguageContext";
+import { AuthProvider } from "../src/context/AuthContext";
 import { AppLayout } from "../src/components/AppLayout";
 import { PalestineHomePage } from "../src/pages/PalestineHomePage";
 import { GovernoratePage } from "../src/pages/GovernoratePage";
@@ -37,6 +38,7 @@ function render(
 ) {
   return renderToStaticMarkup(
     <LanguageProvider>
+      <AuthProvider>
       <MemoryRouter initialEntries={[path]}>
         <Routes>
           {layout ? (
@@ -48,6 +50,7 @@ function render(
           )}
         </Routes>
       </MemoryRouter>
+      </AuthProvider>
     </LanguageProvider>,
   );
 }

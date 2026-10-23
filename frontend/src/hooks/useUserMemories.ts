@@ -1,8 +1,12 @@
 import { useCallback, useEffect, useState } from "react";
 import type { UserJourneyMemory } from "../types";
-
-const STORAGE_KEY = "hikaya-quds.user-journey-memories";
-const MEMORIES_EVENT = "hikaya-quds:user-memories";
+import {
+  deleteMemory,
+  MEMORIES_EVENT,
+  newRecordId,
+  uploadMemory,
+  USER_MEMORIES_KEY as STORAGE_KEY,
+} from "../services/accountSync";
 const MAX_IMAGE_EDGE = 1280;
 
 function isMemory(value: unknown): value is UserJourneyMemory {
@@ -10,7 +14,8 @@ function isMemory(value: unknown): value is UserJourneyMemory {
   const item = value as Record<string, unknown>;
   return typeof item.id === "string"
     && typeof item.photoDataUrl === "string"
-    && item.photoDataUrl.startsWith("data:image/")
+    // A data URL on the device, or the account's copy once it has synced.
+    && (item.photoDataUrl.startsWith("data:image/") || item.photoDataUrl.startsWith("/api/v1/me/photos/"))
     && typeof item.locationTag === "string"
     && typeof item.note === "string"
     && typeof item.createdAt === "string";
@@ -78,14 +83,13 @@ export function useUserMemories() {
   const addMemory = useCallback((memory: Omit<UserJourneyMemory, "id" | "createdAt">) => {
     const next: UserJourneyMemory = {
       ...memory,
-      id: typeof crypto !== "undefined" && "randomUUID" in crypto
-        ? crypto.randomUUID()
-        : `${Date.now()}-${Math.random().toString(36).slice(2)}`,
+      id: newRecordId(),
       createdAt: new Date().toISOString(),
     };
     storeUserMemories([next, ...readUserMemories()]);
+    void uploadMemory(next);
     return next;
   }, []);
 
-  return { memories, addMemory };
+  return { memories, addMemory, removeMemory: deleteMemory };
 }

@@ -5,6 +5,7 @@ import { useInterfaceLanguage } from "../context/LanguageContext";
 import { MyJerusalemStoryModal } from "./MyJerusalemStoryModal";
 import { governorates, nationalRecord } from "../data/heritage";
 import { OPEN_JERUSALEM_STORY_EVENT } from "../services/progress";
+import { AccountChip, AccountToasts } from "./AccountWidgets";
 
 const NAV_ITEMS = [
   { to: "/", en: "Home", ar: "الرئيسية", icon: Home, end: true },
@@ -48,7 +49,7 @@ export const AppLayout: React.FC = () => {
             <button type="button" onClick={() => setLanguage(language === "ar" ? "en" : "ar")} aria-label={isArabic ? "التبديل إلى الإنجليزية" : "Switch to Arabic"} className="bg-white border border-brand-border text-brand-olive text-[10px] font-bold px-3 py-2 rounded-full inline-flex items-center gap-1.5">
               <Languages className="w-3.5 h-3.5" /> {language === "ar" ? "EN" : "العربية"}
             </button>
-            <span className="bg-brand-amber/10 text-brand-amber text-[10px] font-mono font-bold px-3 py-2 rounded-full border border-brand-amber/20">Hikaya</span>
+            <AccountChip />
           </div>
         </div>
         <nav className="flex flex-wrap items-center gap-1 mt-5 border-b border-brand-border-light">
@@ -69,6 +70,7 @@ export const AppLayout: React.FC = () => {
         <div className="flex justify-center items-center gap-1.5 text-brand-amber"><Heart className="w-3 h-3 fill-current" /> {isArabic ? "Hikaya" : "Hikaya"}</div>
       </footer>
       <MyJerusalemStoryModal open={storyOpen} onClose={() => setStoryOpen(false)} />
+      <AccountToasts />
     </div>
   );
 };

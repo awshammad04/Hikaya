@@ -14,6 +14,7 @@ import { createJourney, JOURNEY_KEY } from "../services/journeys";
 import { PageTransition } from "../components/motion";
 import { MyJerusalemStoryModal } from "../components/MyJerusalemStoryModal";
 import { HomePage } from "./HomePage";
+import { saveStory } from "../services/accountSync";
 
 const interests: { id: TourInterest; ar: string; en: string }[] = [
   { id: "history", ar: "تاريخ وحضارات", en: "History & civilizations" },
@@ -131,6 +132,14 @@ export const CreateStoryPage: React.FC = () => {
             : "Could not save the journey on this device. Check browser storage space.",
         );
       }
+      // Every journey is also kept in the passport (and the account, if any).
+      saveStory({
+        kind: "journey",
+        title: journey.title,
+        governorateIds: journey.governorateIds,
+        payload: journey,
+        createdAt: journey.createdAt,
+      });
       navigate("/my-story");
     } catch (error) {
       setError(error instanceof Error ? error.message : String(error));

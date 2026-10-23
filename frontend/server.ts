@@ -47,14 +47,22 @@ app.use("/api/v1", async (req, res) => {
         accept: req.get("accept") ?? "application/json",
         "content-type": req.get("content-type") ?? "application/json",
         "x-hikaya-internal-token": process.env.HIKAYA_INTERNAL_TOKEN || "",
+        // Account sessions ride on an HttpOnly cookie set by the API; the
+        // client address lets the API throttle password guessing per visitor.
+        ...(req.get("cookie") ? { cookie: req.get("cookie")! } : {}),
+        "x-forwarded-for": req.ip ?? "",
       },
       body: hasBody ? JSON.stringify(req.body) : undefined,
     });
 
     const contentType = upstream.headers.get("content-type");
     const retryAfter = upstream.headers.get("retry-after");
+    const cacheControl = upstream.headers.get("cache-control");
+    const setCookies = upstream.headers.getSetCookie();
     if (retryAfter) res.setHeader("Retry-After", retryAfter);
     if (contentType) res.setHeader("Content-Type", contentType);
+    if (cacheControl) res.setHeader("Cache-Control", cacheControl);
+    if (setCookies.length) res.setHeader("Set-Cookie", setCookies);
     const payload = Buffer.from(await upstream.arrayBuffer());
     return res.status(upstream.status).send(payload);
   } catch (error) {

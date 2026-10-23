@@ -2,6 +2,7 @@ import { Global, Module } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { DatabaseService } from './database.service';
 import {
+  ACCOUNTS_REPOSITORY,
   CONTRIBUTIONS_REPOSITORY,
   LOCATIONS_REPOSITORY,
   MEDIA_REPOSITORY,
@@ -33,6 +34,10 @@ import {
   InMemoryQuizRepository,
   PostgresQuizRepository,
 } from './repositories/quiz.repository';
+import {
+  InMemoryAccountsRepository,
+  PostgresAccountsRepository,
+} from './repositories/accounts.repository';
 
 /**
  * DatabaseModule
@@ -106,6 +111,14 @@ import {
           : new InMemoryQuizRepository(),
       inject: [DatabaseService],
     },
+    {
+      provide: ACCOUNTS_REPOSITORY,
+      useFactory: (db: DatabaseService) =>
+        db.isAvailable()
+          ? new PostgresAccountsRepository(db)
+          : new InMemoryAccountsRepository(),
+      inject: [DatabaseService],
+    },
   ],
   exports: [
     DatabaseService,
@@ -115,6 +128,7 @@ import {
     MEDIA_REPOSITORY,
     TIMELINE_REPOSITORY,
     QUIZ_REPOSITORY,
+    ACCOUNTS_REPOSITORY,
   ],
 })
 export class DatabaseModule {}

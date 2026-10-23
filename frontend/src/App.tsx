@@ -7,6 +7,7 @@ import React from "react";
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import { AppLayout } from "./components/AppLayout";
 import { LanguageProvider } from "./context/LanguageContext";
+import { AuthProvider } from "./context/AuthContext";
 import { PersonalizedTourModal } from "./components/PersonalizedTourModal";
 import { AboutPage } from "./pages/AboutPage";
 import { ConstellationPage } from "./pages/ConstellationPage";
@@ -19,6 +20,8 @@ import { CreateStoryPage } from "./pages/CreateStoryPage";
 import { MyStoryPage } from "./pages/MyStoryPage";
 import { LocationDetailsPage } from "./pages/LocationDetailsPage";
 import { MapPage } from "./pages/MapPage";
+import { AccountPage } from "./pages/AccountPage";
+import { PassportPage } from "./pages/PassportPage";
 
 /**
  * Routes for the Sprint 2 MVP flow:
@@ -29,6 +32,8 @@ import { MapPage } from "./pages/MapPage";
  *   /locations/:id      details, reviewed stories, AI narrative, memories
  *   /contribute         user contribution form
  *   /about              project background
+ *   /account            sign in or create an account (optional)
+ *   /me                 "My passport": progress, photos, saved stories
  *   /explorer           legacy URL redirected to the current Jerusalem map
  *
  * Location ids are the same slugs used by the API and the content files
@@ -37,6 +42,7 @@ import { MapPage } from "./pages/MapPage";
 export default function App() {
   return (
     <LanguageProvider>
+      <AuthProvider>
       <BrowserRouter>
         <Routes>
           <Route element={<AppLayout />}>
@@ -56,11 +62,14 @@ export default function App() {
             <Route path="constellation" element={<ConstellationPage />} />
             <Route path="contribute" element={<ContributePage />} />
             <Route path="about" element={<AboutPage />} />
+            <Route path="account" element={<AccountPage />} />
+            <Route path="me" element={<PassportPage />} />
             <Route path="explorer" element={<Navigate to="/map" replace />} />
             <Route path="*" element={<Navigate to="/" replace />} />
           </Route>
         </Routes>
       </BrowserRouter>
+      </AuthProvider>
     </LanguageProvider>
   );
 }

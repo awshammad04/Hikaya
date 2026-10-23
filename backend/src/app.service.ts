@@ -36,6 +36,9 @@ export class AppService {
         'POST /api/v1/contributions',
         'POST /api/v1/ai/generate-story',
         'POST /api/v1/ai/ask-guide',
+        'POST /api/v1/auth/signup | login | logout',
+        'GET  /api/v1/auth/me',
+        'GET  /api/v1/me/progress | photos | stories | contributions',
       ],
       documentation: 'backend/README.md',
     };

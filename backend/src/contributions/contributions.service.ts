@@ -59,13 +59,16 @@ export class ContributionsService {
    * @throws NotFoundException when the location does not exist, so the form
    * gets a clear 404 rather than a foreign-key error from PostgreSQL.
    */
-  async create(dto: CreateContributionDto): Promise<Contribution> {
+  async create(
+    dto: CreateContributionDto,
+    userId: string | null = null,
+  ): Promise<Contribution> {
     await this.locationsService.findOne(dto.locationId);
 
     const contribution = await this.contributions.create({
       referenceCode: await this.generateReferenceCode(),
       locationId: dto.locationId,
-      userId: null,
+      userId,
       categoryId: dto.categoryId ?? null,
       title: dto.title,
       content: dto.content,
