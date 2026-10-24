@@ -9,7 +9,7 @@ This is the Sprint 2 implementation of the workflow documented in
 Both refuse to work from anything except reviewed content. There are two
 generation backends:
 
-* **model backend** - used when ``ANTHROPIC_API_KEY`` is set, under the strict
+* **model backend** - used when a provider key is set (see :mod:`service.llm`), under the strict
   no-invention prompts in :mod:`service.prompts`;
 * **offline extractive backend** - the default. It composes the narrative out of
   sentences taken from the reviewed summary itself, so it cannot invent a fact
@@ -106,6 +106,7 @@ def generate_story(request, content_dir=None):
         # The guard checks against everything the model was allowed to see.
         source_text or fact_text,
         audience=request.target_audience,
+        arabic_vocabulary=model_info is OFFLINE_MODEL,
     )
 
     # 'partial' means the fact guard found something a reviewer should look at.
@@ -138,13 +139,29 @@ def answer_question(request, content_dir=None):
         response.error = {"code": exc.code, "message": exc.message}
         return response
 
+    if llm.is_configured():
+        try:
+            return _grounded_answer(request, content_dir)
+        except ValidationError as exc:
+            return GuideResponse(status="error", answered_from_source=False,
+                                 error={"code": exc.code, "message": exc.message})
+        except llm.LLMUnavailable:
+            if os.environ.get("NODE_ENV") == "production":
+                raise
+            # Development keeps working on the keyword fallback below.
+    return _answer_offline(request, content_dir)
+
+
+def _answer_offline(request, content_dir):
+    # type: (GuideRequest, Optional[str]) -> GuideResponse
+    """Keyword retrieval over reviewed sentences; needs no model or network."""
     if request.governorate_ids or request.location_ids:
         from .scope import resolve_ids
         try:
             ids = resolve_ids(request.governorate_ids, [request.location_id] if request.location_id else request.location_ids, content_dir)
         except ValidationError as exc:
             return GuideResponse(status='error', answered_from_source=False, error={'code':exc.code, 'message':exc.message})
-        answers = [answer_question(GuideRequest(question=request.question, location_id=id, language=request.language, history=request.history), content_dir) for id in ids]
+        answers = [_answer_offline(GuideRequest(question=request.question, location_id=id, language=request.language, history=request.history), content_dir) for id in ids]
         supported = [answer for answer in answers if answer.answered_from_source and not answer.error]
         return GuideResponse(answer='\n\n'.join(answer.source.location_name+': '+answer.answer for answer in supported) if supported else _not_in_records(request.language),
                              answered_from_source=bool(supported), excerpts=[excerpt for answer in supported for excerpt in answer.excerpts],
@@ -212,40 +229,6 @@ def answer_question(request, content_dir=None):
             model=OFFLINE_MODEL,
         )
 
-    if llm.is_configured():
-        try:
-            raw = llm.complete(
-                prompts.GUIDE_SYSTEM_PROMPT,
-                prompts.build_guide_prompt(
-                    "\n\n".join(
-                        "[%s | %s] %s" % (
-                            item["section"], item["content_type"], item["text"]
-                        )
-                        for item in selected
-                    ),
-                    location_name, request.question, request.language,
-                    history=request.history,
-                ),
-            )
-            blocks = llm.parse_labelled_blocks(raw, ["ANSWER", "FROM_SOURCE", "EXCERPT"])
-            answer = blocks["ANSWER"].strip() or _not_in_records(request.language)
-            from_source = blocks["FROM_SOURCE"].strip().upper().startswith("Y")
-            excerpt = blocks["EXCERPT"].strip()
-            return GuideResponse(
-                status=STATUS_OK,
-                answer=answer,
-                answered_from_source=from_source,
-                excerpts=[excerpt] if excerpt and excerpt.upper() != "NONE" else [],
-                citations=_citations(selected),
-                uncertainty_notes=[] if from_source else [_not_in_records(request.language)],
-                source=source,
-                model=ModelInfo(provider=llm.PROVIDER_NAME, name=llm.DEFAULT_MODEL),
-            )
-        except llm.LLMUnavailable:
-            if os.environ.get("NODE_ENV") == "production":
-                raise
-            pass  # fall through to the offline retrieval below
-
     return GuideResponse(
         status=STATUS_OK,
         answer=" ".join(_format_chunk(item, request.language) for item in selected),
@@ -256,6 +239,58 @@ def answer_question(request, content_dir=None):
         source=source,
         model=OFFLINE_MODEL,
     )
+
+
+def _grounded_answer(request, content_dir):
+    # type: (GuideRequest, Optional[str]) -> GuideResponse
+    """Answer from whole reviewed records in scope (see :mod:`service.grounding`)."""
+    from . import grounding
+    from .scope import catalog, resolve_ids
+
+    catalog_items = dict((item["id"], item) for item in catalog()["locations"])
+    if request.historical_text and not (request.governorate_ids or request.location_ids):
+        source = SourceInfo(location_id=request.location_id,
+                            location_name=request.location_id, provided_inline=True)
+        records = [grounding.inline_record(request.historical_text, source)]
+        return grounding.answer(request, records, request.location_id or "the provided text",
+                                _not_in_records)
+
+    if request.governorate_ids or request.location_ids:
+        ids = resolve_ids(request.governorate_ids,
+                          [request.location_id] if request.location_id else request.location_ids,
+                          content_dir)
+        strict = True
+    elif request.location_id:
+        others = sorted(_mentioned_location_ids(request.question, content_dir)
+                        - {request.location_id})
+        ids = [request.location_id] + others[:3]
+        strict = True
+    else:
+        ids = [item["location_id"] for item in content_loader.available_locations(content_dir)]
+        strict = False
+
+    records = []
+    for location_id in ids:
+        try:
+            content, source = _resolve_source(
+                StoryRequest(location_id=location_id, language="en"), content_dir)
+        except ValidationError:
+            if strict and location_id == (request.location_id or ids[0]):
+                raise
+            continue
+        records.append(grounding.build_record(content, source, catalog_items.get(location_id)))
+    if not records:
+        raise ValidationError(ERR_UNKNOWN_LOCATION, "No reviewed content is available.")
+
+    if request.location_id and not (request.governorate_ids or request.location_ids):
+        first = records[0]
+        label = "%s (%s)" % (first.name, first.arabic_name) if first.arabic_name else first.name
+    elif len(records) == 1:
+        label = records[0].name
+    else:
+        label = "Palestinian heritage places in the Hikaya archive: " + ", ".join(
+            record.name for record in records)
+    return grounding.answer(request, records, label, _not_in_records)
 
 
 # ---------------------------------------------------------------------------
@@ -349,7 +384,7 @@ def _generate_with_model(request, content, source_text, location_name, mode):
         blocks["SUMMARY"].strip(),
         narrative,
         notes,
-        ModelInfo(provider=llm.PROVIDER_NAME, name=llm.DEFAULT_MODEL),
+        ModelInfo(provider=llm.provider_name(), name=llm.used_model()),
     )
 
 
@@ -367,6 +402,13 @@ def _generate_offline(request, content, location_name, mode):
     """
     notes = []  # type: List[str]
     is_child = request.target_audience == "child"
+
+    if (request.language == "ar" and content is not None
+            and not retrieval.has_arabic(content.section("overview"))
+            and content.section("arabic_overview")):
+        # Jerusalem records carry reviewed Arabic sections; tell the story from
+        # those rather than returning English to an Arabic reader.
+        return _generate_offline_arabic(request, content, mode)
 
     if content is None:
         # Inline text from the backend: use it directly, trimmed to the mode.
@@ -424,6 +466,69 @@ def _generate_offline(request, content, location_name, mode):
     summary = _build_summary(content, request, location_name)
     title = _default_title(location_name, mode)
     return title, summary, narrative, notes, OFFLINE_MODEL
+
+
+# Arabic counterparts of audiences.CHILD_UNSAFE_TERMS (normalised stems).
+_ARABIC_CHILD_UNSAFE = ("حصار", "هدم", "دمار", "حرب", "حروب", "قتل", "مجزر", "غزو",
+                        "صليبي", "احتلال", "تهجير", "طرد", "قصف", "معرك", "اعتداء")
+
+
+def _arabic_unsafe(sentence):
+    # type: (str) -> bool
+    normalized = retrieval.normalize_arabic(sentence)
+    return any(term in normalized for term in _ARABIC_CHILD_UNSAFE)
+
+
+def _generate_offline_arabic(request, content, mode):
+    # type: (StoryRequest, ReviewedContent, audiences.AudienceMode) -> tuple
+    """Arabic narrative composed only from the record's reviewed Arabic sections."""
+    is_child = request.target_audience == "child"
+
+    def sentences(key):
+        # type: (str) -> List[str]
+        found = [part.strip() for part in textutils.split_sentences(
+            content.section(key).replace("\n", " ")) if part.strip()]
+        return [part for part in found if not (is_child and _arabic_unsafe(part))]
+
+    overview = sentences("arabic_overview") + sentences("arabic_guide")
+    history = sentences("arabic_history")
+    importance = sentences("arabic_importance")
+    landmarks = sentences("arabic_landmarks")
+    traditions = sentences("arabic_traditions")
+
+    if mode.key == "short":
+        paragraphs = [" ".join((overview + history + importance)[:4])]
+    else:
+        paragraphs = [" ".join(overview)]
+        if history:
+            paragraphs.append(("حكاية المكان عبر الزمن:\n" if is_child else "التسلسل التاريخي:\n")
+                              + " ".join(history))
+        if importance:
+            paragraphs.append("لماذا يهمّ هذا المكان:\n" + " ".join(importance))
+        if landmarks:
+            paragraphs.append(("ما تبحث عنه:\n" if mode.key in ("tourist", "child") else "المعالم:\n")
+                              + " ".join(landmarks))
+        if traditions:
+            paragraphs.append("تقاليد منسوبة:\n" + " ".join(
+                "وفق التقليد الديني: " + item for item in traditions))
+    narrative = "\n\n".join(paragraph for paragraph in paragraphs if paragraph.strip())
+    if not narrative.strip():
+        return None
+
+    notes = [
+        "تعتمد هذه الحكاية على الأقسام العربية المراجعة فقط، وهي أقصر من السجل الإنجليزي؛ "
+        "فعّل مزوّد الذكاء الاصطناعي للحصول على حكاية عربية كاملة من السجل كله."
+    ]
+    if is_child and (_dropped_for_child(content) or any(
+            _arabic_unsafe(part) for part in textutils.split_sentences(content.section("arabic_history")))):
+        notes.append("حُذفت من نسخة الأطفال الفترات التي تتناول الحصار أو الهدم أو الحرب؛ وهي موجودة في المصدر المراجع.")
+    name = content.arabic_name or content.name
+    titles = {
+        "student": "%s: تاريخ موجز", "tourist": "زيارة %s", "child": "حكاية %s",
+        "short": "%s باختصار", "historian": "%s: سجلّ موثّق", "general": "%s",
+    }
+    summary = overview[0] if overview else name
+    return titles.get(mode.key, "%s") % name, summary, narrative, notes, OFFLINE_MODEL
 
 
 def _render_section(content, key, mode, is_child):
@@ -589,6 +694,8 @@ _STOPWORDS = {
     "بين", "بعد", "قبل", "كان", "كانت", "يكون", "تكون", "كم", "كيف",
     "لماذا", "ماهو", "ماهي", "الي", "ال", "و", "يا",
 }
+# Compare against normalised tokens (متى is tokenised as متي).
+_STOPWORDS = _STOPWORDS | set(token for word in _STOPWORDS for token in retrieval.tokens(word))
 
 _MIN_COVERAGE = 0.6
 
@@ -672,13 +779,7 @@ def _rank_chunks(question, chunks, location_name="", limit=3):
     if not base_terms or not expanded_terms:
         return [], []
     question_words = set(retrieval.tokens(question))
-    location_question = bool(
-        question_words
-        & {
-            "where", "located", "location", "town", "city", "village", "address",
-            "situated", "اين", "وين", "تقع", "موقع", "بلده", "مدينه",
-        }
-    )
+    location_question = retrieval.is_location_question(question_words)
 
     document_tokens = [
         retrieval.tokens(
@@ -866,10 +967,4 @@ def _mentioned_location_ids(question, content_dir):
 
 def _is_location_question(question):
     # type: (str) -> bool
-    return bool(
-        set(retrieval.tokens(question))
-        & {
-            "where", "located", "location", "town", "city", "village", "address",
-            "situated", "اين", "وين", "تقع", "موقع", "بلده", "مدينه",
-        }
-    )
+    return retrieval.is_location_question(set(retrieval.tokens(question)))

@@ -275,7 +275,7 @@ export function useNarration(language: "ar" | "en" = "ar"): NarrationState {
       const retryAfter = Math.max(1, Math.ceil(failure.retryAfterSeconds ?? 60));
       setNotice(language === "ar"
         ? (dailyQuotaExceeded
-            ? "اكتملت الحصة اليومية المجانية للصوت الطبيعي (10 طلبات). استخدم صوت الجهاز الآن، أو انتظر إعادة ضبط الحصة/فعّل الفوترة لمفتاح Gemini."
+            ? "اكتملت الحصة اليومية للصوت الطبيعي لمفتاح Gemini هذا. استخدم صوت الجهاز الآن، أو انتظر إعادة ضبط الحصة أو فعّل الفوترة للمفتاح."
             : quotaExceeded
             ? `اكتملت حصة الصوت الطبيعي مؤقتاً. حاول مجدداً بعد نحو ${retryAfter} ثانية، أو اختر صوت الجهاز.`
             : timedOut
@@ -284,7 +284,7 @@ export function useNarration(language: "ar" | "en" = "ar"): NarrationState {
             ? "انتهى بث الصوت من دون بيانات قابلة للتشغيل. أعد المحاولة أو اختر صوت الجهاز."
             : "الصوت الطبيعي غير متاح الآن. اختر «صوت الجهاز دون اتصال» إن أردت الاستماع فوراً.")
         : (dailyQuotaExceeded
-            ? "The free daily natural-voice quota (10 requests) is exhausted. Use the device voice now, or wait for the quota reset/enable billing for the Gemini key."
+            ? "The daily natural-voice quota for this Gemini key is exhausted. Use the device voice now, or wait for the quota reset or enable billing for the key."
             : quotaExceeded
             ? `The natural-voice rate limit is temporarily exhausted. Retry in about ${retryAfter} seconds, or choose the device voice.`
             : timedOut

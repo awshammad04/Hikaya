@@ -21,6 +21,8 @@ _ARABIC_STOPWORDS = {
     "هو", "هي", "هم", "هن", "هذا", "هذه", "هناك", "ذلك", "تلك", "في",
     "عن", "على", "مع", "بين", "بعد", "قبل", "كان", "كانت", "يكون", "تكون",
     "كم", "كيف", "لماذا", "ماهو", "ماهي", "الي", "ال", "و", "يا",
+    # Common Palestinian colloquial question words.
+    "شو", "ايش", "وين", "ليش", "قديش", "هاد", "هاي", "فيه", "فيها",
 }
 _ENGLISH_STOPWORDS = {
     "a", "about", "all", "and", "any", "are", "as", "at", "be", "been",
@@ -29,8 +31,28 @@ _ENGLISH_STOPWORDS = {
     "of", "on", "or", "please", "tell", "that", "the", "their", "there",
     "they", "this", "to", "today", "was", "were", "what", "when", "where",
     "which", "who", "why", "will", "with", "you", "your", "here", "near",
-    "nearby", "some", "something", "anything",
+    "nearby", "some", "something", "anything", "best", "i", "my", "we", "us",
+    "should", "could", "would", "see",
 }
+# Words that make a question about where a place is.
+LOCATION_WORDS = {
+    "where", "located", "location", "address", "situated",
+    "اين", "وين", "تقع", "يقع", "موقع",
+}
+_PLACE_WORDS = {"town", "village", "city", "بلده", "مدينه", "قريه"}
+
+
+def is_location_question(words: Set[str]) -> bool:
+    """True for "where is it?" and "which town is it in?", not for "the Old City"."""
+    if words & LOCATION_WORDS:
+        return True
+    place_words = words & _PLACE_WORDS
+    if not place_words:
+        return False
+    # "the Old City" / "البلدة القديمة" names a place; it does not ask for one.
+    old_city = ("old" in words and "city" in words) or (
+        "بلده" in words and any(word.startswith("قديم") for word in words))
+    return not old_city or len(place_words) > 1
 _ALIASES = {
     "تاريخ": "تاريخ history",
     "تاريخي": "تاريخ history",
@@ -62,6 +84,16 @@ _ALIASES = {
     "البلده القديمه في الخليل": "البلده القديمه في الخليل hebron old town",
 }
 _SYNONYMS = {
+    "called": {"name", "named", "recall", "known"},
+    "name": {"called", "named", "recall"},
+    "commissioned": {"built", "under", "ordered"},
+    "open": {"completed", "opened", "inaugurated"},
+    "opened": {"completed", "open", "inaugurated"},
+    "big": {"area", "square", "metre", "size"},
+    "size": {"area", "square", "metre", "big"},
+    "associated": {"tradition", "associate", "linked"},
+    "architect": {"designed", "design", "architect"},
+    "designed": {"architect", "design"},
     "built": {"build", "constructed", "construction"},
     "construction": {"built", "constructed", "build"},
     "constructed": {"build", "built", "construction"},
@@ -74,7 +106,10 @@ _SYNONYMS = {
     "location": {"located", "where"},
 }
 _ARABIC_LIGHT_PREFIXES = ("وال", "بال", "كال", "فال", "لل", "ال")
-_ARABIC_LIGHT_SUFFIXES = ("يات", "ات", "ون", "ين", "ان", "ها", "هم", "هن", "كم", "نا", "ية", "يه")
+# "ان" is deliberately absent: it ends many names (سليمان، السلطان، عثمان) and
+# stripping it merged different words; short inflections are matched by
+# :func:`same_stem` instead.
+_ARABIC_LIGHT_SUFFIXES = ("يات", "ات", "ون", "ين", "ها", "هم", "هن", "كم", "نا", "ية", "يه")
 
 
 def normalize_arabic(text: str) -> str:
@@ -102,6 +137,16 @@ def _normalize_token(token: str) -> str:
     return token
 
 
+def same_stem(term: str, token: str) -> bool:
+    """Exact match, or an Arabic inflection one or two letters longer (بني/بنيت)."""
+    if term == token:
+        return True
+    if not term or not token or not ("\u0600" <= term[0] <= "\u06ff"):
+        return False
+    shorter, longer = (term, token) if len(term) <= len(token) else (token, term)
+    return len(shorter) >= 3 and len(longer) - len(shorter) <= 2 and longer.startswith(shorter)
+
+
 def tokens(text: str) -> List[str]:
     """Return normalized English and Arabic tokens with light Arabic stemming."""
     text = normalize_arabic(text)
@@ -111,6 +156,10 @@ def tokens(text: str) -> List[str]:
         if token:
             output.append(token)
     return output
+
+
+_ARABIC_STOPWORDS = _ARABIC_STOPWORDS | {_normalize_token(word) for word in _ARABIC_STOPWORDS}
+_ENGLISH_STOPWORDS = _ENGLISH_STOPWORDS | {_normalize_token(word) for word in _ENGLISH_STOPWORDS}
 
 
 def query_terms(
@@ -123,16 +172,15 @@ def query_terms(
         expanded = expanded.replace(phrase, replacement)
     raw_words = set(tokens(expanded))
     words = set(raw_words)
-    location_question = bool(
-        raw_words
-        & {
-            "where", "located", "location", "town", "city", "village", "address",
-            "situated", "اين", "وين", "تقع", "موقع", "بلده", "مدينه",
-        }
-    )
+    location_question = is_location_question(raw_words)
     location_names = set() if location_question else set(tokens(location_name))
-    ignored = _ENGLISH_STOPWORDS | _ARABIC_STOPWORDS | location_names
-    words = {word for word in words if word not in ignored and len(word) > 1}
+    stopwords = _ENGLISH_STOPWORDS | _ARABIC_STOPWORDS
+    words = {word for word in words if word not in stopwords and len(word) > 1}
+    # Drop the place's own name, unless it is all the question is about
+    # ("Why is it called Bab al-Amud?").
+    without_name = words - location_names
+    if without_name:
+        words = without_name
     if not has_arabic(question) and any(
         word in raw_words for word in ("where", "located", "location")
     ):
@@ -153,14 +201,17 @@ def bm25_scores(query: Set[str], documents: Sequence[Sequence[str]]) -> List[flo
         return [0.0] * len(documents)
     frequencies: Dict[str, int] = {}
     for term in query:
-        frequencies[term] = sum(1 for document in documents if term in document)
+        frequencies[term] = sum(
+            1 for document in documents if any(same_stem(term, token) for token in document)
+        )
     scores = []
     for document, length in zip(documents, lengths):
         score = 0.0
         counts = {}
-        for term in document:
-            if term in query:
-                counts[term] = counts.get(term, 0) + 1
+        for token in document:
+            for term in query:
+                if same_stem(term, token):
+                    counts[term] = counts.get(term, 0) + 1
         for term, frequency in counts.items():
             document_frequency = frequencies[term]
             inverse_frequency = math.log(
@@ -191,4 +242,5 @@ def arabic_terms(text: str) -> Set[str]:
 
 def term_matches(term: str, document_terms: Sequence[str]) -> bool:
     """Check a base query term against itself and its curated synonyms."""
-    return bool(({term} | _SYNONYMS.get(term, set())) & set(document_terms))
+    candidates = {term} | _SYNONYMS.get(term, set())
+    return any(same_stem(candidate, token) for candidate in candidates for token in document_terms)

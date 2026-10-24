@@ -68,9 +68,10 @@ def main(argv=None):
     sub.add_parser("locations", help="list locations that have reviewed content")
 
     args = parser.parse_args(argv)
+    llm.load_env_file()
 
     if args.command == "locations":
-        backend = llm.PROVIDER_NAME if llm.is_configured() else "offline-extractive"
+        backend = llm.provider_name() if llm.is_configured() else "offline-extractive"
         print("backend: %s" % backend)
         for item in content_loader.available_locations():
             print("  %-12s %-28s reviewed=%s  (%s)"

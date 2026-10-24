@@ -32,13 +32,11 @@ export function installProductionControls(app: Express) {
   });
   app.use("/api", requestLimit(300, 600, 60_000, false));
   const aiLimit = requestLimit(20, Number(process.env.AI_REQUESTS_PER_HOUR || 200), 3_600_000, true);
-  const videoLimit = requestLimit(3, Number(process.env.VIDEO_REQUESTS_PER_HOUR || 10), 3_600_000, true);
   const contributionLimit = requestLimit(10, 100, 3_600_000, false);
   app.use((req, res, next) => {
     if (req.method !== "POST") return next();
-    if (req.path === "/api/generate-video") return videoLimit(req, res, next);
-    if (/^\/api\/(tts(?:-stream)?|generate-story|v1\/(ai\/.*|journeys))$/.test(req.path)) return aiLimit(req, res, next);
-    if (["/api/contribute", "/api/v1/contributions"].includes(req.path)) return contributionLimit(req, res, next);
+    if (/^\/api\/(tts-stream|v1\/(ai\/.*|journeys))$/.test(req.path)) return aiLimit(req, res, next);
+    if (req.path === "/api/v1/contributions") return contributionLimit(req, res, next);
     next();
   });
 }

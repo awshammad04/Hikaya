@@ -33,8 +33,6 @@ services:
         value: '180000'
       - key: GEMINI_API_KEY
         sync: false
-      - key: GOOGLE_MAPS_PLATFORM_KEY
-        sync: false
   - type: web
     name: hikaya-backend
     runtime: node
@@ -86,10 +84,19 @@ services:
         value: production
       - key: AI_INTERNAL_TOKEN
         generateValue: true
+      # Grounded guide answers and stories. With GEMINI_API_KEY set, provider
+      # "auto" uses Gemini; with only ANTHROPIC_API_KEY it uses Anthropic; with
+      # neither it serves the reviewed-content extractive engine.
+      - key: GEMINI_API_KEY
+        sync: false
       - key: ANTHROPIC_API_KEY
         sync: false
+      - key: HIKAYA_AI_PROVIDER
+        value: auto
       - key: HIKAYA_AI_MODEL
-        value: claude-sonnet-5
+        value: gemini-3.5-flash
+      - key: HIKAYA_AI_FALLBACK_MODEL
+        value: gemini-3.5-flash-lite
 databases:
   - name: hikaya-postgres
     region: frankfurt

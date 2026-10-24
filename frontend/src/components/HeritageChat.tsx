@@ -78,7 +78,9 @@ export const HeritageChat: React.FC<HeritageChatProps> = ({
     let result: GuideAnswer;
     try {
       result = (await askGuide(location.id, trimmed, history, language, scope)).data;
-      if (!scope && isArabic && (result.generatedBy === "frontend-mock" || !/[\u0600-\u06ff]/.test(result.answer))) {
+      // Only the offline mock is replaced; real guide answers already come back
+      // in the visitor's language.
+      if (!scope && isArabic && result.generatedBy === "frontend-mock") {
         result = localArabicGuideAnswer(location.id, trimmed);
       }
     } catch (error) {

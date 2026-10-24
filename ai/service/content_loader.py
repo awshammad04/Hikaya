@@ -128,6 +128,12 @@ class ReviewedContent(object):
             ("walkthrough", "VISITOR WALKTHROUGH (reviewed spatial and sensory guidance)"),
             ("source_notes", "SOURCE NOTES (includes gaps you must not fill)"),
             ("references", "REVIEWED BIBLIOGRAPHY (provenance only, not new facts)"),
+            ("arabic_overview", "REVIEWED ARABIC OVERVIEW (same facts, Arabic wording)"),
+            ("arabic_history", "REVIEWED ARABIC HISTORY (same facts, Arabic wording)"),
+            ("arabic_importance", "REVIEWED ARABIC IMPORTANCE (same facts, Arabic wording)"),
+            ("arabic_landmarks", "REVIEWED ARABIC LANDMARKS (same facts, Arabic wording)"),
+            ("arabic_traditions", "REVIEWED ARABIC RELIGIOUS TRADITIONS (attribute, never assert as fact)"),
+            ("arabic_guide", "REVIEWED ARABIC GUIDE TEXT"),
         ):
             body = self.sections.get(key)
             if body:

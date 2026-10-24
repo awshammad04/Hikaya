@@ -43,8 +43,8 @@ async def lifespan(_app):
             raise RuntimeError("AI_INTERNAL_TOKEN is required in production.")
         if len(content_loader.available_locations()) < 14:
             raise RuntimeError("Reviewed Jerusalem and Palestine content must be available.")
-        if os.environ.get("ANTHROPIC_API_KEY") and not llm.is_configured():
-            raise RuntimeError("Anthropic SDK is unavailable.")
+        if os.environ.get("HIKAYA_AI_PROVIDER", "auto") not in ("auto", "") and not llm.is_configured():
+            raise RuntimeError("HIKAYA_AI_PROVIDER is set but its API key (or SDK) is missing.")
     yield
 
 
@@ -113,8 +113,8 @@ def health():
     return {
         "status": "ok",
         "version": app.version,
-        "backend": llm.PROVIDER_NAME if llm.is_configured() else "offline-extractive",
-        "model": llm.DEFAULT_MODEL if llm.is_configured() else "hikaya-extractive-v1",
+        "backend": llm.provider_name() if llm.is_configured() else "offline-extractive",
+        "model": llm.model_name() if llm.is_configured() else "hikaya-extractive-v1",
         "reviewed_locations": [item["location_id"] for item in locations],
     }
 

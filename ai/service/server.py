@@ -59,8 +59,8 @@ def health_payload():
         "status": "ok",
         "version": VERSION,
         "server": "stdlib",
-        "backend": llm.PROVIDER_NAME if configured else "offline-extractive",
-        "model": llm.DEFAULT_MODEL if configured else "hikaya-extractive-v1",
+        "backend": llm.provider_name() if configured else "offline-extractive",
+        "model": llm.model_name() if configured else "hikaya-extractive-v1",
         "reviewed_locations": [
             item["location_id"] for item in content_loader.available_locations()
         ],
@@ -151,11 +151,13 @@ def main(argv=None):
     parser.add_argument("--port", type=int, default=8001)
     args = parser.parse_args(argv)
 
+    llm.load_env_file()
     info = health_payload()
     server = ThreadingHTTPServer((args.host, args.port), Handler)
     sys.stderr.write(
-        "[hikaya-ai] listening on http://%s:%d  backend=%s  locations=%s\n"
-        % (args.host, args.port, info["backend"], ", ".join(info["reviewed_locations"]))
+        "[hikaya-ai] listening on http://%s:%d  backend=%s  model=%s  locations=%s\n"
+        % (args.host, args.port, info["backend"], info["model"],
+           ", ".join(info["reviewed_locations"]))
     )
     try:
         server.serve_forever()

@@ -105,12 +105,18 @@ describe('LocationsService', () => {
     });
 
     it('flags entries that rest on tradition rather than documented history', async () => {
-      const timeline = await service.findTimeline('bab-al-amud');
+      const timeline = await service.findTimeline('at-tur');
       const traditions = timeline.filter((event) => event.isTradition);
       expect(traditions.length).toBeGreaterThan(0);
       expect(
-        traditions.some((event) => /believed/.test(event.description)),
+        traditions.some((event) => /tradition/.test(event.description)),
       ).toBe(true);
+    });
+
+    it('does not flag documented archaeology as tradition', async () => {
+      // The Roman gate under Bab al-Amud is archaeological fabric, not belief.
+      const timeline = await service.findTimeline('bab-al-amud');
+      expect(timeline.find((event) => /Hadrian/.test(event.description))?.isTradition).toBe(false);
     });
 
     it('cites the content file every event came from', async () => {
