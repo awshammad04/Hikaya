@@ -72,7 +72,7 @@ function arabicFallbackNarrative(
       `هيا نكتشف ${profile.arabicName}. ${profile.arabicSummary}`,
       `${observation}`,
       `${living}`,
-      `هل تستطيع أن تلاحظ ${profile.arabicLandmarks.slice(0, 3).join("، و")}؟ انظر بهدوء، واستمع إلى المكان، وتذكّر أن الحارة بيتٌ لأناس يعيشون فيها كل يوم.`,
+      `هل تستطيع أن تلاحظ ${profile.arabicLandmarks.slice(0, 3).join("، و")}؟ انظر بهدوء، واستمع إلى المكان، وتذكّر أن هذا المكان جزء من حياة أناس يعيشون حوله كل يوم.`,
     ].join("\n\n");
   }
   if (audience === "historian") {

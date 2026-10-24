@@ -26,7 +26,7 @@ export const ContributePage: React.FC = () => {
 
         <div>
           <h1 className="font-serif font-black text-3xl text-brand-olive">
-            {isArabic ? "شارك ذكرى مقدسية" : "Share a memory"}
+            {isArabic ? "شارك ذكرى" : "Share a memory"}
           </h1>
           <p className="text-sm text-brand-text leading-relaxed mt-2">
             {isArabic ? "حكاية ليست سجلاً للمباني والتواريخ فقط. شارع مشيت فيه، أو دكان أُغلق، أو عبارة قالتها جدتك؛ كل ذلك تراث، وهو أول ما يضيع إن لم ندوّنه." : "Hikaya is not only a record of buildings and dates. A street you walked, a shop that closed, something your grandmother said — that is heritage too, and it is the part that disappears first if nobody writes it down."}
