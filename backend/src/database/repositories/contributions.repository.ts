@@ -23,6 +23,8 @@ export interface ContributionsRepository {
    * is the contributor asking about their own submission.
    */
   findByReference(referenceCode: string): Promise<Contribution | null>;
+  /** Every submission linked to an account, any status - for its owner only. */
+  findByUser(userId: string): Promise<Contribution[]>;
   /** Approved count per location id, for the summary on location cards. */
   countsApprovedByLocation(): Promise<Record<string, number>>;
 }
@@ -119,6 +121,15 @@ export class PostgresContributionsRepository implements ContributionsRepository 
     return result.rows.length ? toContribution(result.rows[0]) : null;
   }
 
+  async findByUser(userId: string): Promise<Contribution[]> {
+    const result = await this.db.query<ContributionRow>(
+      `SELECT * FROM contributions WHERE user_id = $1
+       ORDER BY submitted_at DESC`,
+      [userId],
+    );
+    return result.rows.map(toContribution);
+  }
+
   async countsApprovedByLocation(): Promise<Record<string, number>> {
     const result = await this.db.query<{ location_id: string; count: string }>(
       `SELECT location_id, COUNT(*)::text AS count FROM contributions
@@ -174,6 +185,12 @@ export class InMemoryContributionsRepository implements ContributionsRepository 
     return Promise.resolve(
       this.contributions.find((item) => item.referenceCode === referenceCode) ??
         null,
+    );
+  }
+
+  findByUser(userId: string): Promise<Contribution[]> {
+    return Promise.resolve(
+      this.contributions.filter((item) => item.userId === userId),
     );
   }
 

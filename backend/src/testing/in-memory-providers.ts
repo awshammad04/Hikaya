@@ -1,5 +1,6 @@
 import { Provider } from '@nestjs/common';
 import {
+  ACCOUNTS_REPOSITORY,
   CONTRIBUTIONS_REPOSITORY,
   LOCATIONS_REPOSITORY,
   MEDIA_REPOSITORY,
@@ -13,6 +14,7 @@ import { InMemoryContributionsRepository } from '../database/repositories/contri
 import { InMemoryMediaRepository } from '../database/repositories/media.repository';
 import { InMemoryTimelineRepository } from '../database/repositories/timeline.repository';
 import { InMemoryQuizRepository } from '../database/repositories/quiz.repository';
+import { InMemoryAccountsRepository } from '../database/repositories/accounts.repository';
 
 /**
  * Every repository token, bound to its in-memory implementation.
@@ -35,4 +37,5 @@ export const IN_MEMORY_REPOSITORY_PROVIDERS: Provider[] = [
   { provide: MEDIA_REPOSITORY, useClass: InMemoryMediaRepository },
   { provide: TIMELINE_REPOSITORY, useClass: InMemoryTimelineRepository },
   { provide: QUIZ_REPOSITORY, useClass: InMemoryQuizRepository },
+  { provide: ACCOUNTS_REPOSITORY, useClass: InMemoryAccountsRepository },
 ];

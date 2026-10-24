@@ -1,9 +1,12 @@
 import React, { useState } from "react";
 import { motion, useReducedMotion } from "motion/react";
+import { Link } from "react-router-dom";
 import {
   AlertTriangle,
   ArrowLeft,
   ArrowRight,
+  Bookmark,
+  BookmarkCheck,
   Check,
   Loader2,
   Sparkles,
@@ -16,6 +19,7 @@ import { SourceCitationLine } from "./SourceCitationLine";
 import { useInterfaceLanguage } from "../context/LanguageContext";
 import { locationById } from "../data/heritage";
 import { visitorWalkthrough } from "../visitorWalkthroughs";
+import { saveStory } from "../services/accountSync";
 
 interface StoryWizardProps {
   location: ApiLocation;
@@ -68,7 +72,7 @@ function arabicFallbackNarrative(
       `هيا نكتشف ${profile.arabicName}. ${profile.arabicSummary}`,
       `${observation}`,
       `${living}`,
-      `هل تستطيع أن تلاحظ ${profile.arabicLandmarks.slice(0, 3).join("، و")}؟ انظر بهدوء، واستمع إلى المكان، وتذكّر أن الحارة بيتٌ لأناس يعيشون فيها كل يوم.`,
+      `هل تستطيع أن تلاحظ ${profile.arabicLandmarks.slice(0, 3).join("، و")}؟ انظر بهدوء، واستمع إلى المكان، وتذكّر أن هذا المكان جزء من حياة أناس يعيشون حوله كل يوم.`,
     ].join("\n\n");
   }
   if (audience === "historian") {
@@ -109,10 +113,24 @@ export const StoryWizard: React.FC<StoryWizardProps> = ({ location, autoPlay }) 
   const [story, setStory] = useState<GeneratedStory | null>(null);
   const [generating, setGenerating] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [savedId, setSavedId] = useState<string | null>(null);
+
+  const keepStory = () => {
+    if (!story) return;
+    const saved = saveStory({
+      kind: "location_story",
+      title: story.title,
+      locationId: location.id,
+      governorateIds: location.governorateId ? [location.governorateId] : [],
+      payload: story,
+    });
+    setSavedId(saved.id);
+  };
 
   const run = async (chosenTone: StoryTone) => {
     setGenerating(true);
     setError(null);
+    setSavedId(null);
     setStep("result");
     try {
       const result = await generateStory(location.id, audience, chosenTone, language);
@@ -343,14 +361,31 @@ export const StoryWizard: React.FC<StoryWizardProps> = ({ location, autoPlay }) 
                     queuedForReview={Boolean(story.storyId)}
                   />
 
-                  <button
-                    type="button"
-                    onClick={restart}
-                    className="text-xs font-serif font-bold uppercase tracking-widest text-brand-olive hover:text-brand-amber inline-flex items-center gap-1.5"
-                  >
-                    <ArrowLeft className="w-3.5 h-3.5" />
-                    {isArabic ? "اروِها بطريقة أخرى" : "Tell it differently"}
-                  </button>
+                  <div className="flex flex-wrap items-center gap-4">
+                    <button
+                      type="button"
+                      onClick={restart}
+                      className="text-xs font-serif font-bold uppercase tracking-widest text-brand-olive hover:text-brand-amber inline-flex items-center gap-1.5"
+                    >
+                      <ArrowLeft className="w-3.5 h-3.5" />
+                      {isArabic ? "اروِها بطريقة أخرى" : "Tell it differently"}
+                    </button>
+                    {savedId ? (
+                      <Link to="/me" className="text-xs font-bold text-brand-amber inline-flex items-center gap-1.5">
+                        <BookmarkCheck className="w-3.5 h-3.5" />
+                        {isArabic ? "حُفظت في جواز سفرك" : "Saved to your passport"}
+                      </Link>
+                    ) : (
+                      <button
+                        type="button"
+                        onClick={keepStory}
+                        className="rounded-full border border-brand-border px-4 py-1.5 text-xs font-bold text-brand-olive hover:border-brand-amber inline-flex items-center gap-1.5"
+                      >
+                        <Bookmark className="w-3.5 h-3.5" />
+                        {isArabic ? "احفظ الحكاية" : "Save story"}
+                      </button>
+                    )}
+                  </div>
                 </article>
               )}
             </>

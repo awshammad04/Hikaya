@@ -1,6 +1,26 @@
 import React from "react";
-import { Award, ShieldCheck, Download, Code2, Megaphone } from "lucide-react";
+import { Award, ShieldCheck, GraduationCap } from "lucide-react";
 import { useInterfaceLanguage } from "../context/LanguageContext";
+
+const UNIVERSITIES = {
+  birzeit: { ar: "جامعة بيرزيت", en: "Birzeit University" },
+  ppu: { ar: "جامعة بوليتكنيك فلسطين", en: "Palestine Polytechnic University" },
+  pau: { ar: "جامعة فلسطين الأهلية", en: "Palestine Ahliya University" },
+};
+
+type University = keyof typeof UNIVERSITIES;
+
+const universityName = (id: University, isArabic: boolean) =>
+  isArabic ? UNIVERSITIES[id].ar : UNIVERSITIES[id].en;
+
+const TEAM_MEMBERS: { name: string; university: University }[] = [
+  { name: "نور الدين اتكيدك", university: "birzeit" },
+  { name: "دعاء حتو", university: "birzeit" },
+  { name: "عمرة صوالحة", university: "ppu" },
+  { name: "أروى حجاحجة", university: "ppu" },
+  { name: "جود أبو عمر", university: "ppu" },
+  { name: "تمارا حمدان", university: "pau" },
+];
 
 export const AboutPanel: React.FC = () => {
   const { isArabic } = useInterfaceLanguage();
@@ -50,10 +70,10 @@ export const AboutPanel: React.FC = () => {
             <Award className="w-4 h-4" />
           </div>
           <h4 className="font-serif font-black text-base text-brand-olive">
-            {isArabic ? "هوية بصرية مقدسية" : "Jerusalem-inspired visual identity"}
+            {isArabic ? "هوية بصرية فلسطينية" : "Palestinian-inspired visual identity"}
           </h4>
           <p className="text-xs text-brand-text leading-relaxed">
-            {isArabic ? "تستمد الهوية البصرية ألوانها من الزيتون والحجر الجيري المقدسي الدافئ وتفاصيل التطريز الفلسطيني، مع خط «ثمانية» العربي في كامل الواجهة." : "The visual theme draws from olive groves, the warm limestone of Jerusalem, and Palestinian tatreez details, with the Thmanyah type family used throughout the interface."}
+            {isArabic ? "تستمد الهوية البصرية ألوانها من الزيتون والحجر الجيري الدافئ في مدن فلسطين القديمة وتفاصيل التطريز الفلسطيني، مع خط «ثمانية» العربي في كامل الواجهة." : "The visual theme draws from olive groves, the warm limestone of Palestine’s old cities, and Palestinian tatreez details, with the Thmanyah type family used throughout the interface."}
           </p>
         </div>
       </div>
@@ -61,7 +81,7 @@ export const AboutPanel: React.FC = () => {
       {/* Team Profile */}
       <div className="border-t border-brand-border pt-6 space-y-4">
         <h4 className="font-serif font-black text-xl text-brand-olive">
-          {isArabic ? "فريق النسخة التجريبية" : "The Beta Founding Team"}
+          {isArabic ? "فريق التطوير" : "Development Team"}
         </h4>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div className="sm:col-span-2 relative overflow-hidden bg-brand-olive text-brand-bg border border-brand-olive p-5 rounded-2xl shadow-md">
@@ -74,57 +94,31 @@ export const AboutPanel: React.FC = () => {
                 <span className="inline-flex rounded-full bg-brand-amber/20 border border-brand-amber/30 px-2.5 py-1 text-[10px] font-mono font-bold uppercase tracking-widest text-brand-amber">
                   Team Lead
                 </span>
-                <p className="mt-2 font-serif font-black text-xl text-white">اوس حماد</p>
+                <p className="mt-2 font-serif font-black text-xl text-white">أوس حماد</p>
+                <p className="mt-1 text-xs text-stone-300">{universityName("birzeit", isArabic)}</p>
               </div>
             </div>
           </div>
 
-          {[
-            { name: "يزيد الحداد", role: "Software Developer", kind: "development" },
-            { name: "امير الرشايدة", role: "Software Developer", kind: "development" },
-            { name: "اسماء عبداللطيف", role: "Software Developer", kind: "development" },
-            { name: "عبير شبانة", role: "Marketing", kind: "marketing" },
-          ].map((member) => (
+          {TEAM_MEMBERS.map((member) => (
             <div
               key={member.name}
               className="group bg-white border border-brand-border p-5 rounded-2xl shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-brand-amber/60 hover:shadow-md"
             >
               <div className="flex items-center gap-4">
                 <div className="w-11 h-11 shrink-0 rounded-xl bg-brand-bg border border-brand-border text-brand-olive flex items-center justify-center transition-colors group-hover:bg-brand-amber group-hover:text-white group-hover:border-brand-amber">
-                  {member.kind === "marketing" ? (
-                    <Megaphone className="w-5 h-5" aria-hidden="true" />
-                  ) : (
-                    <Code2 className="w-5 h-5" aria-hidden="true" />
-                  )}
+                  <GraduationCap className="w-5 h-5" aria-hidden="true" />
                 </div>
                 <div className="min-w-0">
                   <p className="font-serif font-black text-lg text-brand-olive leading-tight">{member.name}</p>
-                  <p dir="ltr" className="mt-1 text-start text-[11px] font-mono font-bold uppercase tracking-wider text-brand-muted">
-                    {member.role}
+                  <p className="mt-1 text-xs font-bold text-brand-muted">
+                    {universityName(member.university, isArabic)}
                   </p>
                 </div>
               </div>
             </div>
           ))}
           </div>
-      </div>
-
-      {/* Complete Sprint Deliverables Download Button */}
-      <div className="border-t border-brand-border pt-6 text-center space-y-3">
-        <h4 className="font-serif font-black text-lg text-brand-olive uppercase tracking-widest">
-          {isArabic ? "تنزيل حزمة المشروع الكاملة" : "Download Complete Project Package"}
-        </h4>
-        <p className="text-xs text-brand-muted max-w-md mx-auto leading-relaxed">
-          {isArabic ? "صدّر واجهة حكاية وخادمها المحلي لتشغيل عرض تجريبي قابل للنقل." : "Export the current Hikaya frontend and local server package for a portable demo."}
-        </p>
-        <a
-          href="/api/download-zip"
-          download="hikaya.zip"
-          className="inline-flex items-center gap-2 bg-brand-amber hover:bg-[#b45309] text-stone-100 font-serif font-black tracking-widest uppercase px-6 py-3.5 rounded-full shadow-lg transition-all"
-        >
-          <Download className="w-4 h-4" />
-          {isArabic ? "تنزيل الواجهة والخادم (.ZIP)" : "Download Frontend & Server Code Bundle (.ZIP)"}
-        </a>
       </div>
     </div>
   );

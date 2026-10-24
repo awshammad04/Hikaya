@@ -7,7 +7,7 @@ content in ``content/ai-ready/`` - none of it is written by hand. Re-run it
 whenever the content summaries or the generator change, and commit the result,
 so the examples always reflect what the module actually returns.
 
-With no ANTHROPIC_API_KEY set, the offline extractive backend produces the
+With no GEMINI_API_KEY or ANTHROPIC_API_KEY set, the offline extractive backend produces the
 output, which makes the examples deterministic and reviewable in a diff.
 """
 
@@ -147,7 +147,7 @@ def main():
     if not os.path.isdir(EXAMPLES_DIR):
         os.makedirs(EXAMPLES_DIR)
 
-    backend = llm.PROVIDER_NAME if llm.is_configured() else "offline-extractive"
+    backend = llm.provider_name() if llm.is_configured() else "offline-extractive"
     print("Generating examples with the %s backend..." % backend)
 
     written = []

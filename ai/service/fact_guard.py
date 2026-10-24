@@ -36,7 +36,8 @@ _COMMON_STARTERS = {
 }
 _NON_FACTUAL_ARABIC_LABELS = (
     "اكتشاف مبسط", "ما يوثقه السجل", "حقائق موثقة", "التسلسل التاريخي",
-    "تقاليد منسوبة", "خلاصة", "المعالم",
+    "تقاليد منسوبة", "خلاصة", "المعالم", "حكاية المكان عبر الزمن",
+    "لماذا يهمّ هذا المكان", "ما تبحث عنه", "وفق التقليد الديني", "التسلسل الزمني",
 )
 
 _NUMBER_RE = re.compile(r"\b\d[\d,.]*\b")
@@ -68,9 +69,15 @@ def extract_entities(text):
     return found
 
 
-def check_narrative(narrative, source_text):
-    # type: (str, str) -> List[str]
-    """Return one warning per element of ``narrative`` missing from ``source_text``."""
+def check_narrative(narrative, source_text, arabic_vocabulary=True):
+    # type: (str, str, bool) -> List[str]
+    """Return one warning per element of ``narrative`` missing from ``source_text``.
+
+    ``arabic_vocabulary`` also requires every Arabic word to occur in the
+    source. That suits the extractive engine, which only copies sentences; a
+    model translating an English record into Arabic would fail it on every
+    word, so model output is held to numbers and named entities instead.
+    """
     warnings = []  # type: List[str]
     source_norm = _normalise(source_text)
     source_numbers = extract_numbers(source_text)
@@ -88,6 +95,9 @@ def check_narrative(narrative, source_text):
                 "unsupported_entity: '%s' appears in the narrative but not in the "
                 "reviewed source." % entity
             )
+
+    if not arabic_vocabulary:
+        return warnings
 
     source_arabic_terms = retrieval.arabic_terms(source_text)
     label_free_narrative = retrieval.normalize_arabic(narrative)
@@ -119,10 +129,10 @@ def check_child_safety(narrative):
     ]
 
 
-def check(narrative, source_text, audience="general"):
-    # type: (str, str, str) -> List[str]
+def check(narrative, source_text, audience="general", arabic_vocabulary=True):
+    # type: (str, str, str, bool) -> List[str]
     """Run every applicable guard and return the combined warnings."""
-    warnings = check_narrative(narrative, source_text)
+    warnings = check_narrative(narrative, source_text, arabic_vocabulary)
     if audience == "child":
         warnings.extend(check_child_safety(narrative))
     return warnings

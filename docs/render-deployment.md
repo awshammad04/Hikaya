@@ -11,8 +11,8 @@ or DNS change has been performed**. Live success requires the checks below.
    `deployment/render-production`, and use the root `render.yaml`.
 3. Review the paid resource estimate before clicking the create/deploy action.
    Supply provider keys in Render's secret fields. Never send keys in chat or
-   put them in Git. You can leave Anthropic empty to use the existing reviewed
-   extractive engine; Gemini is needed to validate natural narration and Veo.
+   put them in Git. You can leave both AI keys empty to use the existing reviewed
+   extractive engine; a Gemini key is needed for model answers and natural narration.
 4. Wait for Postgres and AI to become available. An uninitialized database
    deliberately prevents the backend's first deployment from becoming healthy.
 5. Initialize the **new empty** database using the guarded process below.
@@ -66,12 +66,11 @@ existing SPA. Unknown `/api/*` paths return JSON 404, rather than the SPA.
 | Frontend | `HIKAYA_API_BASE_URL` | Full server-only backend URL ending `/api/v1`, if configured manually |
 | Frontend | `HIKAYA_API_HOSTPORT` | Blueprint alternative; automatically converted to `http://host:port/api/v1`; BASE_URL takes priority |
 | Frontend | `HIKAYA_INTERNAL_TOKEN` | Required shared backend credential, generated/referenced by Blueprint |
-| Frontend | `GEMINI_API_KEY` | Server-only narration/video credential; enter in Render |
-| Frontend | `GEMINI_API_MODE` | Optional `developer` or `vertex`; default chooses Vertex Express for `AQ.` keys, Developer API otherwise |
-| Frontend | `GOOGLE_MAPS_PLATFORM_KEY` | Optional browser Maps integration; available at build time; rebuild after changing |
+| Frontend | `GEMINI_API_KEY` | Server-only natural-narration credential; enter in Render |
+| Frontend | `GEMINI_API_MODE` | Optional `developer` or `vertex`; empty tries the Developer API first, then Vertex Express (`AQ.` keys exist for both) |
+| Frontend | `GEMINI_TTS_MODEL` / `GEMINI_TRANSCRIBE_MODEL` | Optional; defaults `gemini-3.8-flash-tts` and `gemini-3.5-transcribe` |
 | Frontend | `API_PROXY_TIMEOUT_MS=180000` | Upstream deadline; includes cold-start allowance |
 | Frontend | `AI_REQUESTS_PER_HOUR=200` | Optional global hourly AI/TTS request cap |
-| Frontend | `VIDEO_REQUESTS_PER_HOUR=10` | Optional global hourly video-generation cap |
 | Backend | `NODE_ENV=production` | Required; disables in-memory/failure fallbacks |
 | Backend | `DATABASE_URL` | Required; Blueprint uses Postgres internal connection string |
 | Backend | `AI_SERVICE_URL` | Full server-only AI URL for manual setup |
@@ -82,8 +81,11 @@ existing SPA. Unknown `/api/*` paths return JSON 404, rather than the SPA.
 | Backend | `PG_POOL_MAX=10` | Optional pool limit; isolated WASM test uses 1 |
 | AI | `NODE_ENV=production` | Required production startup/auth/failure checks |
 | AI | `AI_INTERNAL_TOKEN` | Required; Blueprint generates it |
-| AI | `ANTHROPIC_API_KEY` | Optional server-only model credential; unset explicitly selects extractive generation |
-| AI | `HIKAYA_AI_MODEL=claude-sonnet-5` | Existing model selection; verify entitlement in your provider account |
+| AI | `GEMINI_API_KEY` | Optional server-only model credential for grounded guide answers and stories (needs billing for real traffic) |
+| AI | `ANTHROPIC_API_KEY` | Optional alternative model credential |
+| AI | `HIKAYA_AI_PROVIDER=auto` | `auto` uses Gemini when its key is set, else Anthropic; with neither key the extractive engine is used |
+| AI | `HIKAYA_AI_MODEL=gemini-3.5-flash` | Model for the chosen provider; a model name for the other provider is ignored |
+| AI | `HIKAYA_AI_FALLBACK_MODEL=gemini-3.5-flash-lite` | Gemini only; used when the main model is overloaded or out of daily quota |
 | AI | `HIKAYA_AI_MAX_TOKENS=2800` | Optional output bound |
 | Web services | `PORT` | Render supplies web ports; do not hardcode them manually |
 | Node services | `NODE_VERSION=24.19.0` | Build/runtime version |
@@ -101,15 +103,11 @@ The Blueprint wires tokens and internal `hostport` values automatically; it does
 not attempt unsupported YAML variable interpolation. Remove stale explicit URLs
 if you want the Blueprint's hostport references to take effect.
 
-## Maps key restrictions
+## Maps
 
-`GOOGLE_MAPS_PLATFORM_KEY` is deliberately browser-visible, as the existing map
-integration requires. In Google Cloud apply **Websites / HTTP referrer** application
-restrictions to `https://hikayapalestine.tech/*`, `https://www.hikayapalestine.tech/*`,
-and the **actual** frontend Render hostname if testing there. Do not allow all
-`*.onrender.com` websites. Restrict APIs to Maps JavaScript API and any additional
-Maps API actually used; set quotas and billing alerts. Use a separate key for
-Gemini. The existing illustrated maps remain intact when Google Maps is unset.
+No Google Maps key is needed. The maps are illustrated SVG drawn from the
+records' coordinates, and walking directions open as ordinary google.com/maps
+links.
 
 ## Safe one-time database initialization
 
@@ -269,13 +267,13 @@ traffic, private services have no Free plan, and Free databases expire after
 30 days. A Free experiment requires explicit public URLs and internal tokens,
 not simply replacing every plan with `free`.
 
-Unset Anthropic deliberately uses the existing labelled `offline-extractive`
-engine. When configured Anthropic fails in production, the response is 503,
+With no AI key the service deliberately uses the labelled `offline-extractive`
+engine. When a configured provider fails in production (after retries and the
+fallback model), the response is 503,
 rather than silently replacing the result. Frontend sample-data fallback and
 Nest local outage fallback are development-only. The existing reviewed Arabic
 adaptation of successful extractive Jerusalem responses is preserved. Natural
-narration's existing device speech fallback is identified in the UI. Veo errors
-return a production error instead of an unrelated scenic sample video.
+narration's existing device speech fallback is identified in the UI.
 
 ## Verification and troubleshooting
 

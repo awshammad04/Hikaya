@@ -29,12 +29,10 @@ npm run start:dev
 ```
 
 ```bash
-# AI service
+# AI service (standard library only; the backend expects port 8001)
 cd ai
-python3 -m venv .venv
-source .venv/bin/activate
-pip install -r requirements.txt
-python3 -m uvicorn main:app --reload --port 8000
+cp .env.example .env   # optional: add GEMINI_API_KEY for model answers
+python3 -m service.server --port 8001
 ```
 
 The frontend has an offline/mock fallback, so it still runs if the backend or AI service is unavailable. See the `README.md` files within each directory for environment variables and further commands.

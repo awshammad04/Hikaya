@@ -266,7 +266,7 @@ export const LocationDetailsPage: React.FC = () => {
           <div className="absolute bottom-6 left-6 right-6">
             <span className="text-[10px] text-brand-amber font-mono tracking-widest uppercase font-black">
               {isArabic ? `تراث ${governorateName(governorateId,true)} الحي` : `${governorateName(governorateId,false)} living heritage`}
-              {hasVisited(location.id) && (isArabic ? " · تمّت الزيارة" : " · visited")}
+              {hasVisited(location.id) && (isArabic ? " · استكشفتَه" : " · explored")}
             </span>
             <h1 className="font-serif font-black text-4xl text-stone-100 leading-tight">
               {displayName}

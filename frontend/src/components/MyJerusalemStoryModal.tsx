@@ -23,6 +23,7 @@ import {
 } from "../services/progress";
 import { useInterfaceLanguage } from "../context/LanguageContext";
 import { prepareMemoryPhoto, useUserMemories } from "../hooks/useUserMemories";
+import { photoAsDataUrl } from "../services/accountSync";
 
 function readVisited(): string[] {
   try {
@@ -232,8 +233,10 @@ export const MyJerusalemStoryModal: React.FC<{ open: boolean; onClose: () => voi
     else await navigator.clipboard?.writeText(text);
   };
 
-  const download = () => {
+  const download = async () => {
     const lang = isArabic ? "ar" : "en";
+    // Synced photos are account URLs; embed every image so the file works offline.
+    const photoSources = await Promise.all(displayedMemories.map((memory) => photoAsDataUrl(memory.photoDataUrl)));
     const title = storyTitle;
     const exploredLabel = isArabic ? "الحارات التي استكشفتها" : "Places explored";
     const memoriesLabel = albumTitle;
@@ -242,7 +245,7 @@ export const MyJerusalemStoryModal: React.FC<{ open: boolean; onClose: () => voi
       ? `مواقع مكتشفة: ${story.heritageSitesDiscovered}${scope === 'jerusalem' ? ` · مشي مخطط: ${story.totalWalkingMinutes} دقيقة` : ''} · صور ملتقطة: ${story.personalPhotosCaptured} · ذكريات مدونة: ${story.personalMemoriesWritten}`
       : `Heritage sites discovered: ${story.heritageSitesDiscovered}${scope === 'jerusalem' ? ` · Planned walking: ${story.totalWalkingMinutes} min` : ''} · Photos captured: ${story.personalPhotosCaptured} · Memories written: ${story.personalMemoriesWritten}`;
     const album = displayedMemories.length > 0
-      ? displayedMemories.map((memory) => `<figure><img src="${memory.photoDataUrl}" alt=""><figcaption><b>${escapeHtml(memory.locationTag)}</b><p>${escapeHtml(memory.note)}</p></figcaption></figure>`).join("")
+      ? displayedMemories.map((memory, index) => `<figure><img src="${photoSources[index]}" alt=""><figcaption><b>${escapeHtml(memory.locationTag)}</b><p>${escapeHtml(memory.note)}</p></figcaption></figure>`).join("")
       : `<p>${empty}</p>`;
     const html = `<!doctype html><html lang="${lang}" dir="${isArabic ? "rtl" : "ltr"}"><meta charset="utf-8"><meta name="viewport" content="width=device-width"><title>${title}</title><style>@font-face{font-family:Thmanyah;src:url('/fonts/thmanyah-sans-regular.woff2')}*{box-sizing:border-box}body{font-family:Thmanyah,serif;background:#f5f5f0;color:#2d2d2a;padding:24px}.card{max-width:820px;margin:auto;border:2px solid #d97706;border-radius:28px;padding:32px;background:white}h1,h2{color:#5a5a40}small{color:#8a8a80}.album{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:18px}figure{margin:0;padding:9px 9px 18px;background:#fff;border:1px solid #ddd8ca;box-shadow:0 10px 24px #352f2022}figure img{width:100%;aspect-ratio:4/3;object-fit:cover}figcaption{padding:10px 4px 0}figcaption p{white-space:pre-wrap}.outro{margin-top:28px;padding:38px 24px;border-radius:22px;color:white;background:linear-gradient(120deg,#3f412dcc,#16170dcc),${scope === 'jerusalem' ? "url('/images/jerusalem/at-tur.jpg') center/cover" : '#5a5a40'}}.outro h2{color:white}</style><div class="card"><small>Hikaya</small><h1>${title}</h1><h2>${escapeHtml(story.badge)}</h2><p>${escapeHtml(story.reflection)}</p><h3>${exploredLabel}</h3><p>${exploredNames.map(escapeHtml).join(" · ") || empty}</p><p>${stats}</p><h3>${memoriesLabel}</h3><div class="album">${album}</div><div class="outro"><small>${scope === "jerusalem" ? (isArabic ? "المشهد الختامي · جبل الزيتون" : "FINAL SCENE · MOUNT OF OLIVES") : scopeName}</small><h2>${isArabic ? "تنتهي الجولة، وتبدأ حكايتك" : "The tour ends. Your story begins."}</h2><p>${scope === "jerusalem" ? (isArabic ? "القدس ليست مكاناً نزوره فقط؛ إنها حكاية نحملها معنا." : "Jerusalem is not only a place we visit; it is a story we carry with us.") : escapeHtml(story.reflection)}</p></div></div></html>`;
     const url = URL.createObjectURL(new Blob([html], { type: "text/html;charset=utf-8" }));

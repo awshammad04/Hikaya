@@ -23,6 +23,8 @@ export async function initialize(client) {
   await client.query('INSERT INTO hikaya_migrations(name,checksum) VALUES ($1,$2)', ['002-governorates.sql', digest(migration)]);
   const national = await readFile(`${databaseDir}/seed-palestine.sql`, 'utf8');
   await client.query('INSERT INTO hikaya_migrations(name,checksum) VALUES ($1,$2)', ['003-palestine-reviewed-seed', digest(national)]);
+  // Later numbered migrations (accounts, ...) apply on top, inside the same transaction.
+  await migrate(client);
 }
 
 export async function migrate(client) {

@@ -1,8 +1,11 @@
 import { useCallback, useEffect, useState } from "react";
 import { locations as jerusalemLocations } from "../locationsData";
-
-const STORAGE_KEY = "hikaya.visited";
-const PROGRESS_EVENT = "hikaya-quds:progress";
+import {
+  forgetProgress,
+  PROGRESS_EVENT,
+  queueProgress,
+  VISITED_KEY as STORAGE_KEY,
+} from "../services/accountSync";
 
 export interface Badge {
   id: string;
@@ -26,9 +29,9 @@ export interface VisitedState {
 /**
  * Tracks which locations this browser has opened.
  *
- * Kept in `localStorage` rather than on the server because there are no
- * accounts: this is a private record of where you have been, it never leaves
- * the device, and it is not something Hikaya needs to know.
+ * Kept in `localStorage`, a private record of where you have been. Guests
+ * keep it on this device only; signed-in visitors also have it mirrored to
+ * their account (see services/accountSync.ts) so it follows them.
  *
  * "Progress" is progress through the locations currently in this Jerusalem
  * guide, not a claim about how much of the city itself someone has explored.
@@ -36,13 +39,18 @@ export interface VisitedState {
 export function useVisitedLocations(totalLocations: number, locationIds: string[] = jerusalemLocations.map((item) => item.id)): VisitedState {
   const [visited, setVisited] = useState<string[]>(() => read());
 
-  // Keep multiple open tabs in step.
+  // Keep multiple open tabs, and account sync, in step.
   useEffect(() => {
     const onStorage = (event: StorageEvent) => {
       if (event.key === STORAGE_KEY) setVisited(read());
     };
+    const onProgress = () => setVisited(read());
     window.addEventListener("storage", onStorage);
-    return () => window.removeEventListener("storage", onStorage);
+    window.addEventListener(PROGRESS_EVENT, onProgress);
+    return () => {
+      window.removeEventListener("storage", onStorage);
+      window.removeEventListener(PROGRESS_EVENT, onProgress);
+    };
   }, []);
 
   const markVisited = useCallback((locationId: string) => {
@@ -50,15 +58,19 @@ export function useVisitedLocations(totalLocations: number, locationIds: string[
       if (current.includes(locationId)) return current;
       const next = [...current, locationId];
       write(next);
-      window.dispatchEvent(new CustomEvent(PROGRESS_EVENT));
+      queueProgress("visited", locationId);
+      // Announce after this state update so listeners re-read storage safely.
+      queueMicrotask(() => window.dispatchEvent(new CustomEvent(PROGRESS_EVENT)));
       return next;
     });
   }, []);
 
   const scopeKey = locationIds.join("|");
   const reset = useCallback(() => {
-    const remaining = read().filter((id) => !locationIds.includes(id));
+    const current = read();
+    const remaining = current.filter((id) => !locationIds.includes(id));
     write(remaining);
+    forgetProgress("visited", current.filter((id) => locationIds.includes(id)));
     setVisited(remaining);
     window.dispatchEvent(new CustomEvent(PROGRESS_EVENT));
   }, [scopeKey]);

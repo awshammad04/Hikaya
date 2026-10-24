@@ -13,7 +13,7 @@ Bab al-Amud is the monumental northern entrance to the Old City. Its stepped pla
 ## 2. Key Historical Timeline
 | Period | What happened |
 |---|---|
-| Roman era (117–138 CE) | A Roman gate complex was built during the reign of Hadrian as the city was refounded as Aelia Capitolina; remains survive below the present entrance, and the Arabic name is believed to recall the column in its plaza. |
+| Roman era (117–138 CE) | A Roman gate complex was built during the reign of Hadrian as the city was refounded as Aelia Capitolina; remains survive below the present entrance. |
 | 6th century CE | The Madaba mosaic map represented the northern gate, an internal plaza and a column marking the start of the main north–south street. |
 | Ottoman era (16th century; 1537–1540 CE) | The present gate was built as part of the Ottoman walls commissioned by Sultan Suleiman the Magnificent. |
 | 19th–early 20th centuries | Photographs documented the gate as a busy arrival point for people, animals and goods from northern routes. |

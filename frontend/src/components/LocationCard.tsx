@@ -13,7 +13,7 @@ import {
 import { ApiLocation } from "../types";
 import { CoverImage } from "./CoverImage";
 import { useInterfaceLanguage } from "../context/LanguageContext";
-import { locationById } from "../data/heritage";
+import { locationById, nationalRecord } from "../data/heritage";
 
 interface LocationCardProps {
   location: ApiLocation;
@@ -71,7 +71,7 @@ export const LocationCard: React.FC<LocationCardProps> = ({ location, visited })
       {visited && (
         <span className="absolute top-3 right-3 bg-white/90 text-brand-olive text-[10px] font-mono uppercase tracking-wider px-2 py-1 rounded-full inline-flex items-center gap-1">
           <Check className="w-3 h-3" />
-          {isArabic ? "تمّت زيارتها" : "Visited"}
+          {isArabic ? "استكشفتَه" : "Explored"}
         </span>
       )}
 
@@ -91,7 +91,7 @@ export const LocationCard: React.FC<LocationCardProps> = ({ location, visited })
       {location.city && (
         <p className="text-[10px] font-mono uppercase tracking-widest text-brand-muted flex items-center gap-1.5">
           <MapPin className="w-3 h-3 text-brand-amber" />
-          {isArabic ? "القدس، فلسطين" : `${location.city}, ${location.country}`}
+          {isArabic ? `${nationalRecord(location.id)?.arabicCity ?? "القدس"}، فلسطين` : `${location.city}, ${location.country}`}
         </p>
       )}
 

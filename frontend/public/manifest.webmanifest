@@ -1,7 +1,7 @@
 {
   "name": "Hikaya | حكاية",
   "short_name": "Hikaya",
-  "description": "Hikaya — an AI-powered, source-grounded personal guide to Palestinian heritage's quarters, gates, souqs and living memories.",
+  "description": "Hikaya — an AI-powered, source-grounded personal guide to Palestinian heritage across Jerusalem, Ramallah, Hebron and Gaza.",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",

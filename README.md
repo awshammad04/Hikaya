@@ -50,6 +50,14 @@ To enable the more human online narration, set `GEMINI_API_KEY` in
 using the best Arabic voice installed on the device instead of silently sounding
 robotic.
 
+To let the heritage guide and stories use a language model, copy
+`ai/.env.example` to `ai/.env`, set `GEMINI_API_KEY` (or `ANTHROPIC_API_KEY`), and
+restart the AI service. The guide then answers from the whole reviewed record of
+each place instead of keyword-matched sentences. Without a key the reviewed-content
+extractive engine is used. A free-tier Gemini key allows only a few requests per
+model per day; enable billing on the key's Google Cloud project for real use.
+No Google Maps key is needed: the maps are illustrated and offline.
+
 With PostgreSQL (optional, recommended):
 
 ```bash
@@ -59,6 +67,7 @@ psql -d hikaya -f database/seed.sql
 psql -d hikaya -f database/seed-generated.sql
 psql -d hikaya -f database/migrations/002-governorates.sql
 psql -d hikaya -f database/seed-palestine.sql
+psql -d hikaya -f database/migrations/004-accounts.sql
 echo 'DATABASE_URL=postgresql://user:password@localhost:5432/hikaya' >> backend/.env
 ```
 

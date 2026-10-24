@@ -113,7 +113,19 @@ export const MyStoryPage: React.FC = () => {
           <h2 className="text-xl font-serif font-black text-brand-olive mb-4">
             {isArabic ? "حكاية واحدة.. أماكن متعددة" : "One story, many places"}
           </h2>
-          <StoryNarrator text={journey.narrative} />
+          {/* One chapter per stop, each with its own narration: a whole journey
+              can run past 20,000 characters, too long to narrate in one go. */}
+          <div className="space-y-8">
+            {journey.stops.map((stop) => (
+              <article key={stop.location.id} className="space-y-3">
+                <h3 className="text-lg font-serif font-black text-brand-olive">
+                  {stop.order}.{" "}
+                  {stop.narrative.title || (isArabic ? stop.location.arabicName : stop.location.name)}
+                </h3>
+                <StoryNarrator text={stop.narrative.narrative} locationId={stop.location.id} />
+              </article>
+            ))}
+          </div>
         </section>
         <div className="grid lg:grid-cols-12 gap-6">
           <div className="lg:col-span-7">

@@ -6,13 +6,17 @@ import {
   Param,
   Post,
   Query,
+  Req,
 } from '@nestjs/common';
+import type { Request } from 'express';
 import {
   ContributionsService,
   ContributionStatusView,
 } from './contributions.service';
 import { CreateContributionDto } from './dto/create-contribution.dto';
 import { Contribution } from '../database/entities/contribution.entity';
+import { AuthService } from '../accounts/auth.service';
+import { readCookie, SESSION_COOKIE } from '../accounts/session';
 
 /**
  * Contributions endpoints.
@@ -24,17 +28,29 @@ import { Contribution } from '../database/entities/contribution.entity';
  */
 @Controller('contributions')
 export class ContributionsController {
-  constructor(private readonly contributionsService: ContributionsService) {}
+  constructor(
+    private readonly contributionsService: ContributionsService,
+    private readonly auth: AuthService,
+  ) {}
 
   @Post()
   @HttpCode(201)
-  async create(@Body() dto: CreateContributionDto): Promise<{
+  async create(
+    @Body() dto: CreateContributionDto,
+    @Req() req: Request,
+  ): Promise<{
     status: string;
     message: string;
     referenceCode?: string;
     contribution: Contribution;
   }> {
-    const contribution = await this.contributionsService.create(dto);
+    // Signed-in contributors see the submission on their profile; guests keep
+    // using the reference code.
+    const user = await this.auth.userForToken(readCookie(req, SESSION_COOKIE));
+    const contribution = await this.contributionsService.create(
+      dto,
+      user?.id ?? null,
+    );
     return {
       status: 'pending_review',
       message:

@@ -425,7 +425,8 @@ export function localArabicGuideAnswer(locationId: string, question: string): Gu
   const locationQuestion = /اين|وين|موقع|تقع|مكان/.test(normalized);
   const record = nationalRecord(locationId);
   if (record && record.reviewed && record.reviewStatus === 'source_checked') {
-    const covered = locationQuestion || (/تاريخ|متى|أهمية|أهميته|ثقاف|حكاية|قصة/.test(normalized) && !/زيارة|الوصول|مفتوح|ساعة|ساعات|آمن|مشي|طريق|حافلة|نقل/.test(normalized));
+    // Patterns use the normalised spelling (ا for أ/إ/آ, ي for ى).
+    const covered = locationQuestion || (/تاريخ|متي|اهمي|ثقاف|حكاية|قصة/.test(normalized) && !/زيارة|الوصول|مفتوح|ساعة|ساعات|امن|مشي|طريق|حافلة|نقل/.test(normalized));
     const answer = locationQuestion
       ? record.arabicDescription
       : covered
@@ -437,9 +438,9 @@ export function localArabicGuideAnswer(locationId: string, question: string): Gu
   if (!profile) return { answer: "لا تتوفر معلومات مراجعة لهذا المكان بعد.", answeredFromSource: false, excerpts: [], uncertaintyNotes: ["لا يغطي السجل المراجع هذا السؤال."], generatedBy: "arabic-reviewed-fallback" };
   let answer: string | null = null;
   if (locationQuestion) answer = profile.arabicSummary;
-  else if (/اقدم|تاريخ|متي|عصر|بني|بني/.test(normalized)) answer = profile.arabicHistoricalSummary;
-  else if (/أرى|ازور|أزور|معالم|أماكن|الموجود/.test(normalized)) answer = `يمكنك تتبّع: ${profile.arabicLandmarks.join("، ")}.`;
-  else if (/أهم|أهمية|ثقاف|لماذا/.test(normalized)) answer = profile.arabicCulturalImportance;
+  else if (/اقدم|تاريخ|متي|عصر|بني/.test(normalized)) answer = profile.arabicHistoricalSummary;
+  else if (/اري|ازور|معالم|اماكن|الموجود/.test(normalized)) answer = `يمكنك تتبّع: ${profile.arabicLandmarks.join("، ")}.`;
+  else if (/اهم|ثقاف|لماذا/.test(normalized)) answer = profile.arabicCulturalImportance;
   else if (/حكاية|قصة|احك/.test(normalized)) answer = profile.arabicStory;
   if (!answer) return { answer: "لا تغطي السجلات المراجعة هذا السؤال بصيغته الحالية، لذلك لن أخمّن. جرّب السؤال عن التاريخ أو المعالم أو الأهمية الثقافية.", answeredFromSource: false, excerpts: [], uncertaintyNotes: ["لا تتوفر إجابة موثقة مباشرة في السجل المراجع."], generatedBy: "arabic-reviewed-fallback" };
   return { answer, answeredFromSource: true, excerpts: [answer], uncertaintyNotes: [], generatedBy: "arabic-reviewed-fallback" };
