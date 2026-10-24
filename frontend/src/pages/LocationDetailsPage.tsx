@@ -41,6 +41,17 @@ import { useVisitedLocations } from "../hooks/useVisitedLocations";
 import { DataSourceBanner } from "../components/DataSourceBanner";
 import { CoverImage } from "../components/CoverImage";
 import { Tabs, TabPanel, TabDefinition } from "../components/Tabs";
+import { arabicCount } from "../utils/plural";
+
+const readingMinutes = (n: number, isArabic: boolean) =>
+  isArabic
+    ? arabicCount(n, {
+        one: "نحو دقيقة قراءة",
+        two: "نحو دقيقتين من القراءة",
+        few: (count) => `نحو ${count} دقائق قراءة`,
+        many: (count) => `نحو ${count} دقيقة قراءة`,
+      })
+    : `About ${n} min of reading`;
 import { HistoricalTimeline } from "../components/HistoricalTimeline";
 import { Gallery } from "../components/Gallery";
 import { BeforeAfterSlider } from "../components/BeforeAfterSlider";
@@ -249,9 +260,9 @@ export const LocationDetailsPage: React.FC = () => {
 
         <Link
           to={mapPath}
-          className="text-xs font-serif font-bold uppercase tracking-widest text-brand-muted hover:text-brand-olive inline-flex items-center gap-1.5"
+          className="text-sm font-bold text-brand-muted hover:text-brand-olive inline-flex items-center gap-1.5"
         >
-          <ArrowLeft className="w-3.5 h-3.5" />
+          <ArrowLeft className={`w-4 h-4 ${isArabic ? "rotate-180" : ""}`} />
           {isArabic ? "كل الأماكن" : "All locations"}
         </Link>
 
@@ -264,7 +275,7 @@ export const LocationDetailsPage: React.FC = () => {
           />
           <div className="absolute inset-0 bg-gradient-to-t from-brand-olive/95 via-brand-olive/30 to-transparent" />
           <div className="absolute bottom-6 left-6 right-6">
-            <span className="text-[10px] text-brand-amber font-mono tracking-widest uppercase font-black">
+            <span className="text-xs text-brand-amber-light font-mono tracking-widest uppercase font-black">
               {isArabic ? `تراث ${governorateName(governorateId,true)} الحي` : `${governorateName(governorateId,false)} living heritage`}
               {hasVisited(location.id) && (isArabic ? " · استكشفتَه" : " · explored")}
             </span>
@@ -277,17 +288,17 @@ export const LocationDetailsPage: React.FC = () => {
               </span>
             )}
             {profile?.imageSourceUrl && (
-              <a href={profile.imageSourceUrl} target="_blank" rel="noreferrer" className="absolute bottom-0 end-0 text-[9px] text-stone-300/90 bg-black/35 px-2 py-1 rounded-full inline-flex items-center gap-1 hover:text-white">
+              <a href={profile.imageSourceUrl} target="_blank" rel="noreferrer" className="absolute bottom-0 end-0 text-xs text-stone-300/90 bg-black/35 px-2 py-1 rounded-full inline-flex items-center gap-1 hover:text-white">
                 <ExternalLink className="w-2.5 h-2.5" />{profile.imageCredit} · {profile.imageLicense}
               </a>
             )}
           </div>
         </header>
 
-        {!isJerusalem && <p className="rounded-2xl bg-brand-amber/10 p-4 text-xs leading-relaxed text-brand-muted">{recordGap}</p>}
+        {!isJerusalem && <p className="rounded-2xl border border-brand-amber/20 bg-brand-amber/5 p-4 text-sm leading-relaxed text-brand-muted">{recordGap}</p>}
         <div className="space-y-5">
           {/* --- Facts ----------------------------------------------------- */}
-          <section className="rounded-3xl border border-brand-border bg-white p-5 shadow-sm md:p-6">
+          <section className="rounded-3xl border border-brand-border bg-brand-surface p-5 shadow-sm md:p-6">
             <div className="grid grid-cols-1 gap-5 lg:grid-cols-12 lg:items-center">
               <div className="space-y-3 lg:col-span-7">
                 <p className="text-sm leading-relaxed text-brand-text">
@@ -297,7 +308,7 @@ export const LocationDetailsPage: React.FC = () => {
                   {location.categories.map((category) => (
                     <span
                       key={category}
-                      className="rounded-full border border-brand-border-light bg-brand-bg px-2.5 py-1 font-mono text-[10px] text-brand-muted"
+                      className="rounded-full border border-brand-border-light bg-brand-bg px-2.5 py-1 font-mono text-xs text-brand-muted"
                     >
                       {isArabic ? category : ({ "حارة تاريخية": "Historic quarter", "معلم ديني": "Sacred site", "سوق تراثي": "Historic souq", "حي مقدسي": "Jerusalem neighbourhood", "ذاكرة شفوية": "Oral memory", "متحف":"Museum", "تراث ثقافي":"Cultural heritage" }[category] ?? category)}
                     </span>
@@ -307,7 +318,7 @@ export const LocationDetailsPage: React.FC = () => {
 
               <aside className="space-y-3 text-xs lg:col-span-5 lg:border-s lg:border-brand-border-light lg:ps-6">
                 <div className="flex flex-wrap items-center gap-x-5 gap-y-2">
-                  <p className="font-mono text-[10px] uppercase tracking-widest text-brand-muted">
+                  <p className="font-mono text-xs uppercase tracking-widest text-brand-muted">
                     {isArabic ? "بيانات المكان" : "Record"}
                   </p>
                   <p className="flex items-center gap-2 text-brand-text">
@@ -326,28 +337,29 @@ export const LocationDetailsPage: React.FC = () => {
                     <button
                       type="button"
                       onClick={() => setRouteOpen(true)}
-                      className="inline-flex items-center justify-center gap-2 rounded-full bg-brand-olive px-4 py-2.5 font-bold text-white transition-colors hover:bg-[#4a4a35]"
+                      className="inline-flex items-center justify-center gap-2 rounded-full bg-brand-olive px-4 py-2.5 font-bold text-white transition-colors hover:bg-brand-olive-deep"
                     >
-                      <Navigation2 className="h-3.5 w-3.5 text-brand-amber" />
+                      <Navigation2 className="h-3.5 w-3.5 text-brand-amber-light" />
                       {isArabic ? "إرشادات المشي" : "Walking guide"}
                     </button>
                   )}
                   {data.stories.length > 0 && (
                     <p className="flex items-center gap-2 text-brand-muted">
                       <Clock className="h-3.5 w-3.5 shrink-0" />
-                      {isArabic ? "نحو " : "About "}
-                      {Math.max(
-                        1,
-                        Math.ceil(
-                          (reviewedWalkthrough
-                            ? reviewedWalkthrough.split(/\s+/).length
-                            : data.stories.reduce(
-                                (total, story) => total + story.simplifiedStory.split(/\s+/).length,
-                                0,
-                              )) / 200,
+                      {readingMinutes(
+                        Math.max(
+                          1,
+                          Math.ceil(
+                            (reviewedWalkthrough
+                              ? reviewedWalkthrough.split(/\s+/).length
+                              : data.stories.reduce(
+                                  (total, story) => total + story.simplifiedStory.split(/\s+/).length,
+                                  0,
+                                )) / 200,
+                          ),
                         ),
-                      )}{" "}
-                      {isArabic ? " دقيقة قراءة" : " min of reading"}
+                        isArabic,
+                      )}
                     </p>
                   )}
                 </div>
@@ -371,20 +383,20 @@ export const LocationDetailsPage: React.FC = () => {
           <TabPanel id="story" active={tab}>
             <div className="space-y-8">
               {data.stories.length === 0 ? (
-                <p className="text-xs text-brand-muted font-serif italic">
+                <p className="text-sm text-brand-muted">
                   {isArabic ? "لم تُنشر حكاية مراجعة لهذا المكان بعد." : "No reviewed story has been published for this location yet."}
                 </p>
               ) : (
                 data.stories.map((story) => (
                   <article
                     key={story.id}
-                    className="bg-white rounded-3xl border border-brand-border p-6 space-y-3 shadow-sm"
+                    className="bg-brand-surface rounded-3xl border border-brand-border p-6 space-y-3 shadow-sm"
                   >
                     <h2 className="font-serif font-black text-xl text-brand-olive">
                       {isArabic ? (profile?.arabicStoryTitle ?? story.title) : (profile?.storyTitle ?? story.title)}
                     </h2>
                     {story.summary && (
-                      <p className="text-xs text-brand-muted font-serif italic">
+                      <p className="text-sm text-brand-muted">
                         {isArabic ? (profile?.arabicSummary ?? story.summary) : (profile?.summary ?? story.summary)}
                       </p>
                     )}
@@ -416,7 +428,7 @@ export const LocationDetailsPage: React.FC = () => {
                   <Sparkles className="w-5 h-5 text-brand-amber" />
                   {isArabic ? "احكِ لي الحكاية" : "Tell me the story"}
                 </h2>
-                <p className="text-xs text-brand-muted font-serif italic">
+                <p className="text-sm text-brand-muted">
                   {isArabic ? "تُولَّد الحكاية من المحتوى المراجع لهذا المكان فقط." : "Generated from the reviewed content for this location only."}
                 </p>
                 <StoryWizard location={location} />
@@ -463,7 +475,7 @@ export const LocationDetailsPage: React.FC = () => {
           <TabPanel id="memories" active={tab}>
             <div className="space-y-4">
               <div className="flex items-end justify-between gap-4 flex-wrap">
-                <p className="text-xs text-brand-muted font-serif italic">
+                <p className="text-sm text-brand-muted">
                   {isArabic ? "ذكريات يشاركها الزوار والسكان وتُنشر بعد المراجعة." : "Contributed by visitors and residents, published after review."}
                 </p>
                 <Link
@@ -476,7 +488,7 @@ export const LocationDetailsPage: React.FC = () => {
               </div>
 
               {data.contributions.length === 0 ? (
-                <p className="text-xs text-brand-muted font-serif italic">
+                <p className="text-sm text-brand-muted">
                   {isArabic ? "لم تُنشر ذكريات لهذا المكان بعد. قد تكون ذكراك الأولى." : "No memories have been published for this location yet. Yours could be the first."}
                 </p>
               ) : (
@@ -490,7 +502,7 @@ export const LocationDetailsPage: React.FC = () => {
                       viewport={{ once: true, margin: "-45px" }}
                       transition={{ duration: reduced ? 0.15 : 0.4, delay: reduced ? 0 : index * 0.06, ease: "easeOut" }}
                       whileHover={reduced ? undefined : { y: -4, scale: 1.01 }}
-                      className="group relative space-y-2 overflow-hidden rounded-3xl border border-s-[3px] border-brand-border bg-white/80 p-5 shadow-sm transition-colors duration-300 hover:border-brand-amber/50 hover:border-s-brand-amber hover:bg-white hover:shadow-md focus:outline-none focus-visible:border-brand-amber focus-visible:shadow-md focus-visible:ring-2 focus-visible:ring-brand-amber/30"
+                      className="group relative space-y-2 overflow-hidden rounded-3xl border border-s-[3px] border-brand-border bg-white/80 p-5 shadow-sm transition-colors duration-300 hover:border-brand-amber/50 hover:border-s-brand-amber hover:bg-brand-surface hover:shadow-md focus:outline-none focus-visible:border-brand-amber focus-visible:shadow-md focus-visible:ring-2 focus-visible:ring-brand-amber/30"
                     >
                       <div className="flex items-start gap-2">
                         <Quote className="mt-0.5 h-4 w-4 shrink-0 text-brand-amber transition-transform duration-300 group-hover:-rotate-6 group-hover:scale-110" aria-hidden="true" />
@@ -501,7 +513,7 @@ export const LocationDetailsPage: React.FC = () => {
                       <p className="text-xs text-brand-text leading-relaxed">
                         {contribution.content}
                       </p>
-                      <p className="text-[10px] font-mono uppercase tracking-widest text-brand-muted pt-2 border-t border-brand-border-light">
+                      <p className="text-xs font-mono uppercase tracking-widest text-brand-muted pt-2 border-t border-brand-border-light">
                         {contribution.contributorName ?? (isArabic ? "مجهول" : "Anonymous")} ·{" "}
                         {new Date(contribution.submittedAt).toLocaleDateString(language === "ar" ? "ar-PS" : "en-GB")}
                       </p>
@@ -520,7 +532,7 @@ export const LocationDetailsPage: React.FC = () => {
             <h2 className="font-serif font-black text-2xl text-brand-olive">
               {isArabic ? "أماكن ذات صلة" : "Related places"}
             </h2>
-            <p className="text-xs text-brand-muted font-serif italic">
+            <p className="text-sm text-brand-muted">
               {isArabic ? `أماكن أخرى في الأرشيف تشترك في موضوع مع ${displayName}.` : `Other locations in the archive that share a theme with ${location.name}.`}
             </p>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">

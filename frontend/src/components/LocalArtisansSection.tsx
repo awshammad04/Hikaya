@@ -32,13 +32,13 @@ export const LocalArtisansSection: React.FC<{ locationId: string }> = ({ locatio
 
   return (
     <section className="space-y-5" dir={isArabic ? "rtl" : "ltr"}>
-      <div className="overflow-hidden rounded-3xl border border-brand-amber/30 bg-gradient-to-br from-brand-amber/10 via-white to-brand-olive/5 p-5 sm:p-6">
+      <div className="overflow-hidden rounded-3xl border border-brand-amber/30 bg-gradient-to-br from-brand-amber/10 via-brand-surface to-brand-olive/5 p-5 sm:p-6">
         <div className="flex items-start gap-3">
           <span className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-brand-amber text-white shadow-sm">
             <HeartHandshake className="h-5 w-5" aria-hidden="true" />
           </span>
           <div>
-            <p className="mb-1 font-mono text-[10px] uppercase tracking-[0.18em] text-brand-amber">
+            <p className="mb-1 font-mono text-xs uppercase tracking-[0.18em] text-brand-amber">
               {isArabic ? "وجوه القدس · الحرفة · السوق" : "People · craft · market"}
             </p>
             <h2 className="font-serif text-xl font-black text-brand-olive sm:text-2xl">
@@ -66,7 +66,7 @@ export const LocalArtisansSection: React.FC<{ locationId: string }> = ({ locatio
   return (
               <article
                 key={item.id}
-                className="group overflow-hidden rounded-3xl border border-brand-border bg-white shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-xl"
+                className="group overflow-hidden rounded-3xl border border-brand-border bg-brand-surface shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-xl"
               >
                 <figure className="relative aspect-[16/10] overflow-hidden bg-brand-olive/10">
                   {!failedImages.includes(item.id) ? <img
@@ -102,11 +102,11 @@ export const LocalArtisansSection: React.FC<{ locationId: string }> = ({ locatio
                       ) : (
                         <ShoppingBag className="h-4 w-4" aria-hidden="true" />
                       )}
-                      <span className="font-mono text-[10px] font-bold uppercase tracking-wider">
+                      <span className="font-mono text-xs font-bold uppercase tracking-wider">
                         {categoryLabel(item.category)}
                       </span>
                     </span>
-                    <span className="rounded-full border border-brand-olive/15 bg-brand-olive/5 px-2.5 py-1 text-[10px] font-bold text-brand-olive">
+                    <span className="rounded-full border border-brand-olive/15 bg-brand-olive/5 px-2.5 py-1 text-xs font-bold text-brand-olive">
                       {isArabic ? "دعم الاقتصاد المحلي المقدسي" : "Support Jerusalem’s local economy"}
                     </span>
                   </div>
@@ -138,7 +138,7 @@ export const LocalArtisansSection: React.FC<{ locationId: string }> = ({ locatio
                     href={item.imageSourceUrl}
                     target="_blank"
                     rel="noreferrer"
-                    className="flex items-center justify-between gap-3 border-t border-brand-border-light pt-3 text-[11px] text-brand-muted transition hover:text-brand-amber"
+                    className="flex items-center justify-between gap-3 border-t border-brand-border-light pt-3 text-xs text-brand-muted transition hover:text-brand-amber"
                     aria-label={`${isArabic ? "افتح مصدر الصورة" : "Open image source"}: ${item.imageCredit}`}
                   >
                     <span>

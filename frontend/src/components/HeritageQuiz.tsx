@@ -61,7 +61,7 @@ export const HeritageQuiz: React.FC<HeritageQuizProps> = ({
           <button
             type="button"
             onClick={reset}
-            className="text-[10px] font-mono uppercase tracking-wider text-brand-muted hover:text-brand-olive inline-flex items-center gap-1.5"
+            className="text-xs font-mono uppercase tracking-wider text-brand-muted hover:text-brand-olive inline-flex items-center gap-1.5"
           >
             <RotateCcw className="w-3 h-3" />
             {isArabic ? "ابدأ من جديد" : "Start again"}
@@ -81,7 +81,7 @@ export const HeritageQuiz: React.FC<HeritageQuizProps> = ({
             viewport={{ once: true, margin: "-45px" }}
             transition={{ duration: reduced ? 0.15 : 0.38, delay: reduced ? 0 : index * 0.045, ease: "easeOut" }}
             whileHover={reduced ? undefined : { scale: 1.005 }}
-            className="space-y-3 rounded-3xl border border-brand-border bg-white/80 p-5 shadow-sm transition-colors duration-300 hover:border-brand-amber/40 hover:bg-white hover:shadow-md"
+            className="space-y-3 rounded-3xl border border-brand-border bg-white/80 p-5 shadow-sm transition-colors duration-300 hover:border-brand-amber/40 hover:bg-brand-surface hover:shadow-md"
           >
             <p className="font-serif font-bold text-sm text-brand-olive">
               {index + 1}. {question.question}
@@ -116,7 +116,7 @@ export const HeritageQuiz: React.FC<HeritageQuizProps> = ({
                         markQuizCompleted(locationId);
                       }
                     }}
-                    className={`inline-flex items-start gap-2 rounded-xl border px-4 py-2.5 text-start text-xs shadow-sm transition-all duration-200 enabled:cursor-pointer enabled:hover:bg-white enabled:hover:shadow-md disabled:cursor-default ${tone}`}
+                    className={`inline-flex items-start gap-2 rounded-xl border px-4 py-2.5 text-start text-xs shadow-sm transition-all duration-200 enabled:cursor-pointer enabled:hover:bg-brand-surface enabled:hover:shadow-md disabled:cursor-default ${tone}`}
                   >
                     {hasAnswered && isAnswer && (
                       <Check className="w-3.5 h-3.5 shrink-0 mt-0.5" />
@@ -139,7 +139,7 @@ export const HeritageQuiz: React.FC<HeritageQuizProps> = ({
                 <p className="text-xs text-brand-text leading-relaxed">
                   {question.explanation}
                 </p>
-                <p className="text-[10px] font-mono text-brand-muted flex items-start gap-1.5">
+                <p className="text-xs font-mono text-brand-muted flex items-start gap-1.5">
                   <FileText className="w-3 h-3 shrink-0 mt-0.5" />
                   {question.sourceNote}
                 </p>

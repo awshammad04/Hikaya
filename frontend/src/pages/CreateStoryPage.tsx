@@ -47,7 +47,11 @@ const durations: { id: TourDuration; ar: string; en: string }[] = [
     ar: "يوم كامل · حتى 7 محطات",
     en: "Full day · up to 7 chapters",
   },
-  { id: "weekend", ar: "نهاية أسبوع معمّقة", en: "In-depth weekend" },
+  {
+    id: "weekend",
+    ar: "نهاية أسبوع معمّقة · حتى 14 محطة",
+    en: "In-depth weekend · up to 14 chapters",
+  },
 ];
 const Choice: React.FC<
   React.PropsWithChildren<{ selected: boolean; onClick: () => void }>
@@ -56,10 +60,15 @@ const Choice: React.FC<
     type="button"
     aria-pressed={selected}
     onClick={onClick}
-    className={`p-4 rounded-2xl border text-start text-sm font-bold transition-colors inline-flex justify-between items-center gap-3 ${selected ? "bg-brand-olive text-white border-brand-olive" : "bg-white border-brand-border hover:border-brand-amber"}`}
+    className={`min-h-14 p-4 rounded-2xl border text-start text-sm font-bold transition-colors inline-flex justify-between items-center gap-3 ${selected ? "bg-brand-olive text-white border-brand-olive" : "bg-brand-surface border-brand-border hover:border-brand-amber"}`}
   >
     {children}
-    {selected && <Check className="w-4 h-4 shrink-0 text-brand-amber" />}
+    <span
+      className={`grid h-5 w-5 shrink-0 place-items-center rounded-full border ${selected ? "border-brand-amber-light bg-brand-amber-light text-[#3f412d]" : "border-brand-border"}`}
+      aria-hidden="true"
+    >
+      {selected && <Check className="w-3.5 h-3.5" />}
+    </span>
   </button>
 );
 
@@ -100,10 +109,17 @@ export const CreateStoryPage: React.FC = () => {
       ? "فلسطين"
       : "Palestine";
   const title = isArabic
-    ? `إنشاء حكايتي في ${name}`
-    : `Create My Story in ${name}`;
-  const totalSteps = governorateId ? 3 : 4;
+    ? `أنشئ حكايتك في ${name}`
+    : `Create your ${name} story`;
+  const stepLabels = [
+    { ar: "المحافظات", en: "Places" },
+    { ar: "الأسلوب", en: "Style" },
+    { ar: "الوقت", en: "Time" },
+    { ar: "الاهتمامات", en: "Interests" },
+  ].slice(governorateId ? 1 : 0);
+  const totalSteps = stepLabels.length;
   const currentStep = governorateId ? step + 1 : step;
+  const allSelected = preferences.governorateIds.length === governorates.length;
   const toggleGov = (id: string) =>
     setPreferences((current) => ({
       ...current,
@@ -150,12 +166,11 @@ export const CreateStoryPage: React.FC = () => {
   return (
     <PageTransition>
       <div className="max-w-4xl mx-auto">
-        <section className="rounded-3xl border border-brand-border bg-white shadow-lg overflow-hidden">
+        <section className="rounded-3xl border border-brand-border bg-brand-surface shadow-lg overflow-hidden">
           <header className="relative bg-brand-olive text-white p-7 sm:p-10">
             <div className="absolute inset-0 tatreez-grid opacity-10 pointer-events-none" />
             <div className="relative">
-              <p className="text-xs text-brand-amber">Hikaya</p>
-              <h1 className="mt-2 font-serif font-black text-3xl sm:text-4xl">
+              <h1 className="font-serif font-black text-3xl sm:text-4xl">
                 {title}
               </h1>
               <p className="mt-3 text-sm leading-6 text-white/80">
@@ -166,17 +181,16 @@ export const CreateStoryPage: React.FC = () => {
             </div>
           </header>
           <div className="p-6 sm:p-10 space-y-7">
-            <div
-              className="flex gap-2"
-              aria-label={isArabic ? "التقدم" : "Progress"}
-            >
-              {Array.from({ length: totalSteps }, (_, index) => (
-                <span
-                  key={index}
-                  className={`h-2 flex-1 rounded-full ${index <= step ? "bg-brand-amber" : "bg-brand-border-light"}`}
-                />
+            <ol className="grid gap-2" style={{ gridTemplateColumns: `repeat(${totalSteps}, minmax(0, 1fr))` }} aria-label={isArabic ? "خطوات الحكاية" : "Story steps"}>
+              {stepLabels.map((label, index) => (
+                <li key={label.en} className="space-y-2" aria-current={index === step ? "step" : undefined}>
+                  <span className={`block h-1.5 rounded-full ${index <= step ? "bg-brand-amber" : "bg-brand-border-light"}`} />
+                  <span className={`block text-xs font-bold ${index === step ? "text-brand-olive" : "text-brand-muted"}`}>
+                    {index + 1}. {isArabic ? label.ar : label.en}
+                  </span>
+                </li>
               ))}
-            </div>
+            </ol>
             {currentStep === 0 && (
               <div className="space-y-4">
                 <h2 className="font-serif text-xl font-black text-brand-olive">
@@ -185,15 +199,18 @@ export const CreateStoryPage: React.FC = () => {
                     : "Choose one or more governorates"}
                 </h2>
                 <button
+                  type="button"
                   onClick={() =>
                     setPreferences({
                       ...preferences,
-                      governorateIds: governorates.map((item) => item.id),
+                      governorateIds: allSelected ? [] : governorates.map((item) => item.id),
                     })
                   }
-                  className="text-xs font-bold text-brand-amber underline"
+                  className="text-sm font-bold text-brand-amber underline underline-offset-4"
                 >
-                  {isArabic ? "اختر كل المحافظات" : "Select all governorates"}
+                  {allSelected
+                    ? isArabic ? "إلغاء تحديد الكل" : "Clear selection"
+                    : isArabic ? "اختر كل المحافظات" : "Select all governorates"}
                 </button>
                 <div className="grid sm:grid-cols-2 gap-3">
                   {governorates.map((item) => (
@@ -227,10 +244,10 @@ export const CreateStoryPage: React.FC = () => {
                   ))}
                 </div>
                 <div className="grid sm:grid-cols-2 gap-4">
-                  <label className="text-xs font-bold text-brand-olive">
+                  <label className="text-sm font-bold text-brand-olive">
                     {isArabic ? "لمن تُروى الحكاية؟" : "Who is the story for?"}
                     <select
-                      className="block mt-2 w-full rounded-xl border border-brand-border bg-brand-bg p-3"
+                      className="block mt-2 w-full rounded-xl border border-brand-border bg-brand-bg p-3 text-sm font-normal text-brand-text"
                       value={preferences.targetAudience}
                       onChange={(event) =>
                         setPreferences({
@@ -257,10 +274,10 @@ export const CreateStoryPage: React.FC = () => {
                       ))}
                     </select>
                   </label>
-                  <label className="text-xs font-bold text-brand-olive">
+                  <label className="text-sm font-bold text-brand-olive">
                     {isArabic ? "النبرة" : "Tone"}
                     <select
-                      className="block mt-2 w-full rounded-xl border border-brand-border bg-brand-bg p-3"
+                      className="block mt-2 w-full rounded-xl border border-brand-border bg-brand-bg p-3 text-sm font-normal text-brand-text"
                       value={preferences.tone}
                       onChange={(event) =>
                         setPreferences({
@@ -326,29 +343,36 @@ export const CreateStoryPage: React.FC = () => {
                 </div>
               </div>
             )}
-            <p className="rounded-2xl bg-brand-bg p-4 text-xs leading-6 text-brand-muted">
+            {step === totalSteps - 1 && (
+            <p className="rounded-2xl bg-brand-bg p-4 text-sm leading-6 text-brand-muted">
               {isArabic
                 ? "هذه رحلة ثقافية للقراءة والاستماع، وليست مسار سفر مؤكداً. تضم محطة من كل محافظة مختارة متى توفر محتوى، وتوضّح الفجوات في المصادر."
                 : "This is a cultural reading and listening journey. It includes a chapter from each selected governorate where content is available, and makes source gaps visible. It does not establish a travel route."}
             </p>
+            )}
             {error && (
               <p role="alert" className="text-sm text-red-700">
                 {error}
               </p>
             )}
             <div className="flex justify-between gap-3">
-              <button
-                disabled={busy}
-                onClick={() => (step ? setStep(step - 1) : navigate(-1))}
-                className="rounded-full border border-brand-border px-5 py-3 text-xs font-bold"
-              >
-                {isArabic ? "رجوع" : "Back"}
-              </button>
+              {step > 0 ? (
+                <button
+                  type="button"
+                  disabled={busy}
+                  onClick={() => setStep(step - 1)}
+                  className="rounded-full border border-brand-border px-5 py-3 text-sm font-bold text-brand-olive"
+                >
+                  {isArabic ? "رجوع" : "Back"}
+                </button>
+              ) : (
+                <span />
+              )}
               {step < totalSteps - 1 ? (
                 <button
                   disabled={!preferences.governorateIds.length}
                   onClick={() => setStep(step + 1)}
-                  className="rounded-full bg-brand-olive px-6 py-3 text-xs font-bold text-white disabled:opacity-50"
+                  className="rounded-full bg-brand-olive px-6 py-3 text-sm font-bold text-white transition-colors hover:bg-brand-olive-deep disabled:opacity-50"
                 >
                   {isArabic ? "التالي" : "Next"}
                 </button>
@@ -360,7 +384,7 @@ export const CreateStoryPage: React.FC = () => {
                     !preferences.governorateIds.length
                   }
                   onClick={() => void build()}
-                  className="rounded-full bg-brand-amber px-6 py-3 text-xs font-bold text-white inline-flex gap-2 items-center disabled:opacity-50"
+                  className="rounded-full bg-brand-amber px-6 py-3 text-sm font-bold text-white inline-flex gap-2 items-center transition-colors hover:bg-brand-amber-deep disabled:opacity-50"
                 >
                   {busy ? (
                     <Loader2 className="w-4 h-4 animate-spin" />

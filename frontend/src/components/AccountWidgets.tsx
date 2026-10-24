@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { CloudUpload, PartyPopper, X } from "lucide-react";
+import { CloudUpload, PartyPopper, UserRound, X } from "lucide-react";
 import { useInterfaceLanguage } from "../context/LanguageContext";
 import { useAuth } from "../context/AuthContext";
 import {
@@ -13,7 +13,14 @@ import {
 
 const NUDGE_DISMISSED_KEY = "hikaya.save-nudge-dismissed";
 
-/** Header entry point: the guest passport, or the signed-in visitor. */
+/** Same footprint as the header's other round buttons. */
+const compactChip =
+  "inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-brand-border bg-brand-surface text-brand-olive transition-colors hover:border-brand-olive";
+
+/**
+ * Header entry point: the guest passport, or the signed-in visitor. A round
+ * button until extra-wide screens, where the header has room for names.
+ */
 export const AccountChip: React.FC = () => {
   const { isArabic } = useInterfaceLanguage();
   const { status, user, guest } = useAuth();
@@ -21,21 +28,27 @@ export const AccountChip: React.FC = () => {
   if (status === "signed-in" && user) {
     const firstName = user.fullName.split(/\s+/)[0];
     return (
-      <Link to="/me" className="bg-white border border-brand-border text-brand-olive text-[10px] font-bold ps-1 pe-3 py-1 rounded-full inline-flex items-center gap-1.5 whitespace-nowrap" aria-label={isArabic ? "جواز سفري" : "My passport"}>
-        <span className="grid h-6 w-6 place-items-center rounded-full bg-brand-olive text-[11px] text-white">{firstName.charAt(0).toUpperCase()}</span>
-        {firstName}
+      <Link to="/me" className="inline-flex h-10 shrink-0 items-center gap-2 rounded-full border border-brand-border bg-brand-surface p-1 xl:pe-3 text-xs font-bold text-brand-olive whitespace-nowrap transition-colors hover:border-brand-olive" aria-label={isArabic ? "جواز سفري" : "My passport"}>
+        <span className="grid h-8 w-8 place-items-center rounded-full bg-brand-olive text-sm text-white">{firstName.charAt(0).toUpperCase()}</span>
+        <span className="hidden xl:inline">{firstName}</span>
       </Link>
     );
   }
+  const guestLabel = isArabic ? `${guest.ar} · جواز سفر الضيف` : `${guest.en} · guest passport`;
   return (
-    <span className="inline-flex items-center rounded-full border border-brand-border bg-white text-[10px] font-bold whitespace-nowrap">
-      <Link to="/me" className="ps-3 pe-2 py-2 text-brand-muted hover:text-brand-olive" title={isArabic ? "جواز سفر الضيف" : "Guest passport"}>
-        {isArabic ? guest.ar : guest.en}
+    <>
+      <Link to="/me" className={`${compactChip} xl:hidden`} aria-label={guestLabel} title={guestLabel}>
+        <UserRound className="w-4 h-4" />
       </Link>
-      <Link to="/account?mode=login" className="rounded-full bg-brand-olive px-3 py-2 text-white">
-        {isArabic ? "دخول" : "Sign in"}
-      </Link>
-    </span>
+      <span className="hidden xl:inline-flex h-10 shrink-0 items-center rounded-full border border-brand-border bg-brand-surface p-1 text-xs font-bold whitespace-nowrap">
+        <Link to="/me" className="ps-3 pe-2 text-brand-muted hover:text-brand-olive" title={guestLabel}>
+          {isArabic ? guest.ar : guest.en}
+        </Link>
+        <Link to="/account?mode=login" className="rounded-full bg-brand-olive px-3 py-2 text-white">
+          {isArabic ? "دخول" : "Sign in"}
+        </Link>
+      </span>
+    </>
   );
 };
 
@@ -126,7 +139,7 @@ export const AccountToasts: React.FC = () => {
 const Toast: React.FC<React.PropsWithChildren<{ onClose: () => void; icon: React.ReactNode }>> = ({ onClose, icon, children }) => {
   const { isArabic } = useInterfaceLanguage();
   return (
-    <div role="status" className="fixed bottom-4 inset-x-4 sm:inset-x-auto sm:end-6 sm:bottom-6 sm:w-96 z-40 rounded-2xl border border-brand-border bg-white p-4 shadow-xl flex gap-3">
+    <div role="status" className="fixed bottom-4 inset-x-4 sm:inset-x-auto sm:end-6 sm:bottom-6 sm:w-96 z-40 rounded-2xl border border-brand-border bg-brand-surface p-4 shadow-xl flex gap-3">
       <span className="shrink-0 mt-0.5">{icon}</span>
       <div className="flex-1 space-y-1 text-sm">{children}</div>
       <button type="button" onClick={onClose} aria-label={isArabic ? "إغلاق" : "Close"} className="self-start rounded-full p-1 text-brand-muted hover:text-brand-olive">

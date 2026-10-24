@@ -9,7 +9,7 @@ import { journeyTotals } from "../services/accountSync";
 const fieldClass =
   "w-full bg-brand-bg border border-brand-border rounded-xl px-4 py-2.5 text-sm text-brand-text focus:outline-none focus:border-brand-amber transition-colors";
 const labelClass =
-  "text-[10px] font-mono uppercase tracking-widest text-brand-muted block mb-1.5";
+  "text-xs font-mono uppercase tracking-widest text-brand-muted block mb-1.5";
 
 /**
  * Sign in or create an account. `?mode=login` opens the sign-in tab and
@@ -68,7 +68,7 @@ export const AccountPage: React.FC = () => {
   return (
     <PageTransition>
       <div className="grid gap-8 lg:grid-cols-[1.1fr_0.9fr] items-start">
-        <section className="rounded-3xl border border-brand-border bg-white p-6 sm:p-8 space-y-6 shadow-sm">
+        <section className="rounded-3xl border border-brand-border bg-brand-surface p-6 sm:p-8 space-y-6 shadow-sm">
           <div className="flex rounded-full bg-brand-bg p-1 text-xs font-bold" role="tablist">
             {(["signup", "login"] as const).map((tab) => (
               <button
@@ -117,7 +117,7 @@ export const AccountPage: React.FC = () => {
             <div>
               <label className={labelClass} htmlFor="account-password">{isArabic ? "كلمة المرور" : "Password"}</label>
               <input id="account-password" type="password" dir="ltr" className={fieldClass} value={password} onChange={(event) => setPassword(event.target.value)} required minLength={mode === "signup" ? 8 : 1} maxLength={200} autoComplete={mode === "signup" ? "new-password" : "current-password"} />
-              {mode === "signup" && <p className="text-[11px] text-brand-muted mt-1.5">{isArabic ? "ثمانية أحرف على الأقل." : "At least 8 characters."}</p>}
+              {mode === "signup" && <p className="text-xs text-brand-muted mt-1.5">{isArabic ? "ثمانية أحرف على الأقل." : "At least 8 characters."}</p>}
             </div>
 
             {error && <p role="alert" className="text-xs text-red-800 bg-red-50 border border-red-200 rounded-xl px-4 py-3">{error}</p>}
@@ -135,7 +135,7 @@ export const AccountPage: React.FC = () => {
 
         <aside className="space-y-4">
           <div className="rounded-3xl bg-brand-olive text-white p-6 space-y-3">
-            <p className="text-[10px] font-mono uppercase tracking-widest text-brand-amber">{isArabic ? "جواز سفر ضيف" : "Guest passport"}</p>
+            <p className="text-xs font-mono uppercase tracking-widest text-brand-amber">{isArabic ? "جواز سفر ضيف" : "Guest passport"}</p>
             <p className="font-serif font-black text-2xl">{isArabic ? guest.ar : guest.en} <span className="text-brand-amber font-mono text-base">#{guest.number}</span></p>
             <p className="text-sm text-white/80 leading-relaxed">
               {carried > 0
@@ -146,7 +146,7 @@ export const AccountPage: React.FC = () => {
             </p>
             <p className="text-xs text-white/60 inline-flex items-center gap-1.5"><Footprints className="w-3.5 h-3.5" />{isArabic ? "كضيف، تبقى رحلتك في هذا المتصفح فقط." : "As a guest, your journey stays in this browser only."}</p>
           </div>
-          <ul className="rounded-3xl border border-brand-border bg-white p-6 space-y-4">
+          <ul className="rounded-3xl border border-brand-border bg-brand-surface p-6 space-y-4">
             {perks.map(({ icon: Icon, ar, en }) => (
               <li key={en} className="flex gap-3 text-sm text-brand-text leading-relaxed">
                 <Icon className="w-5 h-5 shrink-0 text-brand-amber mt-0.5" />

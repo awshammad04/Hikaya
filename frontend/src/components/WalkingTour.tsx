@@ -87,7 +87,7 @@ export const WalkingTour: React.FC<{ locations: ApiLocation[] }> = ({ locations 
   if (!supported) return null;
 
   return (
-    <section className="bg-white rounded-3xl border border-brand-border p-5 space-y-3">
+    <section className="bg-brand-surface rounded-3xl border border-brand-border p-5 space-y-3">
       <h3 className="font-serif font-black text-lg text-brand-olive flex items-center gap-2">
         <Footprints className="w-4 h-4 text-brand-amber" />
         {isArabic ? "هل أنت قريب؟" : "Are you nearby?"}
@@ -125,7 +125,7 @@ export const WalkingTour: React.FC<{ locations: ApiLocation[] }> = ({ locations 
               </p>
               <Link
                 to={`/locations/${nearest.location.id}?tour=1`}
-                className="bg-brand-amber hover:bg-[#b45f05] text-white text-xs font-serif font-black tracking-widest uppercase px-5 py-2.5 rounded-full inline-flex items-center gap-2 transition-colors"
+                className="bg-brand-amber hover:bg-brand-amber-deep text-white text-xs font-serif font-black tracking-widest uppercase px-5 py-2.5 rounded-full inline-flex items-center gap-2 transition-colors"
               >
                 <Footprints className="w-3.5 h-3.5" />
                 {isArabic ? "ابدأ الجولة الصوتية" : "Start the audio tour"}

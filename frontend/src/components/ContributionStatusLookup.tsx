@@ -63,7 +63,7 @@ export const ContributionStatusLookup: React.FC = () => {
   const StatusIcon = style?.icon;
 
   return (
-    <section className="bg-white rounded-3xl border border-brand-border p-6 space-y-4 shadow-sm">
+    <section className="bg-brand-surface rounded-3xl border border-brand-border p-6 space-y-4 shadow-sm">
       <div>
         <h3 className="font-serif font-black text-lg text-brand-olive">
           {isArabic ? "هل أرسلت ذكرى من قبل؟" : "Already sent something?"}
@@ -84,7 +84,7 @@ export const ContributionStatusLookup: React.FC = () => {
         <button
           type="submit"
           disabled={looking || !code.trim()}
-          className="bg-brand-olive hover:bg-[#4a4a35] disabled:opacity-50 text-brand-bg rounded-full p-3 transition-colors"
+          className="bg-brand-olive hover:bg-brand-olive-deep disabled:opacity-50 text-brand-bg rounded-full p-3 transition-colors"
           aria-label={isArabic ? "تحقق من المساهمة" : "Look up contribution"}
         >
           {looking ? (
@@ -107,7 +107,7 @@ export const ContributionStatusLookup: React.FC = () => {
           animate={{ opacity: 1, y: 0 }}
           className={`rounded-2xl border px-4 py-4 space-y-2 ${style.className}`}
         >
-          <p className="text-[10px] font-mono uppercase tracking-widest inline-flex items-center gap-1.5">
+          <p className="text-xs font-mono uppercase tracking-widest inline-flex items-center gap-1.5">
             <StatusIcon className="w-3 h-3" />
             {isArabic ? ({ pending_review: "بانتظار المراجعة", approved: "منشورة", rejected: "غير منشورة" }[status.status]) : style.label}
           </p>
@@ -118,7 +118,7 @@ export const ContributionStatusLookup: React.FC = () => {
               <span className="font-bold">{isArabic ? "ملاحظة فريق التوثيق:" : "Reviewer note:"}</span> {status.reviewNotes}
             </p>
           )}
-          <p className="text-[10px] font-mono opacity-70">
+          <p className="text-xs font-mono opacity-70">
             {isArabic ? "أُرسلت " : "Submitted "}{new Date(status.submittedAt).toLocaleDateString(language === "ar" ? "ar-PS" : "en-GB")}
             {status.reviewedAt && (isArabic ? ` · روجعت ${new Date(status.reviewedAt).toLocaleDateString("ar-PS")}` : ` · reviewed ${new Date(status.reviewedAt).toLocaleDateString("en-GB")}`)}
           </p>

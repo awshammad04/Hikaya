@@ -171,7 +171,7 @@ export const MyJerusalemStoryModal: React.FC<{ open: boolean; onClose: () => voi
     : (item.governorateId ?? "jerusalem") === scope), ...defaultMemories];
   const story = buildStory(isArabic, displayedMemories, locations, scope);
   const scopeName = scope === "all" ? (isArabic ? "فلسطين" : "Palestine") : governorateName(scope,isArabic);
-  const storyTitle = isArabic ? `حكايتي في ${scopeName}` : scope === "jerusalem" ? "My Jerusalem Story" : `My ${scopeName} Story`;
+  const storyTitle = isArabic ? `تذكار رحلتي في ${scopeName}` : `My ${scopeName} keepsake`;
   const albumTitle = isArabic ? `ألبوم ذكرياتي ولحظاتي في ${scopeName}` : `My ${scopeName} Journey Memories`;
   const explored = locations.filter((location) => story.exploredLocationIds.includes(location.id));
   const exploredNames = explored.map((item) => isArabic ? item.arabicName : item.name);
@@ -258,43 +258,43 @@ export const MyJerusalemStoryModal: React.FC<{ open: boolean; onClose: () => voi
 
   return (
     <div className="fixed inset-0 z-50 flex items-end justify-center overflow-hidden bg-black/70 p-3 backdrop-blur-md sm:items-center sm:p-8" role="dialog" aria-modal="true" aria-label={storyTitle}>
-      <div className="jerusalem-story-dialog flex w-full max-w-2xl min-h-0 flex-col overflow-hidden rounded-[1.75rem] border border-brand-amber/80 bg-white shadow-[0_28px_90px_rgba(0,0,0,0.45)] sm:rounded-3xl" dir={isArabic ? "rtl" : "ltr"}>
+      <div className="jerusalem-story-dialog flex w-full max-w-2xl min-h-0 flex-col overflow-hidden rounded-[1.75rem] border border-brand-amber/80 bg-brand-surface shadow-[0_28px_90px_rgba(0,0,0,0.45)] sm:rounded-3xl" dir={isArabic ? "rtl" : "ltr"}>
         <header className="relative z-30 shrink-0 overflow-hidden bg-brand-olive px-5 py-4 text-white shadow-md sm:px-6 sm:py-5">
           <div className="absolute inset-0 opacity-15 [background-image:radial-gradient(circle_at_20%_20%,white_0,transparent_35%),radial-gradient(circle_at_80%_80%,#d97706_0,transparent_32%)]" />
           <div className="relative flex items-center gap-3">
             <span className="h-10 w-10 shrink-0 rounded-xl bg-brand-bg p-1">
-              <img src="/logo-icon.png" alt="Hikaya" className="h-full w-full object-contain mix-blend-multiply" />
+              <img src="/logo-icon.png" alt="Hikaya" className="h-full w-full object-contain mix-blend-multiply dark:mix-blend-normal" />
             </span>
             <div className="min-w-0">
-              <p className="text-[9px] font-bold uppercase tracking-[0.16em] text-brand-amber sm:text-[10px]">{isArabic ? "تذكار جولتك الرقمية · Hikaya" : "Your digital tour keepsake · Hikaya"}</p>
+              <p className="text-xs font-bold uppercase tracking-[0.16em] text-brand-amber-light">{isArabic ? "تذكار جولتك الرقمية" : "Your digital tour keepsake"}</p>
               <h2 className="truncate font-serif text-2xl font-black sm:text-3xl">{storyTitle}</h2>
             </div>
             <button type="button" onClick={onClose} className="ms-auto shrink-0 rounded-full border border-white/25 bg-black/15 p-2 shadow-sm transition hover:bg-white/20" aria-label={isArabic ? "إغلاق" : "Close"}><X className="h-4 w-4" /></button>
           </div>
         </header>
 
-        <div ref={modalScrollRef} className="min-h-0 flex-1 touch-pan-y space-y-5 overflow-y-auto bg-[#fbfaf7] p-4 [-webkit-overflow-scrolling:touch] sm:p-6">
-          <section className="relative overflow-hidden rounded-2xl border border-brand-border-light bg-white px-4 py-5 text-center shadow-[0_5px_20px_rgba(74,66,42,0.05)]">
+        <div ref={modalScrollRef} className="min-h-0 flex-1 touch-pan-y space-y-5 overflow-y-auto bg-brand-bg p-4 [-webkit-overflow-scrolling:touch] sm:p-6">
+          <section className="relative overflow-hidden rounded-2xl border border-brand-border-light bg-brand-surface px-4 py-5 text-center shadow-[0_5px_20px_rgba(74,66,42,0.05)]">
             <div className="pointer-events-none absolute inset-x-8 top-0 h-px bg-gradient-to-r from-transparent via-brand-amber/60 to-transparent" />
             <Award className="mx-auto h-10 w-10 text-brand-amber" />
             <h3 className="font-serif text-2xl font-black text-brand-olive">{story.badge}</h3>
-            <p className="mt-1 text-[10px] font-mono uppercase tracking-wider text-brand-muted">{isArabic ? "شهادة ختام جولتك" : "Your journey completion certificate"}</p>
+            <p className="mt-1 text-xs font-mono uppercase tracking-wider text-brand-muted">{isArabic ? "شهادة ختام جولتك" : "Your journey completion certificate"}</p>
             <p className="mt-2 text-sm text-brand-text">“{story.reflection}”</p>
           </section>
 
           <section className="rounded-2xl bg-brand-bg p-4">
             <p className="mb-2 text-xs text-brand-muted">{isArabic ? "الحارات التي استكشفتها" : "Places explored"} ({explored.length}/{locations.length})</p>
-            <div className="flex flex-wrap gap-2">{explored.length ? explored.map((item) => <span key={item.id} className="rounded-full border border-brand-border bg-white px-3 py-1 text-xs">{isArabic ? item.arabicName : item.name}</span>) : <span className="text-xs text-brand-muted">{isArabic ? "افتح صفحة حي ليُضاف إلى الحكاية." : "Open a place page to add it to your story."}</span>}</div>
+            <div className="flex flex-wrap gap-2">{explored.length ? explored.map((item) => <span key={item.id} className="rounded-full border border-brand-border bg-brand-surface px-3 py-1 text-xs">{isArabic ? item.arabicName : item.name}</span>) : <span className="text-xs text-brand-muted">{isArabic ? "افتح صفحة حي ليُضاف إلى الحكاية." : "Open a place page to add it to your story."}</span>}</div>
           </section>
 
           <section className="space-y-2">
-            <div className="grid grid-cols-2 gap-2 text-center text-[11px] sm:grid-cols-4">
+            <div className="grid grid-cols-2 gap-2 text-center text-xs sm:grid-cols-4">
               <Stat value={story.heritageSitesDiscovered} label={isArabic ? "مواقع مكتشفة" : "Sites discovered"} icon={<MapPin className="h-3 w-3" />} />
               {scope === "jerusalem" && <Stat value={story.totalWalkingMinutes} label={isArabic ? "دقائق مشي" : "Walking min"} icon={<Footprints className="h-3 w-3" />} />}
               <Stat value={story.personalPhotosCaptured} label={isArabic ? "صور ملتقطة" : "Photos captured"} icon={<Camera className="h-3 w-3" />} />
               <Stat value={story.personalMemoriesWritten} label={isArabic ? "ذكريات مدونة" : "Memories written"} icon={<PenLine className="h-3 w-3" />} />
             </div>
-            <div className="flex flex-wrap justify-center gap-2 text-[10px] text-brand-muted">
+            <div className="flex flex-wrap justify-center gap-2 text-xs text-brand-muted">
               <MiniStat value={story.completedQuizLocationIds.length} label={isArabic ? "اختبارات" : "Quizzes"} />
               <MiniStat value={story.listenedLocationIds.length} label={isArabic ? "روايات مسموعة" : "Narrations"} />
               <MiniStat value={story.oralMemoriesUncovered} label={isArabic ? "ذكريات مكتشفة" : "Memories found"} icon={<MessageSquareText className="h-3 w-3" />} />
@@ -302,15 +302,15 @@ export const MyJerusalemStoryModal: React.FC<{ open: boolean; onClose: () => voi
             </div>
           </section>
 
-          <section aria-labelledby="journey-memories-title" className="space-y-3 rounded-3xl border border-brand-border-light bg-[linear-gradient(145deg,#f5efe2_0%,#fbfaf6_58%,#eee5d3_100%)] p-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.9)] sm:p-5">
+          <section aria-labelledby="journey-memories-title" className="paper-scope space-y-3 rounded-3xl border border-brand-border-light bg-[linear-gradient(145deg,#f5efe2_0%,#fbfaf6_58%,#eee5d3_100%)] p-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.9)] sm:p-5">
             <div className="flex items-center justify-between gap-3 border-b border-brand-border/60 pb-3">
               <div className="min-w-0">
-                <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-brand-amber">{isArabic ? "من دفتر الطريق" : "From your travel journal"}</p>
+                <p className="text-xs font-bold uppercase tracking-[0.18em] text-brand-amber">{isArabic ? "من دفتر الطريق" : "From your travel journal"}</p>
                 <h3 id="journey-memories-title" className="font-serif text-lg font-black leading-tight text-brand-olive sm:text-xl">{albumTitle}</h3>
-                <p className="mt-1 text-[11px] text-brand-muted">{isArabic ? "صور وكلمات من تفاصيل الجولة." : "Photos and words from moments along the way."}</p>
+                <p className="mt-1 text-xs text-brand-muted">{isArabic ? "صور وكلمات من تفاصيل الجولة." : "Photos and words from moments along the way."}</p>
               </div>
               <div className="flex shrink-0 items-center gap-2">
-                <span className="rounded-full border border-brand-border bg-white/75 px-2.5 py-1 text-[10px] font-bold text-brand-olive">{displayedMemories.length} {isArabic ? "ذكريات" : "memories"}</span>
+                <span className="rounded-full border border-brand-border bg-white/75 px-2.5 py-1 text-xs font-bold text-brand-olive">{displayedMemories.length} {isArabic ? "ذكريات" : "memories"}</span>
                 {!addingMemory && <button type="button" onClick={() => setAddingMemory(true)} className="rounded-full bg-brand-olive p-2 text-white shadow-sm transition hover:bg-brand-olive/90" aria-label={isArabic ? "أضف ذكرى" : "Add memory"}><ImagePlus className="h-4 w-4" /></button>}
               </div>
             </div>
@@ -321,9 +321,9 @@ export const MyJerusalemStoryModal: React.FC<{ open: boolean; onClose: () => voi
                     <span className="absolute start-1/2 top-0 z-10 h-5 w-16 -translate-x-1/2 -translate-y-1/2 rotate-[-2deg] bg-[#ddc797]/75 shadow-sm" />
                     <img src={memory.photoDataUrl} alt={memory.locationTag} className="aspect-[4/3] w-full rounded-[2px] bg-brand-border-light object-cover" />
                     <figcaption className="px-2 pt-3">
-                      <span className="inline-flex items-center gap-1 text-[10px] font-bold text-brand-amber"><MapPin className="h-3 w-3" />{memory.locationTag}</span>
+                      <span className="inline-flex items-center gap-1 text-xs font-bold text-brand-amber"><MapPin className="h-3 w-3" />{memory.locationTag}</span>
                       <p className="mt-2 whitespace-pre-wrap font-serif text-[13px] leading-5 text-brand-text">{memory.note}</p>
-                      <time className="mt-3 block border-t border-dashed border-brand-border pt-2 text-[9px] text-brand-muted" dateTime={memory.createdAt}>{new Intl.DateTimeFormat(isArabic ? "ar-PS" : "en", { dateStyle: "medium", timeStyle: "short" }).format(new Date(memory.createdAt))}</time>
+                      <time className="mt-3 block border-t border-dashed border-brand-border pt-2 text-xs text-brand-muted" dateTime={memory.createdAt}>{new Intl.DateTimeFormat(isArabic ? "ar-PS" : "en", { dateStyle: "medium", timeStyle: "short" }).format(new Date(memory.createdAt))}</time>
                     </figcaption>
                   </figure>
               ))}
@@ -335,12 +335,12 @@ export const MyJerusalemStoryModal: React.FC<{ open: boolean; onClose: () => voi
                   <span className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-brand-amber/10 text-brand-amber"><Camera className="h-4 w-4" /></span>
                   <p className="max-w-sm text-xs leading-relaxed text-brand-text">{isArabic ? "أضف لقطة وكلماتك لتكبر الحكاية مع كل محطة." : "Add a photo and your own words as the story grows at every stop."}</p>
                 </div>
-                <button type="button" onClick={() => setAddingMemory(true)} className="inline-flex shrink-0 items-center gap-2 rounded-full bg-brand-olive px-4 py-2 text-xs font-bold text-white"><ImagePlus className="h-4 w-4 text-brand-amber" />{isArabic ? "أضف ذكرى" : "Add memory"}</button>
+                <button type="button" onClick={() => setAddingMemory(true)} className="inline-flex shrink-0 items-center gap-2 rounded-full bg-brand-olive px-4 py-2 text-xs font-bold text-white"><ImagePlus className="h-4 w-4 text-brand-amber-light" />{isArabic ? "أضف ذكرى" : "Add memory"}</button>
               </div>
             )}
 
             {addingMemory && (
-              <div className="space-y-3 rounded-2xl border border-brand-border bg-white p-4">
+              <div className="space-y-3 rounded-2xl border border-brand-border bg-brand-surface p-4">
                 <div className="grid gap-4 sm:grid-cols-[180px_1fr]">
                   <label className="flex aspect-[4/3] cursor-pointer items-center justify-center overflow-hidden rounded-xl border border-dashed border-brand-amber/50 bg-brand-bg text-center text-xs text-brand-muted">
                     {photoDataUrl ? <img src={photoDataUrl} alt="" className="h-full w-full object-cover" /> : <span className="p-3"><Camera className="mx-auto mb-2 h-6 w-6 text-brand-amber" />{photoBusy ? (isArabic ? "جارٍ تجهيز الصورة…" : "Preparing photo…") : (isArabic ? "التقط صورة أو اخترها" : "Take or choose a photo")}</span>}
@@ -348,12 +348,12 @@ export const MyJerusalemStoryModal: React.FC<{ open: boolean; onClose: () => voi
                   </label>
                   <div className="space-y-3">
                     <div>
-                      <label htmlFor="memory-location" className="mb-1 block text-[10px] font-bold uppercase tracking-wider text-brand-muted">{isArabic ? "المكان" : "Location"}</label>
+                      <label htmlFor="memory-location" className="mb-1 block text-xs font-bold uppercase tracking-wider text-brand-muted">{isArabic ? "المكان" : "Location"}</label>
                       <input id="memory-location" list="jerusalem-memory-locations" value={locationTag} onChange={(event) => setLocationTag(event.target.value)} placeholder={isArabic ? "مثال: باب العامود" : "Example: Damascus Gate"} className="w-full rounded-xl border border-brand-border bg-brand-bg px-3 py-2 text-sm focus:border-brand-amber focus:outline-none" maxLength={100} />
                       <datalist id="jerusalem-memory-locations">{locationSuggestions.map((location) => <option key={location} value={location} />)}</datalist>
                     </div>
                     <div>
-                      <label htmlFor="memory-note" className="mb-1 block text-[10px] font-bold uppercase tracking-wider text-brand-muted">{isArabic ? "ماذا تريد أن تتذكر؟" : "What do you want to remember?"}</label>
+                      <label htmlFor="memory-note" className="mb-1 block text-xs font-bold uppercase tracking-wider text-brand-muted">{isArabic ? "ماذا تريد أن تتذكر؟" : "What do you want to remember?"}</label>
                       <textarea id="memory-note" value={note} onChange={(event) => setNote(event.target.value)} placeholder={isArabic ? "لحظة، صوت، رائحة، أو شعور من جولتك…" : "A moment, sound, scent, or feeling from your journey…"} className="min-h-24 w-full resize-y rounded-xl border border-brand-border bg-brand-bg px-3 py-2 text-sm focus:border-brand-amber focus:outline-none" maxLength={600} />
                     </div>
                   </div>
@@ -371,14 +371,14 @@ export const MyJerusalemStoryModal: React.FC<{ open: boolean; onClose: () => voi
             {scope === "jerusalem" && <img src="/images/jerusalem/at-tur.jpg" alt="" className="absolute inset-0 h-full w-full object-cover" />}
             <div className="absolute inset-0 bg-gradient-to-t from-[#27291b] via-[#3f412dcc] to-[#3f412d55]" />
             <div className="relative flex min-h-[210px] flex-col justify-end p-5 sm:p-7">
-              <span className="mb-auto inline-flex w-fit items-center gap-1.5 rounded-full border border-white/25 bg-black/25 px-3 py-1 text-[9px] font-bold uppercase tracking-[0.18em] backdrop-blur"><Sparkles className="h-3 w-3 text-brand-amber" />{scope === "jerusalem" ? (isArabic ? "المشهد الختامي · جبل الزيتون" : "Final scene · Mount of Olives") : scopeName}</span>
-              <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-brand-amber">Hikaya</p>
+              <span className="mb-auto inline-flex w-fit items-center gap-1.5 rounded-full border border-white/25 bg-black/25 px-3 py-1 text-xs font-bold uppercase tracking-[0.18em] backdrop-blur"><Sparkles className="h-3 w-3 text-brand-amber" />{scope === "jerusalem" ? (isArabic ? "المشهد الختامي · جبل الزيتون" : "Final scene · Mount of Olives") : scopeName}</span>
+              <p className="text-xs font-bold uppercase tracking-[0.16em] text-brand-amber-light">{isArabic ? "حكاية" : "Hikaya"}</p>
               <h3 className="mt-1 font-serif text-2xl font-black sm:text-3xl">{isArabic ? "تنتهي الجولة، وتبدأ حكايتك" : "The tour ends. Your story begins."}</h3>
               <p className="mt-2 max-w-xl text-sm leading-relaxed text-white/85">{scope === "jerusalem" ? (isArabic ? "من مطلّة جبل الزيتون، تصبح القدس أكثر من مكان زرته؛ تصبح حكايةً تحملها معك." : "From the Mount of Olives, Jerusalem becomes more than a place you visited—it becomes a story you carry with you.") : story.reflection}</p>
             </div>
           </section>
 
-          <p className="text-[10px] text-brand-muted">{isArabic ? "الشهادة مبنية على تقدّمك وصورك وكلماتك فقط؛ ولا تضيف أي ادعاء تاريخي." : "This certificate uses only your progress, photos, and words; it adds no historical claim."}</p>
+          <p className="text-xs text-brand-muted">{isArabic ? "الشهادة مبنية على تقدّمك وصورك وكلماتك فقط؛ ولا تضيف أي ادعاء تاريخي." : "This certificate uses only your progress, photos, and words; it adds no historical claim."}</p>
           <div className="flex flex-col gap-3 sm:flex-row">
             <button type="button" onClick={download} className="inline-flex flex-1 items-center justify-center gap-2 rounded-full bg-brand-olive py-3 text-xs font-bold text-white"><Download className="h-4 w-4" />{isArabic ? "تحميل الشهادة والألبوم" : "Download certificate and album"}</button>
             <button type="button" onClick={() => void share()} className="inline-flex flex-1 items-center justify-center gap-2 rounded-full border border-brand-border py-3 text-xs font-bold"><Share2 className="h-4 w-4" />{isArabic ? "مشاركة حكاية الجولة" : "Share journey story"}</button>
@@ -390,14 +390,14 @@ export const MyJerusalemStoryModal: React.FC<{ open: boolean; onClose: () => voi
 };
 
 const Stat: React.FC<{ value: number; label: string; icon?: React.ReactNode }> = ({ value, label, icon }) => (
-  <div className="rounded-2xl border border-brand-border-light bg-white p-2.5 shadow-[0_3px_12px_rgba(74,66,42,0.05)] sm:p-3">
+  <div className="rounded-2xl border border-brand-border-light bg-brand-surface p-2.5 shadow-[0_3px_12px_rgba(74,66,42,0.05)] sm:p-3">
     <strong className="block font-serif text-xl text-brand-olive sm:text-2xl">{value}</strong>
     <span className="mt-0.5 inline-flex items-center justify-center gap-1 text-brand-muted">{icon}{label}</span>
   </div>
 );
 
 const MiniStat: React.FC<{ value: number; label: string; icon?: React.ReactNode }> = ({ value, label, icon }) => (
-  <span className="inline-flex items-center gap-1.5 rounded-full border border-brand-border-light bg-white px-3 py-1.5 shadow-sm">
+  <span className="inline-flex items-center gap-1.5 rounded-full border border-brand-border-light bg-brand-surface px-3 py-1.5 shadow-sm">
     {icon}<strong className="text-brand-olive">{value}</strong>{label}
   </span>
 );

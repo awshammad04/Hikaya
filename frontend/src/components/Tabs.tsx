@@ -38,7 +38,7 @@ export const Tabs: React.FC<TabsProps> = ({ tabs, active, onChange }) => {
     <div
       role="tablist"
       aria-label={isArabic ? "أقسام المكان" : "Location sections"}
-      className="flex flex-wrap items-center gap-1 border-b border-brand-border-light overflow-x-auto"
+      className="scrollbar-none -mx-4 flex items-center gap-1 overflow-x-auto border-b border-brand-border-light px-4 sm:mx-0 sm:px-0"
     >
       {tabs.map((tab, index) => {
         const Icon = tab.icon;
@@ -54,16 +54,16 @@ export const Tabs: React.FC<TabsProps> = ({ tabs, active, onChange }) => {
             tabIndex={selected ? 0 : -1}
             onClick={() => onChange(tab.id)}
             onKeyDown={(event) => onKeyDown(event, index)}
-            className={`pb-3 pt-1 px-3 whitespace-nowrap text-xs font-serif font-bold uppercase tracking-widest border-b-2 transition-colors inline-flex items-center gap-1.5 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-amber rounded-t ${
+            className={`shrink-0 pb-3 pt-2 px-3 whitespace-nowrap text-sm font-bold border-b-2 transition-colors inline-flex items-center gap-1.5 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-amber rounded-t ${
               selected
                 ? "border-brand-olive text-brand-olive"
                 : "border-transparent text-brand-muted hover:text-brand-olive"
             }`}
           >
-            {Icon && <Icon className="w-3.5 h-3.5" />}
+            {Icon && <Icon className="w-4 h-4" />}
             {tab.label}
             {tab.badge !== undefined && tab.badge > 0 && (
-              <span className="text-[9px] font-mono text-brand-amber">{tab.badge}</span>
+              <span className="rounded-full bg-brand-amber/10 px-1.5 text-xs font-bold text-brand-amber">{tab.badge}</span>
             )}
           </button>
         );

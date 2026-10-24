@@ -46,7 +46,7 @@ export const FeaturedStoryCard: React.FC<FeaturedStoryCardProps> = ({
   const locationName = isArabic ? (profile?.arabicName ?? location?.arabicName ?? location?.name) : location?.name;
 
   return (
-    <article className="bg-white rounded-3xl border border-brand-border overflow-hidden shadow-sm grid grid-cols-1 md:grid-cols-5">
+    <article className="bg-brand-surface rounded-3xl border border-brand-border overflow-hidden shadow-sm grid grid-cols-1 md:grid-cols-5">
       <div className="relative md:col-span-2 min-h-[190px] bg-brand-olive">
         <CoverImage
           src={profile?.coverImage ?? location?.coverImageUrl}
@@ -57,7 +57,7 @@ export const FeaturedStoryCard: React.FC<FeaturedStoryCardProps> = ({
       </div>
 
       <div className="md:col-span-3 p-6 space-y-3">
-        <p className="text-[10px] font-mono uppercase tracking-widest text-brand-amber flex items-center gap-1.5">
+        <p className="text-xs font-mono uppercase tracking-widest text-brand-amber flex items-center gap-1.5">
           {reason === "random" ? (
             <>
               <Shuffle className="w-3 h-3" />
@@ -90,7 +90,7 @@ export const FeaturedStoryCard: React.FC<FeaturedStoryCardProps> = ({
           {location && (
             <Link
               to={`/locations/${location.id}`}
-              className="bg-brand-olive hover:bg-[#4a4a35] text-brand-bg text-xs font-serif font-black tracking-widest uppercase px-5 py-2.5 rounded-full inline-flex items-center gap-2 transition-colors"
+              className="bg-brand-olive hover:bg-brand-olive-deep text-brand-bg text-xs font-serif font-black tracking-widest uppercase px-5 py-2.5 rounded-full inline-flex items-center gap-2 transition-colors"
             >
               {isArabic ? "اقرأ الحكاية" : "Read it"}
               <ArrowRight className="w-3.5 h-3.5 text-brand-amber" />

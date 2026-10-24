@@ -54,7 +54,7 @@ const Credit: React.FC<{ image: ApiMedia; className?: string; isArabic?: boolean
   className = "",
   isArabic = false,
 }) => (
-  <p className={`text-[10px] font-mono text-brand-muted ${className}`}>
+  <p className={`text-xs font-mono text-brand-muted ${className}`}>
     {image.credit ?? "Credit missing"}
     {image.capturedAt ? ` · ${image.capturedAt}` : ""}
     {image.license ? ` · ${image.license}` : ""}
@@ -163,7 +163,7 @@ export const Gallery: React.FC<GalleryProps> = ({ images, loading }) => {
             viewport={{ once: true, margin: "-45px" }}
             transition={{ duration: reduced ? 0.15 : 0.4, delay: reduced ? 0 : (index % 3) * 0.065, ease: "easeOut" }}
             whileHover={reduced ? undefined : { y: -4, scale: 1.01 }}
-            className="space-y-1.5 rounded-2xl border border-brand-border-light bg-white/80 p-2 shadow-sm transition-colors duration-300 hover:border-brand-amber/50 hover:bg-white hover:shadow-md"
+            className="space-y-1.5 rounded-2xl border border-brand-border-light bg-white/80 p-2 shadow-sm transition-colors duration-300 hover:border-brand-amber/50 hover:bg-brand-surface hover:shadow-md"
           >
             <button
               type="button"
@@ -178,9 +178,9 @@ export const Gallery: React.FC<GalleryProps> = ({ images, loading }) => {
                   loading="lazy"
                   onError={() => markImageFailed(image)}
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                /> : <span className="absolute inset-0 grid place-items-center p-4 text-center text-[10px] text-stone-200"><CameraOff className="w-6 h-6 mx-auto mb-1" />{isArabic ? "تعذر تحميل الصورة؛ يبقى الوصف والمصدر متاحين." : "Image unavailable; its description and source remain available."}</span>}
+                /> : <span className="absolute inset-0 grid place-items-center p-4 text-center text-xs text-stone-200"><CameraOff className="w-6 h-6 mx-auto mb-1" />{isArabic ? "تعذر تحميل الصورة؛ يبقى الوصف والمصدر متاحين." : "Image unavailable; its description and source remain available."}</span>}
               {image.era && (
-                <span className="absolute top-2 left-2 bg-white/90 text-brand-olive text-[9px] font-mono uppercase tracking-wider px-2 py-0.5 rounded-full">
+                <span className="absolute top-2 left-2 bg-white/90 text-brand-olive text-xs font-mono uppercase tracking-wider px-2 py-0.5 rounded-full">
                   {image.era === "historical"
                     ? (isArabic ? "تاريخية" : "Historical")
                     : (isArabic ? "حديثة" : "Modern")}
@@ -188,12 +188,12 @@ export const Gallery: React.FC<GalleryProps> = ({ images, loading }) => {
               )}
             </button>
             {subject && (
-              <figcaption className="text-[10px] font-serif font-bold text-brand-olive px-0.5">
+              <figcaption className="text-xs font-serif font-bold text-brand-olive px-0.5">
                 {subject}
               </figcaption>
             )}
             {description && (
-              <p className="text-[10px] text-brand-text/75 leading-relaxed px-0.5 line-clamp-3">
+              <p className="text-xs text-brand-text/75 leading-relaxed px-0.5 line-clamp-3">
                 {description}
               </p>
             )}

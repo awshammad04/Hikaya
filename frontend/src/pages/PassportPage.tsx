@@ -139,7 +139,7 @@ export const PassportPage: React.FC = () => {
           <div aria-hidden="true" className="absolute -top-16 -end-16 h-56 w-56 rounded-full border-[18px] border-brand-amber/20" />
           <div className="relative flex flex-col sm:flex-row sm:items-end justify-between gap-6">
             <div className="space-y-2">
-              <p className="text-[10px] font-mono uppercase tracking-[0.3em] text-brand-amber">
+              <p className="text-xs font-mono uppercase tracking-[0.3em] text-brand-amber">
                 {isArabic ? "جواز سفر حكاية" : "Hikaya passport"}
                 {!signedIn && ` · ${isArabic ? "ضيف" : "guest"}`}
               </p>
@@ -164,7 +164,7 @@ export const PassportPage: React.FC = () => {
           <dl className="relative mt-8 grid grid-cols-2 sm:grid-cols-5 gap-3">
             {stats.map(({ icon: Icon, value, ar, en }) => (
               <div key={en} className="rounded-2xl bg-white/10 px-4 py-3">
-                <dt className="text-[10px] text-white/70 inline-flex items-center gap-1.5"><Icon className="w-3.5 h-3.5" />{isArabic ? ar : en}</dt>
+                <dt className="text-xs text-white/70 inline-flex items-center gap-1.5"><Icon className="w-3.5 h-3.5" />{isArabic ? ar : en}</dt>
                 <dd className="font-serif font-black text-2xl mt-1">{value}</dd>
               </div>
             ))}
@@ -172,7 +172,7 @@ export const PassportPage: React.FC = () => {
         </header>
 
         {!signedIn && (
-          <section className="rounded-3xl border-2 border-dashed border-brand-amber/50 bg-amber-50/60 p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <section className="rounded-3xl border-2 border-dashed border-brand-amber/50 bg-brand-amber/10 p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div className="space-y-1">
               <h2 className="font-serif font-black text-xl text-brand-olive">{isArabic ? "لا تدع رحلتك تضيع" : "Don't lose your journey"}</h2>
               <p className="text-sm text-brand-text leading-relaxed">
@@ -183,7 +183,7 @@ export const PassportPage: React.FC = () => {
             </div>
             <div className="flex gap-2 shrink-0">
               <Link to="/account" className="rounded-full bg-brand-amber px-5 py-2.5 text-xs font-bold text-white inline-flex items-center gap-1.5"><UserPlus className="w-4 h-4" />{isArabic ? "احفظ رحلتي" : "Save my journey"}</Link>
-              <Link to="/account?mode=login" className="rounded-full border border-brand-border bg-white px-5 py-2.5 text-xs font-bold text-brand-olive">{isArabic ? "لدي حساب" : "I have an account"}</Link>
+              <Link to="/account?mode=login" className="rounded-full border border-brand-border bg-brand-surface px-5 py-2.5 text-xs font-bold text-brand-olive">{isArabic ? "لدي حساب" : "I have an account"}</Link>
             </div>
           </section>
         )}
@@ -196,7 +196,7 @@ export const PassportPage: React.FC = () => {
             if (!inGovernorate.length) return null;
             const count = inGovernorate.filter((place) => visited.has(place.id)).length;
             return (
-              <div key={item.id} className="rounded-3xl border border-brand-border bg-white p-5 space-y-3">
+              <div key={item.id} className="rounded-3xl border border-brand-border bg-brand-surface p-5 space-y-3">
                 <div className="flex items-center justify-between text-sm">
                   <Link to={`/governorates/${item.id}`} className="font-serif font-bold text-brand-olive hover:text-brand-amber">{governorateName(item.id, isArabic)}</Link>
                   <span className="text-xs font-mono text-brand-muted">{count}/{inGovernorate.length}</span>
@@ -212,7 +212,7 @@ export const PassportPage: React.FC = () => {
                         title={isArabic ? place.arabicName : place.name}
                       >
                         {stamped ? <CheckCircle2 className="w-5 h-5 text-brand-amber" /> : <MapPin className="w-5 h-5" />}
-                        <span className="text-[10px] font-bold leading-tight line-clamp-2">{isArabic ? place.arabicName : place.name}</span>
+                        <span className="text-xs font-bold leading-tight line-clamp-2">{isArabic ? place.arabicName : place.name}</span>
                       </Link>
                     );
                   })}
@@ -227,10 +227,10 @@ export const PassportPage: React.FC = () => {
           <h2 className="font-serif font-black text-2xl text-brand-olive">{isArabic ? "الأوسمة" : "Achievements"}</h2>
           <ul className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-3">
             {achievements.map(({ id, icon: Icon, earned, ar, en, arHint, enHint }) => (
-              <li key={id} className={`rounded-2xl border p-4 text-center space-y-1.5 ${earned ? "border-brand-amber bg-amber-50" : "border-brand-border bg-white opacity-60"}`}>
+              <li key={id} className={`rounded-2xl border p-4 text-center space-y-1.5 ${earned ? "border-brand-amber bg-brand-amber/10" : "border-brand-border bg-brand-surface opacity-60"}`}>
                 <Icon className={`w-6 h-6 mx-auto ${earned ? "text-brand-amber" : "text-brand-muted"}`} />
                 <p className="text-xs font-bold text-brand-olive">{isArabic ? ar : en}</p>
-                <p className="text-[10px] text-brand-muted">{isArabic ? arHint : enHint}</p>
+                <p className="text-xs text-brand-muted">{isArabic ? arHint : enHint}</p>
               </li>
             ))}
           </ul>
@@ -246,15 +246,15 @@ export const PassportPage: React.FC = () => {
           ) : (
             <ul className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
               {memories.map((memory) => (
-                <li key={memory.id} className="group relative rounded-2xl bg-white border border-brand-border p-2 shadow-sm">
+                <li key={memory.id} className="group relative rounded-2xl bg-brand-surface border border-brand-border p-2 shadow-sm">
                   <img src={memory.photoDataUrl} alt={memory.locationTag} loading="lazy" className="aspect-[4/3] w-full rounded-xl object-cover bg-brand-border-light" />
                   <p className="mt-2 text-xs font-bold text-brand-olive">{memory.locationTag}</p>
-                  <p className="text-[11px] text-brand-muted line-clamp-2">{memory.note}</p>
+                  <p className="text-xs text-brand-muted line-clamp-2">{memory.note}</p>
                   <button
                     type="button"
                     onClick={() => removeMemory(memory.id)}
                     aria-label={isArabic ? "حذف الصورة" : "Delete photo"}
-                    className="absolute top-3 end-3 rounded-full bg-white/90 p-1.5 text-red-700 opacity-0 group-hover:opacity-100 focus:opacity-100 transition-opacity"
+                    className="absolute top-3 end-3 rounded-full bg-brand-surface/90 p-1.5 text-red-700 opacity-0 group-hover:opacity-100 focus:opacity-100 transition-opacity"
                   >
                     <Trash2 className="w-3.5 h-3.5" />
                   </button>
@@ -278,11 +278,11 @@ export const PassportPage: React.FC = () => {
                 const narrative = (story.payload as { narrative?: string } | null)?.narrative;
                 const place = story.locationId ? locationById(story.locationId) : undefined;
                 return (
-                  <li key={story.id} className="rounded-2xl border border-brand-border bg-white p-4 space-y-2">
+                  <li key={story.id} className="rounded-2xl border border-brand-border bg-brand-surface p-4 space-y-2">
                     <div className="flex flex-wrap items-center justify-between gap-2">
                       <div>
                         <p className="font-serif font-bold text-brand-olive">{story.title}</p>
-                        <p className="text-[11px] text-brand-muted">
+                        <p className="text-xs text-brand-muted">
                           {story.kind === "journey"
                             ? story.governorateIds.map((id) => governorateName(id, isArabic)).join(" · ")
                             : place ? (isArabic ? place.arabicName : place.name) : story.locationId}
@@ -291,9 +291,9 @@ export const PassportPage: React.FC = () => {
                       </div>
                       <div className="flex gap-2">
                         {story.kind === "journey" ? (
-                          <button type="button" onClick={() => openJourney(story)} className="rounded-full bg-brand-olive px-4 py-1.5 text-[11px] font-bold text-white">{isArabic ? "افتح الرحلة" : "Open journey"}</button>
+                          <button type="button" onClick={() => openJourney(story)} className="rounded-full bg-brand-olive px-4 py-1.5 text-xs font-bold text-white">{isArabic ? "افتح الرحلة" : "Open journey"}</button>
                         ) : (
-                          <button type="button" onClick={() => setOpenStory(openStory === story.id ? null : story.id)} className="rounded-full bg-brand-olive px-4 py-1.5 text-[11px] font-bold text-white">{openStory === story.id ? (isArabic ? "إخفاء" : "Hide") : (isArabic ? "اقرأ" : "Read")}</button>
+                          <button type="button" onClick={() => setOpenStory(openStory === story.id ? null : story.id)} className="rounded-full bg-brand-olive px-4 py-1.5 text-xs font-bold text-white">{openStory === story.id ? (isArabic ? "إخفاء" : "Hide") : (isArabic ? "اقرأ" : "Read")}</button>
                         )}
                         <button type="button" onClick={() => deleteStory(story.id)} aria-label={isArabic ? "حذف الحكاية" : "Delete story"} className="rounded-full border border-brand-border p-1.5 text-red-700"><Trash2 className="w-3.5 h-3.5" /></button>
                       </div>
@@ -331,12 +331,12 @@ export const PassportPage: React.FC = () => {
               {contributions.map((item) => {
                 const place = locationById(item.locationId);
                 return (
-                  <li key={item.id} className="rounded-2xl border border-brand-border bg-white px-4 py-3 flex flex-wrap items-center justify-between gap-2">
+                  <li key={item.id} className="rounded-2xl border border-brand-border bg-brand-surface px-4 py-3 flex flex-wrap items-center justify-between gap-2">
                     <div>
                       <p className="text-sm font-bold text-brand-olive">{item.title}</p>
-                      <p className="text-[11px] text-brand-muted">{place ? (isArabic ? place.arabicName : place.name) : item.locationId} · {item.referenceCode}</p>
+                      <p className="text-xs text-brand-muted">{place ? (isArabic ? place.arabicName : place.name) : item.locationId} · {item.referenceCode}</p>
                     </div>
-                    <span className={`rounded-full border px-3 py-1 text-[10px] font-bold ${STATUS_STYLE[item.status]}`}>
+                    <span className={`rounded-full border px-3 py-1 text-xs font-bold ${STATUS_STYLE[item.status]}`}>
                       {item.status === "approved" ? (isArabic ? "منشورة" : "Published") : item.status === "rejected" ? (isArabic ? "لم تُنشر" : "Not published") : (isArabic ? "قيد المراجعة" : "In review")}
                     </span>
                   </li>
@@ -348,7 +348,7 @@ export const PassportPage: React.FC = () => {
 
         {/* --- Account ------------------------------------------------------------ */}
         {signedIn && user && (
-          <section className="rounded-3xl border border-brand-border bg-white p-6 space-y-4">
+          <section className="rounded-3xl border border-brand-border bg-brand-surface p-6 space-y-4">
             <div className="flex flex-wrap items-center justify-between gap-3">
               <div>
                 <h2 className="font-serif font-black text-xl text-brand-olive">{isArabic ? "الحساب" : "Account"}</h2>
@@ -364,11 +364,11 @@ export const PassportPage: React.FC = () => {
             ) : (
               <form onSubmit={confirmDelete} className="rounded-2xl border border-red-200 bg-red-50 p-4 space-y-3">
                 <p className="text-xs text-red-800">{isArabic ? "سيُحذف حسابك وأختامك وصورك وحكاياتك المحفوظة نهائياً. الذكريات التي شاركتها تبقى في الأرشيف دون ربطها بك." : "Your account, stamps, photos and saved stories will be deleted for good. Memories you shared stay in the archive, unlinked from you."}</p>
-                <input type="password" dir="ltr" required value={deletePassword} onChange={(event) => setDeletePassword(event.target.value)} placeholder={isArabic ? "كلمة المرور للتأكيد" : "Password to confirm"} className="w-full rounded-xl border border-red-200 bg-white px-4 py-2 text-sm" autoComplete="current-password" />
+                <input type="password" dir="ltr" required value={deletePassword} onChange={(event) => setDeletePassword(event.target.value)} placeholder={isArabic ? "كلمة المرور للتأكيد" : "Password to confirm"} className="w-full rounded-xl border border-red-200 bg-brand-surface px-4 py-2 text-sm" autoComplete="current-password" />
                 {deleteError && <p role="alert" className="text-xs text-red-800">{deleteError}</p>}
                 <div className="flex gap-2">
                   <button type="submit" className="rounded-full bg-red-700 px-5 py-2 text-xs font-bold text-white">{isArabic ? "احذف حسابي" : "Delete my account"}</button>
-                  <button type="button" onClick={() => { setConfirmingDelete(false); setDeletePassword(""); setDeleteError(null); }} className="rounded-full border border-brand-border bg-white px-5 py-2 text-xs font-bold text-brand-olive">{isArabic ? "إلغاء" : "Cancel"}</button>
+                  <button type="button" onClick={() => { setConfirmingDelete(false); setDeletePassword(""); setDeleteError(null); }} className="rounded-full border border-brand-border bg-brand-surface px-5 py-2 text-xs font-bold text-brand-olive">{isArabic ? "إلغاء" : "Cancel"}</button>
                 </div>
               </form>
             )}

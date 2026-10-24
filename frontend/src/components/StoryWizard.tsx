@@ -173,9 +173,9 @@ export const StoryWizard: React.FC<StoryWizardProps> = ({ location, autoPlay }) 
   const stepIndex = step === "audience" ? 0 : step === "tone" ? 1 : 2;
 
   return (
-    <div className="bg-white rounded-3xl border border-brand-border p-6 space-y-5 shadow-sm">
+    <div className="bg-brand-surface rounded-3xl border border-brand-border p-6 space-y-5 shadow-sm">
       {/* --- Step indicator --------------------------------------------- */}
-      <ol className="flex items-center gap-2 text-[10px] font-mono uppercase tracking-wider">
+      <ol className="flex items-center gap-2 text-xs font-mono uppercase tracking-wider">
         {(isArabic ? ["الجمهور", "الأسلوب", "الحكاية"] : ["Audience", "Style", "Story"]).map((label, index) => (
           <li key={label} className="flex items-center gap-2">
             <span
@@ -274,7 +274,7 @@ export const StoryWizard: React.FC<StoryWizardProps> = ({ location, autoPlay }) 
                     <span className="font-serif font-bold text-sm text-brand-olive block">
                       {isArabic ? option.ar : option.en}
                     </span>
-                    <span className="text-[10px] text-brand-muted">{isArabic ? option.arHint : option.enHint}</span>
+                    <span className="text-xs text-brand-muted">{isArabic ? option.arHint : option.enHint}</span>
                   </button>
                 ))}
               </div>
@@ -290,7 +290,7 @@ export const StoryWizard: React.FC<StoryWizardProps> = ({ location, autoPlay }) 
                 <button
                   type="button"
                   onClick={() => void run(tone)}
-                  className="bg-brand-amber hover:bg-[#b45f05] text-white text-xs font-serif font-black tracking-widest uppercase px-6 py-3 rounded-full inline-flex items-center gap-2 transition-colors"
+                  className="bg-brand-amber hover:bg-brand-amber-deep text-white text-xs font-serif font-black tracking-widest uppercase px-6 py-3 rounded-full inline-flex items-center gap-2 transition-colors"
                 >
                   <Sparkles className="w-3.5 h-3.5" />
                   {isArabic ? "اكتب الحكاية" : "Write it"}
@@ -339,7 +339,7 @@ export const StoryWizard: React.FC<StoryWizardProps> = ({ location, autoPlay }) 
 
                   {story.warnings.length > 0 && (
                     <div className="bg-red-50 border border-red-200 rounded-2xl p-4 space-y-1.5">
-                      <p className="text-[10px] font-mono uppercase tracking-widest text-red-700 flex items-center gap-1.5">
+                      <p className="text-xs font-mono uppercase tracking-widest text-red-700 flex items-center gap-1.5">
                         <AlertTriangle className="w-3 h-3" />
                         {isArabic ? "معلّمة للمراجعة" : "Flagged for review"}
                       </p>

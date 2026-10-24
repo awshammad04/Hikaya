@@ -1,27 +1,106 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Link, NavLink, Outlet, useLocation } from "react-router-dom";
-import { BookHeart, Heart, Home, Info, Languages, MapPin, PenLine, Route, Waypoints } from "lucide-react";
+import { BookHeart, ChevronDown, Home, Info, Languages, MapPin, Menu, Moon, PenLine, Stamp, Sun, Waypoints, X } from "lucide-react";
 import { useInterfaceLanguage } from "../context/LanguageContext";
 import { MyJerusalemStoryModal } from "./MyJerusalemStoryModal";
-import { governorates, nationalRecord } from "../data/heritage";
+import { governorates, governorateById, nationalRecord } from "../data/heritage";
 import { OPEN_JERUSALEM_STORY_EVENT } from "../services/progress";
 import { AccountChip, AccountToasts } from "./AccountWidgets";
 
-const NAV_ITEMS = [
-  { to: "/", en: "Home", ar: "الرئيسية", icon: Home, end: true },
-  { to: "/create-story", en: "My Palestine story", ar: "حكايتي في فلسطين", icon: Route, end: false },
-  { to: "/palestine-map", en: "Map", ar: "الخريطة", icon: MapPin, end: false },
-  { to: "/constellation", en: "Connections", ar: "الروابط", icon: Waypoints, end: false },
-  { to: "/contribute", en: "Contribute", ar: "شارك حكاية", icon: PenLine, end: false },
-  { to: "/about", en: "About", ar: "عن المنصة", icon: Info, end: false },
-];
+type Theme = "light" | "dark";
+const THEME_KEY = "hikaya.theme";
+
+function readStoredTheme(): Theme | null {
+  try {
+    const stored = window.localStorage.getItem(THEME_KEY);
+    return stored === "light" || stored === "dark" ? stored : null;
+  } catch {
+    return null;
+  }
+}
+
+function systemTheme(): Theme {
+  return window.matchMedia?.("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+}
+
+/** Light/dark preference; follows the system until the visitor picks one. */
+function useTheme(): [Theme, () => void] {
+  const [stored, setStored] = useState<Theme | null>(readStoredTheme);
+  const [system, setSystem] = useState<Theme>(systemTheme);
+
+  useEffect(() => {
+    const query = window.matchMedia?.("(prefers-color-scheme: dark)");
+    if (!query) return;
+    const update = () => setSystem(query.matches ? "dark" : "light");
+    query.addEventListener("change", update);
+    return () => query.removeEventListener("change", update);
+  }, []);
+
+  useEffect(() => {
+    if (stored) document.documentElement.dataset.theme = stored;
+    else delete document.documentElement.dataset.theme;
+  }, [stored]);
+
+  const theme = stored ?? system;
+  const toggle = () => {
+    const next: Theme = theme === "dark" ? "light" : "dark";
+    setStored(next);
+    try {
+      window.localStorage.setItem(THEME_KEY, next);
+    } catch {
+      // Private windows may block storage; the choice still applies this visit.
+    }
+  };
+  return [theme, toggle];
+}
+
+/** The governorate a page belongs to, when it belongs to one. */
+function currentGovernorate(pathname: string): string | null {
+  const match = pathname.match(/^\/governorates\/([^/]+)/);
+  if (match) return match[1];
+  if (["/jerusalem", "/map", "/plan-tour", "/constellation"].includes(pathname)) return "jerusalem";
+  if (pathname.startsWith("/locations/")) {
+    return nationalRecord(pathname.split("/")[2])?.governorateId ?? "jerusalem";
+  }
+  return null;
+}
 
 export const AppLayout: React.FC = () => {
   const { language, setLanguage, isArabic } = useInterfaceLanguage();
+  const [theme, toggleTheme] = useTheme();
   const [storyOpen, setStoryOpen] = useState(false);
-  const {pathname}=useLocation();
-  const isJerusalem = ['/jerusalem','/map','/plan-tour','/constellation'].includes(pathname) || pathname.startsWith('/governorates/jerusalem') || (pathname.startsWith('/locations/') && !nationalRecord(pathname.split('/')[2]));
-  const items = isJerusalem ? NAV_ITEMS.map((item) => item.to === '/create-story' ? {...item,to:'/plan-tour',en:'Plan tour',ar:'صمّم جولتك'} : item.to === '/palestine-map' ? {...item,to:'/map'} : item.to === '/' ? {...item,to:'/governorates/jerusalem'} : item) : NAV_ITEMS.map((item)=>item.to === "/constellation" ? {...item,to:"/palestine-connections"} : item);
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [placesOpen, setPlacesOpen] = useState(false);
+  const placesRef = useRef<HTMLDivElement>(null);
+  const { pathname } = useLocation();
+
+  const governorateId = currentGovernorate(pathname);
+  const isJerusalem = governorateId === "jerusalem";
+  const governorate = governorateId ? governorateById(governorateId) : undefined;
+
+  // Labels stay the same everywhere; inside Jerusalem the map and connections
+  // open the Jerusalem versions.
+  const navItems = [
+    { to: "/", en: "Home", ar: "الرئيسية", icon: Home, active: pathname === "/" },
+    {
+      to: isJerusalem ? "/map" : "/palestine-map",
+      en: "Map",
+      ar: "الخريطة",
+      icon: MapPin,
+      active: pathname === "/map" || pathname === "/palestine-map" || /^\/governorates\/[^/]+\/map$/.test(pathname),
+    },
+    {
+      to: isJerusalem ? "/constellation" : "/palestine-connections",
+      en: "Connections",
+      ar: "الروابط",
+      icon: Waypoints,
+      active: pathname === "/constellation" || pathname === "/palestine-connections" || /^\/governorates\/[^/]+\/connections$/.test(pathname),
+    },
+    { to: "/contribute", en: "Contribute", ar: "شارك حكاية", icon: PenLine, active: pathname === "/contribute" },
+    { to: "/about", en: "About", ar: "عن المنصة", icon: Info, active: pathname === "/about" },
+  ];
+  const storyPath = governorateId ? `/governorates/${governorateId}/create-story` : "/create-story";
+  const storyActive = pathname === "/create-story" || pathname === "/my-story" || pathname.endsWith("/create-story");
 
   useEffect(() => {
     const openStory = () => setStoryOpen(true);
@@ -29,46 +108,209 @@ export const AppLayout: React.FC = () => {
     return () => window.removeEventListener(OPEN_JERUSALEM_STORY_EVENT, openStory);
   }, []);
 
+  useEffect(() => {
+    setMenuOpen(false);
+    setPlacesOpen(false);
+  }, [pathname]);
+
+  useEffect(() => {
+    if (!placesOpen && !menuOpen) return;
+    const onKey = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setPlacesOpen(false);
+        setMenuOpen(false);
+      }
+    };
+    const onClick = (event: MouseEvent) => {
+      if (placesRef.current && !placesRef.current.contains(event.target as Node)) setPlacesOpen(false);
+    };
+    window.addEventListener("keydown", onKey);
+    window.addEventListener("mousedown", onClick);
+    return () => {
+      window.removeEventListener("keydown", onKey);
+      window.removeEventListener("mousedown", onClick);
+    };
+  }, [placesOpen, menuOpen]);
+
+  const navLinkClass = (active: boolean) =>
+    `relative inline-flex h-10 items-center gap-1.5 rounded-full px-3 text-sm font-bold transition-colors ${
+      active ? "bg-brand-olive/10 text-brand-olive" : "text-brand-muted hover:bg-brand-olive/5 hover:text-brand-olive"
+    }`;
+  const storyButton =
+    "h-10 items-center gap-2 rounded-full bg-brand-olive px-4 text-sm font-bold text-white transition-colors hover:bg-brand-olive-deep";
+  const mobileStoryButton =
+    "mt-4 flex w-full min-h-12 items-center justify-center gap-2 rounded-2xl bg-brand-olive text-base font-bold text-white sm:hidden";
+  const iconButton =
+    "inline-flex h-10 min-w-10 items-center justify-center gap-1.5 rounded-full border border-brand-border bg-brand-surface px-3 text-xs font-bold text-brand-olive transition-colors hover:border-brand-olive";
+
   return (
     <div className="min-h-screen bg-brand-bg text-brand-text font-sans flex flex-col" dir={isArabic ? "rtl" : "ltr"}>
-      <div className="h-2 w-full bg-gradient-to-r from-brand-olive via-brand-amber to-brand-olive" />
-      <header className="max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 pt-3 sm:pt-5 pb-0">
-        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-3 sm:gap-4">
-          <Link to="/" className="group flex max-w-[480px] items-center gap-3 sm:gap-4" aria-label="Hikaya | حكاية">
-            <picture className="shrink-0 mix-blend-multiply">
+      <a
+        href="#main"
+        className="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:start-3 focus:z-[60] focus:rounded-full focus:bg-brand-olive focus:px-4 focus:py-2 focus:text-sm focus:font-bold focus:text-white"
+      >
+        {isArabic ? "تخطَّ إلى المحتوى" : "Skip to content"}
+      </a>
+      <header className="sticky top-0 z-40 border-b border-brand-border-light bg-brand-bg/90 backdrop-blur-md">
+        <div className="h-1 w-full bg-gradient-to-r from-brand-olive via-brand-amber to-brand-olive" />
+        <div className="max-w-7xl mx-auto flex h-16 items-center justify-between gap-3 px-4 sm:px-6 lg:px-8">
+          <Link to="/" className="flex min-w-0 items-center gap-3" aria-label={isArabic ? "حكاية — الرئيسية" : "Hikaya — home"}>
+            <picture className="shrink-0 mix-blend-multiply dark:mix-blend-normal dark:rounded-xl dark:bg-[#f5f5f0] dark:p-0.5">
               <source media="(max-width: 520px)" srcSet="/logo-icon.png" />
-              <img src="/logo-horizontal.png" alt="Hikaya | حكاية" className="h-[52px] w-auto max-w-[150px] object-contain sm:h-[78px] sm:max-w-[185px]" />
+              <img src="/logo-horizontal.png" alt="" className="h-11 w-auto max-w-[130px] rounded-lg object-contain" />
             </picture>
-            <span className="hidden sm:block h-9 w-px shrink-0 bg-brand-border-light" aria-hidden="true" />
-            <p className="hidden sm:block max-w-[16rem] text-xs leading-relaxed text-brand-muted">{isJerusalem ? (isArabic?"المرشد السياحي الرقمي الذكي للقدس":"The intelligent digital guide to Jerusalem") : (isArabic ? "المرشد الرقمي للتراث الفلسطيني" : "The digital guide to Palestinian heritage")}</p>
+            <span className="hidden xl:block h-8 w-px shrink-0 bg-brand-border-light" aria-hidden="true" />
+            <span className="hidden xl:block max-w-[12rem] text-xs leading-snug text-brand-muted">
+              {isJerusalem
+                ? isArabic ? "المرشد الرقمي الذكي للقدس" : "The intelligent guide to Jerusalem"
+                : isArabic ? "المرشد الرقمي للتراث الفلسطيني" : "The digital guide to Palestinian heritage"}
+            </span>
           </Link>
-          <div className="flex flex-wrap items-center gap-2 self-start">
-            {isJerusalem ? <button type="button" onClick={()=>setStoryOpen(true)} className="bg-brand-olive text-brand-bg text-[10px] font-bold px-3 py-2 rounded-full inline-flex items-center gap-1.5"><BookHeart className="w-3.5 h-3.5 text-brand-amber"/>{isArabic?"إنشاء حكايتي في القدس":"Generate My Jerusalem Story"}</button> : <Link to="/create-story" className="bg-brand-olive text-brand-bg text-[10px] font-bold px-3 py-2 rounded-full inline-flex items-center gap-1.5">
-              <BookHeart className="w-3.5 h-3.5 text-brand-amber" /> {isArabic ? "إنشاء حكايتي في فلسطين" : "Create My Story in Palestine"}
-            </Link>}
-            <button type="button" onClick={() => setLanguage(language === "ar" ? "en" : "ar")} aria-label={isArabic ? "التبديل إلى الإنجليزية" : "Switch to Arabic"} className="bg-white border border-brand-border text-brand-olive text-[10px] font-bold px-3 py-2 rounded-full inline-flex items-center gap-1.5">
-              <Languages className="w-3.5 h-3.5" /> {language === "ar" ? "EN" : "العربية"}
+
+          <nav aria-label={isArabic ? "التنقل الرئيسي" : "Main"} className="hidden lg:flex items-center gap-1">
+            {navItems.slice(0, 1).map(({ to, en, ar, icon: Icon, active }) => (
+              <Link key={to} to={to} className={navLinkClass(active)} aria-current={active ? "page" : undefined}>
+                <Icon className="hidden xl:block w-4 h-4" /> {isArabic ? ar : en}
+              </Link>
+            ))}
+            <div className="relative" ref={placesRef}>
+              <button
+                type="button"
+                onClick={() => setPlacesOpen((open) => !open)}
+                aria-expanded={placesOpen}
+                aria-haspopup="true"
+                className={navLinkClass(Boolean(governorate))}
+              >
+                {governorate ? (isArabic ? governorate.arabicName : governorate.name) : isArabic ? "المحافظات" : "Governorates"}
+                <ChevronDown className={`w-4 h-4 transition-transform ${placesOpen ? "rotate-180" : ""}`} />
+              </button>
+              {placesOpen && (
+                <div className="absolute top-12 start-0 w-56 rounded-2xl border border-brand-border bg-brand-surface p-2 shadow-xl">
+                  {governorates.map((item) => (
+                    <NavLink
+                      key={item.id}
+                      to={`/governorates/${item.id}`}
+                      className={() =>
+                        `flex items-center justify-between rounded-xl px-3 py-2.5 text-sm font-bold transition-colors ${
+                          governorateId === item.id ? "bg-brand-olive/10 text-brand-olive" : "text-brand-text hover:bg-brand-bg"
+                        }`
+                      }
+                    >
+                      {isArabic ? item.arabicName : item.name}
+                      <MapPin className="w-3.5 h-3.5 text-brand-amber" />
+                    </NavLink>
+                  ))}
+                </div>
+              )}
+            </div>
+            {navItems.slice(1).map(({ to, en, ar, icon: Icon, active }) => (
+              <Link key={to} to={to} className={navLinkClass(active)} aria-current={active ? "page" : undefined}>
+                <Icon className="hidden xl:block w-4 h-4" /> {isArabic ? ar : en}
+              </Link>
+            ))}
+          </nav>
+
+          <div className="flex shrink-0 items-center gap-2">
+            <button
+              type="button"
+              onClick={() => setLanguage(language === "ar" ? "en" : "ar")}
+              aria-label={isArabic ? "التبديل إلى الإنجليزية" : "Switch to Arabic"}
+              className={iconButton}
+            >
+              <Languages className="w-4 h-4" /> {language === "ar" ? "EN" : "ع"}
+            </button>
+            <button
+              type="button"
+              onClick={toggleTheme}
+              aria-label={theme === "dark" ? (isArabic ? "الوضع الفاتح" : "Light mode") : isArabic ? "الوضع الداكن" : "Dark mode"}
+              className={`${iconButton} px-0`}
+            >
+              {theme === "dark" ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
             </button>
             <AccountChip />
+            {isJerusalem ? (
+              <button type="button" onClick={() => setStoryOpen(true)} className={`hidden sm:inline-flex ${storyButton}`}>
+                <BookHeart className="w-4 h-4 text-brand-amber-light" />
+                {isArabic ? "أنشئ حكايتك" : "Create your story"}
+              </button>
+            ) : (
+              <Link to={storyPath} className={`hidden sm:inline-flex ${storyButton} ${storyActive ? "ring-2 ring-brand-amber ring-offset-2 ring-offset-brand-bg" : ""}`}>
+                <BookHeart className="w-4 h-4 text-brand-amber-light" />
+                {isArabic ? "أنشئ حكايتك" : "Create your story"}
+              </Link>
+            )}
+            <button
+              type="button"
+              onClick={() => setMenuOpen((open) => !open)}
+              aria-expanded={menuOpen}
+              aria-controls="mobile-menu"
+              aria-label={menuOpen ? (isArabic ? "إغلاق القائمة" : "Close menu") : isArabic ? "فتح القائمة" : "Open menu"}
+              className={`${iconButton} px-0 lg:hidden`}
+            >
+              {menuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+            </button>
           </div>
         </div>
-        {/* One scrollable row on phones instead of two wrapped rows. */}
-        <nav className="flex flex-nowrap sm:flex-wrap items-center gap-1 mt-3 sm:mt-5 border-b border-brand-border-light overflow-x-auto [scrollbar-width:none]">
-          {items.map(({ to, en, ar, icon: Icon, end }) => (
-            <NavLink key={to} to={to} end={end} className={({ isActive }) => `shrink-0 whitespace-nowrap pb-3 pt-1 text-[11px] font-serif font-bold border-b-2 px-3 transition-colors flex items-center gap-1.5 ${isActive ? "border-brand-olive text-brand-olive" : "border-transparent text-brand-muted hover:text-brand-olive"}`}>
-              <Icon className="w-3.5 h-3.5" /> {isArabic ? ar : en}
-            </NavLink>
-          ))}
-        </nav>
-        <nav aria-label={isArabic?'المحافظات':'Governorates'} className="flex flex-wrap gap-3 pt-3 text-xs text-brand-muted">
-          {isJerusalem && <Link to="/" className="text-brand-olive font-bold">{isArabic?'فلسطين':'Palestine'}</Link>}
-          {governorates.map((item)=><NavLink key={item.id} to={`/governorates/${item.id}`} className={({isActive})=>isActive?'text-brand-olive font-bold':'hover:text-brand-amber'}>{isArabic?item.arabicName:item.name}</NavLink>)}
-        </nav>
+
+        {menuOpen && (
+          <div id="mobile-menu" className="lg:hidden max-h-[calc(100dvh-4.25rem)] overflow-y-auto border-t border-brand-border-light bg-brand-bg px-4 pb-5 pt-3 sm:px-6">
+            <nav aria-label={isArabic ? "التنقل الرئيسي" : "Main"} className="grid gap-1">
+              {navItems.map(({ to, en, ar, icon: Icon, active }) => (
+                <Link
+                  key={to}
+                  to={to}
+                  aria-current={active ? "page" : undefined}
+                  className={`flex min-h-12 items-center gap-3 rounded-2xl px-4 text-base font-bold ${active ? "bg-brand-olive/10 text-brand-olive" : "text-brand-text"}`}
+                >
+                  <Icon className="w-5 h-5 text-brand-amber" /> {isArabic ? ar : en}
+                </Link>
+              ))}
+            </nav>
+            <Link
+              to="/me"
+              className="mt-1 flex min-h-12 items-center gap-3 rounded-2xl px-4 text-base font-bold text-brand-text"
+            >
+              <Stamp className="w-5 h-5 text-brand-amber" /> {isArabic ? "جواز سفري" : "My passport"}
+            </Link>
+            <p className="mt-4 mb-2 px-4 text-xs font-bold text-brand-muted">{isArabic ? "المحافظات" : "Governorates"}</p>
+            <div className="grid grid-cols-2 gap-2">
+              {governorates.map((item) => (
+                <Link
+                  key={item.id}
+                  to={`/governorates/${item.id}`}
+                  className={`flex min-h-12 items-center justify-center rounded-2xl border text-sm font-bold ${
+                    governorateId === item.id ? "border-brand-olive bg-brand-olive text-white" : "border-brand-border bg-brand-surface text-brand-olive"
+                  }`}
+                >
+                  {isArabic ? item.arabicName : item.name}
+                </Link>
+              ))}
+            </div>
+            {isJerusalem ? (
+              <button type="button" onClick={() => { setMenuOpen(false); setStoryOpen(true); }} className={mobileStoryButton}>
+                <BookHeart className="w-5 h-5 text-brand-amber-light" />
+                {isArabic ? "أنشئ حكايتك" : "Create your story"}
+              </button>
+            ) : (
+              <Link to={storyPath} className={mobileStoryButton}>
+                <BookHeart className="w-5 h-5 text-brand-amber-light" />
+                {isArabic ? "أنشئ حكايتك" : "Create your story"}
+              </Link>
+            )}
+          </div>
+        )}
       </header>
-      <main className="max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-1"><Outlet /></main>
-      <footer className="mt-8 py-8 text-center text-[10px] text-brand-muted font-mono tracking-widest space-y-1 border-t border-brand-border-light">
-        <p>© 2026 Hikaya · حكاية</p>
-        <div className="flex justify-center items-center gap-1.5 text-brand-amber"><Heart className="w-3 h-3 fill-current" /> {isArabic ? "Hikaya" : "Hikaya"}</div>
+      <main id="main" className="max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-1"><Outlet /></main>
+      <footer className="mt-8 border-t border-brand-border-light py-8">
+        <div className="max-w-7xl mx-auto flex flex-col items-center justify-between gap-4 px-4 text-sm text-brand-muted sm:flex-row sm:px-6 lg:px-8">
+          <p>
+            © 2026 {isArabic ? "حكاية" : "Hikaya"} · {isArabic ? "المرشد الرقمي للتراث الفلسطيني" : "The digital guide to Palestinian heritage"}
+          </p>
+          <nav aria-label={isArabic ? "روابط التذييل" : "Footer"} className="flex gap-5 font-bold">
+            <Link to="/contribute" className="hover:text-brand-olive">{isArabic ? "شارك حكاية" : "Contribute"}</Link>
+            <Link to="/about" className="hover:text-brand-olive">{isArabic ? "عن المنصة" : "About"}</Link>
+          </nav>
+        </div>
       </footer>
       <MyJerusalemStoryModal open={storyOpen} onClose={() => setStoryOpen(false)} />
       <AccountToasts />

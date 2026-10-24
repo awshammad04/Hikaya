@@ -148,10 +148,10 @@ export const PersonalizedTourModal: React.FC = () => {
 
   return (
     <div className="max-w-4xl mx-auto" dir={isArabic ? "rtl" : "ltr"}>
-      <section className="bg-white rounded-3xl border border-brand-border shadow-2xl overflow-hidden">
+      <section className="bg-brand-surface rounded-3xl border border-brand-border shadow-2xl overflow-hidden">
         <div className="bg-brand-olive text-white p-7 sm:p-10 relative overflow-hidden">
           <div className="absolute inset-0 tatreez-grid opacity-10" />
-          <div className="relative"><p className="text-brand-amber text-xs font-bold tracking-widest">Hikaya · {isArabic ? "مخطط المسار الذكي" : "SMART ROUTE PLANNER"}</p><h1 className="font-serif font-black text-3xl sm:text-4xl mt-2">{isArabic ? "صمّم جولتك الذكية في القدس" : "Design your smart Jerusalem tour"}</h1><p className="text-stone-200 text-sm mt-2">{isArabic ? "ثلاث خطوات لمسار شخصي، قابل للاستخدام دون اتصال، ومبني على محتوى موثّق." : "Three steps to a personalized, offline-ready route grounded in reviewed content."}</p></div>
+          <div className="relative"><p className="text-brand-amber-light text-xs font-bold tracking-widest">{isArabic ? "مخطط المسار الذكي" : "SMART ROUTE PLANNER"}</p><h1 className="font-serif font-black text-3xl sm:text-4xl mt-2">{isArabic ? "صمّم جولتك الذكية في القدس" : "Design your smart Jerusalem tour"}</h1><p className="text-stone-200 text-sm mt-2">{isArabic ? "ثلاث خطوات لمسار شخصي، قابل للاستخدام دون اتصال، ومبني على محتوى موثّق." : "Three steps to a personalized, offline-ready route grounded in reviewed content."}</p></div>
         </div>
         <div className="p-6 sm:p-10 space-y-8">
           <div className="flex gap-2" aria-label={isArabic ? "التقدم" : "Progress"}>{[0,1,2].map((item) => <span key={item} className={`h-2 flex-1 rounded-full ${item <= step ? "bg-brand-amber" : "bg-brand-border-light"}`} />)}</div>
@@ -170,4 +170,4 @@ export const PersonalizedTourModal: React.FC = () => {
 };
 
 const ChoiceGrid: React.FC<React.PropsWithChildren<{ icon: React.ElementType; title: string }>> = ({ icon: Icon, title, children }) => <div className="space-y-4"><h2 className="font-serif font-black text-xl text-brand-olive inline-flex items-center gap-2"><Icon className="w-5 h-5 text-brand-amber" />{title}</h2><div className="grid grid-cols-1 sm:grid-cols-2 gap-3">{children}</div></div>;
-const Choice: React.FC<React.PropsWithChildren<{ selected: boolean; onClick: () => void }>> = ({ selected, onClick, children }) => <button type="button" onClick={onClick} className={`p-4 rounded-2xl border text-start text-sm font-bold transition-colors inline-flex justify-between items-center ${selected ? "bg-brand-olive text-white border-brand-olive" : "bg-white border-brand-border hover:border-brand-amber"}`}>{children}{selected && <Check className="w-4 h-4 text-brand-amber" />}</button>;
+const Choice: React.FC<React.PropsWithChildren<{ selected: boolean; onClick: () => void }>> = ({ selected, onClick, children }) => <button type="button" onClick={onClick} className={`p-4 rounded-2xl border text-start text-sm font-bold transition-colors inline-flex justify-between items-center ${selected ? "bg-brand-olive text-white border-brand-olive" : "bg-brand-surface border-brand-border hover:border-brand-amber"}`}>{children}{selected && <Check className="w-4 h-4 text-brand-amber-light" />}</button>;
