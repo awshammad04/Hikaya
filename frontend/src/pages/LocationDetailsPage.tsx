@@ -15,7 +15,10 @@ import {
   ExternalLink,
   Navigation2,
   Quote,
+  GraduationCap,
+  HeartHandshake,
 } from "lucide-react";
+import { ShareButton } from "../components/ShareButton";
 import { motion, useReducedMotion } from "motion/react";
 import {
   ApiContribution,
@@ -199,7 +202,7 @@ export const LocationDetailsPage: React.FC = () => {
 
   const { location } = data;
 
-  if (import.meta.env.PROD && reason && !location) return (
+  if (import.meta.env?.PROD && reason && !location) return (
     <PageTransition><DataSourceBanner source="backend" reason={reason} /></PageTransition>
   );
 
@@ -343,6 +346,14 @@ export const LocationDetailsPage: React.FC = () => {
                       {isArabic ? "إرشادات المشي" : "Walking guide"}
                     </button>
                   )}
+                  <ShareButton title={displayName} text={description ?? undefined} path={`/locations/${location.id}`} />
+                  <Link
+                    to={`/locations/${location.id}/lesson`}
+                    className="inline-flex items-center justify-center gap-2 rounded-full border border-brand-border px-4 py-2.5 font-bold text-brand-olive transition-colors hover:border-brand-amber"
+                  >
+                    <GraduationCap className="h-3.5 w-3.5" />
+                    {isArabic ? "حزمة درس للمعلّم" : "Teacher's lesson pack"}
+                  </Link>
                   {data.stories.length > 0 && (
                     <p className="flex items-center gap-2 text-brand-muted">
                       <Clock className="h-3.5 w-3.5 shrink-0" />
@@ -485,6 +496,13 @@ export const LocationDetailsPage: React.FC = () => {
                   <PenLine className="w-3.5 h-3.5" />
                   {isArabic ? "أضف ذكراك" : "Add yours"}
                 </Link>
+                <Link
+                  to={`/contribute?location=${location.id}&interview=1`}
+                  className="text-xs font-serif font-bold uppercase tracking-widest text-brand-olive hover:text-brand-amber inline-flex items-center gap-1.5"
+                >
+                  <HeartHandshake className="w-3.5 h-3.5" />
+                  {isArabic ? "قابِل أحد كبار العائلة" : "Interview an elder"}
+                </Link>
               </div>
 
               {data.contributions.length === 0 ? (
@@ -502,7 +520,7 @@ export const LocationDetailsPage: React.FC = () => {
                       viewport={{ once: true, margin: "-45px" }}
                       transition={{ duration: reduced ? 0.15 : 0.4, delay: reduced ? 0 : index * 0.06, ease: "easeOut" }}
                       whileHover={reduced ? undefined : { y: -4, scale: 1.01 }}
-                      className="group relative space-y-2 overflow-hidden rounded-3xl border border-s-[3px] border-brand-border bg-white/80 p-5 shadow-sm transition-colors duration-300 hover:border-brand-amber/50 hover:border-s-brand-amber hover:bg-brand-surface hover:shadow-md focus:outline-none focus-visible:border-brand-amber focus-visible:shadow-md focus-visible:ring-2 focus-visible:ring-brand-amber/30"
+                      className="group relative space-y-2 overflow-hidden rounded-3xl border border-s-[3px] border-brand-border bg-white/80 dark:bg-brand-surface p-5 shadow-sm transition-colors duration-300 hover:border-brand-amber/50 hover:border-s-brand-amber hover:bg-brand-surface hover:shadow-md focus:outline-none focus-visible:border-brand-amber focus-visible:shadow-md focus-visible:ring-2 focus-visible:ring-brand-amber/30"
                     >
                       <div className="flex items-start gap-2">
                         <Quote className="mt-0.5 h-4 w-4 shrink-0 text-brand-amber transition-transform duration-300 group-hover:-rotate-6 group-hover:scale-110" aria-hidden="true" />

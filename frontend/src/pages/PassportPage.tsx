@@ -11,6 +11,9 @@ import { useUserMemories } from "../hooks/useUserMemories";
 import { useSavedStories } from "../hooks/useSavedStories";
 import { governorates, governorateName, locationById, nationalRecord, scopedProfiles } from "../data/heritage";
 import { JOURNEY_KEY } from "../services/journeys";
+import { plainNarrative } from "../utils/plainText";
+import { rememberedContributions } from "../services/myContributions";
+import { getContributionStatus } from "../services/api";
 import {
   accountApi,
   AccountContribution,
@@ -68,11 +71,39 @@ export const PassportPage: React.FC = () => {
   const signedIn = status === "signed-in";
 
   useEffect(() => {
-    if (!signedIn) {
-      setContributions(null);
+    if (signedIn) {
+      accountApi.contributions().then(setContributions).catch(() => setContributions([]));
       return;
     }
-    accountApi.contributions().then(setContributions).catch(() => setContributions([]));
+    // A guest's memories are known by the codes this device remembered; each
+    // code's current review status is looked up, falling back to "in review".
+    const remembered = rememberedContributions();
+    if (!remembered.length) {
+      setContributions([]);
+      return;
+    }
+    let cancelled = false;
+    setContributions(null);
+    void Promise.all(
+      remembered.map((item) =>
+        getContributionStatus(item.referenceCode)
+          .then((status) => ({ status: status.status, reviewNotes: status.reviewNotes }))
+          .catch(() => ({ status: "pending_review" as const, reviewNotes: null }))
+          .then((current): AccountContribution => ({
+            id: item.referenceCode,
+            referenceCode: item.referenceCode,
+            locationId: item.locationId,
+            title: item.title,
+            submittedAt: item.submittedAt,
+            ...current,
+          })),
+      ),
+    ).then((items) => {
+      if (!cancelled) setContributions(items);
+    });
+    return () => {
+      cancelled = true;
+    };
   }, [signedIn]);
 
   const places = useMemo(() => scopedProfiles("all").map((place) => ({
@@ -300,7 +331,7 @@ export const PassportPage: React.FC = () => {
                     </div>
                     {openStory === story.id && narrative && (
                       <div className="text-sm text-brand-text leading-loose whitespace-pre-line border-t border-brand-border-light pt-3">
-                        {narrative}
+                        {plainNarrative(narrative)}
                         {story.locationId && <Link to={`/locations/${story.locationId}`} className="block mt-3 text-xs font-bold text-brand-amber">{isArabic ? "زر المكان ←" : "Visit the place →"}</Link>}
                       </div>
                     )}
@@ -314,9 +345,9 @@ export const PassportPage: React.FC = () => {
         {/* --- Contributions ---------------------------------------------------- */}
         <section className="space-y-4">
           <h2 className="font-serif font-black text-2xl text-brand-olive">{isArabic ? "ذكرياتي المشاركة" : "Memories I shared"}</h2>
-          {!signedIn ? (
+          {!signedIn && contributions?.length === 0 ? (
             <p className="text-sm text-brand-muted">
-              {isArabic ? "كضيف، تابع ما شاركته عبر الرمز المرجعي في " : "As a guest, follow what you shared with its reference code on "}
+              {isArabic ? "ما تشاركه من هذا الجهاز يظهر هنا مع حالة مراجعته. ولذكرى أُرسلت من جهاز آخر، استخدم الرمز المرجعي في " : "Memories you share from this device appear here with their review status. For one sent from another device, use its reference code on "}
               <Link to="/contribute" className="font-bold text-brand-amber">{isArabic ? "صفحة المشاركة" : "the contribute page"}</Link>.
             </p>
           ) : contributions === null ? (

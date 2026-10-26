@@ -163,7 +163,7 @@ export const Gallery: React.FC<GalleryProps> = ({ images, loading }) => {
             viewport={{ once: true, margin: "-45px" }}
             transition={{ duration: reduced ? 0.15 : 0.4, delay: reduced ? 0 : (index % 3) * 0.065, ease: "easeOut" }}
             whileHover={reduced ? undefined : { y: -4, scale: 1.01 }}
-            className="space-y-1.5 rounded-2xl border border-brand-border-light bg-white/80 p-2 shadow-sm transition-colors duration-300 hover:border-brand-amber/50 hover:bg-brand-surface hover:shadow-md"
+            className="space-y-1.5 rounded-2xl border border-brand-border-light bg-white/80 dark:bg-brand-surface p-2 shadow-sm transition-colors duration-300 hover:border-brand-amber/50 hover:bg-brand-surface hover:shadow-md"
           >
             <button
               type="button"
@@ -180,7 +180,7 @@ export const Gallery: React.FC<GalleryProps> = ({ images, loading }) => {
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                 /> : <span className="absolute inset-0 grid place-items-center p-4 text-center text-xs text-stone-200"><CameraOff className="w-6 h-6 mx-auto mb-1" />{isArabic ? "تعذر تحميل الصورة؛ يبقى الوصف والمصدر متاحين." : "Image unavailable; its description and source remain available."}</span>}
               {image.era && (
-                <span className="absolute top-2 left-2 bg-white/90 text-brand-olive text-xs font-mono uppercase tracking-wider px-2 py-0.5 rounded-full">
+                <span className="absolute top-2 left-2 bg-white/90 dark:bg-brand-surface/90 text-brand-olive text-xs font-mono uppercase tracking-wider px-2 py-0.5 rounded-full">
                   {image.era === "historical"
                     ? (isArabic ? "تاريخية" : "Historical")
                     : (isArabic ? "حديثة" : "Modern")}

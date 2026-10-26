@@ -90,7 +90,7 @@ export const LocationCard: React.FC<LocationCardProps> = ({ location, visited })
       <div className="absolute inset-0 bg-gradient-to-t from-brand-olive/90 via-brand-olive/10 to-transparent" />
 
       {visited && (
-        <span className="absolute top-3 end-3 bg-white/90 text-brand-olive text-xs font-mono uppercase tracking-wider px-2 py-1 rounded-full inline-flex items-center gap-1">
+        <span className="absolute top-3 end-3 bg-white/90 dark:bg-brand-surface/90 text-brand-olive text-xs font-mono uppercase tracking-wider px-2 py-1 rounded-full inline-flex items-center gap-1">
           <Check className="w-3 h-3" />
           {isArabic ? "استكشفتَه" : "Explored"}
         </span>

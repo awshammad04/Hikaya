@@ -310,7 +310,7 @@ export const MyJerusalemStoryModal: React.FC<{ open: boolean; onClose: () => voi
                 <p className="mt-1 text-xs text-brand-muted">{isArabic ? "صور وكلمات من تفاصيل الجولة." : "Photos and words from moments along the way."}</p>
               </div>
               <div className="flex shrink-0 items-center gap-2">
-                <span className="rounded-full border border-brand-border bg-white/75 px-2.5 py-1 text-xs font-bold text-brand-olive">{displayedMemories.length} {isArabic ? "ذكريات" : "memories"}</span>
+                <span className="rounded-full border border-brand-border bg-white/75 dark:bg-brand-surface px-2.5 py-1 text-xs font-bold text-brand-olive">{displayedMemories.length} {isArabic ? "ذكريات" : "memories"}</span>
                 {!addingMemory && <button type="button" onClick={() => setAddingMemory(true)} className="rounded-full bg-brand-olive p-2 text-white shadow-sm transition hover:bg-brand-olive/90" aria-label={isArabic ? "أضف ذكرى" : "Add memory"}><ImagePlus className="h-4 w-4" /></button>}
               </div>
             </div>
@@ -330,7 +330,7 @@ export const MyJerusalemStoryModal: React.FC<{ open: boolean; onClose: () => voi
             </div>
 
             {!addingMemory && (
-              <div className="flex flex-col items-center justify-between gap-3 rounded-2xl border border-dashed border-brand-amber/35 bg-white/65 px-4 py-3 text-center sm:flex-row sm:text-start">
+              <div className="flex flex-col items-center justify-between gap-3 rounded-2xl border border-dashed border-brand-amber/35 bg-white/65 dark:bg-brand-surface px-4 py-3 text-center sm:flex-row sm:text-start">
                 <div className="flex items-center gap-3">
                   <span className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-brand-amber/10 text-brand-amber"><Camera className="h-4 w-4" /></span>
                   <p className="max-w-sm text-xs leading-relaxed text-brand-text">{isArabic ? "أضف لقطة وكلماتك لتكبر الحكاية مع كل محطة." : "Add a photo and your own words as the story grows at every stop."}</p>

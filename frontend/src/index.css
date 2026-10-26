@@ -315,3 +315,36 @@ textarea {
 .animate-ripple {
   animation: pulse-ripple 2s infinite ease-out;
 }
+
+/*
+ * Printing (lesson packs, interview sheets): paper colours whatever the theme,
+ * no site chrome, and sections that do not split across pages.
+ */
+@media print {
+  /* Repeated :root outranks the dark-theme selectors above. */
+  :root:root:root {
+    color-scheme: light;
+    --color-brand-bg: #ffffff;
+    --color-brand-surface: #ffffff;
+    --color-brand-text: #1f1f1c;
+    --color-brand-border: #c9c9c0;
+    --color-brand-border-light: #e2e2da;
+    --color-brand-muted: #55554d;
+    --color-brand-olive: #4a4a33;
+    --brand-olive-text: #4a4a33;
+    --brand-olive-border: #4a4a33;
+  }
+  body {
+    background: #ffffff !important;
+  }
+  #main {
+    padding: 0 !important;
+    max-width: none !important;
+  }
+  .print-break-before {
+    break-before: page;
+  }
+  .print-avoid-break {
+    break-inside: avoid;
+  }
+}

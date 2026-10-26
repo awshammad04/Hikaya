@@ -29,8 +29,8 @@ describe('AppController', () => {
     expect(info.endpoints).toContain('GET  /api/v1/locations');
   });
 
-  it('reports the in-memory seed when no database is connected', () => {
-    const health = controller.getHealth();
+  it('reports the in-memory seed when no database is connected', async () => {
+    const health = await controller.getHealth();
     expect(health.status).toBe('ok');
     expect(health.dataSource).toBe('in-memory-seed');
   });

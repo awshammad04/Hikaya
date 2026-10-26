@@ -9,7 +9,8 @@
     "build": "vite build && esbuild server.ts --bundle --platform=node --format=cjs --packages=external --sourcemap --outfile=runtime/server.cjs",
     "start": "node runtime/server.cjs",
     "clean": "rm -rf dist server.js",
-    "lint": "tsc --noEmit"
+    "lint": "tsc --noEmit",
+    "test": "tsx tests/plain-text.test.ts && tsx tests/journeys.test.ts && tsx tests/render-pages.test.tsx"
   },
   "dependencies": {
     "@google/genai": "^2.4.0",

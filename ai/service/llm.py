@@ -32,7 +32,9 @@ from typing import Dict, List, Optional
 DEFAULT_MODELS = {"gemini": "gemini-3.5-flash", "anthropic": "claude-sonnet-5-5"}
 # Tried when the main Gemini model is overloaded or out of quota for the day.
 DEFAULT_GEMINI_FALLBACK = "gemini-3.5-flash-lite"
-DEFAULT_MAX_TOKENS = 2800
+# Arabic costs several tokens per word, so a long Arabic narrative needs far more
+# room than its word count suggests; a tight ceiling cut stories mid-sentence.
+DEFAULT_MAX_TOKENS = 8000
 
 _GEMINI_HOSTS = {
     "developer": "https://generativelanguage.googleapis.com/v1beta/models/%s:generateContent",
@@ -102,6 +104,7 @@ def _anthropic_ready():
 def complete(system_prompt, user_prompt, max_tokens=None, temperature=0.4):
     # type: (str, str, Optional[int], float) -> str
     """Send one prompt to the configured model and return the text of the reply."""
+    _last.truncated = False
     provider = provider_name()
     if provider == "gemini":
         return _complete_gemini(system_prompt, user_prompt, max_tokens, temperature)
@@ -221,12 +224,19 @@ def _error_message(exc):
     return "%s [%s]" % (message, ", ".join(quotas)) if quotas else message
 
 
+def was_truncated():
+    # type: () -> bool
+    """Whether the latest reply on this thread stopped at the output-token ceiling."""
+    return bool(getattr(_last, "truncated", False))
+
+
 def _gemini_text(data):
     # type: (dict) -> str
     candidates = data.get("candidates") or []
     if not candidates:
         reason = (data.get("promptFeedback") or {}).get("blockReason", "no candidates")
         raise LLMUnavailable("Model returned no answer (%s)." % reason)
+    _last.truncated = candidates[0].get("finishReason") == "MAX_TOKENS"
     parts = (candidates[0].get("content") or {}).get("parts") or []
     text = "".join(part.get("text", "") for part in parts if not part.get("thought"))
     if not text.strip():
@@ -262,6 +272,7 @@ def _complete_anthropic(system_prompt, user_prompt, max_tokens, temperature):
     except Exception as exc:  # network, auth, rate limit - all handled the same way
         raise LLMUnavailable("Model call failed: %s" % exc)
 
+    _last.truncated = getattr(message, "stop_reason", None) == "max_tokens"
     text = "".join(
         block.text for block in message.content if getattr(block, "type", "") == "text"
     )
@@ -281,7 +292,11 @@ def parse_labelled_blocks(text, labels):
     A block runs until the next known label, so multi-line narratives survive.
     Labels the model omitted come back as empty strings.
     """
-    pattern = r"^\**(%s)\**\s*:\s*\**" % "|".join(re.escape(label) for label in labels)
+    # "**LABEL:**" closes its bold after the colon; "LABEL:" and "**LABEL**:" do
+    # not, and there a following "**" opens the value's first bold heading and
+    # has to stay with the value.
+    names = "|".join(re.escape(label) for label in labels)
+    pattern = r"^(?:\*\*(%s)\s*:\s*\*\*|\**(%s)\**\s*:)[ \t]*" % (names, names)
     label_re = re.compile(pattern, re.MULTILINE)
 
     matches = list(label_re.finditer(text))
@@ -289,7 +304,7 @@ def parse_labelled_blocks(text, labels):
     for index, match in enumerate(matches):
         start = match.end()
         end = matches[index + 1].start() if index + 1 < len(matches) else len(text)
-        result[match.group(1)] = text[start:end].strip()
+        result[match.group(1) or match.group(2)] = text[start:end].strip()
     return result
 
 

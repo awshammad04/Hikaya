@@ -1,9 +1,11 @@
 import express from "express";
 import path from "path";
+import fs from "fs";
 import net from "net";
 import dotenv from "dotenv";
 import { backendUrl, installProductionControls, isProduction } from "./production";
 import { registerNarration } from "./narration";
+import { createSeo } from "./seo";
 
 dotenv.config();
 
@@ -20,6 +22,14 @@ app.get("/health", (_req, res) => res.json({ status: "ok" }));
 // Body parser
 app.use(express.json({ limit: isProduction ? "8mb" : "50mb" }));
 app.use(express.urlencoded({ limit: isProduction ? "8mb" : "50mb", extended: true }));
+// A malformed or oversized body is the client's mistake: answer in JSON like the
+// rest of the API instead of with an HTML error page (and, in development, a
+// stack trace).
+app.use((error: { type?: string }, _req: express.Request, res: express.Response, next: express.NextFunction) => {
+  if (error?.type === "entity.parse.failed") return res.status(400).json({ message: "The request body is not valid JSON." });
+  if (error?.type === "entity.too.large") return res.status(413).json({ message: "The request body is too large." });
+  next(error);
+});
 
 /**
  * Same-origin API bridge.
@@ -79,6 +89,10 @@ app.use("/api/v1", async (req, res) => {
 // Natural narration (Gemini text-to-speech): see narration.ts.
 registerNarration(app);
 
+// robots.txt, sitemap.xml and per-page link previews: see seo.ts.
+const seo = createSeo(HIKAYA_API_UPSTREAM);
+seo.register(app);
+
 // Serve Vite build in production, or mount Vite middleware in development
 const isProd = isProduction;
 app.use("/api", (_req, res) => res.status(404).json({ error: "API route not found." }));
@@ -96,9 +110,28 @@ if (!isProd) {
     if (/\.(?:cjs|map)$/i.test(req.path)) return res.status(404).end();
     next();
   });
-  app.use(express.static(distPath, { dotfiles: "deny" }));
-  app.get("*", (req, res) => {
-    res.sendFile(path.join(distPath, "index.html"));
+  // Vite fingerprints everything under /assets, so those files never change
+  // and can be cached for a year; index.html must always be revalidated so a
+  // new deploy is picked up.
+  app.use(express.static(distPath, {
+    dotfiles: "deny",
+    index: false,
+    setHeaders: (res, filePath) => {
+      res.setHeader(
+        "Cache-Control",
+        filePath.includes(`${path.sep}assets${path.sep}`) ? "public, max-age=31536000, immutable" : "public, max-age=3600",
+      );
+    },
+  }));
+  const indexHtml = fs.readFileSync(path.join(distPath, "index.html"), "utf8");
+  app.get("*", async (req, res) => {
+    res.setHeader("Cache-Control", "no-cache");
+    try {
+      res.type("html").send(await seo.renderIndex(indexHtml, req));
+    } catch (error) {
+      console.error("[Hikaya Server] link preview failed:", error);
+      res.type("html").send(indexHtml);
+    }
   });
 }
 

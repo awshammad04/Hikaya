@@ -121,6 +121,32 @@ Each folder has its own README.
 - A downloadable “My Jerusalem Story” souvenir built from visited places, quizzes
   and listened narrations
 - Reviewed heritage content for eight Jerusalem quarters, gates and neighbourhoods
+- A printable lesson pack for teachers on every place (`/locations/<id>/lesson`):
+  the reviewed story, a timeline-ordering activity, a quiz worksheet, discussion
+  and family homework, and the answer key on its own page
+- A family interview guide (`/contribute?interview=1`): place-specific questions
+  for recording an elder's memories, consent and privacy guidance, notes kept on
+  the device, and one step to turn the answers into a memory for review
+- A question of the day on the home page, drawn from the reviewed quizzes across
+  every governorate, with its source and a streak kept on the device
+- Guests see the memories they shared from a device, with live review status, in
+  their passport; places can be shared with a link that opens in the sharer's
+  language (`?lang=en`) and previews with the place's name and photo
+
+### Production behaviour
+
+- The web server gives each place and governorate its own link preview (title,
+  description, photo), a canonical URL, `robots.txt` and a `sitemap.xml`. Set
+  `APP_URL` so these use the public address.
+- Fingerprinted assets are cached for a year and `index.html` is always
+  revalidated, so a deploy is picked up immediately. Pages load as separate
+  chunks; a failed chunk after a deploy shows a reload prompt, not a blank page.
+- Unknown addresses show a not-found page, each page sets its own browser title,
+  and malformed request bodies get a JSON 400.
+- Story chapters of a journey are written at most four at a time, and a model
+  reply that stops at its length limit is cut back to the last whole sentence.
+- Run all checks with `npm run lint && npm test` (frontend), `npx jest`
+  (backend) and `python3 -m unittest discover -s tests` (ai).
 
 ## Technology
 

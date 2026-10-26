@@ -24,6 +24,9 @@ export function installProductionControls(app: Express) {
     res.setHeader("Referrer-Policy", "strict-origin-when-cross-origin");
     res.setHeader("X-Frame-Options", "SAMEORIGIN");
     res.setHeader("Strict-Transport-Security", "max-age=31536000");
+    // Location powers "Am I near a place?" and the album can take a photo;
+    // nothing uses the microphone, payments or USB, so those stay off.
+    res.setHeader("Permissions-Policy", "geolocation=(self), camera=(self), microphone=(), payment=(), usb=()");
     if (req.path.startsWith("/api/")) res.setHeader("Cache-Control", "no-store");
     if (!["GET", "HEAD", "OPTIONS"].includes(req.method) && req.get("origin") && !origins.has(req.get("origin"))) {
       return res.status(403).json({ message: "Request origin is not allowed." });

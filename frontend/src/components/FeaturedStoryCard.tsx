@@ -7,6 +7,7 @@ import { useInterfaceLanguage } from "../context/LanguageContext";
 import { locationById } from "../data/heritage";
 import { visitorWalkthrough } from "../visitorWalkthroughs";
 import { SourceCitationLine } from "./SourceCitationLine";
+import { readableNarrative } from "../utils/plainText";
 
 interface FeaturedStoryCardProps {
   featured: FeaturedStory;
@@ -15,9 +16,20 @@ interface FeaturedStoryCardProps {
   shuffling?: boolean;
 }
 
-/** First ~55 words, so the card gives a taste without becoming the page. */
+/**
+ * First ~55 words, so the card gives a taste without becoming the page.
+ * Section headings ("What to notice") are left out: flattened into one line
+ * they would run straight into the sentence that follows them.
+ */
 function excerpt(text: string, words = 55): string {
-  const tokens = text.replace(/\s+/g, " ").trim().split(" ");
+  const { text: plain, headings } = readableNarrative(text);
+  const body = plain
+    .split("\n")
+    .map((line) => line.trim())
+    .filter((line) => line && !headings.has(line))
+    .filter((line) => line.split(/\s+/).length > 6 || /[.؟?!،,;؛…:]$/.test(line))
+    .join(" ");
+  const tokens = body.replace(/\s+/g, " ").trim().split(" ");
   return tokens.length <= words
     ? tokens.join(" ")
     : `${tokens.slice(0, words).join(" ")}…`;

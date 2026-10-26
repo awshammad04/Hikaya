@@ -370,18 +370,22 @@ def _generate_with_model(request, content, source_text, location_name, mode):
         return _generate_offline(request, content, location_name, mode)
 
     blocks = llm.parse_labelled_blocks(raw, ["TITLE", "SUMMARY", "NARRATIVE", "UNCERTAINTY"])
-    narrative = blocks["NARRATIVE"].strip()
+    narrative = textutils.plain_narrative(blocks["NARRATIVE"])
+    if llm.was_truncated():
+        # The reply hit the output ceiling: end on the last whole sentence
+        # rather than show (and narrate) half of one.
+        narrative = textutils.drop_unfinished_tail(narrative)
     if not narrative:
         return _generate_offline(request, content, location_name, mode)
 
     notes = []  # type: List[str]
-    uncertainty = blocks["UNCERTAINTY"].strip()
+    uncertainty = textutils.plain_narrative(blocks["UNCERTAINTY"])
     if uncertainty and uncertainty.upper() != "NONE":
         notes = [line.strip("- ").strip() for line in uncertainty.splitlines() if line.strip()]
 
     return (
-        blocks["TITLE"].strip() or _default_title(location_name, mode),
-        blocks["SUMMARY"].strip(),
+        textutils.plain_narrative(blocks["TITLE"]) or _default_title(location_name, mode),
+        textutils.plain_narrative(blocks["SUMMARY"]),
         narrative,
         notes,
         ModelInfo(provider=llm.provider_name(), name=llm.used_model()),

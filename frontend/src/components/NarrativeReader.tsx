@@ -5,6 +5,7 @@ import { useNarration } from "../hooks/useNarration";
 import { markAudioListened } from "../services/progress";
 import { useInterfaceLanguage } from "../context/LanguageContext";
 import type { WordTimestamp } from "../types";
+import { readableNarrative } from "../utils/plainText";
 
 export type { WordTimestamp } from "../types";
 
@@ -88,7 +89,7 @@ function isHeadingLine(line: string) {
  * highlighting follows the audio playback clock rather than a flat timer.
  */
 export const NarrativeReader: React.FC<NarrativeReaderProps> = ({
-  text,
+  text: rawText,
   timestamps = [],
   typing = false,
   narration = true,
@@ -99,6 +100,9 @@ export const NarrativeReader: React.FC<NarrativeReaderProps> = ({
   const reduced = useReducedMotion();
   const { language, isArabic } = useInterfaceLanguage();
   const speech = useNarration(language);
+  // The same cleaned text is displayed and narrated, so word highlighting
+  // stays aligned with the audio.
+  const { text, headings } = useMemo(() => readableNarrative(rawText), [rawText]);
   const paragraphs = useMemo(() => tokenise(text), [text]);
   const totalWords = useMemo(
     () => text.split(/\s+/).filter(Boolean).length,
@@ -316,7 +320,8 @@ export const NarrativeReader: React.FC<NarrativeReaderProps> = ({
         dir={isArabic ? "rtl" : "ltr"}
       >
         {paragraphs.map((lines, paragraphIndex) => {
-          const headed = lines.length > 1 && isHeadingLine(lines[0].map((entry) => entry.token).join(""));
+          const firstLine = lines[0].map((entry) => entry.token).join("").trim();
+          const headed = headings.has(firstLine) || (lines.length > 1 && isHeadingLine(firstLine));
           return (
           <p key={paragraphIndex} className="whitespace-pre-line" dir="auto">
             {lines.map((line, lineIndex) => {

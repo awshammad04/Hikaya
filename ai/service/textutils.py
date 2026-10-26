@@ -29,6 +29,38 @@ def clean(text):
     return text.strip()
 
 
+_HEADING_MARK_RE = re.compile(r"^[ \t]*#{1,6}[ \t]+", re.MULTILINE)
+_LIST_STAR_RE = re.compile(r"^([ \t]*)\*[ \t]+", re.MULTILINE)
+_TERMINAL_RE = re.compile(r"[.!?؟…»\"')\]]\s*$")
+
+
+def plain_narrative(text):
+    # type: (str) -> str
+    """Remove markdown emphasis and heading marks from model prose.
+
+    Narratives are shown as plain paragraphs and read aloud, so ``**`` or ``#``
+    would be printed literally and spoken by the narrator. Line breaks are kept:
+    they carry the paragraph and heading structure.
+    """
+    text = _HEADING_MARK_RE.sub("", text)
+    text = _LIST_STAR_RE.sub(r"\1- ", text)
+    text = _BOLD_RE.sub(r"\1", text)
+    text = re.sub(r"__([^_\n]+)__", r"\1", text)
+    text = text.replace("**", "")
+    text = re.sub(r"[ \t]+\n", "\n", text)
+    return re.sub(r"\n{3,}", "\n\n", text).strip()
+
+
+def drop_unfinished_tail(text):
+    # type: (str) -> str
+    """Cut a narrative that stopped mid-sentence back to its last full sentence."""
+    text = text.rstrip()
+    if not text or _TERMINAL_RE.search(text):
+        return text
+    ends = [match.end() for match in re.finditer(r"[.!?؟…](?=\s|$)", text)]
+    return text[:ends[-1]].rstrip() if ends else text
+
+
 def split_sentences(text):
     # type: (str) -> List[str]
     """Split cleaned prose into sentences."""

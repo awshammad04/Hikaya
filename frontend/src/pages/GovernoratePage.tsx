@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-import { Link, useParams, Navigate } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
+import { NotFoundPage } from "./NotFoundPage";
 import { BookHeart, MapPin, Route } from "lucide-react";
 import { useInterfaceLanguage } from "../context/LanguageContext";
 import { governorateById, catalog } from "../data/heritage";
@@ -22,7 +23,7 @@ import { PalestineMiniMap } from "../components/PalestineGeography";
 export const GovernoratePage: React.FC = () => {
   const { governorateId = "" } = useParams();
   const governorate = governorateById(governorateId);
-  if (!governorate) return <Navigate to="/" replace />;
+  if (!governorate) return <NotFoundPage />;
   return governorateId === "jerusalem" ? (
     <HomePage />
   ) : (

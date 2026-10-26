@@ -16,6 +16,33 @@ const CATEGORY_INTERESTS: Record<string, string[]> = {
   'تراث ثقافي': ['architecture', 'history'],
 };
 
+/**
+ * Chapters are written by the model in parallel, but a 14-stop journey must not
+ * fire 14 requests at once: providers rate-limit bursts, and one failure fails
+ * the whole journey.
+ */
+const STORY_CONCURRENCY = 4;
+
+async function mapWithLimit<T, R>(
+  items: T[],
+  limit: number,
+  work: (item: T, index: number) => Promise<R>,
+): Promise<R[]> {
+  const results = new Array<R>(items.length);
+  let next = 0;
+  const workers = Array.from(
+    { length: Math.min(limit, items.length) },
+    async () => {
+      while (next < items.length) {
+        const index = next++;
+        results[index] = await work(items[index], index);
+      }
+    },
+  );
+  await Promise.all(workers);
+  return results;
+}
+
 @Injectable()
 export class JourneysService {
   constructor(
@@ -70,8 +97,10 @@ export class JourneysService {
         if (item) selected.push(item);
       }
     }
-    const stops = await Promise.all(
-      selected.map(async ({ location, matchedInterests }, index) => {
+    const stops = await mapWithLimit(
+      selected,
+      STORY_CONCURRENCY,
+      async ({ location, matchedInterests }, index) => {
         const record = catalog.locations.find(
           (item) => item.id === location.id,
         );
@@ -98,7 +127,7 @@ export class JourneysService {
             contribute: `/contribute?location=${location.id}`,
           },
         };
-      }),
+      },
     );
     const names = ids
       .map((id) => allGov.find((item) => item.id === id)!)

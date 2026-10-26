@@ -53,6 +53,13 @@ const durations: { id: TourDuration; ar: string; en: string }[] = [
     en: "In-depth weekend · up to 14 chapters",
   },
 ];
+/** Mirrors the backend's stop budget for each journey length. */
+const DURATION_STOPS: Record<TourDuration, number> = {
+  express: 3,
+  half_day: 5,
+  full_day: 7,
+  weekend: 14,
+};
 const Choice: React.FC<
   React.PropsWithChildren<{ selected: boolean; onClick: () => void }>
 > = ({ selected, onClick, children }) => (
@@ -321,6 +328,15 @@ export const CreateStoryPage: React.FC = () => {
                     </Choice>
                   ))}
                 </div>
+                {/* The journey keeps one chapter per chosen governorate even when
+                    that is more than the length's usual number of stops. */}
+                {preferences.governorateIds.length > (DURATION_STOPS[preferences.duration] ?? 5) && (
+                  <p className="rounded-2xl border border-brand-amber/30 bg-brand-amber/10 px-4 py-3 text-sm text-brand-text" role="note">
+                    {isArabic
+                      ? `اخترت ${preferences.governorateIds.length} محافظات، فستضم الحكاية ${preferences.governorateIds.length} فصول: فصلاً واحداً على الأقل لكل محافظة.`
+                      : `You chose ${preferences.governorateIds.length} governorates, so the story will have ${preferences.governorateIds.length} chapters: at least one for each.`}
+                  </p>
+                )}
               </div>
             )}
             {currentStep === 3 && (

@@ -13,6 +13,7 @@ import { useLocations } from "../hooks/useLocations";
 import { DataSourceBanner } from "../components/DataSourceBanner";
 import { PalestineMiniMap } from "../components/PalestineGeography";
 import { placesCount } from "../utils/plural";
+import { DailyQuestion } from "../components/DailyQuestion";
 
 const STEPS = [
   {
@@ -153,6 +154,8 @@ export const PalestineHomePage: React.FC = () => {
             })}
           </StaggerList>
         </Reveal>
+
+        <DailyQuestion />
 
         <Reveal className="space-y-5">
           <h2 className="font-serif font-black text-3xl text-brand-olive">

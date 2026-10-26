@@ -1,11 +1,13 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { Suspense, useEffect, useRef, useState } from "react";
 import { Link, NavLink, Outlet, useLocation } from "react-router-dom";
-import { BookHeart, ChevronDown, Home, Info, Languages, MapPin, Menu, Moon, PenLine, Stamp, Sun, Waypoints, X } from "lucide-react";
+import { BookHeart, ChevronDown, Home, Info, Languages, Loader2, MapPin, Menu, Moon, PenLine, Stamp, Sun, Waypoints, X } from "lucide-react";
 import { useInterfaceLanguage } from "../context/LanguageContext";
 import { MyJerusalemStoryModal } from "./MyJerusalemStoryModal";
 import { governorates, governorateById, nationalRecord } from "../data/heritage";
 import { OPEN_JERUSALEM_STORY_EVENT } from "../services/progress";
 import { AccountChip, AccountToasts } from "./AccountWidgets";
+import { ErrorBoundary } from "./ErrorBoundary";
+import { pageTitle } from "../utils/pageTitle";
 
 type Theme = "light" | "dark";
 const THEME_KEY = "hikaya.theme";
@@ -114,6 +116,10 @@ export const AppLayout: React.FC = () => {
   }, [pathname]);
 
   useEffect(() => {
+    document.title = pageTitle(pathname, isArabic);
+  }, [pathname, isArabic]);
+
+  useEffect(() => {
     if (!placesOpen && !menuOpen) return;
     const onKey = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
@@ -151,7 +157,7 @@ export const AppLayout: React.FC = () => {
       >
         {isArabic ? "تخطَّ إلى المحتوى" : "Skip to content"}
       </a>
-      <header className="sticky top-0 z-40 border-b border-brand-border-light bg-brand-bg/90 backdrop-blur-md">
+      <header className="print:hidden sticky top-0 z-40 border-b border-brand-border-light bg-brand-bg/90 backdrop-blur-md">
         <div className="h-1 w-full bg-gradient-to-r from-brand-olive via-brand-amber to-brand-olive" />
         <div className="max-w-7xl mx-auto flex h-16 items-center justify-between gap-3 px-4 sm:px-6 lg:px-8">
           <Link to="/" className="flex min-w-0 items-center gap-3" aria-label={isArabic ? "حكاية — الرئيسية" : "Hikaya — home"}>
@@ -300,8 +306,21 @@ export const AppLayout: React.FC = () => {
           </div>
         )}
       </header>
-      <main id="main" className="max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-1"><Outlet /></main>
-      <footer className="mt-8 border-t border-brand-border-light py-8">
+      <main id="main" className="max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-1">
+        <ErrorBoundary isArabic={isArabic} resetKey={pathname}>
+          <Suspense
+            fallback={
+              <div className="flex items-center gap-3 py-16 text-brand-muted" role="status">
+                <Loader2 className="h-5 w-5 animate-spin" />
+                {isArabic ? "جارٍ التحميل…" : "Loading…"}
+              </div>
+            }
+          >
+            <Outlet />
+          </Suspense>
+        </ErrorBoundary>
+      </main>
+      <footer className="print:hidden mt-8 border-t border-brand-border-light py-8">
         <div className="max-w-7xl mx-auto flex flex-col items-center justify-between gap-4 px-4 text-sm text-brand-muted sm:flex-row sm:px-6 lg:px-8">
           <p>
             © 2026 {isArabic ? "حكاية" : "Hikaya"} · {isArabic ? "المرشد الرقمي للتراث الفلسطيني" : "The digital guide to Palestinian heritage"}
@@ -313,7 +332,7 @@ export const AppLayout: React.FC = () => {
         </div>
       </footer>
       <MyJerusalemStoryModal open={storyOpen} onClose={() => setStoryOpen(false)} />
-      <AccountToasts />
+      <div className="print:hidden"><AccountToasts /></div>
     </div>
   );
 };

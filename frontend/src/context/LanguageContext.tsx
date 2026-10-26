@@ -9,15 +9,29 @@ interface LanguageContextValue {
 }
 
 const LanguageContext = createContext<LanguageContextValue | null>(null);
+const LANGUAGE_KEY = "hikaya-quds.language";
 
 export const LanguageProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
   const [language, setLanguage] = useState<InterfaceLanguage>(() => {
-    const stored = window.localStorage.getItem("hikaya-quds.language");
+    // `?lang=en` lets a shared link or a printed QR code open in the reader's
+    // language; otherwise the visitor's last choice is kept.
+    const requested = new URLSearchParams(window.location?.search ?? "").get("lang");
+    if (requested === "en" || requested === "ar") return requested;
+    let stored: string | null = null;
+    try {
+      stored = window.localStorage.getItem(LANGUAGE_KEY);
+    } catch {
+      // Storage can be blocked (private browsing, strict settings): use Arabic.
+    }
     return stored === "en" ? "en" : "ar";
   });
 
   useEffect(() => {
-    window.localStorage.setItem("hikaya-quds.language", language);
+    try {
+      window.localStorage.setItem(LANGUAGE_KEY, language);
+    } catch {
+      // Not remembered across visits, but the page still works.
+    }
     document.documentElement.lang = language;
     document.documentElement.dir = language === "ar" ? "rtl" : "ltr";
   }, [language]);

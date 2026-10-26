@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { motion, useReducedMotion } from "motion/react";
 import {
   ArrowLeft,
@@ -14,12 +14,21 @@ import {
 } from "lucide-react";
 import { ApiLocation, NewContribution } from "../types";
 import { submitContribution } from "../services/api";
+import { rememberContribution } from "../services/myContributions";
 import { useInterfaceLanguage } from "../context/LanguageContext";
 import { governorates, locationById } from "../data/heritage";
+
+export interface ContributionDraft {
+  locationId?: string;
+  title: string;
+  content: string;
+}
 
 interface ContributionWizardProps {
   locations: ApiLocation[];
   defaultLocationId?: string;
+  /** Text prepared elsewhere (the interview kit); a new object re-applies it. */
+  draft?: ContributionDraft | null;
 }
 
 type Step = "place" | "memory" | "media" | "you" | "done";
@@ -54,6 +63,7 @@ const MEDIA_KINDS = [
 export const ContributionWizard: React.FC<ContributionWizardProps> = ({
   locations,
   defaultLocationId,
+  draft,
 }) => {
   const { isArabic } = useInterfaceLanguage();
   const reduced = useReducedMotion();
@@ -69,6 +79,20 @@ export const ContributionWizard: React.FC<ContributionWizardProps> = ({
     null,
   );
   const [copied, setCopied] = useState(false);
+
+  // A draft from the interview kit replaces the memory text and opens the
+  // memory step, where the contributor reviews it before sending.
+  useEffect(() => {
+    if (!draft) return;
+    setForm((current) => ({
+      ...current,
+      locationId: draft.locationId || current.locationId,
+      title: draft.title,
+      content: draft.content,
+    }));
+    setReceipt(null);
+    setStep("memory");
+  }, [draft]);
 
   const update = <K extends keyof NewContribution>(
     key: K,
@@ -97,6 +121,14 @@ export const ContributionWizard: React.FC<ContributionWizardProps> = ({
         mediaType: form.mediaUrl?.trim() ? form.mediaType : undefined,
       });
       setReceipt({ message: isArabic ? "وصلت مساهمتك إلى حكاية. يراجعها عضو من فريق التوثيق قبل نشرها، حفاظاً على الدقة وخصوصية أصحاب الذكريات." : response.message, code: response.referenceCode });
+      if (response.referenceCode) {
+        rememberContribution({
+          referenceCode: response.referenceCode,
+          title: form.title.trim(),
+          locationId: form.locationId,
+          submittedAt: new Date().toISOString(),
+        });
+      }
       setStep("done");
     } catch (caught) {
       setError(isArabic

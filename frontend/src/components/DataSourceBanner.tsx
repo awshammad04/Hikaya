@@ -18,7 +18,7 @@ interface DataSourceBannerProps {
  */
 export const DataSourceBanner: React.FC<DataSourceBannerProps> = ({ source, reason }) => {
   const { isArabic } = useInterfaceLanguage();
-  if (import.meta.env.PROD && reason) return (
+  if (import.meta.env?.PROD && reason) return (
     <div role="alert" className="mb-6 rounded-2xl border border-brand-amber/30 bg-brand-amber/10 px-4 py-3 text-sm">
       {isArabic ? "الخدمة غير متاحة مؤقتاً. يرجى إعادة المحاولة." : "The service is temporarily unavailable. Please try again."}
     </div>

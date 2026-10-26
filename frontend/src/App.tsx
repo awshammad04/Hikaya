@@ -3,25 +3,33 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import React from "react";
+import React, { lazy } from "react";
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import { AppLayout } from "./components/AppLayout";
 import { LanguageProvider } from "./context/LanguageContext";
 import { AuthProvider } from "./context/AuthContext";
-import { PersonalizedTourModal } from "./components/PersonalizedTourModal";
-import { AboutPage } from "./pages/AboutPage";
-import { ConstellationPage } from "./pages/ConstellationPage";
-import { ContributePage } from "./pages/ContributePage";
-import { HomePage } from "./pages/HomePage";
 import { PalestineHomePage } from "./pages/PalestineHomePage";
-import { GovernoratePage } from "./pages/GovernoratePage";
-import { HeritageMapPage } from "./pages/HeritageMapPage";
-import { CreateStoryPage } from "./pages/CreateStoryPage";
-import { MyStoryPage } from "./pages/MyStoryPage";
-import { LocationDetailsPage } from "./pages/LocationDetailsPage";
-import { MapPage } from "./pages/MapPage";
-import { AccountPage } from "./pages/AccountPage";
-import { PassportPage } from "./pages/PassportPage";
+import { NotFoundPage } from "./pages/NotFoundPage";
+
+// Every other page is its own chunk, loaded when first visited, so a phone
+// opening the home page does not download the maps, the story tools and the
+// passport up front. AppLayout shows a loading state meanwhile.
+const page = <T extends Record<string, React.ComponentType>>(load: () => Promise<T>, name: keyof T) =>
+  lazy(() => load().then((module) => ({ default: module[name] })));
+const PersonalizedTourModal = page(() => import("./components/PersonalizedTourModal"), "PersonalizedTourModal");
+const AboutPage = page(() => import("./pages/AboutPage"), "AboutPage");
+const ConstellationPage = page(() => import("./pages/ConstellationPage"), "ConstellationPage");
+const ContributePage = page(() => import("./pages/ContributePage"), "ContributePage");
+const HomePage = page(() => import("./pages/HomePage"), "HomePage");
+const GovernoratePage = page(() => import("./pages/GovernoratePage"), "GovernoratePage");
+const HeritageMapPage = page(() => import("./pages/HeritageMapPage"), "HeritageMapPage");
+const CreateStoryPage = page(() => import("./pages/CreateStoryPage"), "CreateStoryPage");
+const MyStoryPage = page(() => import("./pages/MyStoryPage"), "MyStoryPage");
+const LocationDetailsPage = page(() => import("./pages/LocationDetailsPage"), "LocationDetailsPage");
+const MapPage = page(() => import("./pages/MapPage"), "MapPage");
+const AccountPage = page(() => import("./pages/AccountPage"), "AccountPage");
+const PassportPage = page(() => import("./pages/PassportPage"), "PassportPage");
+const LessonPackPage = page(() => import("./pages/LessonPackPage"), "LessonPackPage");
 
 /**
  * Routes for the Sprint 2 MVP flow:
@@ -59,13 +67,14 @@ export default function App() {
             <Route path="plan-tour" element={<PersonalizedTourModal />} />
             <Route path="map" element={<MapPage />} />
             <Route path="locations/:locationId" element={<LocationDetailsPage />} />
+            <Route path="locations/:locationId/lesson" element={<LessonPackPage />} />
             <Route path="constellation" element={<ConstellationPage />} />
             <Route path="contribute" element={<ContributePage />} />
             <Route path="about" element={<AboutPage />} />
             <Route path="account" element={<AccountPage />} />
             <Route path="me" element={<PassportPage />} />
             <Route path="explorer" element={<Navigate to="/map" replace />} />
-            <Route path="*" element={<Navigate to="/" replace />} />
+            <Route path="*" element={<NotFoundPage />} />
           </Route>
         </Routes>
       </BrowserRouter>

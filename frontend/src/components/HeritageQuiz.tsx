@@ -81,7 +81,7 @@ export const HeritageQuiz: React.FC<HeritageQuizProps> = ({
             viewport={{ once: true, margin: "-45px" }}
             transition={{ duration: reduced ? 0.15 : 0.38, delay: reduced ? 0 : index * 0.045, ease: "easeOut" }}
             whileHover={reduced ? undefined : { scale: 1.005 }}
-            className="space-y-3 rounded-3xl border border-brand-border bg-white/80 p-5 shadow-sm transition-colors duration-300 hover:border-brand-amber/40 hover:bg-brand-surface hover:shadow-md"
+            className="space-y-3 rounded-3xl border border-brand-border bg-white/80 dark:bg-brand-surface p-5 shadow-sm transition-colors duration-300 hover:border-brand-amber/40 hover:bg-brand-surface hover:shadow-md"
           >
             <p className="font-serif font-bold text-sm text-brand-olive">
               {index + 1}. {question.question}

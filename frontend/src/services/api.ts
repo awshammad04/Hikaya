@@ -43,12 +43,12 @@ import { locationById, nationalLocations, nationalRecord, nationalTimeline, nati
  */
 
 const BASE_URL: string =
-  (import.meta.env.PROD ? undefined : import.meta.env?.VITE_API_BASE_URL as string | undefined) ??
+  (import.meta.env?.PROD ? undefined : import.meta.env?.VITE_API_BASE_URL as string | undefined) ??
   "/api/v1";
 
-const REQUEST_TIMEOUT_MS = import.meta.env.PROD ? 190000 : 8000;
+const REQUEST_TIMEOUT_MS = import.meta.env?.PROD ? 190000 : 8000;
 /** Story generation is slower than a normal read. */
-const GENERATION_TIMEOUT_MS = import.meta.env.PROD ? 190000 : 45000;
+const GENERATION_TIMEOUT_MS = import.meta.env?.PROD ? 190000 : 45000;
 
 export interface ApiResult<T> {
   data: T;
@@ -162,7 +162,7 @@ async function withFallback<T>(
   try {
     return { data: await live(), source: "backend" };
   } catch (error) {
-    if (import.meta.env.PROD) throw error;
+    if (import.meta.env?.PROD) throw error;
     if (rejectClientErrors && error instanceof ApiError && error.status && error.status >= 400 && error.status < 500) throw error;
     const reason = error instanceof Error ? error.message : String(error);
     console.warn(`[hikaya] backend unavailable (${reason}) - showing sample data.`);
@@ -196,7 +196,7 @@ export async function getLocation(id: string): Promise<ApiResult<ApiLocation | n
     if (error instanceof ApiError && error.status === 404) {
       return { data: null, source: "backend" };
     }
-    if (import.meta.env.PROD) throw error;
+    if (import.meta.env?.PROD) throw error;
     const reason = error instanceof Error ? error.message : String(error);
     console.warn(`[hikaya] backend unavailable (${reason}) - showing sample data.`);
     return {
