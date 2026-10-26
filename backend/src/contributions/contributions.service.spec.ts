@@ -12,6 +12,7 @@ describe('ContributionsService', () => {
     id: 'reviewer-1',
     fullName: 'Review Team',
     email: 'reviewer@hikaya.test',
+    phone: null,
     role: 'editor',
     createdAt: new Date(),
   };

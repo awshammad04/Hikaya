@@ -23,6 +23,7 @@ PostgreSQL implementation of the Hikaya data model.
 | `migrations/002-governorates.sql` | Non-destructive governorate upgrade for existing databases. |
 | `migrations/004-accounts.sql` | Optional visitor accounts: sessions, synced progress, private journey photos and saved stories. Additive. |
 | `migrations/005-story-review.sql` | Visitors' own stories (private until shared) and who reviewed each public submission. Additive. |
+| `migrations/006-phone-accounts.sql` | Sign-up and log-in by phone number (E.164); email becomes optional for new accounts. Additive. |
 | `seed-palestine.sql` | Additive national configuration and six source-checked location records. |
 | `seed.sql` | Hand-written seed: users, categories, locations, stories, contributions. Run this second. |
 | `seed-generated.sql` | **Generated** seed: timeline, media and quiz rows. Run this third. Produced by `python3 ai/scripts/export_seed_data.py` from the content files — do not edit it. |
@@ -44,6 +45,7 @@ psql -d hikaya -f database/migrations/002-governorates.sql
 psql -d hikaya -f database/seed-palestine.sql
 psql -d hikaya -f database/migrations/004-accounts.sql
 psql -d hikaya -f database/migrations/005-story-review.sql
+psql -d hikaya -f database/migrations/006-phone-accounts.sql
 ```
 
 Then point the backend at it in `backend/.env`:
@@ -57,7 +59,7 @@ running it again resets everything — do not run it against a database holding 
 user contributions.
 
 Upgrade an existing database with **only** `migrations/002-governorates.sql`,
-`seed-palestine.sql`, `migrations/004-accounts.sql` and `migrations/005-story-review.sql`; these preserve existing heritage and user rows and may be
+`seed-palestine.sql`, `migrations/004-accounts.sql`, `migrations/005-story-review.sql` and `migrations/006-phone-accounts.sql`; these preserve existing heritage and user rows and may be
 repeated safely. See [upgrade and validation details](../docs/palestine-expansion.md).
 
 Verify the seed:

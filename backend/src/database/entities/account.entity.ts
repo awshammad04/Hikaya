@@ -10,7 +10,10 @@ export type UserRole = 'visitor' | 'contributor' | 'editor' | 'admin';
 export interface User {
   id: string;
   fullName: string;
-  email: string;
+  /** Accounts made before phone sign-up, and staff accounts. */
+  email: string | null;
+  /** E.164, e.g. +970599123456. How new accounts sign up and log in. */
+  phone: string | null;
   role: UserRole;
   createdAt: Date;
 }

@@ -5,6 +5,7 @@ import {
   MapPin, Route, ShieldCheck, Sparkles, Stamp, Trash2, UserPlus,
 } from "lucide-react";
 import { MyStoriesSection } from "../components/MyStoriesSection";
+import { formatPhone } from "../utils/phone";
 import { PageTransition } from "../components/motion";
 import { useInterfaceLanguage } from "../context/LanguageContext";
 import { AccountError, useAuth } from "../context/AuthContext";
@@ -350,7 +351,7 @@ export const PassportPage: React.FC = () => {
             <div className="flex flex-wrap items-center justify-between gap-3">
               <div>
                 <h2 className="font-serif font-black text-xl text-brand-olive">{isArabic ? "الحساب" : "Account"}</h2>
-                <p className="text-sm text-brand-muted" dir="ltr">{user.email}</p>
+                <p className="text-sm text-brand-muted" dir="ltr">{user.phone ? formatPhone(user.phone) : user.email}</p>
               </div>
               <button type="button" onClick={() => void logOut().then(() => navigate("/"))} className="rounded-full border border-brand-border px-5 py-2 text-xs font-bold text-brand-olive inline-flex items-center gap-1.5">
                 <LogOut className="w-4 h-4" />{isArabic ? "تسجيل الخروج" : "Sign out"}

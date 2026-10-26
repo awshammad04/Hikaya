@@ -54,10 +54,16 @@ const MAX_LOCAL_STORIES = 30;
 export interface AccountUser {
   id: string;
   fullName: string;
-  email: string;
+  /** Only accounts made before phone sign-up, and staff accounts. */
+  email: string | null;
+  /** E.164, e.g. +970599123456. */
+  phone: string | null;
   role: string;
   createdAt: string;
 }
+
+/** A phone number with its country code, or an older account's email. */
+export type LogInCredentials = { countryCode: string; phone: string } | { email: string };
 
 export interface SavedStory {
   id: string;
@@ -175,10 +181,10 @@ const post = (body: unknown): RequestInit => ({ method: "POST", body: JSON.strin
 
 export const accountApi = {
   me: () => request<{ user: AccountUser | null }>("/auth/me"),
-  signUp: (name: string, email: string, password: string) =>
-    request<{ user: AccountUser }>("/auth/signup", post({ name, email, password })),
-  logIn: (email: string, password: string) =>
-    request<{ user: AccountUser }>("/auth/login", post({ email, password })),
+  signUp: (name: string, countryCode: string, phone: string, password: string) =>
+    request<{ user: AccountUser }>("/auth/signup", post({ name, countryCode, phone, password })),
+  logIn: (credentials: LogInCredentials, password: string) =>
+    request<{ user: AccountUser }>("/auth/login", post({ ...credentials, password })),
   logOut: () => request<void>("/auth/logout", post({})),
   deleteAccount: (password: string) =>
     request<void>("/auth/me", { method: "DELETE", body: JSON.stringify({ password }) }),

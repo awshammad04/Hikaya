@@ -6,6 +6,7 @@ import {
   timingSafeEqual,
 } from 'crypto';
 import {
+  BadRequestException,
   ConflictException,
   HttpException,
   HttpStatus,
@@ -21,6 +22,7 @@ import {
 import { ACCOUNTS_REPOSITORY } from '../database/repositories/tokens';
 import type { User, UserRole } from '../database/entities/account.entity';
 import { SESSION_TTL_SECONDS } from './session';
+import { normalizeListedPhone, normalizePhone } from './phone';
 
 const SCRYPT = { N: 16384, r: 8, p: 1, keyLength: 64 };
 const MAX_FAILURES = 8;
@@ -77,18 +79,36 @@ const REVIEWER_ROLES: ReadonlySet<UserRole> = new Set(['editor', 'admin']);
 export const isReviewer = (user: User | null | undefined): boolean =>
   Boolean(user && REVIEWER_ROLES.has(user.role));
 
+/** How someone logs in: their phone number, or an older account's email. */
+export type Credentials =
+  { countryCode: string; phone: string } | { email: string };
+
+function listed(
+  variable: string,
+  normalize: (value: string) => string | null,
+): string[] {
+  return (process.env[variable] ?? '')
+    .split(',')
+    .map((value) => value.trim() && normalize(value.trim()))
+    .filter((value): value is string => Boolean(value));
+}
+
 /**
- * Accounts listed in HIKAYA_ADMIN_EMAILS act as admins without a database
- * edit, which is how the first reviewer is appointed on a fresh deployment.
+ * Accounts listed in HIKAYA_ADMIN_PHONES or HIKAYA_ADMIN_EMAILS act as admins
+ * without a database edit, which is how the first reviewer is appointed on a
+ * fresh deployment.
  */
 function withConfiguredRole(user: User): User {
-  const admins = (process.env.HIKAYA_ADMIN_EMAILS ?? '')
-    .split(',')
-    .map((email) => email.trim().toLowerCase())
-    .filter(Boolean);
-  return admins.includes(user.email.toLowerCase())
-    ? { ...user, role: 'admin' }
-    : user;
+  const admin =
+    (user.phone !== null &&
+      listed('HIKAYA_ADMIN_PHONES', normalizeListedPhone).includes(
+        user.phone,
+      )) ||
+    (user.email !== null &&
+      listed('HIKAYA_ADMIN_EMAILS', (email) => email.toLowerCase()).includes(
+        user.email.toLowerCase(),
+      ));
+  return admin ? { ...user, role: 'admin' } : user;
 }
 
 export interface SignedIn {
@@ -100,8 +120,8 @@ export interface SignedIn {
  * Accounts for visitors who want their journey to follow them.
  *
  * Passwords are hashed with scrypt; sessions are random tokens of which only
- * the SHA-256 is stored. Failed logins are throttled per address and email so
- * a password cannot be guessed at speed.
+ * the SHA-256 is stored. Failed logins are throttled per address and phone
+ * number (or email) so a password cannot be guessed at speed.
  */
 @Injectable()
 export class AuthService {
@@ -116,19 +136,25 @@ export class AuthService {
     private readonly accounts: AccountsRepository,
   ) {}
 
+  /** New accounts sign up with a phone number. */
   async signUp(
     fullName: string,
-    email: string,
+    countryCode: string,
+    phoneNumber: string,
     password: string,
   ): Promise<SignedIn> {
-    const normalized = email.trim().toLowerCase();
-    if (await this.accounts.findUserByEmail(normalized))
+    const phone = normalizePhone(countryCode, phoneNumber);
+    if (!phone)
+      throw new BadRequestException(
+        'Enter a valid phone number with its country code.',
+      );
+    if (await this.accounts.findUserByPhone(phone))
       throw new ConflictException(
-        'An account with this email already exists. Log in instead.',
+        'An account with this phone number already exists. Log in instead.',
       );
     const user = await this.accounts.createUser({
       fullName: fullName.trim(),
-      email: normalized,
+      phone,
       passwordHash: await hashPassword(password),
     });
     this.logger.log(`Account created for ${user.id}`);
@@ -139,17 +165,28 @@ export class AuthService {
   }
 
   async logIn(
-    email: string,
+    credentials: Credentials,
     password: string,
     client: string,
   ): Promise<SignedIn> {
-    const normalized = email.trim().toLowerCase();
-    const key = `${client}|${normalized}`;
+    const byEmail = 'email' in credentials;
+    // A malformed number cannot match an account; it still counts as a try.
+    const identifier = byEmail
+      ? credentials.email.trim().toLowerCase()
+      : (normalizePhone(credentials.countryCode, credentials.phone) ??
+        `invalid:${credentials.phone}`);
+    const key = `${client}|${identifier}`;
     this.assertNotThrottled(key);
-    const stored = await this.accounts.findUserByEmail(normalized);
+    const stored = byEmail
+      ? await this.accounts.findUserByEmail(identifier)
+      : await this.accounts.findUserByPhone(identifier);
     if (!stored || !(await verifyPassword(password, stored.passwordHash))) {
       this.recordFailure(key);
-      throw new UnauthorizedException('The email or password is incorrect.');
+      throw new UnauthorizedException(
+        byEmail
+          ? 'The email or password is incorrect.'
+          : 'The phone number or password is incorrect.',
+      );
     }
     this.failures.delete(key);
     await this.accounts.touchLogin(stored.id);
