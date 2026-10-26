@@ -31,8 +31,8 @@ for(const table of tables){
     for(const key of Object.keys(old))assert.deepEqual(row[key],old[key],`${table}.${old.id??old.location_id}.${key} changed`);
   }
 }
-assert.equal((await db.query('SELECT COUNT(*)::int AS count FROM governorates')).rows[0].count,4);
-assert.equal((await db.query('SELECT COUNT(*)::int AS count FROM locations')).rows[0].count,14);
+assert.equal((await db.query('SELECT COUNT(*)::int AS count FROM governorates')).rows[0].count,7);
+assert.equal((await db.query('SELECT COUNT(*)::int AS count FROM locations')).rows[0].count,26);
 assert.equal((await db.query("SELECT COUNT(*)::int AS count FROM locations WHERE governorate_id='jerusalem'")).rows[0].count,8);
 assert.equal((await db.query("SELECT COUNT(*)::int AS count FROM stories WHERE is_ai_generated AND status='published' AND location_id NOT IN (SELECT id FROM locations WHERE governorate_id='jerusalem')")).rows[0].count,0);
 console.log(`Migration and seed ran twice; preserved all original rows in ${tables.length} tables; four governorates and 14 locations present.`);

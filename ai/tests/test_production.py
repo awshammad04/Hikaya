@@ -23,7 +23,7 @@ class ProductionTests(unittest.TestCase):
                 self.assertEqual(client.post('/generate-story', json={}).status_code, 401)
                 health = client.get('/health')
                 self.assertEqual(health.status_code, 200)
-                self.assertEqual(len(health.json()['reviewed_locations']), 14)
+                self.assertEqual(len(health.json()['reviewed_locations']), 26)
                 response = client.post('/generate-story', json={"location_id": "muslim-quarter"},
                                        headers={"x-hikaya-ai-token": "test-only-token"})
                 self.assertEqual(response.status_code, 200)

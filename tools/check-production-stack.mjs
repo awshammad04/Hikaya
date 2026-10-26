@@ -62,9 +62,9 @@ try {
   }
   assert.equal((await fetch(web + '/api/tts', { method: 'POST', headers: { 'Content-Type': 'application/json', Origin: 'https://evil.example' }, body: '{}' })).status, 403);
   const all = await json('/api/v1/locations?scope=all');
-  assert.equal(all.length, 14);
+  assert.equal(all.length, 26);
   assert.equal((await json('/api/v1/locations')).length, 8);
-  assert.equal((await json('/api/v1/governorates')).length, 4);
+  assert.equal((await json('/api/v1/governorates')).length, 7);
   await json('/api/v1/ai/generate-story', { historicalText: 'Unreviewed visitor text' }, 400);
   for (const location of all) {
     for (const suffix of ['media', 'timeline', 'quiz']) {

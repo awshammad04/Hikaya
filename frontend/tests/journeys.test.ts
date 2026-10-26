@@ -43,7 +43,10 @@ assert.throws(() =>
   selectJourneyLocations({ ...preferences, governorateIds: ["invalid"] }, all),
 );
 assert.ok(locationById("palestinian-museum")?.arabicStory.includes("2016"));
-assert.equal(locationById("palestinian-museum")?.coverImage, "");
+// National covers are credited, licensed Commons photographs, never placeholders.
+const museum = locationById("palestinian-museum");
+assert.match(museum?.coverImage ?? "", /^https:\/\/commons\.wikimedia\.org\//);
+assert.ok(museum?.imageCredit && museum.imageLicense && museum.imageSourceUrl);
 assert.equal(MOCK_LOCATIONS.length, 8);
 console.log(
   "Frontend journey selection, scope isolation, Arabic data and legacy fallback checks passed.",

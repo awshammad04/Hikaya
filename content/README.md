@@ -1,11 +1,14 @@
 # Content Module
 
 Reviewed historical and cultural material for eight original Jerusalem locations
-and six bounded, source-checked records in Ramallah, Hebron and Gaza. Everything the
+and eighteen bounded, source-checked records in Ramallah, Nablus, Jericho,
+Bethlehem, Hebron and Gaza. Everything the
 AI module is allowed to say about a location comes from this folder — nothing else.
 
-The new bilingual catalogue is `palestine/catalog.json`. Its references, approval
-states and media/coordinate gaps are documented in
+The new bilingual catalogue is `palestine/catalog.json`. Its records carry their own
+credited photographs (`media`, checked by the exporter with the same rules as
+`media/media.json`). Its references, approval states and media/coordinate gaps are
+documented in
 [Palestine expansion](../docs/palestine-expansion.md). Run
 `python tools/generate-palestine-data.py` from the repository root to export the
 national summaries and matching frontend/backend/SQL data; the eight Jerusalem

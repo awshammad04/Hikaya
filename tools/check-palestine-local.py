@@ -26,9 +26,9 @@ def fetch(url, body=None, expected=200):
 def check():
     data = json.loads((ROOT / 'content/palestine/catalog.json').read_text(encoding='utf8'))
     governors = fetch(API + '/governorates')
-    assert {item['id'] for item in governors} == {'jerusalem', 'ramallah', 'hebron', 'gaza'}
+    assert {item['id'] for item in governors} == {item['id'] for item in data['governorates']}
     assert len(fetch(API + '/locations')) == 8
-    assert len(fetch(API + '/locations?scope=all')) == 14
+    assert len(fetch(API + '/locations?scope=all')) == len(data['locations']) + 8
     assert fetch(WEB + '/api/v1/health')['status'] == 'ok'
     for path in ['/', '/jerusalem', '/palestine-map', '/create-story', '/my-story'] + [
         '/governorates/' + item['id'] for item in governors
@@ -77,7 +77,7 @@ def check():
     assert {source['governorate_id'] for source in national['sources']} == {'ramallah', 'hebron'}
     legacy = fetch(API + '/ai/generate-story', {'locationId': 'muslim-quarter', 'language': 'en', 'persist': False})
     assert legacy['generatedBy'] == 'offline-extractive' and legacy['source']['locationId'] == 'muslim-quarter'
-    print('Local integration passed: 4 governorates, 14 places, bilingual single/multi/all journeys, scoped guide, legacy AI, source gaps and route responses.')
+    print('Local integration passed: 7 governorates, 26 places, bilingual single/multi/all journeys, scoped guide, legacy AI, source gaps and route responses.')
 
 
 if __name__ == '__main__':

@@ -55,6 +55,8 @@ const CATEGORY_STYLE: Record<string, { color: string; en: string; ar: string }> 
   "سوق تراثي": { color: "#98723a", en: "Historic souq", ar: "سوق تراثي" },
   "حارة تاريخية": { color: "#5a5a40", en: "Historic quarter", ar: "حارة تاريخية" },
   "حي مقدسي": { color: "#688158", en: "Jerusalem neighbourhood", ar: "حي مقدسي" },
+  "موقع أثري": { color: "#8c5a3c", en: "Archaeological site", ar: "موقع أثري" },
+  "مشهد ثقافي": { color: "#4f7a3a", en: "Cultural landscape", ar: "مشهد ثقافي" },
 };
 
 const CATEGORY_ORDER = Object.keys(CATEGORY_STYLE);

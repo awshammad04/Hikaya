@@ -3,6 +3,7 @@ import { INestApplication, ValidationPipe } from '@nestjs/common';
 import request from 'supertest';
 import { App } from 'supertest/types';
 import { AppModule } from './../src/app.module';
+import { catalog } from './../src/database/seed/palestine-data';
 
 describe('AppController (e2e)', () => {
   let app: INestApplication<App>;
@@ -41,7 +42,7 @@ describe('AppController (e2e)', () => {
       );
   });
 
-  it('keeps the legacy location list at eight while offering fourteen nationally', async () => {
+  it('keeps the legacy location list at eight while offering twenty-six nationally', async () => {
     const legacy = await request(app.getHttpServer())
       .get('/api/v1/locations')
       .expect(200);
@@ -54,24 +55,24 @@ describe('AppController (e2e)', () => {
         (item: { governorateId: string }) => item.governorateId === 'jerusalem',
       ),
     ).toBe(true);
-    expect(national.body).toHaveLength(14);
+    expect(national.body).toHaveLength(26);
   });
 
-  it('lists four governorates and keeps their locations scoped', async () => {
+  it('lists the catalogue governorates and keeps their locations scoped', async () => {
     const result = await request(app.getHttpServer())
       .get('/api/v1/governorates')
       .expect(200);
-    expect((result.body as { id: string }[]).map((item) => item.id)).toEqual([
-      'jerusalem',
-      'ramallah',
-      'hebron',
-      'gaza',
-    ]);
-    for (const id of ['ramallah', 'hebron', 'gaza']) {
+    // PostgreSQL lists governorates by name; the in-memory seed keeps catalogue order.
+    expect(
+      (result.body as { id: string }[]).map((item) => item.id).sort(),
+    ).toEqual(catalog.governorates.map((item) => item.id).sort());
+    for (const { id } of catalog.governorates.slice(1)) {
       const scoped = await request(app.getHttpServer())
         .get(`/api/v1/governorates/${id}/locations`)
         .expect(200);
-      expect(scoped.body).toHaveLength(2);
+      expect(scoped.body).toHaveLength(
+        catalog.locations.filter((item) => item.governorateId === id).length,
+      );
       expect(
         (scoped.body as { governorateId: string }[]).every(
           (item: { governorateId: string }) => item.governorateId === id,
