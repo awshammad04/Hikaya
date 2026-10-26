@@ -8,7 +8,6 @@ import {
   flushProgress,
   guestIdentity,
   GuestIdentity,
-  LogInCredentials,
   markDeviceOwner,
   MergeSummary,
   setSignedIn,
@@ -27,8 +26,8 @@ interface AuthContextValue {
   /** What a sign-in brought over from the guest journey, until dismissed. */
   lastMerge: MergeSummary | null;
   dismissMerge: () => void;
-  signUp: (name: string, countryCode: string, phone: string, password: string) => Promise<void>;
-  logIn: (credentials: LogInCredentials, password: string) => Promise<void>;
+  signUp: (name: string, countryCode: string, phone: string, password: string, email?: string) => Promise<void>;
+  logIn: (countryCode: string, phone: string, password: string) => Promise<void>;
   logOut: () => Promise<void>;
   deleteAccount: (password: string) => Promise<void>;
 }
@@ -83,13 +82,13 @@ export const AuthProvider: React.FC<React.PropsWithChildren> = ({ children }) =>
     return () => { cancelled = true; };
   }, [startSession]);
 
-  const signUp = useCallback(async (name: string, countryCode: string, phone: string, password: string) => {
-    const { user: created } = await accountApi.signUp(name, countryCode, phone, password);
+  const signUp = useCallback(async (name: string, countryCode: string, phone: string, password: string, email?: string) => {
+    const { user: created } = await accountApi.signUp(name, countryCode, phone, password, email);
     await startSession(created, true);
   }, [startSession]);
 
-  const logIn = useCallback(async (credentials: LogInCredentials, password: string) => {
-    const { user: current } = await accountApi.logIn(credentials, password);
+  const logIn = useCallback(async (countryCode: string, phone: string, password: string) => {
+    const { user: current } = await accountApi.logIn(countryCode, phone, password);
     await startSession(current, true);
   }, [startSession]);
 
