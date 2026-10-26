@@ -1,11 +1,11 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Link, NavLink, Outlet, useLocation } from "react-router-dom";
-import { BookHeart, ChevronDown, Home, Info, Languages, MapPin, Menu, Moon, PenLine, Stamp, Sun, Waypoints, X } from "lucide-react";
+import { BookHeart, ChevronDown, Home, Info, Languages, MapPin, Menu, Moon, PenLine, ShieldCheck, Stamp, Sun, Waypoints, X } from "lucide-react";
 import { useInterfaceLanguage } from "../context/LanguageContext";
 import { MyJerusalemStoryModal } from "./MyJerusalemStoryModal";
 import { governorates, governorateById, nationalRecord } from "../data/heritage";
 import { OPEN_JERUSALEM_STORY_EVENT } from "../services/progress";
-import { AccountChip, AccountToasts } from "./AccountWidgets";
+import { AccountChip, AccountToasts, ReviewChip, usePendingReviews } from "./AccountWidgets";
 
 type Theme = "light" | "dark";
 const THEME_KEY = "hikaya.theme";
@@ -80,6 +80,7 @@ export const AppLayout: React.FC = () => {
 
   // Labels stay the same everywhere; inside Jerusalem the map and connections
   // open the Jerusalem versions.
+  const pendingReviews = usePendingReviews();
   const navItems = [
     { to: "/", en: "Home", ar: "الرئيسية", icon: Home, active: pathname === "/" },
     {
@@ -227,6 +228,7 @@ export const AppLayout: React.FC = () => {
             >
               {theme === "dark" ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
             </button>
+            <ReviewChip pending={pendingReviews} />
             <AccountChip />
             {isJerusalem ? (
               <button type="button" onClick={() => setStoryOpen(true)} className={`hidden sm:inline-flex ${storyButton}`}>
@@ -272,6 +274,15 @@ export const AppLayout: React.FC = () => {
             >
               <Stamp className="w-5 h-5 text-brand-amber" /> {isArabic ? "جواز سفري" : "My passport"}
             </Link>
+            {pendingReviews !== null && (
+              <Link
+                to="/admin/review"
+                className="mt-1 flex min-h-12 items-center gap-3 rounded-2xl px-4 text-base font-bold text-brand-text"
+              >
+                <ShieldCheck className="w-5 h-5 text-brand-amber" /> {isArabic ? "مراجعة الحكايات" : "Review stories"}
+                {pendingReviews > 0 && <span className="rounded-full bg-brand-amber px-2 text-xs text-white">{pendingReviews}</span>}
+              </Link>
+            )}
             <p className="mt-4 mb-2 px-4 text-xs font-bold text-brand-muted">{isArabic ? "المحافظات" : "Governorates"}</p>
             <div className="grid grid-cols-2 gap-2">
               {governorates.map((item) => (

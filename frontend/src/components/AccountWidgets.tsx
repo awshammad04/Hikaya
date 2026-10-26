@@ -1,13 +1,16 @@
 import React, { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { CloudUpload, PartyPopper, UserRound, X } from "lucide-react";
+import { CloudUpload, PartyPopper, ShieldCheck, UserRound, X } from "lucide-react";
 import { useInterfaceLanguage } from "../context/LanguageContext";
 import { useAuth } from "../context/AuthContext";
 import {
+  isReviewerRole,
   journeyTotals,
   MEMORIES_EVENT,
   MergeSummary,
   PROGRESS_EVENT,
+  REVIEW_EVENT,
+  reviewApi,
   STORIES_EVENT,
 } from "../services/accountSync";
 
@@ -49,6 +52,54 @@ export const AccountChip: React.FC = () => {
         </Link>
       </span>
     </>
+  );
+};
+
+/** How many public stories are waiting; null for anyone who is not a reviewer. */
+export function usePendingReviews(): number | null {
+  const { status, user } = useAuth();
+  const { pathname } = useLocation();
+  const reviewer = status === "signed-in" && isReviewerRole(user?.role);
+  const [pending, setPending] = useState<number | null>(null);
+  useEffect(() => {
+    if (!reviewer) {
+      setPending(null);
+      return;
+    }
+    let cancelled = false;
+    const update = () => {
+      reviewApi.queue("pending_review")
+        .then((queue) => { if (!cancelled) setPending(queue.counts.pending_review); })
+        .catch(() => undefined);
+    };
+    update();
+    window.addEventListener(REVIEW_EVENT, update);
+    return () => {
+      cancelled = true;
+      window.removeEventListener(REVIEW_EVENT, update);
+    };
+  }, [reviewer, pathname]);
+  return pending;
+}
+
+/**
+ * Header shortcut to the review queue, shown to editors and admins only.
+ * Hidden between lg and xl, where the header has no room; the passport links
+ * to the queue there.
+ */
+export const ReviewChip: React.FC<{ pending: number | null }> = ({ pending }) => {
+  const { isArabic } = useInterfaceLanguage();
+  if (pending === null) return null;
+  const label = isArabic ? `مراجعة الحكايات · ${pending} بانتظارك` : `Review stories · ${pending} waiting`;
+  return (
+    <Link to="/admin/review" className={`${compactChip} relative lg:hidden xl:inline-flex`} aria-label={label} title={label}>
+      <ShieldCheck className="w-4 h-4" />
+      {pending > 0 && (
+        <span className="absolute -top-1 -end-1 min-w-5 h-5 rounded-full bg-brand-amber px-1 text-[11px] font-bold leading-5 text-white text-center">
+          {pending > 99 ? "99+" : pending}
+        </span>
+      )}
+    </Link>
   );
 };
 

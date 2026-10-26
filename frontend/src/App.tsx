@@ -22,6 +22,7 @@ import { LocationDetailsPage } from "./pages/LocationDetailsPage";
 import { MapPage } from "./pages/MapPage";
 import { AccountPage } from "./pages/AccountPage";
 import { PassportPage } from "./pages/PassportPage";
+import { ReviewPage } from "./pages/ReviewPage";
 
 /**
  * Routes for the Sprint 2 MVP flow:
@@ -34,6 +35,7 @@ import { PassportPage } from "./pages/PassportPage";
  *   /about              project background
  *   /account            sign in or create an account (optional)
  *   /me                 "My passport": progress, photos, saved stories
+ *   /admin/review       review queue for public stories (editors and admins)
  *   /explorer           legacy URL redirected to the current Jerusalem map
  *
  * Location ids are the same slugs used by the API and the content files
@@ -64,6 +66,7 @@ export default function App() {
             <Route path="about" element={<AboutPage />} />
             <Route path="account" element={<AccountPage />} />
             <Route path="me" element={<PassportPage />} />
+            <Route path="admin/review" element={<ReviewPage />} />
             <Route path="explorer" element={<Navigate to="/map" replace />} />
             <Route path="*" element={<Navigate to="/" replace />} />
           </Route>

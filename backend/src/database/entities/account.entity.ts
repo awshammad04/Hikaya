@@ -46,7 +46,8 @@ export interface UserPhotoImage {
   photoMime: string;
 }
 
-export type SavedStoryKind = 'journey' | 'location_story';
+/** `my_story` is one the visitor wrote; it stays private unless they share it. */
+export type SavedStoryKind = 'journey' | 'location_story' | 'my_story';
 
 export interface SavedStory {
   id: string;

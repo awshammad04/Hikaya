@@ -1,20 +1,28 @@
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
 import { motion, useReducedMotion } from "motion/react";
 import {
   ArrowLeft,
   ArrowRight,
+  BookHeart,
   Check,
   Copy,
+  EyeOff,
+  Globe,
   Image as ImageIcon,
   Loader2,
+  Lock,
   Mic,
   Send,
   ShieldCheck,
+  UserRound,
   Video,
 } from "lucide-react";
 import { ApiLocation, NewContribution } from "../types";
 import { submitContribution } from "../services/api";
+import { MyStoryPayload, saveStory } from "../services/accountSync";
 import { useInterfaceLanguage } from "../context/LanguageContext";
+import { useAuth } from "../context/AuthContext";
 import { governorates, locationById } from "../data/heritage";
 
 interface ContributionWizardProps {
@@ -22,13 +30,16 @@ interface ContributionWizardProps {
   defaultLocationId?: string;
 }
 
-type Step = "place" | "memory" | "media" | "you" | "done";
+type Step = "place" | "memory" | "media" | "share" | "done";
+type Visibility = "private" | "public";
+/** What goes out with a public story: the contributor's details, or nothing. */
+type Credit = "named" | "anonymous";
 
 const STEPS = [
   { id: "place" as const, en: "Place", ar: "المكان" },
-  { id: "memory" as const, en: "Memory", ar: "الذكرى" },
+  { id: "memory" as const, en: "Story", ar: "الحكاية" },
   { id: "media" as const, en: "Media", ar: "الوسائط" },
-  { id: "you" as const, en: "You", ar: "بياناتك" },
+  { id: "share" as const, en: "Share", ar: "المشاركة" },
 ];
 
 const MIN_CONTENT_LENGTH = 20;
@@ -39,23 +50,32 @@ const MEDIA_KINDS = [
   { value: "video" as const, en: "Video", ar: "فيديو", icon: Video },
 ];
 
+interface Receipt {
+  visibility: Visibility;
+  message: string;
+  code?: string;
+  creditedAs?: string | null;
+}
+
 /**
- * The contribution form as a short sequence of steps.
+ * Writing your story of a place, as a short sequence of steps.
  *
  * One long form asks for everything at once and gets abandoned. Splitting it
- * puts the memory itself on a screen of its own, which is the only part that
- * actually matters - place is a dropdown, media and name are optional, and the
- * whole thing can be finished in two steps if that is all someone wants to give.
+ * puts the story itself on a screen of its own, which is the only part that
+ * actually matters - place is a dropdown, media is optional, and the last step
+ * asks who should see it: kept private in the passport, or sent to the review
+ * team to be published for everyone, with or without the writer's name.
  *
- * There is no mock fallback anywhere in here: if the submission fails the
- * contributor is told, and told to keep their text. A fake receipt for a memory
- * that was never saved would be the worst thing this page could do.
+ * There is no mock fallback anywhere in here: if a public submission fails the
+ * writer is told, and told to keep their text. A fake receipt for a story that
+ * was never saved would be the worst thing this page could do.
  */
 export const ContributionWizard: React.FC<ContributionWizardProps> = ({
   locations,
   defaultLocationId,
 }) => {
   const { isArabic } = useInterfaceLanguage();
+  const { user } = useAuth();
   const reduced = useReducedMotion();
   const [step, setStep] = useState<Step>("place");
   const [form, setForm] = useState<NewContribution>({
@@ -63,17 +83,23 @@ export const ContributionWizard: React.FC<ContributionWizardProps> = ({
     title: "",
     content: "",
   });
+  const [visibility, setVisibility] = useState<Visibility | null>(null);
+  const [credit, setCredit] = useState<Credit | null>(null);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [receipt, setReceipt] = useState<{ message: string; code?: string } | null>(
-    null,
-  );
+  const [receipt, setReceipt] = useState<Receipt | null>(null);
   const [copied, setCopied] = useState(false);
 
   const update = <K extends keyof NewContribution>(
     key: K,
     value: NewContribution[K],
   ) => setForm((current) => ({ ...current, [key]: value }));
+
+  const chooseCredit = (value: Credit) => {
+    setCredit(value);
+    // A signed-in writer has already told us their name.
+    if (value === "named" && !form.contributorName && user) update("contributorName", user.fullName);
+  };
 
   const contentTooShort = form.content.trim().length < MIN_CONTENT_LENGTH;
   const canContinue =
@@ -82,37 +108,104 @@ export const ContributionWizard: React.FC<ContributionWizardProps> = ({
       : step === "memory"
         ? Boolean(form.title.trim()) && !contentTooShort
         : true;
+  const canSubmit =
+    visibility === "private" ||
+    (visibility === "public" &&
+      (credit === "anonymous" || (credit === "named" && Boolean(form.contributorName?.trim()))));
 
   const submit = async () => {
+    if (!canSubmit) return;
+    const title = form.title.trim();
+    const mediaUrl = form.mediaUrl?.trim() || undefined;
+    const story: MyStoryPayload = {
+      content: form.content.trim(),
+      mediaUrl,
+      mediaType: mediaUrl ? form.mediaType : undefined,
+    };
+    const keep = (payload: MyStoryPayload) =>
+      saveStory({
+        kind: "my_story",
+        title,
+        locationId: form.locationId,
+        governorateIds: [locations.find((item) => item.id === form.locationId)?.governorateId ?? "jerusalem"],
+        payload,
+      });
+
+    if (visibility === "private") {
+      keep(story);
+      setReceipt({
+        visibility,
+        message: isArabic
+          ? "حُفظت حكايتك في جواز سفرك. لا يراها أحد غيرك، ويمكنك مشاركتها للعموم لاحقاً متى شئت."
+          : "Your story is saved in your passport. Nobody else can see it, and you can share it publicly whenever you like.",
+      });
+      setStep("done");
+      return;
+    }
+
     setSubmitting(true);
     setError(null);
+    const named = credit === "named";
+    const creditedAs = named ? form.contributorName?.trim() || null : null;
     try {
       const response = await submitContribution({
-        ...form,
-        title: form.title.trim(),
-        content: form.content.trim(),
-        contributorName: form.contributorName?.trim() || undefined,
-        contributorEmail: form.contributorEmail?.trim() || undefined,
-        mediaUrl: form.mediaUrl?.trim() || undefined,
-        mediaType: form.mediaUrl?.trim() ? form.mediaType : undefined,
+        locationId: form.locationId,
+        title,
+        content: story.content,
+        mediaUrl: story.mediaUrl,
+        mediaType: story.mediaType,
+        // "Only the story" sends nothing about the writer at all.
+        contributorName: creditedAs ?? undefined,
+        contributorEmail: named ? form.contributorEmail?.trim() || undefined : undefined,
       });
-      setReceipt({ message: isArabic ? "وصلت مساهمتك إلى حكاية. يراجعها عضو من فريق التوثيق قبل نشرها، حفاظاً على الدقة وخصوصية أصحاب الذكريات." : response.message, code: response.referenceCode });
+      keep({
+        ...story,
+        share: {
+          referenceCode: response.referenceCode,
+          contributionId: response.contribution.id,
+          creditedAs,
+          sharedAt: new Date().toISOString(),
+        },
+      });
+      setReceipt({
+        visibility,
+        message: isArabic
+          ? "وصلت حكايتك إلى فريق المراجعة في حكاية. بعد موافقة المشرف تظهر في صفحة المكان لكل الزوار."
+          : "Your story reached the Hikaya review team. Once an admin approves it, it appears on the place page for every visitor.",
+        code: response.referenceCode,
+        creditedAs,
+      });
       setStep("done");
     } catch (caught) {
       setError(isArabic
-        ? "تعذر إرسال المساهمة الآن. احتفظ بنصك وحاول مجدداً بعد التحقق من اتصال الخادم."
-        : caught instanceof Error ? caught.message : "The contribution could not be submitted.");
+        ? "تعذر إرسال الحكاية الآن. احتفظ بنصك وحاول مجدداً بعد التحقق من اتصال الخادم."
+        : caught instanceof Error ? caught.message : "The story could not be sent.");
     } finally {
       setSubmitting(false);
     }
+  };
+
+  const startOver = () => {
+    setForm({ locationId: form.locationId, title: "", content: "" });
+    setVisibility(null);
+    setCredit(null);
+    setReceipt(null);
+    setStep("place");
   };
 
   const fieldClass =
     "w-full bg-brand-bg border border-brand-border rounded-xl px-4 py-2.5 text-sm text-brand-text focus:outline-none focus:border-brand-amber transition-colors";
   const labelClass =
     "text-xs font-mono uppercase tracking-widest text-brand-muted block mb-1.5";
+  const choiceClass = (active: boolean) =>
+    `w-full text-start rounded-2xl border p-4 flex gap-3 transition-colors ${
+      active
+        ? "border-brand-amber bg-brand-amber/10 ring-2 ring-brand-amber"
+        : "border-brand-border hover:border-brand-amber"
+    }`;
 
   if (step === "done" && receipt) {
+    const shared = receipt.visibility === "public";
     return (
       <motion.div
         initial={{ opacity: 0, y: 10 }}
@@ -120,14 +213,25 @@ export const ContributionWizard: React.FC<ContributionWizardProps> = ({
         className="bg-brand-surface rounded-3xl border border-brand-border p-6 space-y-4 shadow-sm text-center"
       >
         <span className="w-12 h-12 rounded-full bg-green-50 border border-green-200 inline-flex items-center justify-center">
-          <Check className="w-6 h-6 text-green-700" />
+          {shared ? <Check className="w-6 h-6 text-green-700" /> : <Lock className="w-6 h-6 text-green-700" />}
         </span>
-        <h3 className="font-serif font-black text-xl text-brand-olive">{isArabic ? "شكراً لك" : "Thank you"}</h3>
+        <h3 className="font-serif font-black text-xl text-brand-olive">
+          {shared ? (isArabic ? "أُرسلت للمراجعة" : "Sent for review") : (isArabic ? "محفوظة لك وحدك" : "Saved just for you")}
+        </h3>
         <p className="text-sm text-brand-text leading-relaxed max-w-md mx-auto">
           {receipt.message}
         </p>
 
-        {receipt.code && (
+        {shared && (
+          <p className="text-xs text-brand-muted flex items-center justify-center gap-1.5">
+            {receipt.creditedAs ? <UserRound className="w-3.5 h-3.5" /> : <EyeOff className="w-3.5 h-3.5" />}
+            {receipt.creditedAs
+              ? (isArabic ? `ستظهر باسم: ${receipt.creditedAs}` : `It will appear as: ${receipt.creditedAs}`)
+              : (isArabic ? "ستظهر دون اسم؛ شاركت الحكاية فقط." : "It will appear without a name — you shared only the story.")}
+          </p>
+        )}
+
+        {shared && receipt.code && (
           <div className="bg-brand-bg border border-brand-border-light rounded-2xl p-4 space-y-2 inline-block">
             <p className="text-xs font-mono uppercase tracking-widest text-brand-muted">
               {isArabic ? "رمز المتابعة" : "Your reference"}
@@ -150,22 +254,25 @@ export const ContributionWizard: React.FC<ContributionWizardProps> = ({
               </button>
             </div>
             <p className="text-xs text-brand-muted max-w-xs">
-              {isArabic ? "احتفظ بهذا الرمز لتتابع مساهمتك لاحقاً؛ لا توجد حسابات، لذلك فهو طريقك الوحيد للعودة إليها." : "Keep this to check on your memory later — there are no accounts, so it is the only way back to it."}
+              {isArabic ? "تتابع حالتها في جواز سفرك، أو بهذا الرمز من أي جهاز." : "Follow its review in your passport, or with this code from any device."}
             </p>
           </div>
         )}
 
-        <div>
+        <div className="flex flex-wrap items-center justify-center gap-4">
+          <Link
+            to="/me"
+            className="bg-brand-olive hover:bg-brand-olive-deep text-brand-bg text-xs font-serif font-black tracking-widest uppercase px-5 py-2.5 rounded-full inline-flex items-center gap-2 transition-colors"
+          >
+            <BookHeart className="w-3.5 h-3.5 text-brand-amber" />
+            {isArabic ? "افتح جواز سفري" : "Open my passport"}
+          </Link>
           <button
             type="button"
-            onClick={() => {
-              setForm({ locationId: form.locationId, title: "", content: "" });
-              setReceipt(null);
-              setStep("place");
-            }}
+            onClick={startOver}
             className="text-xs font-serif font-bold uppercase tracking-widest text-brand-olive hover:text-brand-amber"
           >
-            {isArabic ? "شارك ذكرى أخرى" : "Share another memory"}
+            {isArabic ? "اكتب حكاية أخرى" : "Write another story"}
           </button>
         </div>
       </motion.div>
@@ -215,7 +322,7 @@ export const ContributionWizard: React.FC<ContributionWizardProps> = ({
           {step === "place" && (
             <>
               <h3 className="font-serif font-black text-xl text-brand-olive">
-                {isArabic ? "عن أي مكان تتحدث هذه الذكرى؟" : "Which place is this about?"}
+                {isArabic ? "عن أي مكان تتحدث حكايتك؟" : "Which place is your story about?"}
               </h3>
               <div>
                 <label className={labelClass} htmlFor="wizard-location">
@@ -252,7 +359,7 @@ export const ContributionWizard: React.FC<ContributionWizardProps> = ({
             <>
               <div>
                 <h3 className="font-serif font-black text-xl text-brand-olive">
-                  {isArabic ? "ماذا تتذكر؟" : "What do you remember?"}
+                  {isArabic ? "ما حكايتك مع هذا المكان؟" : "What is your story of this place?"}
                 </h3>
                 <p className="text-xs text-brand-muted">
                   {isArabic ? "شخص أو رائحة أو موسم أو عادة؛ أي تفصيل قد يضيع إن لم يُروَ." : "A person, a smell, a season, a habit — anything that would otherwise be lost."}
@@ -273,7 +380,7 @@ export const ContributionWizard: React.FC<ContributionWizardProps> = ({
               </div>
               <div>
                 <label className={labelClass} htmlFor="wizard-content">
-                  {isArabic ? "ذكراك" : "Your memory"}
+                  {isArabic ? "حكايتك" : "Your story"}
                 </label>
                 <textarea
                   id="wizard-content"
@@ -339,54 +446,101 @@ export const ContributionWizard: React.FC<ContributionWizardProps> = ({
             </>
           )}
 
-          {step === "you" && (
+          {step === "share" && (
             <>
-              <div>
-                <h3 className="font-serif font-black text-xl text-brand-olive">
-                  {isArabic ? "لمن ننسب الذكرى؟" : "Who should we credit?"}
-                </h3>
-                <p className="text-xs text-brand-muted">
-                  {isArabic ? "الحقلان اختياريان. اتركهما فارغين إن رغبت في عدم ذكر الاسم." : "Both optional. Leave them blank to stay anonymous."}
-                </p>
+              <h3 className="font-serif font-black text-xl text-brand-olive">
+                {isArabic ? "هل تريد أن تكون حكايتك عامة؟" : "Do you want to make your story public?"}
+              </h3>
+              <div role="radiogroup" aria-label={isArabic ? "من يرى الحكاية" : "Who can see the story"} className="grid gap-3 sm:grid-cols-2">
+                <button type="button" role="radio" aria-checked={visibility === "private"} onClick={() => setVisibility("private")} className={choiceClass(visibility === "private")}>
+                  <Lock className="w-5 h-5 shrink-0 text-brand-amber mt-0.5" />
+                  <span>
+                    <span className="block text-sm font-bold text-brand-olive">{isArabic ? "لا، أبقها لي" : "No, keep it private"}</span>
+                    <span className="block text-xs text-brand-muted leading-relaxed mt-1">
+                      {isArabic ? "تُحفظ في جواز سفرك ولا يراها أحد غيرك. يمكنك مشاركتها لاحقاً." : "Saved in your passport and seen by nobody else. You can share it later."}
+                    </span>
+                  </span>
+                </button>
+                <button type="button" role="radio" aria-checked={visibility === "public"} onClick={() => setVisibility("public")} className={choiceClass(visibility === "public")}>
+                  <Globe className="w-5 h-5 shrink-0 text-brand-amber mt-0.5" />
+                  <span>
+                    <span className="block text-sm font-bold text-brand-olive">{isArabic ? "نعم، شاركها مع الجميع" : "Yes, share it with everyone"}</span>
+                    <span className="block text-xs text-brand-muted leading-relaxed mt-1">
+                      {isArabic ? "تُرسل إلى فريق المراجعة، وبعد موافقة المشرف تظهر في صفحة المكان لكل الزوار." : "Sent to the review team. Once an admin approves it, it appears on the place page for every visitor."}
+                    </span>
+                  </span>
+                </button>
               </div>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div>
-                  <label className={labelClass} htmlFor="wizard-name">
-                    {isArabic ? "الاسم" : "Your name"}
-                  </label>
-                  <input
-                    id="wizard-name"
-                    className={fieldClass}
-                    value={form.contributorName ?? ""}
-                    onChange={(event) => update("contributorName", event.target.value)}
-                    maxLength={120}
-                  />
+
+              {visibility === "public" && (
+                <div className="space-y-3 border-t border-brand-border-light pt-4">
+                  <p className="text-sm font-bold text-brand-olive">
+                    {isArabic ? "ماذا نشارك معها؟" : "What should we share with it?"}
+                  </p>
+                  <div role="radiogroup" aria-label={isArabic ? "ما يُنشر مع الحكاية" : "What is published with the story"} className="grid gap-3 sm:grid-cols-2">
+                    <button type="button" role="radio" aria-checked={credit === "named"} onClick={() => chooseCredit("named")} className={choiceClass(credit === "named")}>
+                      <UserRound className="w-5 h-5 shrink-0 text-brand-amber mt-0.5" />
+                      <span>
+                        <span className="block text-sm font-bold text-brand-olive">{isArabic ? "الحكاية واسمي" : "The story and my name"}</span>
+                        <span className="block text-xs text-brand-muted leading-relaxed mt-1">
+                          {isArabic ? "يظهر اسمك مع الحكاية." : "Your name appears with the story."}
+                        </span>
+                      </span>
+                    </button>
+                    <button type="button" role="radio" aria-checked={credit === "anonymous"} onClick={() => chooseCredit("anonymous")} className={choiceClass(credit === "anonymous")}>
+                      <EyeOff className="w-5 h-5 shrink-0 text-brand-amber mt-0.5" />
+                      <span>
+                        <span className="block text-sm font-bold text-brand-olive">{isArabic ? "الحكاية فقط" : "Only the story"}</span>
+                        <span className="block text-xs text-brand-muted leading-relaxed mt-1">
+                          {isArabic ? "تُنشر دون اسم، ولا نرسل أي معلومات عنك." : "Published without a name. Nothing about you is sent."}
+                        </span>
+                      </span>
+                    </button>
+                  </div>
+
+                  {credit === "named" && (
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      <div>
+                        <label className={labelClass} htmlFor="wizard-name">
+                          {isArabic ? "الاسم الظاهر" : "Name to show"}
+                        </label>
+                        <input
+                          id="wizard-name"
+                          className={fieldClass}
+                          value={form.contributorName ?? ""}
+                          onChange={(event) => update("contributorName", event.target.value)}
+                          maxLength={120}
+                        />
+                      </div>
+                      <div>
+                        <label className={labelClass} htmlFor="wizard-email">
+                          {isArabic ? "البريد الإلكتروني (اختياري)" : "Email (optional)"}
+                        </label>
+                        <input
+                          id="wizard-email"
+                          type="email"
+                          className={fieldClass}
+                          value={form.contributorEmail ?? ""}
+                          onChange={(event) => update("contributorEmail", event.target.value)}
+                          placeholder={isArabic ? "لا يُنشر؛ للتواصل معك فقط" : "Never published; only so the team can reach you"}
+                        />
+                      </div>
+                    </div>
+                  )}
+
+                  <p className="text-xs text-brand-muted flex items-start gap-2 leading-relaxed">
+                    <ShieldCheck className="w-4 h-4 text-brand-olive shrink-0 mt-0.5" />
+                    {isArabic ? "لا يظهر شيء للعموم قبل موافقة المشرف. تُنشر الحكايات الشخصية بوصفها تراثاً شفوياً وتبقى منفصلة عن التاريخ الموثق." : "Nothing is public until an admin approves it. Personal stories are published as oral heritage, kept separate from documented history."}
+                  </p>
                 </div>
-                <div>
-                  <label className={labelClass} htmlFor="wizard-email">
-                    {isArabic ? "البريد الإلكتروني" : "Email"}
-                  </label>
-                  <input
-                    id="wizard-email"
-                    type="email"
-                    className={fieldClass}
-                    value={form.contributorEmail ?? ""}
-                    onChange={(event) => update("contributorEmail", event.target.value)}
-                    placeholder={isArabic ? "فقط إن سمحت لفريق التوثيق بالتواصل معك" : "Only if the documentation team may contact you"}
-                  />
-                </div>
-              </div>
-              <p className="text-xs text-brand-muted flex items-start gap-2 leading-relaxed">
-                <ShieldCheck className="w-4 h-4 text-brand-olive shrink-0 mt-0.5" />
-                {isArabic ? "يراجع عضو من فريق التوثيق كل مساهمة قبل ظهورها. تُنشر الذكريات الشخصية بوصفها تراثاً شفوياً وتبقى منفصلة عن التاريخ الموثق." : "A documentation-team member reviews every contribution before it appears. Personal memories are published as oral heritage, kept separate from documented history."}
-              </p>
+              )}
             </>
           )}
       </motion.div>
 
       {error && (
         <div className="text-xs text-red-800 bg-red-50 border border-red-200 rounded-xl px-4 py-3 space-y-1">
-          <p className="font-bold">{isArabic ? "لم تُحفظ المساهمة." : "The contribution was not saved."}</p>
+          <p className="font-bold">{isArabic ? "لم تُرسل الحكاية." : "The story was not sent."}</p>
           <p>{error}</p>
           <p className="text-red-700">
             {isArabic ? "لم يُخزّن شيء؛ انسخ نصك قبل مغادرة الصفحة." : "Nothing was stored — please copy your text before leaving the page."}
@@ -405,19 +559,25 @@ export const ContributionWizard: React.FC<ContributionWizardProps> = ({
           {isArabic ? "رجوع" : "Back"}
         </button>
 
-        {step === "you" ? (
+        {step === "share" ? (
           <button
             type="button"
             onClick={() => void submit()}
-            disabled={submitting}
-            className="bg-brand-olive hover:bg-brand-olive-deep disabled:opacity-60 text-brand-bg text-xs font-serif font-black tracking-widest uppercase px-6 py-3 rounded-full inline-flex items-center gap-2 transition-colors"
+            disabled={submitting || !canSubmit}
+            className="bg-brand-olive hover:bg-brand-olive-deep disabled:opacity-40 disabled:cursor-not-allowed text-brand-bg text-xs font-serif font-black tracking-widest uppercase px-6 py-3 rounded-full inline-flex items-center gap-2 transition-colors"
           >
             {submitting ? (
               <Loader2 className="w-3.5 h-3.5 animate-spin" />
+            ) : visibility === "private" ? (
+              <Lock className="w-3.5 h-3.5 text-brand-amber" />
             ) : (
               <Send className="w-3.5 h-3.5 text-brand-amber" />
             )}
-            {submitting ? (isArabic ? "جارٍ الإرسال…" : "Sending…") : (isArabic ? "إرسال" : "Submit")}
+            {submitting
+              ? (isArabic ? "جارٍ الإرسال…" : "Sending…")
+              : visibility === "private"
+                ? (isArabic ? "احفظها لي" : "Save privately")
+                : (isArabic ? "أرسلها للمراجعة" : "Send for review")}
           </button>
         ) : (
           <button

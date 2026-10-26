@@ -61,7 +61,8 @@ export interface AccountUser {
 
 export interface SavedStory {
   id: string;
-  kind: "journey" | "location_story";
+  /** `my_story` is one the visitor wrote; private unless they shared it. */
+  kind: "journey" | "location_story" | "my_story";
   title: string;
   locationId?: string | null;
   governorateIds: string[];
@@ -78,6 +79,52 @@ export interface AccountContribution {
   reviewNotes?: string | null;
   submittedAt: string;
 }
+
+/** The payload of a story the visitor wrote themselves. */
+export interface MyStoryPayload {
+  content: string;
+  mediaUrl?: string;
+  mediaType?: "image" | "audio" | "video";
+  /** Set once it was sent for review; the public copy is a contribution. */
+  share?: {
+    referenceCode?: string;
+    contributionId: string;
+    /** The name shown with it, or null when only the story was shared. */
+    creditedAs: string | null;
+    sharedAt: string;
+  };
+}
+
+export type ContributionStatus = AccountContribution["status"];
+
+/** A submission as the review team sees it. */
+export interface ReviewItem {
+  id: string;
+  referenceCode?: string;
+  locationId: string;
+  title: string;
+  content: string;
+  contributorName?: string;
+  contributorEmail?: string;
+  mediaUrl?: string;
+  mediaType?: "image" | "audio" | "video";
+  status: ContributionStatus;
+  reviewNotes?: string | null;
+  reviewedAt?: string | null;
+  submittedAt: string;
+}
+
+export interface ReviewQueue {
+  status: ContributionStatus;
+  items: ReviewItem[];
+  counts: Record<ContributionStatus, number>;
+}
+
+/** Editors and admins can open the review queue. */
+export const isReviewerRole = (role: string | undefined) => role === "editor" || role === "admin";
+
+/** Fired after a review decision so the header badge can recount. */
+export const REVIEW_EVENT = "hikaya:review-queue";
 
 interface RemotePhoto {
   id: string;
@@ -136,6 +183,19 @@ export const accountApi = {
   deleteAccount: (password: string) =>
     request<void>("/auth/me", { method: "DELETE", body: JSON.stringify({ password }) }),
   contributions: () => request<AccountContribution[]>("/me/contributions"),
+};
+
+export const reviewApi = {
+  queue: (status: ContributionStatus) =>
+    request<ReviewQueue>(`/admin/contributions?status=${encodeURIComponent(status)}`),
+  review: async (id: string, decision: "approved" | "rejected", notes?: string) => {
+    const reviewed = await request<ReviewItem>(
+      `/admin/contributions/${encodeURIComponent(id)}/review`,
+      post({ decision, notes: notes?.trim() || undefined }),
+    );
+    notify(REVIEW_EVENT);
+    return reviewed;
+  },
 };
 
 // --- Local storage -----------------------------------------------------------
@@ -350,6 +410,17 @@ export function saveStory(story: Omit<SavedStory, "id" | "createdAt"> & Partial<
   writeSavedStories([saved, ...readSavedStories().filter((item) => item.id !== saved.id)]);
   if (signedIn) void sendStory(saved);
   return saved;
+}
+
+/**
+ * Replace a kept story, e.g. once a private story has been shared. The API
+ * keeps the first copy of an id, so the account copy is removed and re-sent.
+ */
+export async function updateStory(story: SavedStory) {
+  writeSavedStories(readSavedStories().map((item) => (item.id === story.id ? story : item)));
+  if (!signedIn) return;
+  await request(`/me/stories/${encodeURIComponent(story.id)}`, { method: "DELETE" }).catch(() => undefined);
+  await sendStory(story);
 }
 
 export function deleteStory(id: string) {

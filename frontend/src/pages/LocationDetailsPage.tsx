@@ -476,14 +476,14 @@ export const LocationDetailsPage: React.FC = () => {
             <div className="space-y-4">
               <div className="flex items-end justify-between gap-4 flex-wrap">
                 <p className="text-sm text-brand-muted">
-                  {isArabic ? "ذكريات يشاركها الزوار والسكان وتُنشر بعد المراجعة." : "Contributed by visitors and residents, published after review."}
+                  {isArabic ? "حكايات يكتبها الزوار والسكان وتُنشر بعد موافقة المشرف." : "Stories written by visitors and residents, published after an admin approves them."}
                 </p>
                 <Link
                   to={`/contribute?location=${location.id}`}
                   className="text-xs font-serif font-bold uppercase tracking-widest text-brand-olive hover:text-brand-amber inline-flex items-center gap-1.5"
                 >
                   <PenLine className="w-3.5 h-3.5" />
-                  {isArabic ? "أضف ذكراك" : "Add yours"}
+                  {isArabic ? "اكتب حكايتك" : "Write your story"}
                 </Link>
               </div>
 
@@ -502,7 +502,7 @@ export const LocationDetailsPage: React.FC = () => {
                       viewport={{ once: true, margin: "-45px" }}
                       transition={{ duration: reduced ? 0.15 : 0.4, delay: reduced ? 0 : index * 0.06, ease: "easeOut" }}
                       whileHover={reduced ? undefined : { y: -4, scale: 1.01 }}
-                      className="group relative space-y-2 overflow-hidden rounded-3xl border border-s-[3px] border-brand-border bg-white/80 p-5 shadow-sm transition-colors duration-300 hover:border-brand-amber/50 hover:border-s-brand-amber hover:bg-brand-surface hover:shadow-md focus:outline-none focus-visible:border-brand-amber focus-visible:shadow-md focus-visible:ring-2 focus-visible:ring-brand-amber/30"
+                      className="group relative space-y-2 overflow-hidden rounded-3xl border border-s-[3px] border-brand-border bg-white/80 dark:bg-brand-surface/80 p-5 shadow-sm transition-colors duration-300 hover:border-brand-amber/50 hover:border-s-brand-amber hover:bg-brand-surface hover:shadow-md focus:outline-none focus-visible:border-brand-amber focus-visible:shadow-md focus-visible:ring-2 focus-visible:ring-brand-amber/30"
                     >
                       <div className="flex items-start gap-2">
                         <Quote className="mt-0.5 h-4 w-4 shrink-0 text-brand-amber transition-transform duration-300 group-hover:-rotate-6 group-hover:scale-110" aria-hidden="true" />

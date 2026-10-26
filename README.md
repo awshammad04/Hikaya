@@ -68,6 +68,7 @@ psql -d hikaya -f database/seed-generated.sql
 psql -d hikaya -f database/migrations/002-governorates.sql
 psql -d hikaya -f database/seed-palestine.sql
 psql -d hikaya -f database/migrations/004-accounts.sql
+psql -d hikaya -f database/migrations/005-story-review.sql
 echo 'DATABASE_URL=postgresql://user:password@localhost:5432/hikaya' >> backend/.env
 ```
 

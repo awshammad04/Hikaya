@@ -19,7 +19,7 @@ import {
   publicUser,
 } from '../database/repositories/accounts.repository';
 import { ACCOUNTS_REPOSITORY } from '../database/repositories/tokens';
-import type { User } from '../database/entities/account.entity';
+import type { User, UserRole } from '../database/entities/account.entity';
 import { SESSION_TTL_SECONDS } from './session';
 
 const SCRYPT = { N: 16384, r: 8, p: 1, keyLength: 64 };
@@ -71,6 +71,26 @@ async function verifyPassword(
 const hashToken = (token: string) =>
   createHash('sha256').update(token).digest('hex');
 
+/** Roles that may read the review queue and publish or reject submissions. */
+const REVIEWER_ROLES: ReadonlySet<UserRole> = new Set(['editor', 'admin']);
+
+export const isReviewer = (user: User | null | undefined): boolean =>
+  Boolean(user && REVIEWER_ROLES.has(user.role));
+
+/**
+ * Accounts listed in HIKAYA_ADMIN_EMAILS act as admins without a database
+ * edit, which is how the first reviewer is appointed on a fresh deployment.
+ */
+function withConfiguredRole(user: User): User {
+  const admins = (process.env.HIKAYA_ADMIN_EMAILS ?? '')
+    .split(',')
+    .map((email) => email.trim().toLowerCase())
+    .filter(Boolean);
+  return admins.includes(user.email.toLowerCase())
+    ? { ...user, role: 'admin' }
+    : user;
+}
+
 export interface SignedIn {
   user: User;
   token: string;
@@ -112,7 +132,10 @@ export class AuthService {
       passwordHash: await hashPassword(password),
     });
     this.logger.log(`Account created for ${user.id}`);
-    return { user, token: await this.startSession(user.id) };
+    return {
+      user: withConfiguredRole(user),
+      token: await this.startSession(user.id),
+    };
   }
 
   async logIn(
@@ -130,7 +153,7 @@ export class AuthService {
     }
     this.failures.delete(key);
     await this.accounts.touchLogin(stored.id);
-    const user = publicUser(stored);
+    const user = withConfiguredRole(publicUser(stored));
     return { user, token: await this.startSession(user.id) };
   }
 
@@ -140,7 +163,8 @@ export class AuthService {
 
   async userForToken(token: string | undefined): Promise<User | null> {
     if (!token || token.length > 200) return null;
-    return this.accounts.findSessionUser(hashToken(token));
+    const user = await this.accounts.findSessionUser(hashToken(token));
+    return user && withConfiguredRole(user);
   }
 
   /** Permanently removes the account and everything attached to it. */

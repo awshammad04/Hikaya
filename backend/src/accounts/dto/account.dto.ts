@@ -143,7 +143,7 @@ export class AddStoryDto {
   @Matches(RECORD_ID)
   id?: string;
 
-  @IsIn(['journey', 'location_story'])
+  @IsIn(['journey', 'location_story', 'my_story'])
   kind: SavedStoryKind;
 
   @IsString()
@@ -162,7 +162,7 @@ export class AddStoryDto {
   @MaxLength(40, { each: true })
   governorateIds?: string[];
 
-  /** The story as the frontend renders it (a journey or a generated story). */
+  /** The story as the frontend renders it (a journey, a generated story or the visitor's own). */
   @IsObject()
   payload: Record<string, unknown>;
 
