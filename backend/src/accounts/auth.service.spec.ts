@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   ConflictException,
   HttpException,
   UnauthorizedException,
@@ -9,9 +10,14 @@ import { IN_MEMORY_REPOSITORY_PROVIDERS } from '../testing/in-memory-providers';
 import { ACCOUNTS_REPOSITORY } from '../database/repositories/tokens';
 import type { AccountsRepository } from '../database/repositories/accounts.repository';
 
+const LAYLA = { countryCode: '+970', phone: '0599123456' };
+
 describe('AuthService', () => {
   let service: AuthService;
   let accounts: AccountsRepository;
+
+  const signUpLayla = () =>
+    service.signUp('Layla', LAYLA.countryCode, LAYLA.phone, 'olive-tree-1948');
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -22,79 +28,112 @@ describe('AuthService', () => {
     accounts = module.get(ACCOUNTS_REPOSITORY);
   });
 
-  it('creates an account with a normalized email and a usable session', async () => {
+  afterEach(() => {
+    delete process.env.HIKAYA_ADMIN_PHONES;
+    delete process.env.HIKAYA_ADMIN_EMAILS;
+  });
+
+  it('creates an account with a normalized phone number and a usable session', async () => {
     const { user, token } = await service.signUp(
       '  Layla  ',
-      'Layla@Example.com',
+      '+970',
+      '059 912 3456',
       'olive-tree-1948',
     );
-    expect(user.email).toBe('layla@example.com');
+    expect(user.phone).toBe('+970599123456');
+    expect(user.email).toBeNull();
     expect(user.fullName).toBe('Layla');
     expect(user).not.toHaveProperty('passwordHash');
     expect((await service.userForToken(token))?.id).toBe(user.id);
   });
 
+  it('refuses a number that cannot be real', async () => {
+    await expect(
+      service.signUp('Layla', '+970', '12345', 'olive-tree-1948'),
+    ).rejects.toBeInstanceOf(BadRequestException);
+  });
+
   it('never stores the password or the session token in plain text', async () => {
-    const { user, token } = await service.signUp(
-      'Layla',
-      'layla@example.com',
-      'olive-tree-1948',
-    );
+    const { user, token } = await signUpLayla();
     const stored = await accounts.findUserById(user.id);
     expect(stored?.passwordHash).toMatch(/^scrypt\$/);
     expect(stored?.passwordHash).not.toContain('olive-tree-1948');
     expect(await accounts.findSessionUser(token)).toBeNull();
   });
 
-  it('refuses a second account for the same email', async () => {
-    await service.signUp('Layla', 'layla@example.com', 'olive-tree-1948');
+  it('refuses a second account for the same number, however it is written', async () => {
+    await signUpLayla();
     await expect(
-      service.signUp('Other', 'LAYLA@example.com', 'another-pass-1'),
+      service.signUp('Other', '+972', '+970 59 912 3456', 'another-pass-1'),
     ).rejects.toBeInstanceOf(ConflictException);
   });
 
-  it('logs in with the right password only', async () => {
-    await service.signUp('Layla', 'layla@example.com', 'olive-tree-1948');
+  it('logs in with the phone number and the right password only', async () => {
+    await signUpLayla();
     await expect(
-      service.logIn('layla@example.com', 'wrong-password', 'client'),
+      service.logIn(LAYLA, 'wrong-password', 'client'),
     ).rejects.toBeInstanceOf(UnauthorizedException);
     const { user } = await service.logIn(
-      'LAYLA@example.com',
+      { countryCode: '+970', phone: '599 123 456' },
       'olive-tree-1948',
       'client',
     );
-    expect(user.email).toBe('layla@example.com');
+    expect(user.phone).toBe('+970599123456');
+  });
+
+  it('still logs in accounts that were made with an email', async () => {
+    const { user } = await signUpLayla();
+    const { passwordHash } = (await accounts.findUserById(user.id))!;
+    await accounts.createUser({
+      fullName: 'Older account',
+      email: 'old@example.com',
+      passwordHash,
+    });
+    const signedIn = await service.logIn(
+      { email: 'OLD@example.com' },
+      'olive-tree-1948',
+      'client',
+    );
+    expect(signedIn.user.email).toBe('old@example.com');
+    expect(signedIn.user.phone).toBeNull();
   });
 
   it('throttles repeated failed logins from one client', async () => {
-    await service.signUp('Layla', 'layla@example.com', 'olive-tree-1948');
+    await signUpLayla();
     for (let attempt = 0; attempt < 8; attempt += 1)
       await expect(
-        service.logIn('layla@example.com', 'guess', 'client'),
+        service.logIn(LAYLA, 'guess', 'client'),
       ).rejects.toBeInstanceOf(UnauthorizedException);
     const blocked = await service
-      .logIn('layla@example.com', 'olive-tree-1948', 'client')
+      .logIn(LAYLA, 'olive-tree-1948', 'client')
       .catch((error: unknown) => error);
     expect(blocked).toBeInstanceOf(HttpException);
     expect((blocked as HttpException).getStatus()).toBe(429);
   });
 
-  it('ends a session on logout', async () => {
-    const { token } = await service.signUp(
-      'Layla',
-      'layla@example.com',
+  it('makes numbers listed in HIKAYA_ADMIN_PHONES admins', async () => {
+    process.env.HIKAYA_ADMIN_PHONES = '+970 599 123 456, 970522222222';
+    const { user, token } = await signUpLayla();
+    expect(user.role).toBe('admin');
+    expect((await service.userForToken(token))?.role).toBe('admin');
+
+    const other = await service.signUp(
+      'Sami',
+      '+970',
+      '0598765432',
       'olive-tree-1948',
     );
+    expect(other.user.role).toBe('visitor');
+  });
+
+  it('ends a session on logout', async () => {
+    const { token } = await signUpLayla();
     await service.logOut(token);
     expect(await service.userForToken(token)).toBeNull();
   });
 
   it('deletes the account and its data only with the password', async () => {
-    const { user, token } = await service.signUp(
-      'Layla',
-      'layla@example.com',
-      'olive-tree-1948',
-    );
+    const { user, token } = await signUpLayla();
     await accounts.addProgress(user.id, { visited: ['silwan'] });
     await expect(
       service.deleteAccount(user, 'wrong-password'),

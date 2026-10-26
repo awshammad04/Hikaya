@@ -5,6 +5,8 @@ import { PageTransition } from "../components/motion";
 import { useInterfaceLanguage } from "../context/LanguageContext";
 import { AccountError, useAuth } from "../context/AuthContext";
 import { journeyTotals } from "../services/accountSync";
+import { PhoneField } from "../components/PhoneField";
+import { DEFAULT_COUNTRY_CODE, normalizePhone } from "../utils/phone";
 
 const fieldClass =
   "w-full bg-brand-bg border border-brand-border rounded-xl px-4 py-2.5 text-sm text-brand-text focus:outline-none focus:border-brand-amber transition-colors";
@@ -12,8 +14,10 @@ const labelClass =
   "text-xs font-mono uppercase tracking-widest text-brand-muted block mb-1.5";
 
 /**
- * Sign in or create an account. `?mode=login` opens the sign-in tab and
- * `?next=/path` returns there afterwards. Guests are never forced here.
+ * Sign in or create an account with a phone number, the usual identifier in
+ * Palestine. `?mode=login` opens the sign-in tab and `?next=/path` returns
+ * there afterwards. Accounts made before phone sign-up can still log in with
+ * their email. Guests are never forced here.
  */
 export const AccountPage: React.FC = () => {
   const { isArabic } = useInterfaceLanguage();
@@ -22,7 +26,10 @@ export const AccountPage: React.FC = () => {
   const navigate = useNavigate();
   const [mode, setMode] = useState<"signup" | "login">(params.get("mode") === "login" ? "login" : "signup");
   const [name, setName] = useState("");
+  const [countryCode, setCountryCode] = useState(DEFAULT_COUNTRY_CODE);
+  const [phone, setPhone] = useState("");
   const [email, setEmail] = useState("");
+  const [withEmail, setWithEmail] = useState(false);
   const [password, setPassword] = useState("");
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -32,21 +39,29 @@ export const AccountPage: React.FC = () => {
 
   if (status === "signed-in") return <Navigate to={next} replace />;
 
+  const usingEmail = mode === "login" && withEmail;
+
   const submit = async (event: React.FormEvent) => {
     event.preventDefault();
-    setBusy(true);
     setError(null);
+    if (!usingEmail && !normalizePhone(countryCode, phone)) {
+      setError(isArabic ? "تحقق من رقم الهاتف ورمز الدولة." : "Check the phone number and country code.");
+      return;
+    }
+    setBusy(true);
     try {
-      if (mode === "signup") await signUp(name, email, password);
-      else await logIn(email, password);
+      if (mode === "signup") await signUp(name, countryCode, phone, password);
+      else await logIn(usingEmail ? { email } : { countryCode, phone }, password);
       navigate(next, { replace: true });
     } catch (caught) {
       const status = caught instanceof AccountError ? caught.status : undefined;
       setError(
         status === 401
-          ? (isArabic ? "البريد الإلكتروني أو كلمة المرور غير صحيحة." : "The email or password is incorrect.")
+          ? usingEmail
+            ? (isArabic ? "البريد الإلكتروني أو كلمة المرور غير صحيحة." : "The email or password is incorrect.")
+            : (isArabic ? "رقم الهاتف أو كلمة المرور غير صحيحة." : "The phone number or password is incorrect.")
           : status === 409
-            ? (isArabic ? "يوجد حساب بهذا البريد الإلكتروني. سجّل الدخول بدلاً من ذلك." : "An account with this email already exists. Log in instead.")
+            ? (isArabic ? "يوجد حساب بهذا الرقم. سجّل الدخول بدلاً من ذلك." : "An account with this phone number already exists. Log in instead.")
             : status === 429
               ? (isArabic ? "محاولات كثيرة غير ناجحة. انتظر بضع دقائق ثم حاول مجدداً." : "Too many failed attempts. Wait a few minutes and try again.")
               : status === 400 && caught instanceof Error
@@ -110,10 +125,29 @@ export const AccountPage: React.FC = () => {
                 <input id="account-name" className={fieldClass} value={name} onChange={(event) => setName(event.target.value)} required maxLength={80} autoComplete="name" />
               </div>
             )}
-            <div>
-              <label className={labelClass} htmlFor="account-email">{isArabic ? "البريد الإلكتروني" : "Email"}</label>
-              <input id="account-email" type="email" dir="ltr" className={fieldClass} value={email} onChange={(event) => setEmail(event.target.value)} required maxLength={254} autoComplete="email" />
-            </div>
+            {usingEmail ? (
+              <div>
+                <label className={labelClass} htmlFor="account-email">{isArabic ? "البريد الإلكتروني" : "Email"}</label>
+                <input id="account-email" type="email" dir="ltr" className={fieldClass} value={email} onChange={(event) => setEmail(event.target.value)} required maxLength={254} autoComplete="email" />
+              </div>
+            ) : (
+              <PhoneField
+                id="account-phone"
+                label={isArabic ? "رقم الهاتف" : "Phone number"}
+                countryCode={countryCode}
+                number={phone}
+                onCountryCode={setCountryCode}
+                onNumber={setPhone}
+                preview={mode === "signup"}
+              />
+            )}
+            {mode === "login" && (
+              <button type="button" onClick={() => { setWithEmail(!withEmail); setError(null); }} className="text-xs font-bold text-brand-olive hover:text-brand-amber">
+                {withEmail
+                  ? (isArabic ? "الدخول برقم الهاتف" : "Log in with your phone number")
+                  : (isArabic ? "حسابك قديم بالبريد الإلكتروني؟ ادخل به" : "Older account with an email? Log in with it")}
+              </button>
+            )}
             <div>
               <label className={labelClass} htmlFor="account-password">{isArabic ? "كلمة المرور" : "Password"}</label>
               <input id="account-password" type="password" dir="ltr" className={fieldClass} value={password} onChange={(event) => setPassword(event.target.value)} required minLength={mode === "signup" ? 8 : 1} maxLength={200} autoComplete={mode === "signup" ? "new-password" : "current-password"} />

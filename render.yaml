@@ -66,6 +66,10 @@ services:
           envVarKey: AI_INTERNAL_TOKEN
       - key: AI_SERVICE_TIMEOUT_MS
         value: '150000'
+      - key: HIKAYA_ADMIN_PHONES
+        sync: false
+      - key: HIKAYA_ADMIN_EMAILS
+        sync: false
   - type: pserv
     name: hikaya-ai
     runtime: python

@@ -8,7 +8,7 @@ import { DataSourceBanner } from "../components/DataSourceBanner";
 import { LoadingRegion, SkeletonLine } from "../components/Skeleton";
 import { PageTransition } from "../components/motion";
 import { useInterfaceLanguage } from "../context/LanguageContext";
-import { Clock, HeartHandshake, ShieldCheck, Sparkles } from "lucide-react";
+import { Clock, Globe, HeartHandshake, Lock, ShieldCheck, Sparkles } from "lucide-react";
 
 /**
  * Contribution page.
@@ -32,7 +32,7 @@ export const ContributePage: React.FC = () => {
 
         <div className="max-w-3xl print:hidden">
           <h1 className="font-serif font-black text-3xl sm:text-4xl text-brand-olive">
-            {isArabic ? "شارك ذكرى من فلسطين" : "Share a memory"}
+            {isArabic ? "اكتب حكايتك عن مكان" : "Write your story of a place"}
           </h1>
           <p className="text-base text-brand-text leading-relaxed mt-3">
             {isArabic ? "حكاية ليست سجلاً للمباني والتواريخ فقط. شارع مشيت فيه، أو دكان أُغلق، أو عبارة قالتها جدتك؛ كل ذلك تراث، وهو أول ما يضيع إن لم ندوّنه." : "Hikaya is not only a record of buildings and dates. A street you walked, a shop that closed, something your grandmother said — that is heritage too, and it is the part that disappears first if nobody writes it down."}
@@ -83,16 +83,20 @@ export const ContributePage: React.FC = () => {
               </h2>
               <ul className="space-y-4 text-sm leading-6 text-brand-muted">
                 <li className="flex gap-3">
-                  <ShieldCheck className="mt-0.5 h-5 w-5 shrink-0 text-brand-amber" />
-                  {isArabic ? "يراجع فريق التوثيق كل ذكرى قبل نشرها. الاسم اختياري؛ اتركه فارغاً لتبقى مجهولاً." : "The documentation team reviews every memory before publishing. Your name is optional; leave it blank to stay anonymous."}
+                  <Lock className="mt-0.5 h-5 w-5 shrink-0 text-brand-amber" />
+                  {isArabic ? "في الخطوة الأخيرة تختار: تبقى الحكاية لك وحدك في جواز سفرك، أو تشاركها مع الجميع." : "At the last step you choose: keep the story just for you in your passport, or share it with everyone."}
                 </li>
                 <li className="flex gap-3">
-                  <Clock className="mt-0.5 h-5 w-5 shrink-0 text-brand-amber" />
-                  {isArabic ? "تحصل على رمز متابعة لتعرف حالة ذكراك في أي وقت." : "You get a tracking code to check on your memory at any time."}
+                  <ShieldCheck className="mt-0.5 h-5 w-5 shrink-0 text-brand-amber" />
+                  {isArabic ? "الحكايات العامة يراجعها مشرف قبل نشرها. تختار أن تُنشر باسمك أو أن تشارك الحكاية فقط دون أي معلومات عنك." : "An admin reviews every public story before it is published. You choose to publish it with your name, or share only the story and nothing about you."}
+                </li>
+                <li className="flex gap-3">
+                  <Globe className="mt-0.5 h-5 w-5 shrink-0 text-brand-amber" />
+                  {isArabic ? "الحكايات المعتمدة تظهر لكل الزوار في صفحة المكان ضمن قسم الذكريات." : "Approved stories appear for every visitor in the Memories section of the place page."}
                 </li>
                 <li className="flex gap-3">
                   <Sparkles className="mt-0.5 h-5 w-5 shrink-0 text-brand-amber" />
-                  {isArabic ? "الذكريات المعتمدة تظهر في صفحة المكان ضمن قسم الذكريات." : "Approved memories appear in the Memories section of the place page."}
+                  {isArabic ? "تتابع حالة حكايتك في جواز سفرك، أو برمز المتابعة من أي جهاز." : "Follow your story’s review in your passport, or with its reference code from any device."}
                 </li>
               </ul>
             </section>

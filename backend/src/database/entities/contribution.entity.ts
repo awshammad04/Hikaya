@@ -28,5 +28,7 @@ export class Contribution {
   status: ContributionStatus;
   reviewNotes?: string | null;
   reviewedAt?: Date | null;
+  /** The reviewer's account id, once a decision has been made. */
+  reviewedBy?: string | null;
   submittedAt: Date;
 }

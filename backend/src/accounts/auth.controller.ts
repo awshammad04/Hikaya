@@ -11,7 +11,7 @@ import {
 } from '@nestjs/common';
 import type { Request, Response } from 'express';
 import type { User } from '../database/entities/account.entity';
-import { AuthService } from './auth.service';
+import { AuthService, Credentials } from './auth.service';
 import { DeleteAccountDto, LogInDto, SignUpDto } from './dto/account.dto';
 import {
   clearedSessionCookie,
@@ -26,8 +26,8 @@ import { SessionGuard } from './session.guard';
 /**
  * Account endpoints. Accounts are optional - every feature works for guests.
  *
- * POST   /api/v1/auth/signup   -> create an account and sign in
- * POST   /api/v1/auth/login    -> sign in
+ * POST   /api/v1/auth/signup   -> create an account (name, phone) and sign in
+ * POST   /api/v1/auth/login    -> sign in with a phone number, or an older email
  * POST   /api/v1/auth/logout   -> end this session
  * GET    /api/v1/auth/me       -> { user } for a session, { user: null } for a guest
  * DELETE /api/v1/auth/me       -> delete the account and all its data
@@ -44,7 +44,8 @@ export class AuthController {
   ): Promise<{ user: User }> {
     const { user, token } = await this.auth.signUp(
       dto.name,
-      dto.email,
+      dto.countryCode,
+      dto.phone,
       dto.password,
     );
     res.setHeader('Set-Cookie', sessionCookie(token));
@@ -58,8 +59,12 @@ export class AuthController {
     @Req() req: Request,
     @Res({ passthrough: true }) res: Response,
   ): Promise<{ user: User }> {
+    const credentials: Credentials =
+      dto.email !== undefined
+        ? { email: dto.email }
+        : { countryCode: dto.countryCode ?? '', phone: dto.phone ?? '' };
     const { user, token } = await this.auth.logIn(
-      dto.email,
+      credentials,
       dto.password,
       clientAddress(req),
     );

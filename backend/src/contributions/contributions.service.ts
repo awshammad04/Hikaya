@@ -1,7 +1,18 @@
 import { randomInt } from 'crypto';
-import { Inject, Injectable, Logger, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Inject,
+  Injectable,
+  Logger,
+  NotFoundException,
+} from '@nestjs/common';
 import { CreateContributionDto } from './dto/create-contribution.dto';
-import { Contribution } from '../database/entities/contribution.entity';
+import { ReviewContributionDto } from './dto/review-contribution.dto';
+import {
+  Contribution,
+  ContributionStatus,
+} from '../database/entities/contribution.entity';
+import type { User } from '../database/entities/account.entity';
 import type { ContributionsRepository } from '../database/repositories/contributions.repository';
 import { CONTRIBUTIONS_REPOSITORY } from '../database/repositories/tokens';
 import { LocationsService } from '../locations/locations.service';
@@ -25,6 +36,15 @@ export interface ContributionStatusView {
   reviewNotes?: string | null;
 }
 
+/** A submission as the review team sees it: the story and any credit given. */
+export type ReviewItem = Omit<Contribution, 'userId'>;
+
+export interface ReviewQueue {
+  status: ContributionStatus;
+  items: ReviewItem[];
+  counts: Record<ContributionStatus, number>;
+}
+
 const STATUS_MESSAGES: Record<Contribution['status'], string> = {
   pending_review:
     'Your memory is waiting for an editor to read it. Nothing is published until it has been reviewed.',
@@ -33,6 +53,12 @@ const STATUS_MESSAGES: Record<Contribution['status'], string> = {
   rejected:
     'An editor decided not to publish this memory. The reviewer note below explains why.',
 };
+
+function reviewItem(item: Contribution): ReviewItem {
+  const view: Partial<Contribution> & ReviewItem = { ...item };
+  delete view.userId;
+  return view;
+}
 
 /**
  * ContributionsService
@@ -95,15 +121,57 @@ export class ContributionsService {
     return this.publicContributions(await this.contributions.findApproved());
   }
 
+  /**
+   * What everyone may read: the story and the name the contributor chose to
+   * show. Their email, account and reference code stay with the review team.
+   */
   private publicContributions(items: Contribution[]): Contribution[] {
-    if (process.env.NODE_ENV !== 'production') return items;
     return items.map((item) => {
       const publicItem = { ...item };
       delete publicItem.contributorEmail;
       delete publicItem.referenceCode;
       delete publicItem.reviewNotes;
+      delete publicItem.reviewedBy;
+      delete publicItem.userId;
       return publicItem;
     });
+  }
+
+  async listForReview(status: ContributionStatus): Promise<ReviewQueue> {
+    const [items, counts] = await Promise.all([
+      this.contributions.findByStatus(status),
+      this.contributions.countsByStatus(),
+    ]);
+    return { status, items: items.map(reviewItem), counts };
+  }
+
+  /**
+   * Approve (publish) or reject a submission. A decided submission can be
+   * reviewed again, which is how a published story is taken down.
+   *
+   * @throws BadRequestException when rejecting without a note.
+   * @throws NotFoundException when the id does not exist.
+   */
+  async review(
+    id: string,
+    dto: ReviewContributionDto,
+    reviewer: User,
+  ): Promise<ReviewItem> {
+    const notes = dto.notes?.trim() || null;
+    if (dto.decision === 'rejected' && !notes)
+      throw new BadRequestException(
+        'Add a short note when rejecting, so the contributor knows why.',
+      );
+    const reviewed = await this.contributions.review(id, {
+      status: dto.decision,
+      reviewNotes: notes,
+      reviewedBy: reviewer.id,
+    });
+    if (!reviewed) throw new NotFoundException('Submission not found.');
+    this.logger.log(
+      `Contribution ${reviewed.referenceCode ?? reviewed.id} ${dto.decision} by ${reviewer.id}`,
+    );
+    return reviewItem(reviewed);
   }
 
   /**

@@ -11,6 +11,7 @@ import {
   Matches,
   MaxLength,
   MinLength,
+  ValidateIf,
 } from 'class-validator';
 import type {
   ProgressKind,
@@ -19,16 +20,23 @@ import type {
 
 const ITEM_ID = /^[A-Za-z0-9_:.-]{1,120}$/;
 const RECORD_ID = /^[A-Za-z0-9-]{8,64}$/;
+/** A calling code from the picker, e.g. +970. */
+const CALLING_CODE = /^\+?[1-9]\d{0,2}$/;
 
+/** The number itself is checked and normalized by AuthService (phone.ts). */
 export class SignUpDto {
   @IsString()
   @IsNotEmpty()
   @MaxLength(80)
   name: string;
 
-  @IsEmail()
-  @MaxLength(254)
-  email: string;
+  @Matches(CALLING_CODE, { message: 'countryCode must look like +970' })
+  countryCode: string;
+
+  @IsString()
+  @IsNotEmpty()
+  @MaxLength(32)
+  phone: string;
 
   @IsString()
   @MinLength(8, { message: 'password must be at least 8 characters' })
@@ -36,10 +44,22 @@ export class SignUpDto {
   password: string;
 }
 
+/** A phone number with its country code, or an older account's email. */
 export class LogInDto {
+  @ValidateIf((dto: LogInDto) => dto.phone === undefined)
   @IsEmail()
   @MaxLength(254)
-  email: string;
+  email?: string;
+
+  @ValidateIf((dto: LogInDto) => dto.email === undefined)
+  @IsString()
+  @IsNotEmpty()
+  @MaxLength(32)
+  phone?: string;
+
+  @ValidateIf((dto: LogInDto) => dto.phone !== undefined)
+  @Matches(CALLING_CODE, { message: 'countryCode must look like +970' })
+  countryCode?: string;
 
   @IsString()
   @IsNotEmpty()
@@ -143,7 +163,7 @@ export class AddStoryDto {
   @Matches(RECORD_ID)
   id?: string;
 
-  @IsIn(['journey', 'location_story'])
+  @IsIn(['journey', 'location_story', 'my_story'])
   kind: SavedStoryKind;
 
   @IsString()
@@ -162,7 +182,7 @@ export class AddStoryDto {
   @MaxLength(40, { each: true })
   governorateIds?: string[];
 
-  /** The story as the frontend renders it (a journey or a generated story). */
+  /** The story as the frontend renders it (a journey, a generated story or the visitor's own). */
   @IsObject()
   payload: Record<string, unknown>;
 

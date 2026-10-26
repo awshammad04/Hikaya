@@ -11,10 +11,8 @@ import {
 } from '../entities/account.entity';
 import { DatabaseService } from '../database.service';
 
-export type NewUser = Pick<
-  UserWithSecret,
-  'fullName' | 'email' | 'passwordHash'
->;
+export type NewUser = Pick<UserWithSecret, 'fullName' | 'passwordHash'> &
+  Partial<Pick<UserWithSecret, 'email' | 'phone'>>;
 export type NewPhoto = Omit<UserPhoto, 'createdAt'> &
   UserPhotoImage & { createdAt?: Date };
 export type NewSavedStory = Omit<SavedStory, 'createdAt'> & {
@@ -24,6 +22,8 @@ export type NewSavedStory = Omit<SavedStory, 'createdAt'> & {
 export interface AccountsRepository {
   createUser(user: NewUser): Promise<User>;
   findUserByEmail(email: string): Promise<UserWithSecret | null>;
+  /** Exact match on the E.164 form. */
+  findUserByPhone(phone: string): Promise<UserWithSecret | null>;
   findUserById(id: string): Promise<UserWithSecret | null>;
   deleteUser(id: string): Promise<void>;
   touchLogin(id: string): Promise<void>;
@@ -65,7 +65,8 @@ function emptyProgress(): Progress {
 interface UserRow {
   id: string;
   full_name: string;
-  email: string;
+  email: string | null;
+  phone: string | null;
   role: User['role'];
   password_hash: string | null;
   created_at: Date;
@@ -76,6 +77,7 @@ function toUser(row: UserRow): UserWithSecret {
     id: row.id,
     fullName: row.full_name,
     email: row.email,
+    phone: row.phone ?? null,
     role: row.role,
     passwordHash: row.password_hash,
     createdAt: row.created_at,
@@ -150,9 +152,14 @@ export class PostgresAccountsRepository implements AccountsRepository {
 
   async createUser(user: NewUser): Promise<User> {
     const result = await this.db.query<UserRow>(
-      `INSERT INTO users (full_name, email, password_hash)
-       VALUES ($1, $2, $3) RETURNING *`,
-      [user.fullName, user.email, user.passwordHash],
+      `INSERT INTO users (full_name, email, phone, password_hash)
+       VALUES ($1, $2, $3, $4) RETURNING *`,
+      [
+        user.fullName,
+        user.email ?? null,
+        user.phone ?? null,
+        user.passwordHash,
+      ],
     );
     return publicUser(toUser(result.rows[0]));
   }
@@ -161,6 +168,14 @@ export class PostgresAccountsRepository implements AccountsRepository {
     const result = await this.db.query<UserRow>(
       'SELECT * FROM users WHERE LOWER(email) = LOWER($1)',
       [email],
+    );
+    return result.rows.length ? toUser(result.rows[0]) : null;
+  }
+
+  async findUserByPhone(phone: string): Promise<UserWithSecret | null> {
+    const result = await this.db.query<UserRow>(
+      'SELECT * FROM users WHERE phone = $1',
+      [phone],
     );
     return result.rows.length ? toUser(result.rows[0]) : null;
   }
@@ -378,7 +393,8 @@ export class InMemoryAccountsRepository implements AccountsRepository {
     const created: UserWithSecret = {
       id: randomUUID(),
       fullName: user.fullName,
-      email: user.email,
+      email: user.email ?? null,
+      phone: user.phone ?? null,
       passwordHash: user.passwordHash,
       role: 'visitor',
       createdAt: new Date(),
@@ -391,8 +407,14 @@ export class InMemoryAccountsRepository implements AccountsRepository {
     const wanted = email.toLowerCase();
     return Promise.resolve(
       [...this.users.values()].find(
-        (user) => user.email.toLowerCase() === wanted,
+        (user) => user.email?.toLowerCase() === wanted,
       ) ?? null,
+    );
+  }
+
+  findUserByPhone(phone: string): Promise<UserWithSecret | null> {
+    return Promise.resolve(
+      [...this.users.values()].find((user) => user.phone === phone) ?? null,
     );
   }
 

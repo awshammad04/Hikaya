@@ -487,14 +487,14 @@ export const LocationDetailsPage: React.FC = () => {
             <div className="space-y-4">
               <div className="flex items-end justify-between gap-4 flex-wrap">
                 <p className="text-sm text-brand-muted">
-                  {isArabic ? "ذكريات يشاركها الزوار والسكان وتُنشر بعد المراجعة." : "Contributed by visitors and residents, published after review."}
+                  {isArabic ? "حكايات يكتبها الزوار والسكان وتُنشر بعد موافقة المشرف." : "Stories written by visitors and residents, published after an admin approves them."}
                 </p>
                 <Link
                   to={`/contribute?location=${location.id}`}
                   className="text-xs font-serif font-bold uppercase tracking-widest text-brand-olive hover:text-brand-amber inline-flex items-center gap-1.5"
                 >
                   <PenLine className="w-3.5 h-3.5" />
-                  {isArabic ? "أضف ذكراك" : "Add yours"}
+                  {isArabic ? "اكتب حكايتك" : "Write your story"}
                 </Link>
                 <Link
                   to={`/contribute?location=${location.id}&interview=1`}

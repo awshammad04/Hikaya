@@ -9,8 +9,14 @@ import { countBy } from './count-by';
 
 export type NewContribution = Omit<
   Contribution,
-  'id' | 'submittedAt' | 'reviewedAt' | 'reviewNotes'
+  'id' | 'submittedAt' | 'reviewedAt' | 'reviewNotes' | 'reviewedBy'
 >;
+
+export interface ReviewDecision {
+  status: Exclude<ContributionStatus, 'pending_review'>;
+  reviewNotes: string | null;
+  reviewedBy: string;
+}
 
 export interface ContributionsRepository {
   create(contribution: NewContribution): Promise<Contribution>;
@@ -27,7 +33,22 @@ export interface ContributionsRepository {
   findByUser(userId: string): Promise<Contribution[]>;
   /** Approved count per location id, for the summary on location cards. */
   countsApprovedByLocation(): Promise<Record<string, number>>;
+
+  /**
+   * Reviewer queue, any status. Pending submissions come oldest first so the
+   * queue is worked in order; decided ones come most recently reviewed first.
+   */
+  findByStatus(status: ContributionStatus): Promise<Contribution[]>;
+  countsByStatus(): Promise<Record<ContributionStatus, number>>;
+  /** Records a reviewer's decision; null when the id does not exist. */
+  review(id: string, decision: ReviewDecision): Promise<Contribution | null>;
 }
+
+const EMPTY_STATUS_COUNTS = (): Record<ContributionStatus, number> => ({
+  pending_review: 0,
+  approved: 0,
+  rejected: 0,
+});
 
 interface ContributionRow {
   id: string;
@@ -44,6 +65,7 @@ interface ContributionRow {
   status: ContributionStatus;
   review_notes: string | null;
   reviewed_at: Date | null;
+  reviewed_by: string | null;
   submitted_at: Date;
 }
 
@@ -63,6 +85,7 @@ function toContribution(row: ContributionRow): Contribution {
     status: row.status,
     reviewNotes: row.review_notes,
     reviewedAt: row.reviewed_at,
+    reviewedBy: row.reviewed_by ?? null,
     submittedAt: row.submitted_at,
   };
 }
@@ -139,6 +162,44 @@ export class PostgresContributionsRepository implements ContributionsRepository 
       result.rows.map((row) => [row.location_id, Number(row.count)]),
     );
   }
+
+  async findByStatus(status: ContributionStatus): Promise<Contribution[]> {
+    const order =
+      status === 'pending_review'
+        ? 'submitted_at ASC'
+        : 'reviewed_at DESC NULLS LAST, submitted_at DESC';
+    const result = await this.db.query<ContributionRow>(
+      `SELECT * FROM contributions WHERE status = $1 ORDER BY ${order}`,
+      [status],
+    );
+    return result.rows.map(toContribution);
+  }
+
+  async countsByStatus(): Promise<Record<ContributionStatus, number>> {
+    const result = await this.db.query<{
+      status: ContributionStatus;
+      count: string;
+    }>(
+      'SELECT status, COUNT(*)::text AS count FROM contributions GROUP BY status',
+    );
+    const counts = EMPTY_STATUS_COUNTS();
+    for (const row of result.rows) counts[row.status] = Number(row.count);
+    return counts;
+  }
+
+  async review(
+    id: string,
+    decision: ReviewDecision,
+  ): Promise<Contribution | null> {
+    const result = await this.db.query<ContributionRow>(
+      `UPDATE contributions
+       SET status = $2, review_notes = $3, reviewed_by = $4, reviewed_at = NOW()
+       WHERE id = $1
+       RETURNING *`,
+      [id, decision.status, decision.reviewNotes, decision.reviewedBy],
+    );
+    return result.rows.length ? toContribution(result.rows[0]) : null;
+  }
 }
 
 /**
@@ -161,6 +222,7 @@ export class InMemoryContributionsRepository implements ContributionsRepository 
       id: randomUUID(),
       reviewNotes: null,
       reviewedAt: null,
+      reviewedBy: null,
       submittedAt: new Date(),
     };
     this.contributions.unshift(created);
@@ -201,5 +263,33 @@ export class InMemoryContributionsRepository implements ContributionsRepository 
         (item) => item.locationId,
       ),
     );
+  }
+
+  findByStatus(status: ContributionStatus): Promise<Contribution[]> {
+    const time = (date?: Date | null) => date?.getTime() ?? 0;
+    // Stored newest first; reversed so same-millisecond ties keep their order.
+    const items = this.contributions
+      .filter((item) => item.status === status)
+      .reverse();
+    items.sort((a, b) =>
+      status === 'pending_review'
+        ? time(a.submittedAt) - time(b.submittedAt)
+        : time(b.reviewedAt) - time(a.reviewedAt) ||
+          time(b.submittedAt) - time(a.submittedAt),
+    );
+    return Promise.resolve(items);
+  }
+
+  countsByStatus(): Promise<Record<ContributionStatus, number>> {
+    const counts = EMPTY_STATUS_COUNTS();
+    for (const item of this.contributions) counts[item.status] += 1;
+    return Promise.resolve(counts);
+  }
+
+  review(id: string, decision: ReviewDecision): Promise<Contribution | null> {
+    const item = this.contributions.find((entry) => entry.id === id);
+    if (!item) return Promise.resolve(null);
+    Object.assign(item, decision, { reviewedAt: new Date() });
+    return Promise.resolve({ ...item });
   }
 }

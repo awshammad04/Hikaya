@@ -2,8 +2,10 @@ import React, { useEffect, useMemo, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import {
   Award, BookHeart, BookOpen, Camera, CheckCircle2, Cloud, CloudOff, Headphones, Loader2, LogOut,
-  MapPin, PenLine, Route, Sparkles, Stamp, Trash2, UserPlus,
+  MapPin, Route, ShieldCheck, Sparkles, Stamp, Trash2, UserPlus,
 } from "lucide-react";
+import { MyStoriesSection } from "../components/MyStoriesSection";
+import { formatPhone } from "../utils/phone";
 import { PageTransition } from "../components/motion";
 import { useInterfaceLanguage } from "../context/LanguageContext";
 import { AccountError, useAuth } from "../context/AuthContext";
@@ -18,7 +20,9 @@ import {
   accountApi,
   AccountContribution,
   AUDIO_KEY,
+  isReviewerRole,
   MEMORY_UNCOVERED_KEY,
+  MyStoryPayload,
   PROGRESS_EVENT,
   QUIZ_KEY,
   readIdList,
@@ -110,6 +114,11 @@ export const PassportPage: React.FC = () => {
     ...place,
     governorateId: nationalRecord(place.id)?.governorateId ?? "jerusalem",
   })), []);
+  const myStories = stories.filter((story) => story.kind === "my_story");
+  const keptStories = stories.filter((story) => story.kind !== "my_story");
+  // Stories written here already show their review status above.
+  const linkedCodes = new Set(myStories.map((story) => (story.payload as MyStoryPayload | null)?.share?.referenceCode));
+  const otherContributions = contributions?.filter((item) => !linkedCodes.has(item.referenceCode)) ?? [];
   const visited = new Set(progress.visited);
   const visitedPlaces = places.filter((place) => visited.has(place.id));
   const governoratesReached = new Set(visitedPlaces.map((place) => place.governorateId));
@@ -295,17 +304,19 @@ export const PassportPage: React.FC = () => {
           )}
         </section>
 
+        <MyStoriesSection stories={myStories} onDelete={deleteStory} />
+
         {/* --- Saved stories --------------------------------------------------- */}
         <section className="space-y-4">
           <h2 className="font-serif font-black text-2xl text-brand-olive">{isArabic ? "حكاياتي المحفوظة" : "My saved stories"}</h2>
-          {stories.length === 0 ? (
+          {keptStories.length === 0 ? (
             <p className="text-sm text-brand-muted rounded-3xl border border-dashed border-brand-border p-6">
               {isArabic ? "رحلات «حكايتي في فلسطين» تُحفظ هنا تلقائياً، ويمكنك حفظ أي حكاية مولّدة من صفحة المكان." : "Journeys from “My Palestine story” are kept here automatically, and you can save any generated story from a place page."}
               {" "}<Link to="/create-story" className="font-bold text-brand-amber">{isArabic ? "أنشئ رحلة" : "Create a journey"}</Link>
             </p>
           ) : (
             <ul className="space-y-3">
-              {stories.map((story) => {
+              {keptStories.map((story) => {
                 const narrative = (story.payload as { narrative?: string } | null)?.narrative;
                 const place = story.locationId ? locationById(story.locationId) : undefined;
                 return (
@@ -342,24 +353,16 @@ export const PassportPage: React.FC = () => {
           )}
         </section>
 
-        {/* --- Contributions ---------------------------------------------------- */}
-        <section className="space-y-4">
-          <h2 className="font-serif font-black text-2xl text-brand-olive">{isArabic ? "ذكرياتي المشاركة" : "Memories I shared"}</h2>
-          {!signedIn && contributions?.length === 0 ? (
-            <p className="text-sm text-brand-muted">
-              {isArabic ? "ما تشاركه من هذا الجهاز يظهر هنا مع حالة مراجعته. ولذكرى أُرسلت من جهاز آخر، استخدم الرمز المرجعي في " : "Memories you share from this device appear here with their review status. For one sent from another device, use its reference code on "}
-              <Link to="/contribute" className="font-bold text-brand-amber">{isArabic ? "صفحة المشاركة" : "the contribute page"}</Link>.
-            </p>
-          ) : contributions === null ? (
-            <Loader2 className="w-5 h-5 animate-spin text-brand-olive" />
-          ) : contributions.length === 0 ? (
-            <p className="text-sm text-brand-muted">
-              {isArabic ? "لم تشارك ذكرى بعد. " : "You have not shared a memory yet. "}
-              <Link to="/contribute" className="font-bold text-brand-amber inline-flex items-center gap-1"><PenLine className="w-3.5 h-3.5" />{isArabic ? "شارك حكاية" : "Share one"}</Link>
-            </p>
-          ) : (
+        {/* --- Memories shared outside "Stories I wrote" ---------------------------- */}
+        {otherContributions.length > 0 && (
+          <section className="space-y-4">
+            <h2 className="font-serif font-black text-2xl text-brand-olive">
+              {myStories.length
+                ? (isArabic ? "ذكريات أخرى شاركتها" : "Other memories I shared")
+                : (isArabic ? "ذكرياتي المشاركة" : "Memories I shared")}
+            </h2>
             <ul className="space-y-2">
-              {contributions.map((item) => {
+              {otherContributions.map((item) => {
                 const place = locationById(item.locationId);
                 return (
                   <li key={item.id} className="rounded-2xl border border-brand-border bg-brand-surface px-4 py-3 flex flex-wrap items-center justify-between gap-2">
@@ -374,8 +377,8 @@ export const PassportPage: React.FC = () => {
                 );
               })}
             </ul>
-          )}
-        </section>
+          </section>
+        )}
 
         {/* --- Account ------------------------------------------------------------ */}
         {signedIn && user && (
@@ -383,13 +386,18 @@ export const PassportPage: React.FC = () => {
             <div className="flex flex-wrap items-center justify-between gap-3">
               <div>
                 <h2 className="font-serif font-black text-xl text-brand-olive">{isArabic ? "الحساب" : "Account"}</h2>
-                <p className="text-sm text-brand-muted" dir="ltr">{user.email}</p>
+                <p className="text-sm text-brand-muted" dir="ltr">{user.phone ? formatPhone(user.phone) : user.email}</p>
               </div>
               <button type="button" onClick={() => void logOut().then(() => navigate("/"))} className="rounded-full border border-brand-border px-5 py-2 text-xs font-bold text-brand-olive inline-flex items-center gap-1.5">
                 <LogOut className="w-4 h-4" />{isArabic ? "تسجيل الخروج" : "Sign out"}
               </button>
             </div>
             <p className="text-xs text-brand-muted">{isArabic ? "عند تسجيل الخروج تبقى رحلتك في حسابك وتُمسح من هذا الجهاز." : "Signing out keeps your journey in your account and clears it from this device."}</p>
+            {isReviewerRole(user.role) && (
+              <Link to="/admin/review" className="flex w-fit items-center gap-1.5 rounded-full bg-brand-olive px-5 py-2 text-xs font-bold text-white">
+                <ShieldCheck className="w-4 h-4 text-brand-amber" />{isArabic ? "مراجعة الحكايات" : "Review stories"}
+              </Link>
+            )}
             {!confirmingDelete ? (
               <button type="button" onClick={() => setConfirmingDelete(true)} className="text-xs font-bold text-red-700">{isArabic ? "حذف الحساب نهائياً" : "Delete account permanently"}</button>
             ) : (
