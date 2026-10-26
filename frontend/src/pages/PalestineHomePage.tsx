@@ -12,7 +12,7 @@ import { governorates } from "../data/heritage";
 import { useLocations } from "../hooks/useLocations";
 import { DataSourceBanner } from "../components/DataSourceBanner";
 import { PalestineMiniMap } from "../components/PalestineGeography";
-import { placesCount } from "../utils/plural";
+import { governoratesCount, placesCount } from "../utils/plural";
 import { DailyQuestion } from "../components/DailyQuestion";
 
 const STEPS = [
@@ -93,8 +93,8 @@ export const PalestineHomePage: React.FC = () => {
             </h2>
             <p className="mt-2 text-sm text-brand-muted">
               {isArabic
-                ? "أربع محافظات، أرشيف واحد قابل للنمو."
-                : "Four governorates, one growing archive."}
+                ? `${governoratesCount(governorates.length, true)}، أرشيف واحد قابل للنمو.`
+                : `${governoratesCount(governorates.length, false)}, one growing archive.`}
             </p>
           </div>
           <StaggerList className="grid grid-cols-1 sm:grid-cols-2 gap-5">

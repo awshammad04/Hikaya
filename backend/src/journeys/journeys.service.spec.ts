@@ -8,6 +8,10 @@ import { DatabaseService } from '../database/database.service';
 import { IN_MEMORY_REPOSITORY_PROVIDERS } from '../testing/in-memory-providers';
 import { GenerateStoryDto } from '../ai/dto/generate-story.dto';
 import { CreateJourneyDto } from './create-journey.dto';
+import { catalog } from '../database/seed/palestine-data';
+
+const placesIn = (id: string) =>
+  catalog.locations.filter((item) => item.governorateId === id).length;
 
 describe('Governorate journeys', () => {
   let service: JourneysService;
@@ -46,16 +50,17 @@ describe('Governorate journeys', () => {
   });
   it('preserves the legacy eight-location collection', async () => {
     expect((await locations.findAll()).length).toBe(8);
-    expect((await locations.findAll('all')).length).toBe(14);
+    expect((await locations.findAll('all')).length).toBe(26);
   });
-  it.each(['ramallah', 'hebron', 'gaza'])(
+  it.each(['ramallah', 'nablus', 'jericho', 'bethlehem', 'hebron', 'gaza'])(
     'restricts %s journeys to that governorate',
     async (id) => {
       const journey = await service.create({
         ...preferences,
         governorateIds: [id],
       });
-      expect(journey.stops).toHaveLength(2);
+      // An express journey holds at most three stops.
+      expect(journey.stops).toHaveLength(Math.min(placesIn(id), 3));
       expect(
         journey.stops.every((stop) => stop.location.governorateId === id),
       ).toBe(true);
@@ -95,8 +100,8 @@ describe('Governorate journeys', () => {
         (item) => item.governorateId === 'jerusalem',
       ),
     ).toBe(true);
-    expect(
-      (await locations.findRelated('gaza-omari-mosque')).map((item) => item.id),
-    ).toEqual(['gaza-porphyrius-church']);
+    const gaza = await locations.findRelated('gaza-omari-mosque');
+    expect(gaza.map((item) => item.id)).toContain('gaza-porphyrius-church');
+    expect(gaza.every((item) => item.governorateId === 'gaza')).toBe(true);
   });
 });

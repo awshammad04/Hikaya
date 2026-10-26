@@ -27,7 +27,7 @@ import {
   mockGeneratedStory,
   mockGuideAnswer,
 } from "../mocks/mockApiData";
-import { locationById, nationalLocations, nationalRecord, nationalTimeline, nationalQuiz } from "../data/heritage";
+import { locationById, nationalLocations, nationalMedia, nationalRecord, nationalTimeline, nationalQuiz } from "../data/heritage";
 
 /**
  * Client for the Hikaya backend (`/api/v1`, see backend/README.md).
@@ -210,7 +210,7 @@ export async function getLocation(id: string): Promise<ApiResult<ApiLocation | n
 export function getMedia(locationId: string): Promise<ApiResult<ApiMedia[]>> {
   return withFallback(
     () => request<ApiMedia[]>(`/locations/${locationId}/media`),
-    () => MOCK_MEDIA.filter((item) => item.locationId === locationId),
+    () => [...MOCK_MEDIA, ...nationalMedia].filter((item) => item.locationId === locationId),
   );
 }
 
@@ -220,7 +220,7 @@ export function getBeforeAfter(
   return withFallback(
     () => request<BeforeAfterResponse>(`/locations/${locationId}/before-after`),
     () => {
-      const images = MOCK_MEDIA.filter((item) => item.locationId === locationId);
+      const images = [...MOCK_MEDIA, ...nationalMedia].filter((item) => item.locationId === locationId);
       const before = images.find((item) => item.pairRole === "before");
       const after = images.find((item) => item.pairRole === "after");
       return before && after

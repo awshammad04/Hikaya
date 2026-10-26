@@ -9,7 +9,7 @@ try {
   await client.query('BEGIN');
   await initialize(client);
   await client.query('COMMIT');
-  assert.equal((await db.query('SELECT COUNT(*)::int AS count FROM locations')).rows[0].count, 14);
+  assert.equal((await db.query('SELECT COUNT(*)::int AS count FROM locations')).rows[0].count, 26);
   const before = (await db.query('SELECT * FROM contributions ORDER BY id')).rows;
   await assert.rejects(initialize(client), /not empty/);
   await client.query('BEGIN');

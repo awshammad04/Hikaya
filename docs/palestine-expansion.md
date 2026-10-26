@@ -1,6 +1,6 @@
 # Hikaya across Palestine
 
-Hikaya now contains Jerusalem, Ramallah, Hebron and Gaza inside one application. The national home is `/`; the original Jerusalem home is `/jerusalem` and is also reused by `/governorates/jerusalem`. The website displays Hikaya without the hackathon or Q GUIDE labels.
+Hikaya now contains Jerusalem, Ramallah, Nablus, Jericho, Bethlehem, Hebron and Gaza inside one application. The national home is `/`; the original Jerusalem home is `/jerusalem` and is also reused by `/governorates/jerusalem`. The website displays Hikaya without the hackathon or Q GUIDE labels.
 
 ## Experiences
 
@@ -83,7 +83,30 @@ The six new records are deliberately bounded factual extracts, checked against t
 
 Religious attribution is identified as tradition. The Gaza tentative-list reference is not presented as World Heritage inscription. Timelines contain only documented dated events; quizzes ask about facts in these records and link their evidence.
 
-No reviewed new photographs, before/after pairs, oral histories or artisan records were added. Exact mapped coordinates are still pending for Yasser Arafat Museum and Ibrahimi Mosque; both remain selectable in the site list without fabricated markers. Other coordinates are reference points, not entrances or permission to visit. Current site condition and access are not asserted.
+### Enrichment of 26 October 2026
+
+Three governorates (Nablus, Jericho, Bethlehem) and twelve records were added, each checked against its UNESCO page on 26 October 2026 (`sourceCheckedAt` on the record). Inscription and danger-list years, coordinates and the Arabic property names come from those pages. Tentative-list entries are described as such, never as World Heritage inscription.
+
+| Governorate | Place | Primary source |
+| --- | --- | --- |
+| Bethlehem | Church of the Nativity and the Pilgrimage Route | [UNESCO property 1433](https://whc.unesco.org/en/list/1433/) |
+| Bethlehem | Battir: Land of Olives and Vines | [UNESCO property 1492](https://whc.unesco.org/en/list/1492/) |
+| Bethlehem | Mar Saba Monastery | [UNESCO tentative-list entry 6954](https://whc.unesco.org/en/tentativelists/6954/) |
+| Jericho | Ancient Jericho / Tell es-Sultan | [UNESCO property 1687](https://whc.unesco.org/en/list/1687/) |
+| Jericho | Hisham’s Palace / Khirbet al-Mafjar | [UNESCO tentative-list entry 6546](https://whc.unesco.org/en/tentativelists/6546/) |
+| Jericho | Monastery of the Temptation (Deir al-Quruntul) | [UNESCO tentative-list entry 6954](https://whc.unesco.org/en/tentativelists/6954/) |
+| Nablus | Historic City of Nablus | [UNESCO tentative-list entry 6956](https://whc.unesco.org/en/tentativelists/6956/) |
+| Nablus | Sebastia | [UNESCO property 1809](https://whc.unesco.org/en/list/1809/) |
+| Nablus | Mount Gerizim and the Samaritans | [UNESCO tentative-list entry 5706](https://whc.unesco.org/en/tentativelists/5706/) |
+| Gaza | Saint Hilarion Monastery / Tell Umm Amer | [UNESCO property 1749](https://whc.unesco.org/en/list/1749/) |
+| Gaza | Anthedon Harbour | [UNESCO tentative-list entry 5719](https://whc.unesco.org/en/tentativelists/5719/) |
+| Ramallah | Throne Villages: Ras Karkar and Deir Ghassaneh | [UNESCO tentative-list entry 5717](https://whc.unesco.org/en/tentativelists/5717/) |
+
+Anthedon has no map marker: UNESCO says the ancient site is not precisely identified and its listed coordinates point outside Gaza. Battir’s marker is the village centre, not the serial property. Gaza records state that current condition and access are not asserted.
+
+All eighteen national records now carry photographs (`media` on each catalogue record): 73 Wikimedia Commons images, each viewed before use, with photographer, licence, licence link, capture date and source page, following the rules of `content/media/media.json` (at least 1600 px wide, era checked against the date, one cover). Archival images come from the Matson Collection (Library of Congress), the Rijksmuseum, the British Museum, the Imperial War Museums and Raphaël Savignac’s plates. Nablus has one then-and-now pair: An-Nasr Mosque’s prayer hall in 1940 and 2010, matched by its windows, mihrab and minbar. The two Anthedon objects are attributed to the site by their Wikidata “location of discovery”. Governorate covers reuse each region’s cover photograph.
+
+Exact mapped coordinates are still pending for Yasser Arafat Museum and Ibrahimi Mosque; both remain selectable in the site list without fabricated markers. Other coordinates are reference points, not entrances or permission to visit. Current site condition and access are not asserted. No oral histories or artisan records were added.
 
 National journeys support Arabic/English. The original Jerusalem planner retains Arabic/English/French. This local run has no provider API keys: the AI uses its fact-guarded extractive mode; narration uses the existing device-voice fallback. Contributions still need a real backend and never fabricate submission receipts.
 

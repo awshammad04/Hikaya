@@ -7,8 +7,8 @@ from service.scope import resolve_ids
 
 class PalestineScopeTests(unittest.TestCase):
     def test_governorate_retrieval_is_isolated(self):
-        self.assertEqual(set(resolve_ids(['ramallah'])), {'palestinian-museum','yasser-arafat-museum'})
-        self.assertEqual(set(resolve_ids(['gaza'])), {'gaza-omari-mosque','gaza-porphyrius-church'})
+        self.assertEqual(set(resolve_ids(['ramallah'])), {'palestinian-museum','yasser-arafat-museum','throne-villages'})
+        self.assertEqual(set(resolve_ids(['gaza'])), {'gaza-omari-mosque','gaza-porphyrius-church','saint-hilarion-monastery','anthedon-harbour'})
 
     def test_wrong_governorate_is_refused(self):
         story = generate_story(StoryRequest(location_id='muslim-quarter',governorate_id='gaza'))

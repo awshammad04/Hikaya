@@ -6,6 +6,7 @@ import {
 } from "../locationsData";
 import {
   ApiLocation,
+  ApiMedia,
   ApiQuizQuestion,
   ApiTimelineEvent,
   TourInterest,
@@ -24,20 +25,42 @@ export const nationalRecord = (id: string) =>
 const reviewedRecords = catalog.locations.filter(
   (item) => item.reviewed && item.reviewStatus === "source_checked",
 );
-export const nationalLocations: ApiLocation[] = reviewedRecords.map((item) => ({
-  ...item,
-  country: "Palestine",
-  isPublished: true,
-  contentFile: `content/ai-ready/${item.id}-summary.md`,
-  aiSummaryFile: `content/ai-ready/${item.id}-summary.md`,
-  stats: {
-    storyCount: 1,
-    imageCount: 0,
-    timelineEventCount: item.timeline.length,
-    memoryCount: 0,
-    readingTimeMinutes: 1,
-  },
-}));
+type NationalRecord = (typeof catalog.locations)[number];
+type CatalogPhoto = Omit<ApiMedia, "locationId" | "type" | "sortOrder">;
+const photosOf = (item: NationalRecord): CatalogPhoto[] =>
+  "media" in item && Array.isArray(item.media) ? (item.media as CatalogPhoto[]) : [];
+const coverOf = (item: NationalRecord) =>
+  photosOf(item).find((photo) => photo.pairRole === "cover");
+
+/** Credited photographs of the national places, shaped like the media API. */
+export const nationalMedia: ApiMedia[] = reviewedRecords.flatMap((item) =>
+  photosOf(item).map((photo, index) => ({
+    ...photo,
+    locationId: item.id,
+    type: "image" as const,
+    sortOrder: index,
+  })),
+);
+
+export const nationalLocations: ApiLocation[] = reviewedRecords.map((record) => {
+  // The photographs are served by the media API, not inside the location.
+  const { media: _photos, ...item } = { media: undefined, ...record };
+  return {
+    ...item,
+    coverImageUrl: coverOf(record)?.url,
+    country: "Palestine",
+    isPublished: true,
+    contentFile: `content/ai-ready/${item.id}-summary.md`,
+    aiSummaryFile: `content/ai-ready/${item.id}-summary.md`,
+    stats: {
+      storyCount: 1,
+      imageCount: photosOf(record).length,
+      timelineEventCount: item.timeline.length,
+      memoryCount: 0,
+      readingTimeMinutes: 1,
+    },
+  };
+});
 
 const profiles: JerusalemLocationData[] = reviewedRecords.map((item) => ({
   id: item.id,
@@ -45,7 +68,7 @@ const profiles: JerusalemLocationData[] = reviewedRecords.map((item) => ({
   arabicName: item.arabicName,
   lat: item.latitude,
   lng: item.longitude,
-  coverImage: "",
+  coverImage: coverOf(item)?.url ?? "",
   summary: item.description,
   arabicSummary: item.arabicDescription,
   culturalImportance: item.importance || item.facts,
@@ -70,9 +93,9 @@ const profiles: JerusalemLocationData[] = reviewedRecords.map((item) => ({
     item.arabicFacts,
     item.arabicTraditions ? `تقليد ديني: ${item.arabicTraditions}` : "",
   ].filter(Boolean).join("\n\n"),
-  imageCredit: "",
-  imageLicense: "",
-  imageSourceUrl: "",
+  imageCredit: coverOf(item)?.credit ?? "",
+  imageLicense: coverOf(item)?.license ?? "",
+  imageSourceUrl: coverOf(item)?.sourceUrl ?? "",
   categories: item.categories,
   interests: item.interests as TourInterest[],
 }));

@@ -1,5 +1,6 @@
 """Export the shared national catalogue without touching Jerusalem's datasets."""
 import json
+import re
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -20,6 +21,41 @@ def array(values):
 def insert(table, fields, values):
     return f"INSERT INTO {table} ({','.join(fields)}) VALUES ({','.join(values)}) ON CONFLICT DO NOTHING;"
 
+CATEGORY_IDS = {'متحف': 'museum', 'تراث ثقافي': 'culture', 'حارة تاريخية': 'quarter', 'سوق تراثي': 'souq',
+                'معلم ديني': 'sacred', 'موقع أثري': 'archaeology', 'مشهد ثقافي': 'landscape'}
+# Same rules as ai/scripts/export_seed_data.py: these are other people's photographs.
+MEDIA_REQUIRED = ('id', 'url', 'thumbUrl', 'width', 'height', 'subject', 'arabicSubject', 'description',
+                  'arabicDescription', 'era', 'credit', 'license', 'licenseUrl', 'sourceUrl')
+MODERN_FROM_YEAR = 1990
+CAPTURE_YEAR = re.compile(r'\b(1[6-9]\d{2}|20\d{2})\b')
+
+def check_media(location):
+    halves = {}
+    for item in location.get('media', []):
+        missing = [field for field in MEDIA_REQUIRED if not item.get(field)]
+        if missing:
+            raise SystemExit(f"Media '{item.get('id')}' is missing: {', '.join(missing)}.")
+        if item['width'] < 1600:
+            raise SystemExit(f"Media '{item['id']}' is only {item['width']}px wide; use an original at least 1600px wide.")
+        years = [int(year) for year in CAPTURE_YEAR.findall(item.get('capturedAt') or '')]
+        if years:
+            expected = 'modern' if min(years) >= MODERN_FROM_YEAR else 'historical'
+            if item['era'] != expected:
+                raise SystemExit(f"Media '{item['id']}' is dated {min(years)} but marked '{item['era']}'; expected '{expected}'.")
+        role = item.get('pairRole')
+        if role in ('before', 'after'):
+            if (role == 'before') != (item['era'] == 'historical'):
+                raise SystemExit(f"Media '{item['id']}' is the '{role}' half but is {item['era']}.")
+            halves[role] = item
+    if len(halves) == 2 and halves['before']['subject'] != halves['after']['subject']:
+        raise SystemExit(f"{location['id']}: a before/after pair must show the same subject.")
+    covers = [item for item in location.get('media', []) if item.get('pairRole') == 'cover']
+    if len(covers) > 1:
+        raise SystemExit(f"{location['id']}: only one cover photograph is allowed.")
+
+def cover_of(location):
+    return next((item['url'] for item in location.get('media', []) if item.get('pairRole') == 'cover'), None)
+
 def outputs():
     data = json.loads(CATALOG.read_text(encoding='utf8'))
     text = json.dumps(data, ensure_ascii=False, indent=2) + '\n'
@@ -30,14 +66,21 @@ def outputs():
         sql.append(insert('governorates', ['id','slug','name','arabic_name','description','arabic_description','map_config','cover_image_url'],
                           [quote(governorate[k]) for k in ['id','slug','name','arabicName','description','arabicDescription']] +
                           [quote(json.dumps({k: governorate[k] for k in ['mapCenter','mapZoom','bounds']}))+'::jsonb',quote(governorate.get('coverImageUrl'))]))
+        # Map frames are configuration and follow the catalogue; a cover is only filled where none was chosen.
+        sql.append(f"UPDATE governorates SET map_config = {quote(json.dumps({k: governorate[k] for k in ['mapCenter','mapZoom','bounds']}))}::jsonb WHERE id = {quote(governorate['id'])};")
+        if governorate.get('coverImageUrl'):
+            sql.append(f"UPDATE governorates SET cover_image_url = {quote(governorate['coverImageUrl'])} WHERE id = {quote(governorate['id'])} AND cover_image_url IS NULL;")
     for location in data['locations']:
+        check_media(location)
         id = location['id']
         approved = location.get('reviewed') is True and location['reviewStatus'] == 'source_checked'
         source = f'content/ai-ready/{id}-summary.md'
         sql.append(insert('locations', ['id','governorate_id','name','arabic_name','city','country','latitude','longitude','description','arabic_description','content_file','ai_summary_file','is_published','review_status','coordinate_status'],
             [quote(location[k]) for k in ['id','governorateId','name','arabicName','city']]+[quote('Palestine'),quote(location.get('latitude')),quote(location.get('longitude')),quote(location['description']),quote(location['arabicDescription']),quote(source),quote(source),quote(approved),quote(location['reviewStatus']),quote(location['coordinateStatus'])]))
+        if cover_of(location):
+            sql.append(f"UPDATE locations SET cover_image_url = {quote(cover_of(location))} WHERE id = {quote(id)} AND cover_image_url IS NULL;")
         for category in location['categories']:
-            category_id = 'palestine-' + {'متحف':'museum','تراث ثقافي':'culture','حارة تاريخية':'quarter','سوق تراثي':'souq','معلم ديني':'sacred'}[category]
+            category_id = 'palestine-' + CATEGORY_IDS[category]
             sql.append(insert('categories', ['id','name'], [quote(category_id),quote(category)]))
             sql.append(f"INSERT INTO location_categories (location_id,category_id) SELECT {quote(id)},id FROM categories WHERE name={quote(category)} ON CONFLICT DO NOTHING;")
         # Only the bounded, source-checked factual record is published. Generated narratives stay pending_review.
@@ -47,6 +90,9 @@ def outputs():
         for index, event in enumerate(location['timeline']):
             sql.append(insert('timeline_events',['id','location_id','period_label','description','sort_year','sort_order','is_tradition','source_file'],
                 [quote(f'palestine-timeline-{id}-{index}'),quote(id),quote(event['label']),quote(event['description']),str(event['year']),str(index),'FALSE',quote(source)]))
+        for order, item in enumerate(location.get('media', [])):
+            sql.append(insert('media', ['id','location_id','type','url','thumb_url','width','height','subject','subject_ar','description','description_ar','era','pair_role','credit','license','license_url','captured_at','source_url','sort_order'],
+                [quote(item['id']),quote(id),"'image'",quote(item['url']),quote(item['thumbUrl']),str(item['width']),str(item['height']),quote(item['subject']),quote(item['arabicSubject']),quote(item['description']),quote(item['arabicDescription']),quote(item['era']),quote(item.get('pairRole')),quote(item['credit']),quote(item['license']),quote(item['licenseUrl']),quote(item.get('capturedAt')),quote(item['sourceUrl']),str(order)]))
         quiz = location['quiz']
         sql.append(insert('quiz_questions',['id','location_id','question','options','answer_index','explanation','source_note','sort_order'],
             [quote('palestine-quiz-'+id),quote(id),quote(quiz['question']),array(quiz['options']),str(quiz['answerIndex']),quote(location['description']+' '+location['facts']+' '+location['traditions']),quote(location['sources'][0]['url']),'0']))
@@ -78,4 +124,4 @@ if __name__ == '__main__':
     for path, text in outputs().items():
         path.parent.mkdir(parents=True, exist_ok=True)
         path.write_text(text, encoding='utf8')
-    print('Exported national catalogue, six summaries and additive SQL seed.')
+    print(f"Exported national catalogue, {len(json.loads(CATALOG.read_text(encoding='utf8'))['locations'])} summaries and additive SQL seed.")

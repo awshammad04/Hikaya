@@ -31,15 +31,76 @@
       "arabicDescription": "المتاحف والأرشيف الثقافي والذاكرة المعاصرة.",
       "mapCenter": {
         "latitude": 31.93,
-        "longitude": 35.2
+        "longitude": 35.17
       },
       "mapZoom": 11,
       "bounds": {
         "minLat": 31.88,
         "maxLat": 31.98,
-        "minLng": 35.15,
+        "minLng": 35.09,
         "maxLng": 35.25
-      }
+      },
+      "coverImageUrl": "https://commons.wikimedia.org/wiki/Special:FilePath/The_Palestinian_Museum.jpg?width=1200"
+    },
+    {
+      "id": "nablus",
+      "slug": "nablus",
+      "name": "Nablus",
+      "arabicName": "نابلس",
+      "description": "An Ottoman old city, Sebastia’s layers and the Samaritans’ mountain.",
+      "arabicDescription": "بلدة قديمة عثمانية وطبقات سبسطية وجبل السامريين.",
+      "mapCenter": {
+        "latitude": 32.244,
+        "longitude": 35.229
+      },
+      "mapZoom": 12,
+      "bounds": {
+        "minLat": 32.203,
+        "maxLat": 32.285,
+        "minLng": 35.178,
+        "maxLng": 35.28
+      },
+      "coverImageUrl": "https://commons.wikimedia.org/wiki/Special:FilePath/%D8%A7%D9%84%D8%A8%D9%84%D8%AF%D8%A9_%D8%A7%D9%84%D9%82%D8%AF%D9%8A%D9%85%D8%A9_-_%D9%86%D8%A7%D8%A8%D9%84%D8%B3.jpg?width=1200"
+    },
+    {
+      "id": "jericho",
+      "slug": "jericho",
+      "name": "Jericho",
+      "arabicName": "أريحا",
+      "description": "Ancient Jericho, an Umayyad palace and a cliffside monastery.",
+      "arabicDescription": "أريحا القديمة وقصر أموي ودير معلّق على الجرف.",
+      "mapCenter": {
+        "latitude": 31.877,
+        "longitude": 35.445
+      },
+      "mapZoom": 13,
+      "bounds": {
+        "minLat": 31.866,
+        "maxLat": 31.889,
+        "minLng": 35.422,
+        "maxLng": 35.468
+      },
+      "coverImageUrl": "https://commons.wikimedia.org/wiki/Special:FilePath/Monastery_of_the_Temptation_%28Jeriho%29.jpg?width=1200"
+    },
+    {
+      "id": "bethlehem",
+      "slug": "bethlehem",
+      "name": "Bethlehem",
+      "arabicName": "بيت لحم",
+      "description": "The Nativity, terraced valleys and desert monasteries.",
+      "arabicDescription": "المهد والمدرّجات الزراعية وأديرة البرّية.",
+      "mapCenter": {
+        "latitude": 31.712,
+        "longitude": 35.234
+      },
+      "mapZoom": 11,
+      "bounds": {
+        "minLat": 31.69,
+        "maxLat": 31.738,
+        "minLng": 35.12,
+        "maxLng": 35.345
+      },
+      "coverImageUrl": "https://commons.wikimedia.org/wiki/Special:FilePath/Holy_Land_2019_%281%29_P046_Bethlehem_Church_of_the_Nativity.jpg?width=1200"
     },
     {
       "id": "hebron",
@@ -58,7 +119,8 @@
         "maxLat": 31.535,
         "minLng": 35.099,
         "maxLng": 35.118
-      }
+      },
+      "coverImageUrl": "https://commons.wikimedia.org/wiki/Special:FilePath/Holy_Land_2022_%281%29_P164_Hebron_Old_City.jpg?width=1200"
     },
     {
       "id": "gaza",
@@ -68,16 +130,17 @@
       "description": "The historic city's layered architectural heritage.",
       "arabicDescription": "التراث المعماري المتراكم للمدينة التاريخية.",
       "mapCenter": {
-        "latitude": 31.504,
-        "longitude": 34.464
+        "latitude": 31.476,
+        "longitude": 34.415
       },
-      "mapZoom": 14,
+      "mapZoom": 12,
       "bounds": {
-        "minLat": 31.498,
-        "maxLat": 31.511,
-        "minLng": 34.457,
-        "maxLng": 34.471
-      }
+        "minLat": 31.44,
+        "maxLat": 31.513,
+        "minLng": 34.357,
+        "maxLng": 34.473
+      },
+      "coverImageUrl": "https://commons.wikimedia.org/wiki/Special:FilePath/%D9%85%D8%AC%D9%85%D9%88%D8%B9%D8%A9_%D8%B5%D9%88%D8%B1_%D9%84%D9%82%D8%B7%D8%A7%D8%B9_%D8%BA%D8%B2%D8%A9_%D9%82%D8%A8%D9%84_%D8%A7%D9%84%D8%AD%D8%B1%D8%A8_%D8%A7%D9%84%D8%A3%D8%AE%D9%8A%D8%B1%D8%A9_03.jpg?width=1200"
     }
   ],
   "locations": [
@@ -145,7 +208,27 @@
       "traditions": "",
       "arabicTraditions": "",
       "latitude": 31.962977,
-      "longitude": 35.181261
+      "longitude": 35.181261,
+      "media": [
+        {
+          "id": "palestinian-museum-01",
+          "url": "https://commons.wikimedia.org/wiki/Special:FilePath/The_Palestinian_Museum.jpg?width=1600",
+          "thumbUrl": "https://commons.wikimedia.org/wiki/Special:FilePath/The_Palestinian_Museum.jpg?width=600",
+          "width": 2716,
+          "height": 1716,
+          "subject": "The Palestinian Museum",
+          "arabicSubject": "المتحف الفلسطيني",
+          "description": "The museum’s angled, terraced building among its planted gardens in Birzeit, June 2023.",
+          "arabicDescription": "مبنى المتحف بزواياه ومدرّجاته بين حدائقه المزروعة في بيرزيت، حزيران/يونيو 2023.",
+          "era": "modern",
+          "credit": "Dan Palraz",
+          "license": "CC BY-SA 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+          "capturedAt": "2023-06-04",
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:The_Palestinian_Museum.jpg",
+          "pairRole": "cover"
+        }
+      ]
     },
     {
       "id": "yasser-arafat-museum",
@@ -249,7 +332,1924 @@
         "answerIndex": 0
       },
       "traditions": "",
-      "arabicTraditions": ""
+      "arabicTraditions": "",
+      "media": [
+        {
+          "id": "yasser-arafat-museum-01",
+          "url": "https://commons.wikimedia.org/wiki/Special:FilePath/Yasser_Arafat_Museum002.jpg?width=1600",
+          "thumbUrl": "https://commons.wikimedia.org/wiki/Special:FilePath/Yasser_Arafat_Museum002.jpg?width=600",
+          "width": 8000,
+          "height": 6000,
+          "subject": "Exhibition gallery",
+          "arabicSubject": "قاعة العرض",
+          "description": "Visitors in one of the museum’s exhibition galleries, 2021.",
+          "arabicDescription": "زوار في إحدى قاعات العرض في المتحف، 2021.",
+          "era": "modern",
+          "credit": "Talmoryair",
+          "license": "CC BY-SA 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+          "capturedAt": "2021-10-28",
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Yasser_Arafat_Museum002.jpg",
+          "pairRole": "cover"
+        },
+        {
+          "id": "yasser-arafat-museum-02",
+          "url": "https://commons.wikimedia.org/wiki/Special:FilePath/Yasser_Arafat_Museum006.jpg?width=1600",
+          "thumbUrl": "https://commons.wikimedia.org/wiki/Special:FilePath/Yasser_Arafat_Museum006.jpg?width=600",
+          "width": 3000,
+          "height": 3000,
+          "subject": "Nobel Peace Prize diploma",
+          "arabicSubject": "شهادة جائزة نوبل للسلام",
+          "description": "A Nobel Peace Prize diploma displayed in a museum case, 2021.",
+          "arabicDescription": "شهادة جائزة نوبل للسلام معروضة في واجهة داخل المتحف، 2021.",
+          "era": "modern",
+          "credit": "Talmoryair",
+          "license": "CC BY-SA 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+          "capturedAt": "2021-10-28",
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Yasser_Arafat_Museum006.jpg"
+        },
+        {
+          "id": "yasser-arafat-museum-03",
+          "url": "https://commons.wikimedia.org/wiki/Special:FilePath/Yasser_Arafat_Museum003.jpg?width=1600",
+          "thumbUrl": "https://commons.wikimedia.org/wiki/Special:FilePath/Yasser_Arafat_Museum003.jpg?width=600",
+          "width": 3000,
+          "height": 3000,
+          "subject": "Office on display",
+          "arabicSubject": "مكتب معروض",
+          "description": "An office shown in the museum, with a picture of the Dome of the Rock behind the desk, 2021.",
+          "arabicDescription": "مكتب معروض في المتحف، وخلف المكتب صورة لقبة الصخرة، 2021.",
+          "era": "modern",
+          "credit": "Talmoryair",
+          "license": "CC BY-SA 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+          "capturedAt": "2021-10-28",
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Yasser_Arafat_Museum003.jpg"
+        }
+      ]
+    },
+    {
+      "id": "throne-villages",
+      "governorateId": "ramallah",
+      "name": "Throne Villages: Ras Karkar and Deir Ghassaneh",
+      "arabicName": "قرى الكراسي: راس كركر ودير غسانة",
+      "city": "Ras Karkar",
+      "arabicCity": "راس كركر",
+      "latitude": 31.942979,
+      "longitude": 35.102654,
+      "coordinateStatus": "unesco_tentative_list_reference",
+      "description": "Hilltop seats of the sheikhs who ruled the central highlands in the 18th and 19th centuries, where fortified mansions rise above the village houses.",
+      "arabicDescription": "مقارّ المشايخ الذين حكموا المرتفعات الوسطى في القرنين الثامن عشر والتاسع عشر، حيث ترتفع القصور المحصّنة فوق بيوت القرية على رؤوس التلال.",
+      "facts": "In the 18th and 19th centuries the central highlands were divided into twenty-four sheikhdoms. Each sheikh collected taxes for the Ottoman government, and the villages where the sheikhs and their clans lived were called “throne villages”. Ras Karkar and Deir Ghassaneh are two of the thirteen villages named in Palestine’s tentative-list entry.",
+      "arabicFacts": "في القرنين الثامن عشر والتاسع عشر قُسّمت المرتفعات الوسطى إلى أربع وعشرين مشيخة. كان كل شيخ يجبي الضرائب للحكومة العثمانية، وسُمّيت القرى التي سكنها المشايخ وعشائرهم «قرى الكراسي». وراس كركر ودير غسانة اثنتان من ثلاث عشرة قرية يذكرها مدخل القائمة التمهيدية لفلسطين.",
+      "importance": "The entry describes the throne villages as a distinctive architectural horizon of the central highlands and an exceptional testimony to the power of local leaders in the late Ottoman period. Allied to urban notables, the sheikhs built mansions closer to city architecture than to peasant houses.",
+      "arabicImportance": "يصف المدخل قرى الكراسي بأنها أفق معماري مميز في المرتفعات الوسطى، وشاهد استثنائي على سلطة الزعامات المحلية في أواخر العهد العثماني. وبحكم تحالف المشايخ مع أعيان المدن، بنوا قصوراً أقرب إلى عمارة المدن منها إلى بيوت الفلاحين.",
+      "landmarks": [
+        "Sheikhs’ residences on hilltops above smaller village houses",
+        "High fortified walls and monumental entrances with decorated wooden gates",
+        "Courtyards and open terraces",
+        "The bent, L-shaped entrance hall that gave privacy to the women of the sheikh’s family"
+      ],
+      "arabicLandmarks": [
+        "دور المشايخ على رؤوس التلال فوق بيوت القرية الصغيرة",
+        "أسوار عالية محصّنة ومداخل ضخمة بأبواب خشبية مزخرفة",
+        "الأحواش والسطوح المكشوفة",
+        "الدهليز المنكسر على شكل حرف L الذي وفّر الخصوصية لنساء عائلة الشيخ"
+      ],
+      "traditions": "",
+      "arabicTraditions": "",
+      "gaps": "The map point marks Ras Karkar as listed by UNESCO; Deir Ghassaneh lies further north and is not mapped separately. Current access and the condition of individual buildings are not asserted.",
+      "arabicGaps": "تشير النقطة على الخريطة إلى راس كركر كما تذكرها اليونسكو، أما دير غسانة فتقع إلى الشمال ولا تظهر منفصلة. لا يؤكد السجل إمكانية الوصول أو حالة المباني الراهنة.",
+      "categories": [
+        "تراث ثقافي",
+        "حارة تاريخية"
+      ],
+      "interests": [
+        "history",
+        "architecture"
+      ],
+      "reviewStatus": "source_checked",
+      "reviewed": true,
+      "sources": [
+        {
+          "title": "Throne Villages — Tentative List",
+          "arabicTitle": "قرى الكراسي — القائمة التمهيدية",
+          "publisher": "UNESCO World Heritage Centre",
+          "arabicPublisher": "مركز التراث العالمي - اليونسكو",
+          "url": "https://whc.unesco.org/en/tentativelists/5717/"
+        }
+      ],
+      "timeline": [
+        {
+          "year": 1700,
+          "label": "18th–19th centuries",
+          "description": "The central highlands are divided into twenty-four sheikhdoms ruled from the throne villages.",
+          "arabicDescription": "تقسيم المرتفعات الوسطى إلى أربع وعشرين مشيخة تُحكم من قرى الكراسي."
+        },
+        {
+          "year": 2013,
+          "label": "2013",
+          "description": "The throne villages are submitted to Palestine’s Tentative List.",
+          "arabicDescription": "إدراج قرى الكراسي على قائمة فلسطين التمهيدية."
+        }
+      ],
+      "quiz": {
+        "question": "Who lived in the “throne villages”?",
+        "arabicQuestion": "من سكن «قرى الكراسي»؟",
+        "options": [
+          "Byzantine monks",
+          "Local sheikhs and their clans",
+          "Roman governors"
+        ],
+        "arabicOptions": [
+          "رهبان بيزنطيون",
+          "المشايخ المحليون وعشائرهم",
+          "ولاة رومان"
+        ],
+        "answerIndex": 1
+      },
+      "sourceCheckedAt": "2026-10-26",
+      "media": [
+        {
+          "id": "throne-villages-01",
+          "url": "https://commons.wikimedia.org/wiki/Special:FilePath/%D9%82%D9%84%D8%B9%D8%A9_%D8%A2%D9%84_%D8%B3%D9%85%D8%AD%D8%A7%D9%86_2024.jpg?width=1600",
+          "thumbUrl": "https://commons.wikimedia.org/wiki/Special:FilePath/%D9%82%D9%84%D8%B9%D8%A9_%D8%A2%D9%84_%D8%B3%D9%85%D8%AD%D8%A7%D9%86_2024.jpg?width=600",
+          "width": 3024,
+          "height": 4032,
+          "subject": "Qal‘at Al Samhan, Ras Karkar",
+          "arabicSubject": "قلعة آل سمحان، راس كركر",
+          "description": "The courtyard, stairs and stone halls of Qal‘at Al Samhan, the fortified mansion of Ras Karkar, 2024.",
+          "arabicDescription": "فناء قلعة آل سمحان وأدراجها وقاعاتها الحجرية، القصر المحصّن في راس كركر، 2024.",
+          "era": "modern",
+          "credit": "امل زيد",
+          "license": "CC BY 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by/4.0",
+          "capturedAt": "2024-09-17",
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:%D9%82%D9%84%D8%B9%D8%A9_%D8%A2%D9%84_%D8%B3%D9%85%D8%AD%D8%A7%D9%86_2024.jpg",
+          "pairRole": "cover"
+        },
+        {
+          "id": "throne-villages-02",
+          "url": "https://commons.wikimedia.org/wiki/Special:FilePath/Qalat_Al_Samhan_06.jpg?width=1600",
+          "thumbUrl": "https://commons.wikimedia.org/wiki/Special:FilePath/Qalat_Al_Samhan_06.jpg?width=600",
+          "width": 3024,
+          "height": 4032,
+          "subject": "Qal‘at Al Samhan entrance",
+          "arabicSubject": "مدخل قلعة آل سمحان",
+          "description": "The monumental arched entrance and wooden door of Qal‘at Al Samhan, 2024.",
+          "arabicDescription": "المدخل المعقود الضخم والباب الخشبي لقلعة آل سمحان، 2024.",
+          "era": "modern",
+          "credit": "RaedHajj",
+          "license": "CC0",
+          "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+          "capturedAt": "2024-09-20",
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Qalat_Al_Samhan_06.jpg"
+        },
+        {
+          "id": "throne-villages-03",
+          "url": "https://commons.wikimedia.org/wiki/Special:FilePath/%D8%B1%D8%A7%D8%B3_%D9%83%D8%B1%D9%83%D8%B1.jpg?width=1600",
+          "thumbUrl": "https://commons.wikimedia.org/wiki/Special:FilePath/%D8%B1%D8%A7%D8%B3_%D9%83%D8%B1%D9%83%D8%B1.jpg?width=600",
+          "width": 7360,
+          "height": 4912,
+          "subject": "Vaulted hall, Ras Karkar",
+          "arabicSubject": "قاعة معقودة في راس كركر",
+          "description": "A cross-vaulted stone hall in Ras Karkar, 2014.",
+          "arabicDescription": "قاعة حجرية ذات عقود متقاطعة في راس كركر، 2014.",
+          "era": "modern",
+          "credit": "Mahmood moutan",
+          "license": "CC BY-SA 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+          "capturedAt": "2014-02-02",
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:%D8%B1%D8%A7%D8%B3_%D9%83%D8%B1%D9%83%D8%B1.jpg"
+        }
+      ]
+    },
+    {
+      "id": "nablus-old-city",
+      "governorateId": "nablus",
+      "name": "Historic City of Nablus",
+      "arabicName": "البلدة القديمة في نابلس",
+      "city": "Nablus",
+      "arabicCity": "نابلس",
+      "latitude": 32.219278,
+      "longitude": 35.260306,
+      "coordinateStatus": "unesco_tentative_list_reference",
+      "description": "A dense Roman–Islamic old city between Mount Ebal and Mount Gerizim, with six main quarters, covered markets, bathhouses and the soap factories behind Nabulsi soap.",
+      "arabicDescription": "بلدة قديمة رومانية إسلامية متلاصقة البناء بين جبلَي عيبال وجرزيم، فيها ست حارات رئيسية وأسواق مسقوفة وحمّامات ومصابن الصابون النابلسي.",
+      "facts": "Nablus stands on the Roman city of Flavia Neapolis, founded under Vespasian in 72 AD, and its two main streets still follow the Roman Decumanus and Cardo. The Ottoman Clock Tower in Bab al-Saha square was built in 1898. By 1882 the city had 30 soap factories, and Nabulsi soap-making was inscribed on UNESCO’s Intangible Cultural Heritage list in December 2024.",
+      "arabicFacts": "تقوم نابلس على المدينة الرومانية فلافيا نيابوليس التي أُسست في عهد فسباسيان عام 72م، وما زال شارعاها الرئيسيان يتبعان الديكومانوس والكاردو الرومانيين. بُني برج الساعة العثماني في ساحة باب الساحة عام 1898. وبحلول عام 1882 كانت في المدينة 30 مصبنة، وأُدرجت صناعة الصابون النابلسي على قائمة اليونسكو للتراث الثقافي غير المادي في كانون الأول/ديسمبر 2024.",
+      "importance": "Known as “Little Damascus”, Nablus grew for twelve centuries as an Arab-Islamic centre of trade and culture while keeping its Roman street plan. The 18th century is often seen as its golden age, when mosques, markets, caravanserais, hammams and soap factories were built in the historic centre.",
+      "arabicImportance": "عُرفت نابلس بلقب «دمشق الصغرى»، ونمت على مدى اثني عشر قرناً مركزاً عربياً إسلامياً للتجارة والثقافة مع احتفاظها بمخطط شوارعها الروماني. ويُعدّ القرن الثامن عشر عصرها الذهبي، حين شُيّدت في مركزها التاريخي المساجد والأسواق والخانات والحمّامات والمصابن.",
+      "landmarks": [
+        "Six main quarters: al-Yasmina, al-Qaryoon, al-Qaysariyya, al-Habla, al-Gharb and al-‘Aqaba",
+        "Bab al-Saha square, the Clock Tower (1898) and al-Nasr Grand Mosque",
+        "The Old Khan and the New Khan covered markets",
+        "Historic soap factories",
+        "The Satoun Mosque and al-Salahi Grand Mosque",
+        "Roman traces: the Decumanus, the nymphaeum and the al-Baidarah baths"
+      ],
+      "arabicLandmarks": [
+        "ست حارات رئيسية: الياسمينة والقريون والقيسارية والحبلة والغرب والعقبة",
+        "ساحة باب الساحة وبرج الساعة (1898) وجامع النصر الكبير",
+        "سوقا خان التجار القديم والجديد المسقوفان",
+        "المصابن التاريخية",
+        "جامع الساطون والجامع الصلاحي الكبير",
+        "آثار رومانية: الديكومانوس والنيمفيوم (سبيل عين القريون) وحمّامات البيدرة"
+      ],
+      "walkthrough": "Two main streets, al-Nasr and Khan al-Tujjar, run east to west and divide the old city into three sections; al-Saha square lies at their junction. Residential quarters are reached through covered passages called dawamees, which open onto narrow alleys, stairways that follow the slope, small squares and family courtyards (ahwash).",
+      "arabicWalkthrough": "يمتد شارعان رئيسيان، النصر وخان التجار، من الشرق إلى الغرب ويقسمان البلدة القديمة إلى ثلاثة أقسام، وعند ملتقاهما تقع ساحة الساحة. ويُدخَل إلى الحارات السكنية عبر ممرات مسقوفة تُسمّى الدواميس، تنفتح على أزقة ضيقة وأدراج تتبع المنحدر وساحات صغيرة وأحواش عائلية.",
+      "traditions": "",
+      "arabicTraditions": "",
+      "categories": [
+        "حارة تاريخية",
+        "سوق تراثي"
+      ],
+      "interests": [
+        "history",
+        "architecture",
+        "food_markets"
+      ],
+      "reviewStatus": "source_checked",
+      "reviewed": true,
+      "sources": [
+        {
+          "title": "The Historic City of Nablus and its environs — Tentative List",
+          "arabicTitle": "مدينة نابلس التاريخية ومحيطها — القائمة التمهيدية",
+          "publisher": "UNESCO World Heritage Centre",
+          "arabicPublisher": "مركز التراث العالمي - اليونسكو",
+          "url": "https://whc.unesco.org/en/tentativelists/6956/"
+        }
+      ],
+      "timeline": [
+        {
+          "year": 72,
+          "label": "72 AD",
+          "description": "The Roman city of Flavia Neapolis, “the new city”, is founded under Vespasian.",
+          "arabicDescription": "تأسيس المدينة الرومانية فلافيا نيابوليس، «المدينة الجديدة»، في عهد فسباسيان."
+        },
+        {
+          "year": 636,
+          "label": "636 AD",
+          "description": "Under Muslim rule, Nablus becomes part of the district of Jund Filastin, with its capital at Ramla.",
+          "arabicDescription": "تحت الحكم الإسلامي تصبح نابلس جزءاً من جند فلسطين وعاصمته الرملة."
+        },
+        {
+          "year": 1099,
+          "label": "1099 AD",
+          "description": "Crusader control; the fortress and several churches are rebuilt on the eastern side.",
+          "arabicDescription": "السيطرة الصليبية؛ إعادة بناء القلعة وعدة كنائس في الجهة الشرقية."
+        },
+        {
+          "year": 1187,
+          "label": "1187 AD",
+          "description": "The Ayyubids regain the city; churches are restored and converted into mosques.",
+          "arabicDescription": "الأيوبيون يستعيدون المدينة وتُرمَّم الكنائس وتُحوَّل إلى مساجد."
+        },
+        {
+          "year": 1198,
+          "label": "1198 AD",
+          "description": "A devastating earthquake is followed by reconstruction under the Ayyubids and Mamluks.",
+          "arabicDescription": "زلزال مدمّر تعقبه إعادة إعمار في عهدَي الأيوبيين والمماليك."
+        },
+        {
+          "year": 1516,
+          "label": "1516 AD",
+          "description": "Ottoman rule begins a period of major expansion; the 18th century becomes the city’s golden age.",
+          "arabicDescription": "بداية الحكم العثماني وفترة توسع كبير، ويصبح القرن الثامن عشر العصر الذهبي للمدينة."
+        },
+        {
+          "year": 1882,
+          "label": "1882",
+          "description": "The city counts 30 soap factories, the backbone of its economy.",
+          "arabicDescription": "المدينة تضم 30 مصبنة تشكّل عماد اقتصادها."
+        },
+        {
+          "year": 1898,
+          "label": "1898",
+          "description": "The Clock Tower is built in Bab al-Saha, the main square.",
+          "arabicDescription": "بناء برج الساعة في باب الساحة، الساحة الرئيسية."
+        },
+        {
+          "year": 2024,
+          "label": "2024",
+          "description": "Nabulsi soap-making is inscribed on UNESCO’s Intangible Cultural Heritage list.",
+          "arabicDescription": "إدراج صناعة الصابون النابلسي على قائمة اليونسكو للتراث الثقافي غير المادي."
+        },
+        {
+          "year": 2026,
+          "label": "2026",
+          "description": "The historic city is added to Palestine’s Tentative List.",
+          "arabicDescription": "إضافة المدينة التاريخية إلى قائمة فلسطين التمهيدية."
+        }
+      ],
+      "quiz": {
+        "question": "Which Nablus craft was inscribed on UNESCO’s Intangible Cultural Heritage list in 2024?",
+        "arabicQuestion": "أي حرفة نابلسية أُدرجت على قائمة اليونسكو للتراث غير المادي عام 2024؟",
+        "options": [
+          "Glass-blowing",
+          "Mother-of-pearl carving",
+          "Nabulsi soap-making"
+        ],
+        "arabicOptions": [
+          "نفخ الزجاج",
+          "حفر الصدف",
+          "صناعة الصابون النابلسي"
+        ],
+        "answerIndex": 2
+      },
+      "sourceCheckedAt": "2026-10-26",
+      "media": [
+        {
+          "id": "nablus-old-city-01",
+          "url": "https://commons.wikimedia.org/wiki/Special:FilePath/%D8%A7%D9%84%D8%A8%D9%84%D8%AF%D8%A9_%D8%A7%D9%84%D9%82%D8%AF%D9%8A%D9%85%D8%A9_-_%D9%86%D8%A7%D8%A8%D9%84%D8%B3.jpg?width=1600",
+          "thumbUrl": "https://commons.wikimedia.org/wiki/Special:FilePath/%D8%A7%D9%84%D8%A8%D9%84%D8%AF%D8%A9_%D8%A7%D9%84%D9%82%D8%AF%D9%8A%D9%85%D8%A9_-_%D9%86%D8%A7%D8%A8%D9%84%D8%B3.jpg?width=600",
+          "width": 5184,
+          "height": 3456,
+          "subject": "Nablus old city",
+          "arabicSubject": "البلدة القديمة في نابلس",
+          "description": "The green dome of An-Nasr Mosque above the rooftops of the old city, 2017.",
+          "arabicDescription": "القبة الخضراء لجامع النصر فوق أسطح البلدة القديمة، 2017.",
+          "era": "modern",
+          "credit": "Hadi Hijjawi",
+          "license": "CC BY-SA 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+          "capturedAt": "2017-04-05",
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:%D8%A7%D9%84%D8%A8%D9%84%D8%AF%D8%A9_%D8%A7%D9%84%D9%82%D8%AF%D9%8A%D9%85%D8%A9_-_%D9%86%D8%A7%D8%A8%D9%84%D8%B3.jpg",
+          "pairRole": "cover"
+        },
+        {
+          "id": "nablus-old-city-02",
+          "url": "https://commons.wikimedia.org/wiki/Special:FilePath/%D8%B3%D9%88%D9%82_%D9%81%D9%8A_%D9%86%D8%A7%D8%A8%D9%84%D8%B3.jpg?width=1600",
+          "thumbUrl": "https://commons.wikimedia.org/wiki/Special:FilePath/%D8%B3%D9%88%D9%82_%D9%81%D9%8A_%D9%86%D8%A7%D8%A8%D9%84%D8%B3.jpg?width=600",
+          "width": 5184,
+          "height": 3456,
+          "subject": "Old city market",
+          "arabicSubject": "سوق البلدة القديمة",
+          "description": "Fruit, vegetables and spices in one of the old markets of Nablus, 2013.",
+          "arabicDescription": "فواكه وخضار وتوابل في أحد أسواق نابلس القديمة، 2013.",
+          "era": "modern",
+          "credit": "Moataz1997",
+          "license": "CC BY-SA 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+          "capturedAt": "2013-08-12",
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:%D8%B3%D9%88%D9%82_%D9%81%D9%8A_%D9%86%D8%A7%D8%A8%D9%84%D8%B3.jpg"
+        },
+        {
+          "id": "nablus-old-city-03",
+          "url": "https://commons.wikimedia.org/wiki/Special:FilePath/Old_City_%28Nablus%29.jpg?width=1600",
+          "thumbUrl": "https://commons.wikimedia.org/wiki/Special:FilePath/Old_City_%28Nablus%29.jpg?width=600",
+          "width": 3188,
+          "height": 4783,
+          "subject": "Stepped alley",
+          "arabicSubject": "زقاق مدرّج",
+          "description": "A stepped alley climbing between stone houses in the old city, 2013.",
+          "arabicDescription": "زقاق مدرّج يصعد بين البيوت الحجرية في البلدة القديمة، 2013.",
+          "era": "modern",
+          "credit": "Moataz1997",
+          "license": "CC BY-SA 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+          "capturedAt": "2013-08-12",
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Old_City_(Nablus).jpg"
+        },
+        {
+          "id": "nablus-old-city-04",
+          "url": "https://commons.wikimedia.org/wiki/Special:FilePath/%D8%A7%D9%84%D8%AC%D8%A7%D9%85%D8%B9_%D8%A7%D9%84%D8%B5%D9%84%D8%A7%D8%AD%D9%8A_%D8%A7%D9%84%D9%83%D8%A8%D9%8A%D8%B1_%D9%81%D9%8A_%D9%86%D8%A7%D8%A8%D9%84%D8%B3.JPG?width=1600",
+          "thumbUrl": "https://commons.wikimedia.org/wiki/Special:FilePath/%D8%A7%D9%84%D8%AC%D8%A7%D9%85%D8%B9_%D8%A7%D9%84%D8%B5%D9%84%D8%A7%D8%AD%D9%8A_%D8%A7%D9%84%D9%83%D8%A8%D9%8A%D8%B1_%D9%81%D9%8A_%D9%86%D8%A7%D8%A8%D9%84%D8%B3.JPG?width=600",
+          "width": 5184,
+          "height": 2912,
+          "subject": "Al-Salahi Grand Mosque",
+          "arabicSubject": "الجامع الصلاحي الكبير",
+          "description": "Columns and arches in the prayer hall of al-Salahi Grand Mosque, 2012.",
+          "arabicDescription": "أعمدة وعقود في قاعة الصلاة بالجامع الصلاحي الكبير، 2012.",
+          "era": "modern",
+          "credit": "عمرو بن كلثوم",
+          "license": "CC BY-SA 3.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0",
+          "capturedAt": "2012-08-29",
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:%D8%A7%D9%84%D8%AC%D8%A7%D9%85%D8%B9_%D8%A7%D9%84%D8%B5%D9%84%D8%A7%D8%AD%D9%8A_%D8%A7%D9%84%D9%83%D8%A8%D9%8A%D8%B1_%D9%81%D9%8A_%D9%86%D8%A7%D8%A8%D9%84%D8%B3.JPG"
+        },
+        {
+          "id": "nablus-old-city-05",
+          "url": "https://commons.wikimedia.org/wiki/Special:FilePath/Arab_factories_%26_gen%28eral%29_improvements_in_Nablus._The_new_mosque._Int%28erior%29_from_main_doorway._East_entr%28ance%29_LOC_matpc.04374.jpg?width=1600",
+          "thumbUrl": "https://commons.wikimedia.org/wiki/Special:FilePath/Arab_factories_%26_gen%28eral%29_improvements_in_Nablus._The_new_mosque._Int%28erior%29_from_main_doorway._East_entr%28ance%29_LOC_matpc.04374.jpg?width=600",
+          "width": 5747,
+          "height": 4279,
+          "subject": "An-Nasr Mosque prayer hall",
+          "arabicSubject": "قاعة الصلاة في جامع النصر",
+          "description": "The prayer hall in 1940, when the Matson caption called it “the new mosque”: arched windows, mihrab and minbar.",
+          "arabicDescription": "قاعة الصلاة عام 1940، حين سمّاها تعليق مجموعة ماتسون «الجامع الجديد»: نوافذ معقودة ومحراب ومنبر.",
+          "era": "historical",
+          "credit": "Matson Collection, Library of Congress",
+          "license": "Public domain",
+          "licenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/",
+          "capturedAt": "1940",
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Arab_factories_%26_gen(eral)_improvements_in_Nablus._The_new_mosque._Int(erior)_from_main_doorway._East_entr(ance)_LOC_matpc.04374.jpg",
+          "pairRole": "before"
+        },
+        {
+          "id": "nablus-old-city-06",
+          "url": "https://commons.wikimedia.org/wiki/Special:FilePath/An_Nasr_Mosque_Nablus.jpg?width=1600",
+          "thumbUrl": "https://commons.wikimedia.org/wiki/Special:FilePath/An_Nasr_Mosque_Nablus.jpg?width=600",
+          "width": 4320,
+          "height": 3240,
+          "subject": "An-Nasr Mosque prayer hall",
+          "arabicSubject": "قاعة الصلاة في جامع النصر",
+          "description": "The same prayer hall in 2010, with the mihrab and minbar in the same places beneath the arched windows.",
+          "arabicDescription": "قاعة الصلاة نفسها عام 2010، والمحراب والمنبر في مكانيهما تحت النوافذ المعقودة.",
+          "era": "modern",
+          "credit": "Andreas Tanner",
+          "license": "CC BY-SA 3.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0",
+          "capturedAt": "2010-05-14",
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:An_Nasr_Mosque_Nablus.jpg",
+          "pairRole": "after"
+        }
+      ]
+    },
+    {
+      "id": "sebastia",
+      "governorateId": "nablus",
+      "name": "Sebastia",
+      "arabicName": "سبسطية",
+      "city": "Sebastia",
+      "arabicCity": "سبسطية",
+      "latitude": 32.276339,
+      "longitude": 35.188875,
+      "coordinateStatus": "unesco_property_reference",
+      "description": "A multi-period hill site north-west of Nablus whose layers run from the Iron Age city widely identified with ancient Samaria, through Roman Sebaste, to Byzantine, Crusader and Ottoman remains.",
+      "arabicDescription": "موقع متعدد الحقب على تلّ شمال غرب نابلس، تمتد طبقاته من مدينة العصر الحديدي التي تُعرَّف على نطاق واسع بالسامرة القديمة، مروراً بسبسطية الرومانية، إلى بقايا بيزنطية وصليبية وعثمانية.",
+      "facts": "Occupation here is documented from the 9th century BCE. The city was a fortified stronghold in the Hellenistic period, was renamed Sebaste by Herod and became a Roman colony under Septimius Severus; in the Byzantine period it was the seat of a bishopric. UNESCO inscribed Sebastia on the World Heritage List in 2026 and placed it on the List of World Heritage in Danger the same year; its statement names land expropriation plans aimed at dividing the property among the threats to its integrity.",
+      "arabicFacts": "الاستيطان في الموقع موثّق منذ القرن التاسع قبل الميلاد. كانت المدينة معقلاً محصّناً في العصر الهلنستي، ثم أعاد هيرودس تسميتها «سيباستي» وأصبحت مستعمرة رومانية في عهد سبتيموس سيفيروس، وفي العصر البيزنطي كانت مقراً لأسقفية. أدرجت اليونسكو سبسطية على قائمة التراث العالمي عام 2026، ووضعتها في العام نفسه على قائمة التراث العالمي المعرّض للخطر، ويذكر بيانها خطط مصادرة أراضٍ تهدف إلى تقسيم الموقع بين التهديدات التي تمسّ سلامته.",
+      "importance": "UNESCO stresses how legible the successive layers are. Unlike many continuously inhabited cities, where later building hides earlier remains, Sebastia keeps relatively direct traces of each major period, so its political, religious and urban history can be read in one place.",
+      "arabicImportance": "تؤكد اليونسكو وضوح الطبقات المتعاقبة في الموقع. فبخلاف كثير من المدن المأهولة باستمرار، حيث يخفي البناء اللاحق البقايا الأقدم، تحتفظ سبسطية بآثار مباشرة نسبياً من كل حقبة رئيسية، فيمكن قراءة تاريخها السياسي والديني والعمراني في مكان واحد.",
+      "landmarks": [
+        "Iron Age remains of a regional political centre",
+        "Hellenistic fortifications",
+        "Remains of the Roman city of Sebaste",
+        "Byzantine and Crusader-period vestiges",
+        "Ottoman-era layers"
+      ],
+      "arabicLandmarks": [
+        "بقايا مركز سياسي إقليمي من العصر الحديدي",
+        "تحصينات هلنستية",
+        "بقايا مدينة سيباستي الرومانية",
+        "آثار بيزنطية وأخرى من الفترة الصليبية",
+        "طبقات من العصر العثماني"
+      ],
+      "traditions": "",
+      "arabicTraditions": "",
+      "categories": [
+        "موقع أثري"
+      ],
+      "interests": [
+        "history",
+        "architecture"
+      ],
+      "reviewStatus": "source_checked",
+      "reviewed": true,
+      "sources": [
+        {
+          "title": "Sebastia",
+          "arabicTitle": "سبسطية",
+          "publisher": "UNESCO World Heritage Centre",
+          "arabicPublisher": "مركز التراث العالمي - اليونسكو",
+          "url": "https://whc.unesco.org/en/list/1809/"
+        }
+      ],
+      "timeline": [
+        {
+          "year": -850,
+          "label": "9th century BCE",
+          "description": "Occupation begins; in the Iron Age the site is a prominent regional political centre.",
+          "arabicDescription": "بداية الاستيطان؛ وفي العصر الحديدي يصبح الموقع مركزاً سياسياً إقليمياً بارزاً."
+        },
+        {
+          "year": -300,
+          "label": "Hellenistic period",
+          "description": "The city becomes a fortified stronghold.",
+          "arabicDescription": "المدينة تصبح معقلاً محصّناً."
+        },
+        {
+          "year": -25,
+          "label": "Roman period",
+          "description": "Herod renames the city Sebaste.",
+          "arabicDescription": "هيرودس يعيد تسمية المدينة «سيباستي»."
+        },
+        {
+          "year": 200,
+          "label": "Roman period (Septimius Severus)",
+          "description": "Sebaste receives the status of a Roman colony.",
+          "arabicDescription": "سيباستي تنال صفة المستعمرة الرومانية."
+        },
+        {
+          "year": 400,
+          "label": "Byzantine period",
+          "description": "The city declines in importance but becomes the seat of a bishopric.",
+          "arabicDescription": "تتراجع أهمية المدينة لكنها تصبح مقراً لأسقفية."
+        },
+        {
+          "year": 1100,
+          "label": "Crusader era",
+          "description": "Notable Crusader-period structures are added.",
+          "arabicDescription": "إضافة منشآت بارزة في الفترة الصليبية."
+        },
+        {
+          "year": 2026,
+          "label": "2026",
+          "description": "Inscribed on the World Heritage List and on the List of World Heritage in Danger.",
+          "arabicDescription": "الإدراج على قائمة التراث العالمي وعلى قائمة التراث العالمي المعرّض للخطر."
+        }
+      ],
+      "quiz": {
+        "question": "What name did Herod give to the city?",
+        "arabicQuestion": "ما الاسم الذي أطلقه هيرودس على المدينة؟",
+        "options": [
+          "Neapolis",
+          "Sebaste",
+          "Anthedon"
+        ],
+        "arabicOptions": [
+          "نيابوليس",
+          "سيباستي",
+          "أنثيدون"
+        ],
+        "answerIndex": 1
+      },
+      "sourceCheckedAt": "2026-10-26",
+      "media": [
+        {
+          "id": "sebastia-01",
+          "url": "https://commons.wikimedia.org/wiki/Special:FilePath/Columned_street_-_panoramio.jpg?width=1600",
+          "thumbUrl": "https://commons.wikimedia.org/wiki/Special:FilePath/Columned_street_-_panoramio.jpg?width=600",
+          "width": 3648,
+          "height": 2432,
+          "subject": "Colonnaded street",
+          "arabicSubject": "الشارع المعمّد",
+          "description": "Column bases and shafts lining the ancient colonnaded street of Sebastia among olive trees, June 2011.",
+          "arabicDescription": "قواعد أعمدة وجذوعها على جانبي الشارع المعمّد القديم في سبسطية بين أشجار الزيتون، حزيران/يونيو 2011.",
+          "era": "modern",
+          "credit": "Mujaddara",
+          "license": "CC BY-SA 3.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0",
+          "capturedAt": "2011-06-06",
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Columned_street_-_panoramio.jpg",
+          "pairRole": "cover"
+        },
+        {
+          "id": "sebastia-02",
+          "url": "https://commons.wikimedia.org/wiki/Special:FilePath/%D8%A7%D9%84%D9%85%D8%AF%D8%B1%D8%AC_%D8%A7%D9%84%D8%B1%D9%88%D9%85%D8%A7%D9%86%D9%8A_%D8%B3%D8%A8%D8%B3%D8%B7%D9%8A%D9%87.jpg?width=1600",
+          "thumbUrl": "https://commons.wikimedia.org/wiki/Special:FilePath/%D8%A7%D9%84%D9%85%D8%AF%D8%B1%D8%AC_%D8%A7%D9%84%D8%B1%D9%88%D9%85%D8%A7%D9%86%D9%8A_%D8%B3%D8%A8%D8%B3%D8%B7%D9%8A%D9%87.jpg?width=600",
+          "width": 5472,
+          "height": 3648,
+          "subject": "Roman theatre",
+          "arabicSubject": "المدرج الروماني",
+          "description": "Visitors on the stone seating of the Roman theatre at Sebastia, July 2024.",
+          "arabicDescription": "زوار على المدرّجات الحجرية للمسرح الروماني في سبسطية، تموز/يوليو 2024.",
+          "era": "modern",
+          "credit": "Shadi abudiak",
+          "license": "CC BY-SA 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+          "capturedAt": "2024-07-12",
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:%D8%A7%D9%84%D9%85%D8%AF%D8%B1%D8%AC_%D8%A7%D9%84%D8%B1%D9%88%D9%85%D8%A7%D9%86%D9%8A_%D8%B3%D8%A8%D8%B3%D8%B7%D9%8A%D9%87.jpg"
+        },
+        {
+          "id": "sebastia-03",
+          "url": "https://commons.wikimedia.org/wiki/Special:FilePath/Information_centre_-_panoramio.jpg?width=1600",
+          "thumbUrl": "https://commons.wikimedia.org/wiki/Special:FilePath/Information_centre_-_panoramio.jpg?width=600",
+          "width": 3648,
+          "height": 2736,
+          "subject": "Sebastia information centre",
+          "arabicSubject": "مركز المعلومات في سبسطية",
+          "description": "The information centre at the archaeological site, set in an old stone building, June 2011.",
+          "arabicDescription": "مركز المعلومات في الموقع الأثري، داخل مبنى حجري قديم، حزيران/يونيو 2011.",
+          "era": "modern",
+          "credit": "Mujaddara",
+          "license": "CC BY-SA 3.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0",
+          "capturedAt": "2011-06-06",
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Information_centre_-_panoramio.jpg"
+        },
+        {
+          "id": "sebastia-04",
+          "url": "https://commons.wikimedia.org/wiki/Special:FilePath/Samaria%2C_pillars_of_the_Roman_Basilica_LOC_matpc.09057.jpg?width=1600",
+          "thumbUrl": "https://commons.wikimedia.org/wiki/Special:FilePath/Samaria%2C_pillars_of_the_Roman_Basilica_LOC_matpc.09057.jpg?width=600",
+          "width": 5841,
+          "height": 4291,
+          "subject": "Roman basilica",
+          "arabicSubject": "البازيليكا الرومانية",
+          "description": "Pillars of the Roman basilica at Sebastia in a Matson stereograph (1898–1946).",
+          "arabicDescription": "أعمدة البازيليكا الرومانية في سبسطية في صورة مجسّمة من مجموعة ماتسون (1898–1946).",
+          "era": "historical",
+          "credit": "Matson Collection, Library of Congress",
+          "license": "Public domain",
+          "licenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/",
+          "capturedAt": "between 1898 and 1946",
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Samaria,_pillars_of_the_Roman_Basilica_LOC_matpc.09057.jpg"
+        },
+        {
+          "id": "sebastia-05",
+          "url": "https://commons.wikimedia.org/wiki/Special:FilePath/Ruins_of_the_Church_of_St_John%2C_Sabaste_%28BM_1877%2C0609.221%29.jpg?width=1600",
+          "thumbUrl": "https://commons.wikimedia.org/wiki/Special:FilePath/Ruins_of_the_Church_of_St_John%2C_Sabaste_%28BM_1877%2C0609.221%29.jpg?width=600",
+          "width": 2500,
+          "height": 1731,
+          "subject": "Church of St John, Sebaste",
+          "arabicSubject": "كنيسة يوحنا المعمدان في سبسطية",
+          "description": "The ruins of the Church of St John at Sebaste in a lithograph after David Roberts, printed in 1844.",
+          "arabicDescription": "أطلال كنيسة يوحنا المعمدان في سبسطية في مطبوعة حجرية عن رسم ديفيد روبرتس، طُبعت عام 1844.",
+          "era": "historical",
+          "credit": "After David Roberts; lithograph by Louis Haghe (British Museum)",
+          "license": "Public domain",
+          "licenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/",
+          "capturedAt": "1844",
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Ruins_of_the_Church_of_St_John,_Sabaste_(BM_1877,0609.221).jpg"
+        }
+      ]
+    },
+    {
+      "id": "mount-gerizim",
+      "governorateId": "nablus",
+      "name": "Mount Gerizim and the Samaritans",
+      "arabicName": "جبل جرزيم والسامريون",
+      "city": "Nablus",
+      "arabicCity": "نابلس",
+      "latitude": 32.212222,
+      "longitude": 35.268889,
+      "coordinateStatus": "unesco_tentative_list_reference",
+      "description": "The sacred mountain of the Samaritans above Nablus, whose summit holds a Hellenistic town, a Byzantine church and a later Muslim shrine.",
+      "arabicDescription": "الجبل المقدس لدى السامريين المطلّ على نابلس، وعلى قمته بقايا بلدة هلنستية وكنيسة بيزنطية ومقام إسلامي لاحق.",
+      "facts": "The temple found on the summit existed before the later 2nd century BC; the town around it was probably destroyed by John Hyrcanus in 128 BC. In 484 AD an octagonal church dedicated to Mary Theotokos was built on the summit and later fortified under Justinian. In the 16th century a shrine of the Muslim saint Sheikh Ghanim was built on a corner of the ruined church.",
+      "arabicFacts": "كان المعبد المكتشف على القمة قائماً قبل أواخر القرن الثاني قبل الميلاد، ودُمّرت البلدة المحيطة به على الأرجح على يد يوحنا هيركانوس عام 128 ق.م. وفي عام 484م بُنيت على القمة كنيسة مثمّنة مكرّسة لمريم والدة الإله، حُصّنت لاحقاً في عهد جستنيان. وفي القرن السادس عشر بُني مقام الولي المسلم الشيخ غانم على زاوية من الكنيسة المهدّمة.",
+      "importance": "The Samaritans, today a small Palestinian community of a few hundred people, keep Mount Gerizim as their religious centre. Their village below the summit now includes a museum, and their Passover ceremony on the mountain continues a form of worship they believe to be thousands of years old.",
+      "arabicImportance": "يبقى جبل جرزيم المركز الديني للسامريين، وهم اليوم جماعة فلسطينية صغيرة لا تتجاوز بضع مئات. وتضم قريتهم أسفل القمة متحفاً، ويواصل احتفالهم بعيد الفصح على الجبل شكلاً من العبادة يؤمنون بأن عمره آلاف السنين.",
+      "landmarks": [
+        "The Hellenistic acropolis with its paved sacred precinct and casemate walls",
+        "Remains of the octagonal church of Mary Theotokos (484 AD)",
+        "The shrine of Sheikh Ghanim",
+        "Tell er-Ras, site of a 2nd-century temple to Zeus",
+        "The Samaritan village and its museum"
+      ],
+      "arabicLandmarks": [
+        "الأكروبول الهلنستي بساحته المقدسة المرصوفة وأسواره المزدوجة",
+        "بقايا كنيسة مريم والدة الإله المثمّنة (484م)",
+        "مقام الشيخ غانم",
+        "تل الراس، موقع معبد لزيوس من القرن الثاني",
+        "القرية السامرية ومتحفها"
+      ],
+      "traditions": "In Samaritan belief, Mount Gerizim is the mountain of the Blessing and the site of the first temple in the Holy Land, built by Yosha’ bin Noun; Samaritans also believe that a rock on the summit is where Abraham was about to sacrifice his son Isaac.",
+      "arabicTraditions": "في المعتقد السامري، جبل جرزيم هو جبل البركة وموضع أول هيكل في الأرض المقدسة بناه يوشع بن نون، ويؤمن السامريون أيضاً بأن صخرة على القمة هي المكان الذي كاد إبراهيم يذبح فيه ابنه إسحاق.",
+      "categories": [
+        "معلم ديني",
+        "موقع أثري"
+      ],
+      "interests": [
+        "history",
+        "religious",
+        "oral_heritage"
+      ],
+      "reviewStatus": "source_checked",
+      "reviewed": true,
+      "sources": [
+        {
+          "title": "Mount Gerizim and the Samaritans — Tentative List",
+          "arabicTitle": "جبل جرزيم والسامريون — القائمة التمهيدية",
+          "publisher": "UNESCO World Heritage Centre",
+          "arabicPublisher": "مركز التراث العالمي - اليونسكو",
+          "url": "https://whc.unesco.org/en/tentativelists/5706/"
+        }
+      ],
+      "timeline": [
+        {
+          "year": -128,
+          "label": "128 BC",
+          "description": "The Hellenistic Samaritan town on the summit is probably destroyed by John Hyrcanus.",
+          "arabicDescription": "تدمير البلدة السامرية الهلنستية على القمة، على الأرجح على يد يوحنا هيركانوس."
+        },
+        {
+          "year": 150,
+          "label": "2nd century AD",
+          "description": "A temple to Zeus is built on Tell er-Ras, overlooking Flavia Neapolis.",
+          "arabicDescription": "بناء معبد لزيوس على تل الراس المطلّ على فلافيا نيابوليس."
+        },
+        {
+          "year": 484,
+          "label": "484 AD",
+          "description": "An octagonal church dedicated to Mary Theotokos is built on the main summit.",
+          "arabicDescription": "بناء كنيسة مثمّنة مكرّسة لمريم والدة الإله على القمة الرئيسية."
+        },
+        {
+          "year": 529,
+          "label": "529 AD",
+          "description": "After the Samaritan revolt the church is turned into a fortress, later strengthened by Justinian.",
+          "arabicDescription": "بعد الثورة السامرية تتحول الكنيسة إلى حصن يقوّيه جستنيان لاحقاً."
+        },
+        {
+          "year": 750,
+          "label": "8th–9th centuries",
+          "description": "The church is abandoned and the fortress dismantled.",
+          "arabicDescription": "هجر الكنيسة ثم تفكيك الحصن."
+        },
+        {
+          "year": 1550,
+          "label": "16th century",
+          "description": "The shrine of Sheikh Ghanim is built on a corner of the ruined church.",
+          "arabicDescription": "بناء مقام الشيخ غانم على زاوية الكنيسة المهدّمة."
+        },
+        {
+          "year": 2012,
+          "label": "2012",
+          "description": "Submitted to Palestine’s Tentative List.",
+          "arabicDescription": "الإدراج على قائمة فلسطين التمهيدية."
+        }
+      ],
+      "quiz": {
+        "question": "Which community regards Mount Gerizim as its sacred mountain?",
+        "arabicQuestion": "أي جماعة تعدّ جبل جرزيم جبلها المقدس؟",
+        "options": [
+          "The Armenians",
+          "The Copts",
+          "The Samaritans"
+        ],
+        "arabicOptions": [
+          "الأرمن",
+          "الأقباط",
+          "السامريون"
+        ],
+        "answerIndex": 2
+      },
+      "sourceCheckedAt": "2026-10-26",
+      "media": [
+        {
+          "id": "mount-gerizim-01",
+          "url": "https://commons.wikimedia.org/wiki/Special:FilePath/%D7%A8%D7%9B%D7%A1_%D7%94%D7%A8_%D7%92%D7%A8%D7%99%D7%96%D7%99%D7%9D.jpg?width=1600",
+          "thumbUrl": "https://commons.wikimedia.org/wiki/Special:FilePath/%D7%A8%D7%9B%D7%A1_%D7%94%D7%A8_%D7%92%D7%A8%D7%99%D7%96%D7%99%D7%9D.jpg?width=600",
+          "width": 5472,
+          "height": 3648,
+          "subject": "Mount Gerizim",
+          "arabicSubject": "جبل جرزيم",
+          "description": "Mount Gerizim rising above Nablus, seen from Mount Ebal in July 2020.",
+          "arabicDescription": "جبل جرزيم مرتفعاً فوق نابلس، كما يبدو من جبل عيبال في تموز/يوليو 2020.",
+          "era": "modern",
+          "credit": "יאיר דב",
+          "license": "CC BY-SA 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+          "capturedAt": "2020-07-31",
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:%D7%A8%D7%9B%D7%A1_%D7%94%D7%A8_%D7%92%D7%A8%D7%99%D7%96%D7%99%D7%9D.jpg",
+          "pairRole": "cover"
+        },
+        {
+          "id": "mount-gerizim-02",
+          "url": "https://commons.wikimedia.org/wiki/Special:FilePath/Har_Gerizim_062.JPG?width=1600",
+          "thumbUrl": "https://commons.wikimedia.org/wiki/Special:FilePath/Har_Gerizim_062.JPG?width=600",
+          "width": 6016,
+          "height": 4000,
+          "subject": "Samaritan Museum sign",
+          "arabicSubject": "لافتة المتحف السامري",
+          "description": "A sign to the Samaritan Museum in the Samaritan village, written in Samaritan script, Arabic, English and Hebrew, 2013.",
+          "arabicDescription": "لافتة إلى المتحف السامري في القرية السامرية، مكتوبة بالخط السامري والعربية والإنجليزية والعبرية، 2013.",
+          "era": "modern",
+          "credit": "Amos Meron",
+          "license": "CC BY-SA 3.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0",
+          "capturedAt": "2013-04-26",
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Har_Gerizim_062.JPG"
+        },
+        {
+          "id": "mount-gerizim-03",
+          "url": "https://commons.wikimedia.org/wiki/Special:FilePath/Har_Gerizim_064.JPG?width=1600",
+          "thumbUrl": "https://commons.wikimedia.org/wiki/Special:FilePath/Har_Gerizim_064.JPG?width=600",
+          "width": 6016,
+          "height": 4000,
+          "subject": "Samaritan inscription",
+          "arabicSubject": "نقش سامري",
+          "description": "A stone tablet carved in Samaritan script beside a doorway in the Samaritan village, 2013.",
+          "arabicDescription": "لوح حجري منقوش بالخط السامري بجانب أحد الأبواب في القرية السامرية، 2013.",
+          "era": "modern",
+          "credit": "Amos Meron",
+          "license": "CC BY-SA 3.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0",
+          "capturedAt": "2013-04-26",
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Har_Gerizim_064.JPG"
+        },
+        {
+          "id": "mount-gerizim-04",
+          "url": "https://commons.wikimedia.org/wiki/Special:FilePath/Mount_Gerizim_IMG_1767.JPG?width=1600",
+          "thumbUrl": "https://commons.wikimedia.org/wiki/Special:FilePath/Mount_Gerizim_IMG_1767.JPG?width=600",
+          "width": 5184,
+          "height": 3456,
+          "subject": "Ruins on Mount Gerizim",
+          "arabicSubject": "أطلال على جبل جرزيم",
+          "description": "Ruined stone walls on Mount Gerizim, 2013.",
+          "arabicDescription": "جدران حجرية متهدّمة على جبل جرزيم، 2013.",
+          "era": "modern",
+          "credit": "Deror_avi",
+          "license": "CC BY-SA 3.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0",
+          "capturedAt": "2013-04-22",
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Mount_Gerizim_IMG_1767.JPG"
+        },
+        {
+          "id": "mount-gerizim-05",
+          "url": "https://commons.wikimedia.org/wiki/Special:FilePath/The_Samaritan_Passover_on_Mt._Gerizim._Samaritan_family_eating_the_sacrifice._LOC_matpc.01862.jpg?width=1600",
+          "thumbUrl": "https://commons.wikimedia.org/wiki/Special:FilePath/The_Samaritan_Passover_on_Mt._Gerizim._Samaritan_family_eating_the_sacrifice._LOC_matpc.01862.jpg?width=600",
+          "width": 6037,
+          "height": 4495,
+          "subject": "Samaritan Passover",
+          "arabicSubject": "الفصح السامري",
+          "description": "A Samaritan family sharing the Passover sacrifice on Mount Gerizim, in a stereograph from about 1900.",
+          "arabicDescription": "عائلة سامرية تتشارك أضحية الفصح على جبل جرزيم، في صورة مجسّمة من نحو عام 1900.",
+          "era": "historical",
+          "credit": "Matson Collection, Library of Congress",
+          "license": "Public domain",
+          "licenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/",
+          "capturedAt": "1900",
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:The_Samaritan_Passover_on_Mt._Gerizim._Samaritan_family_eating_the_sacrifice._LOC_matpc.01862.jpg"
+        },
+        {
+          "id": "mount-gerizim-06",
+          "url": "https://commons.wikimedia.org/wiki/Special:FilePath/Air_views._Nablus_%26_Gerizim%2C_looking_S.E._LOC_matpc.22275.jpg?width=1600",
+          "thumbUrl": "https://commons.wikimedia.org/wiki/Special:FilePath/Air_views._Nablus_%26_Gerizim%2C_looking_S.E._LOC_matpc.22275.jpg?width=600",
+          "width": 4321,
+          "height": 2828,
+          "subject": "Nablus and Mount Gerizim from the air",
+          "arabicSubject": "نابلس وجبل جرزيم من الجو",
+          "description": "Nablus and the slopes of Mount Gerizim from an aircraft in 1937, looking south-east.",
+          "arabicDescription": "نابلس وسفوح جبل جرزيم من طائرة عام 1937، بالنظر نحو الجنوب الشرقي.",
+          "era": "historical",
+          "credit": "Matson Collection, Library of Congress",
+          "license": "Public domain",
+          "licenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/",
+          "capturedAt": "1937",
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Air_views._Nablus_%26_Gerizim,_looking_S.E._LOC_matpc.22275.jpg"
+        }
+      ]
+    },
+    {
+      "id": "tell-es-sultan",
+      "governorateId": "jericho",
+      "name": "Ancient Jericho / Tell es-Sultan",
+      "arabicName": "أريحا القديمة / تل السلطان",
+      "city": "Jericho",
+      "arabicCity": "أريحا",
+      "latitude": 31.871306,
+      "longitude": 35.444056,
+      "coordinateStatus": "unesco_property_reference",
+      "description": "An oval mound north-west of present-day Jericho holding traces of human activity from about 10,500 BC, beside the perennial spring of ‘Ain es-Sultan.",
+      "arabicDescription": "تلّ بيضاوي شمال غرب أريحا الحالية يحفظ آثار نشاط بشري منذ نحو 10,500 قبل الميلاد، بجوار نبع عين السلطان الدائم.",
+      "facts": "The tell’s stratigraphy shows twenty-nine phases of occupation. By the 9th–8th millennium BC it was already a sizeable permanent settlement with a wall, a ditch and a tower. Middle Bronze Age remains reveal a large Canaanite city-state with innovative rampart fortifications. UNESCO inscribed the site on the World Heritage List in 2023.",
+      "arabicFacts": "تُظهر طبقات التل تسعاً وعشرين مرحلة من الاستيطان. وبحلول الألفين التاسع والثامن قبل الميلاد كان مستوطنة دائمة كبيرة لها سور وخندق وبرج. وتكشف بقايا العصر البرونزي الوسيط عن دولة-مدينة كنعانية كبيرة بتحصينات أسوار مبتكرة. أدرجت اليونسكو الموقع على قائمة التراث العالمي عام 2023.",
+      "importance": "UNESCO recognises Tell es-Sultan as exceptional evidence of the Neolithic shift to settled communal life and new ways of living from the land, of changes in social organisation and ritual — including the treatment of skulls after death — and of the rise of early urban culture in the Levant.",
+      "arabicImportance": "تعدّ اليونسكو تل السلطان شاهداً استثنائياً على تحوّل الإنسان في العصر الحجري الحديث إلى حياة جماعية مستقرة وأنماط عيش جديدة، وعلى تغيّر التنظيم الاجتماعي والطقوس — ومنها معالجة الجماجم بعد الموت — وعلى نشوء الثقافة الحضرية المبكرة في بلاد الشام.",
+      "landmarks": [
+        "The Neolithic wall, ditch and tower",
+        "The perennial spring of ‘Ain es-Sultan",
+        "Early Bronze Age urban remains",
+        "Middle Bronze Age rampart fortifications"
+      ],
+      "arabicLandmarks": [
+        "السور والخندق والبرج من العصر الحجري الحديث",
+        "نبع عين السلطان الدائم",
+        "بقايا حضرية من العصر البرونزي المبكر",
+        "تحصينات الأسوار من العصر البرونزي الوسيط"
+      ],
+      "walkthrough": "The property is a single oval mound together with the spring beside it, which has watered the area for millennia. Its layers run from the Neolithic to the Bronze Age. The artefacts excavated here are no longer on the site.",
+      "arabicWalkthrough": "يتألف الموقع من تلّ بيضاوي واحد والنبع المجاور له، الذي يروي المنطقة منذ آلاف السنين. تمتد طبقاته من العصر الحجري الحديث إلى العصر البرونزي. أما القطع التي استُخرجت منه في الحفريات فلم تعد في الموقع.",
+      "traditions": "",
+      "arabicTraditions": "",
+      "categories": [
+        "موقع أثري"
+      ],
+      "interests": [
+        "history",
+        "architecture"
+      ],
+      "reviewStatus": "source_checked",
+      "reviewed": true,
+      "sources": [
+        {
+          "title": "Ancient Jericho/Tell es-Sultan",
+          "arabicTitle": "أريحا القديمة / تل السلطان",
+          "publisher": "UNESCO World Heritage Centre",
+          "arabicPublisher": "مركز التراث العالمي - اليونسكو",
+          "url": "https://whc.unesco.org/en/list/1687/"
+        }
+      ],
+      "timeline": [
+        {
+          "year": -10500,
+          "label": "c. 10,500 BC",
+          "description": "The earliest archaeological deposits of human activity on the tell.",
+          "arabicDescription": "أقدم الرواسب الأثرية للنشاط البشري في التل."
+        },
+        {
+          "year": -8500,
+          "label": "9th–8th millennium BC",
+          "description": "A sizeable permanent settlement with a wall, a ditch and a tower.",
+          "arabicDescription": "مستوطنة دائمة كبيرة لها سور وخندق وبرج."
+        },
+        {
+          "year": -3000,
+          "label": "Early Bronze Age",
+          "description": "Archaeological material shows early urban planning.",
+          "arabicDescription": "مواد أثرية تكشف عن تخطيط حضري مبكر."
+        },
+        {
+          "year": -1800,
+          "label": "Middle Bronze Age",
+          "description": "A large Canaanite city-state with innovative rampart fortifications.",
+          "arabicDescription": "دولة-مدينة كنعانية كبيرة بتحصينات أسوار مبتكرة."
+        },
+        {
+          "year": 2023,
+          "label": "2023",
+          "description": "Inscribed on the World Heritage List.",
+          "arabicDescription": "الإدراج على قائمة التراث العالمي."
+        }
+      ],
+      "quiz": {
+        "question": "How many phases of occupation does the stratigraphy of Tell es-Sultan show?",
+        "arabicQuestion": "كم مرحلة من الاستيطان تُظهرها طبقات تل السلطان؟",
+        "options": [
+          "Three",
+          "Twenty-nine",
+          "One hundred"
+        ],
+        "arabicOptions": [
+          "ثلاث",
+          "تسع وعشرون",
+          "مئة"
+        ],
+        "answerIndex": 1
+      },
+      "sourceCheckedAt": "2026-10-26",
+      "media": [
+        {
+          "id": "tell-es-sultan-01",
+          "url": "https://commons.wikimedia.org/wiki/Special:FilePath/Jericho_from_Tell_es-Sultan_01.jpg?width=1600",
+          "thumbUrl": "https://commons.wikimedia.org/wiki/Special:FilePath/Jericho_from_Tell_es-Sultan_01.jpg?width=600",
+          "width": 4032,
+          "height": 3024,
+          "subject": "Tell es-Sultan",
+          "arabicSubject": "تل السلطان",
+          "description": "The excavated mound of Tell es-Sultan with the hills west of Jericho behind it, 2022.",
+          "arabicDescription": "تلّ السلطان المنقّب وخلفه التلال الواقعة غرب أريحا، 2022.",
+          "era": "modern",
+          "credit": "Davide Mauro",
+          "license": "CC BY-SA 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+          "capturedAt": "2022-11-11",
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Jericho_from_Tell_es-Sultan_01.jpg",
+          "pairRole": "cover"
+        },
+        {
+          "id": "tell-es-sultan-02",
+          "url": "https://commons.wikimedia.org/wiki/Special:FilePath/2010-06-16_11-08-04_Israel_Jericho_JH_%2852791612433%29.jpg?width=1600",
+          "thumbUrl": "https://commons.wikimedia.org/wiki/Special:FilePath/2010-06-16_11-08-04_Israel_Jericho_JH_%2852791612433%29.jpg?width=600",
+          "width": 4288,
+          "height": 2848,
+          "subject": "Excavations on the tell",
+          "arabicSubject": "حفريات التل",
+          "description": "Excavated stone structures on Tell es-Sultan, 2010.",
+          "arabicDescription": "منشآت حجرية مكشوفة بالتنقيب في تل السلطان، 2010.",
+          "era": "modern",
+          "credit": "Jan Helebrant",
+          "license": "CC0",
+          "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+          "capturedAt": "2010-06-16",
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:2010-06-16_11-08-04_Israel_Jericho_JH_(52791612433).jpg"
+        },
+        {
+          "id": "tell-es-sultan-03",
+          "url": "https://commons.wikimedia.org/wiki/Special:FilePath/Pottery_Jericho_6000_5500_BC_Ashmolean.jpg?width=1600",
+          "thumbUrl": "https://commons.wikimedia.org/wiki/Special:FilePath/Pottery_Jericho_6000_5500_BC_Ashmolean.jpg?width=600",
+          "width": 3999,
+          "height": 4721,
+          "subject": "Pottery from Tell es-Sultan",
+          "arabicSubject": "فخار من تل السلطان",
+          "description": "Early pottery excavated at Tell es-Sultan, now displayed at the Ashmolean Museum in Oxford.",
+          "arabicDescription": "فخار مبكر استُخرج من تل السلطان، ويُعرض اليوم في متحف أشموليان في أكسفورد.",
+          "era": "modern",
+          "credit": "Zunkir",
+          "license": "CC BY-SA 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+          "capturedAt": "2022-08-23",
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Pottery_Jericho_6000_5500_BC_Ashmolean.jpg"
+        },
+        {
+          "id": "tell-es-sultan-04",
+          "url": "https://commons.wikimedia.org/wiki/Special:FilePath/Air_views_of_Palestine._Air_route_following_the_old_Jerusalem-Jericho_Road._Mound_of_ancient_Jericho._Looking_southward%2C_modern_Jericho_in_distance_LOC_matpc.22117.jpg?width=1600",
+          "thumbUrl": "https://commons.wikimedia.org/wiki/Special:FilePath/Air_views_of_Palestine._Air_route_following_the_old_Jerusalem-Jericho_Road._Mound_of_ancient_Jericho._Looking_southward%2C_modern_Jericho_in_distance_LOC_matpc.22117.jpg?width=600",
+          "width": 4389,
+          "height": 2932,
+          "subject": "Tell es-Sultan from the air",
+          "arabicSubject": "تل السلطان من الجو",
+          "description": "The mound of ancient Jericho from the air in 1931, looking south towards the modern town.",
+          "arabicDescription": "تلّ أريحا القديمة من الجو عام 1931، بالنظر جنوباً نحو البلدة الحديثة.",
+          "era": "historical",
+          "credit": "Matson Collection, Library of Congress",
+          "license": "Public domain",
+          "licenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/",
+          "capturedAt": "1931",
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Air_views_of_Palestine._Air_route_following_the_old_Jerusalem-Jericho_Road._Mound_of_ancient_Jericho._Looking_southward,_modern_Jericho_in_distance_LOC_matpc.22117.jpg"
+        }
+      ]
+    },
+    {
+      "id": "hishams-palace",
+      "governorateId": "jericho",
+      "name": "Hisham’s Palace / Khirbet al-Mafjar",
+      "arabicName": "قصر هشام / خربة المفجر",
+      "city": "Jericho",
+      "arabicCity": "أريحا",
+      "latitude": 31.882294,
+      "longitude": 35.459953,
+      "coordinateStatus": "unesco_tentative_list_reference",
+      "description": "An Umayyad winter retreat about 4 km north of Jericho, built between 724 and 743 AD and famous for its bath-hall mosaics and the Tree of Life.",
+      "arabicDescription": "منتجع شتوي أموي على بعد نحو 4 كم شمال أريحا، بُني بين عامي 724 و743م، ويشتهر بفسيفساء قاعة الحمّام ولوحة شجرة الحياة.",
+      "facts": "Inscriptions suggest it was built by Caliph Hisham bin Abd al-Malik and decorated by his heir al-Walid II; an earthquake destroyed it in 749 AD. The bath hall’s floor, about 30 by 30 metres, is made of 38 mosaic carpets — one of the largest early Islamic mosaic floors in the world. The first excavations, from 1935 to 1948, were directed by Dimitri Baramki.",
+      "arabicFacts": "تشير النقوش إلى أن الخليفة هشام بن عبد الملك بناه، وأن وليّ عهده الوليد الثاني زخرفه، ثم دمّره زلزال عام 749م. تتألف أرضية قاعة الحمّام، ومساحتها نحو 30 × 30 متراً، من 38 سجادة فسيفسائية، وهي من أكبر أرضيات الفسيفساء الإسلامية المبكرة في العالم. وأدار الحفريات الأولى بين عامي 1935 و1948 ديمتري برامكي.",
+      "importance": "Palestine’s tentative-list entry calls it one of the most significant early Islamic sites in Palestine. Its mosaics, stucco, frescoes and carved stone blend Byzantine and Sasanian traditions with Coptic and Roman designs, and it is a rare example of human and animal figures in Umayyad secular art. The palace’s star-shaped rosette window has become a symbol of Jericho.",
+      "arabicImportance": "تصفه قائمة فلسطين التمهيدية بأنه من أهم المواقع الإسلامية المبكرة في فلسطين. تمزج فسيفساؤه وزخارفه الجصية ورسومه الجدارية وحجارته المنحوتة بين التقاليد البيزنطية والساسانية والتصاميم القبطية والرومانية، وهو مثال نادر على تصوير البشر والحيوانات في الفن الأموي غير الديني. وأصبحت نافذته النجمية الشكل رمزاً لأريحا.",
+      "landmarks": [
+        "The two-storey palace around an arcaded courtyard",
+        "The great audience hall and bath with 38 mosaic carpets",
+        "The diwan and its Tree of Life mosaic",
+        "The rosette (star) window, a symbol of Jericho",
+        "The mosques and the fountain pavilion in the forecourt",
+        "The Northern Area estate with its large grape press"
+      ],
+      "arabicLandmarks": [
+        "القصر المؤلف من طابقين حول فناء محاط بالأروقة",
+        "قاعة الاستقبال الكبرى والحمّام بسجاداته الفسيفسائية الثماني والثلاثين",
+        "الديوان ولوحة شجرة الحياة الفسيفسائية",
+        "النافذة النجمية، رمز أريحا",
+        "المسجدان وجناح النافورة في الساحة الأمامية",
+        "المنطقة الشمالية الزراعية ومعصرة العنب الكبيرة"
+      ],
+      "walkthrough": "Along the west side of a shared forecourt stood the palace, a mosque and the audience hall with its bath, around a pool under a pavilion. In the north-west corner of the hall, the small diwan held the finest mosaic, the Tree of Life. Water arrived by an open channel from the ‘Ein Duk and ‘Ein Nu’eima springs at the foot of Mount Quruntul, five kilometres to the west.",
+      "arabicWalkthrough": "على الجانب الغربي من ساحة أمامية مشتركة قام القصر ومسجد وقاعة الاستقبال وحمّامها، حول بركة يظلّلها جناح. وفي الزاوية الشمالية الغربية من القاعة ضمّ الديوان الصغير أجمل الفسيفساء: شجرة الحياة. وكان الماء يصل في قناة مكشوفة من نبعَي عين الديوك وعين النويعمة عند سفح جبل قرنطل على بعد خمسة كيلومترات غرباً.",
+      "traditions": "",
+      "arabicTraditions": "",
+      "categories": [
+        "موقع أثري"
+      ],
+      "interests": [
+        "history",
+        "architecture"
+      ],
+      "reviewStatus": "source_checked",
+      "reviewed": true,
+      "sources": [
+        {
+          "title": "Hisham’s Palace/ Khirbet al-Mafjar — Tentative List",
+          "arabicTitle": "قصر هشام / خربة المفجر — القائمة التمهيدية",
+          "publisher": "UNESCO World Heritage Centre",
+          "arabicPublisher": "مركز التراث العالمي - اليونسكو",
+          "url": "https://whc.unesco.org/en/tentativelists/6546/"
+        }
+      ],
+      "timeline": [
+        {
+          "year": 724,
+          "label": "724–743 AD",
+          "description": "Built in the Umayyad period, most likely by Caliph Hisham bin Abd al-Malik.",
+          "arabicDescription": "البناء في العصر الأموي، على الأرجح بأمر الخليفة هشام بن عبد الملك."
+        },
+        {
+          "year": 743,
+          "label": "743–744 AD",
+          "description": "Decorated by Hisham’s heir, al-Walid II.",
+          "arabicDescription": "الوليد الثاني، وليّ عهد هشام، يزخرف القصر."
+        },
+        {
+          "year": 749,
+          "label": "749 AD",
+          "description": "A severe earthquake destroys the complex.",
+          "arabicDescription": "زلزال شديد يدمّر المجمّع."
+        },
+        {
+          "year": 750,
+          "label": "750–950 AD",
+          "description": "An elite residence with a small mosque, houses and stables is added in the Northern Area during the Abbasid period.",
+          "arabicDescription": "إضافة مسكن للنخبة فيه مسجد صغير وبيوت وإسطبلات في المنطقة الشمالية خلال العصر العباسي."
+        },
+        {
+          "year": 1935,
+          "label": "1935–1948",
+          "description": "First excavations under Dimitri Baramki uncover much of the palace complex.",
+          "arabicDescription": "الحفريات الأولى بإدارة ديمتري برامكي تكشف معظم مجمّع القصر."
+        },
+        {
+          "year": 2011,
+          "label": "2011–2015",
+          "description": "New excavations by the Ministry of Tourism and Antiquities and the University of Chicago.",
+          "arabicDescription": "حفريات جديدة لوزارة السياحة والآثار وجامعة شيكاغو."
+        },
+        {
+          "year": 2020,
+          "label": "2020",
+          "description": "Submitted to Palestine’s Tentative List.",
+          "arabicDescription": "الإدراج على قائمة فلسطين التمهيدية."
+        }
+      ],
+      "quiz": {
+        "question": "How many mosaic carpets make up the floor of the bath hall?",
+        "arabicQuestion": "كم سجادة فسيفسائية تتألف منها أرضية قاعة الحمّام؟",
+        "options": [
+          "8",
+          "38",
+          "380"
+        ],
+        "arabicOptions": [
+          "8",
+          "38",
+          "380"
+        ],
+        "answerIndex": 1
+      },
+      "sourceCheckedAt": "2026-10-26",
+      "media": [
+        {
+          "id": "hishams-palace-01",
+          "url": "https://commons.wikimedia.org/wiki/Special:FilePath/Hisham%27s_Palace_%2889245%29.jpg?width=1600",
+          "thumbUrl": "https://commons.wikimedia.org/wiki/Special:FilePath/Hisham%27s_Palace_%2889245%29.jpg?width=600",
+          "width": 3000,
+          "height": 4000,
+          "subject": "Bath hall mosaic",
+          "arabicSubject": "فسيفساء قاعة الحمّام",
+          "description": "The great mosaic floor of the bath hall between its massive piers, under a protective roof, 2025.",
+          "arabicDescription": "أرضية الفسيفساء الكبرى في قاعة الحمّام بين دعاماتها الضخمة، تحت سقف حماية، 2025.",
+          "era": "modern",
+          "credit": "AnasNashashibi",
+          "license": "CC BY-SA 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+          "capturedAt": "2025-10-24",
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Hisham%27s_Palace_(89245).jpg",
+          "pairRole": "cover"
+        },
+        {
+          "id": "hishams-palace-02",
+          "url": "https://commons.wikimedia.org/wiki/Special:FilePath/Hisham%27s_Palace_%2867809%29.jpg?width=1600",
+          "thumbUrl": "https://commons.wikimedia.org/wiki/Special:FilePath/Hisham%27s_Palace_%2867809%29.jpg?width=600",
+          "width": 4000,
+          "height": 3000,
+          "subject": "Vaulted room with mosaic floor",
+          "arabicSubject": "قاعة معقودة بأرضية فسيفساء",
+          "description": "A vaulted room with stone benches along its walls and a geometric mosaic floor.",
+          "arabicDescription": "قاعة معقودة على جانبيها مقاعد حجرية وأرضيتها من الفسيفساء الهندسية.",
+          "era": "modern",
+          "credit": "AnasNashashibi",
+          "license": "CC BY-SA 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+          "capturedAt": "2025-10-24",
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Hisham%27s_Palace_(67809).jpg"
+        },
+        {
+          "id": "hishams-palace-03",
+          "url": "https://commons.wikimedia.org/wiki/Special:FilePath/Jericho_Hisham-Palast_7.JPG?width=1600",
+          "thumbUrl": "https://commons.wikimedia.org/wiki/Special:FilePath/Jericho_Hisham-Palast_7.JPG?width=600",
+          "width": 4554,
+          "height": 3396,
+          "subject": "Stone piers",
+          "arabicSubject": "الدعامات الحجرية",
+          "description": "Massive stone piers among the ruins of the palace complex, 2014.",
+          "arabicDescription": "دعامات حجرية ضخمة بين أطلال مجمّع القصر، 2014.",
+          "era": "modern",
+          "credit": "Zairon",
+          "license": "CC BY-SA 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+          "capturedAt": "2014-03-06",
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Jericho_Hisham-Palast_7.JPG"
+        },
+        {
+          "id": "hishams-palace-04",
+          "url": "https://commons.wikimedia.org/wiki/Special:FilePath/Hisham%27s_Palace_%28Khirbat_al_Mafjar%29_remains_at_the_Rockefeller_Museum_P1190028.JPG?width=1600",
+          "thumbUrl": "https://commons.wikimedia.org/wiki/Special:FilePath/Hisham%27s_Palace_%28Khirbat_al_Mafjar%29_remains_at_the_Rockefeller_Museum_P1190028.JPG?width=600",
+          "width": 3000,
+          "height": 4000,
+          "subject": "Stucco figure",
+          "arabicSubject": "تمثال جصّي",
+          "description": "A carved stucco figure from Hisham’s Palace, displayed at the Rockefeller Museum in Jerusalem.",
+          "arabicDescription": "تمثال من الجصّ المنحوت من قصر هشام، معروض في متحف روكفلر في القدس.",
+          "era": "modern",
+          "credit": "Deror Avi",
+          "license": "CC BY-SA 3.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0",
+          "capturedAt": "2012-10-27",
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Hisham%27s_Palace_(Khirbat_al_Mafjar)_remains_at_the_Rockefeller_Museum_P1190028.JPG"
+        },
+        {
+          "id": "hishams-palace-05",
+          "url": "https://commons.wikimedia.org/wiki/Special:FilePath/Excavations_at_Khirbet_Mefjer_near_Ain_el-Sultan%2C_Jericho._East_gate_of_palace_LOC_matpc.03718.jpg?width=1600",
+          "thumbUrl": "https://commons.wikimedia.org/wiki/Special:FilePath/Excavations_at_Khirbet_Mefjer_near_Ain_el-Sultan%2C_Jericho._East_gate_of_palace_LOC_matpc.03718.jpg?width=600",
+          "width": 5766,
+          "height": 4260,
+          "subject": "East gate of the palace",
+          "arabicSubject": "البوابة الشرقية للقصر",
+          "description": "The east gate of the palace, with benches along the entrance passage, during the excavations of 1934–1939.",
+          "arabicDescription": "البوابة الشرقية للقصر والمقاعد على جانبي ممر المدخل، خلال حفريات 1934–1939.",
+          "era": "historical",
+          "credit": "Matson Collection, Library of Congress",
+          "license": "Public domain",
+          "licenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/",
+          "capturedAt": "between 1934 and 1939",
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Excavations_at_Khirbet_Mefjer_near_Ain_el-Sultan,_Jericho._East_gate_of_palace_LOC_matpc.03718.jpg"
+        }
+      ]
+    },
+    {
+      "id": "monastery-of-the-temptation",
+      "governorateId": "jericho",
+      "name": "Monastery of the Temptation (Deir al-Quruntul)",
+      "arabicName": "دير قرنطل (دير التجربة)",
+      "city": "Jericho",
+      "arabicCity": "أريحا",
+      "latitude": 31.874444,
+      "longitude": 35.430278,
+      "coordinateStatus": "unesco_tentative_list_reference",
+      "description": "A Greek Orthodox monastery carved into the eastern cliffs of the Mount of Temptation, looking over Jericho and the Jordan Valley.",
+      "arabicDescription": "دير أرثوذكسي يوناني منحوت في المنحدرات الشرقية لجبل قرنطل (جبل التجربة)، يطلّ على أريحا ووادي الأردن.",
+      "facts": "A monastery was built in the 6th century over the cave associated with the Temptation, and the site is also identified with Chariton’s second foundation, the Douka monastery. About forty caves on the mountain’s eastern slopes served monks as sanctuaries. The present monastery was restored in 1892 and is overseen by the Greek Orthodox Patriarchate of Jerusalem.",
+      "arabicFacts": "بُني دير في القرن السادس فوق المغارة المرتبطة بالتجربة، ويُعرَّف الموقع أيضاً بالتأسيس الثاني للقديس خاريطون، أي دير دوقا. واستخدم الرهبان نحو أربعين مغارة على السفوح الشرقية للجبل صوامع لهم. رُمّم الدير الحالي عام 1892، وتشرف عليه بطريركية الروم الأرثوذكس في القدس.",
+      "importance": "Palestine’s tentative list selects the monastery as one of four that represent the desert monastic tradition of the Jerusalem Wilderness. Its vertical, cliffside building, small chapels, cells and narrow corridors follow Byzantine monastic principles and suit the ascetic life of its monks.",
+      "arabicImportance": "اختارت قائمة فلسطين التمهيدية هذا الدير واحداً من أربعة أديرة تمثّل تقليد الرهبنة الصحراوية في برّية القدس. وبناؤه العمودي على الجرف وكنائسه الصغيرة وقلاليه وممراته الضيقة تتبع مبادئ العمارة الرهبانية البيزنطية وتلائم حياة النسك لرهبانه.",
+      "landmarks": [
+        "The cave venerated as the place of Jesus’s fast",
+        "Chapels and cells carved into the rock face",
+        "Old paths up the cliff from Jericho and along Wadi el-Mafjar",
+        "Restored aqueducts and cisterns of the Douka fortress"
+      ],
+      "arabicLandmarks": [
+        "المغارة التي تُكرَّم مكاناً لصوم السيد المسيح",
+        "كنائس صغيرة وقلالٍ منحوتة في وجه الصخر",
+        "دروب قديمة تصعد الجرف من أريحا وعلى طول وادي المفجر",
+        "قنوات وآبار قلعة دوقا التي رمّمها الرهبان"
+      ],
+      "traditions": "According to Christian tradition, drawing on the Gospel of Luke, Jesus fasted and meditated here for forty days and nights before Satan tried to tempt him.",
+      "arabicTraditions": "بحسب التقليد المسيحي المستند إلى إنجيل لوقا، صام السيد المسيح وتأمّل هنا أربعين يوماً وليلة قبل أن يحاول الشيطان تجربته.",
+      "categories": [
+        "معلم ديني"
+      ],
+      "interests": [
+        "history",
+        "architecture",
+        "religious"
+      ],
+      "reviewStatus": "source_checked",
+      "reviewed": true,
+      "sources": [
+        {
+          "title": "Monasteries of the Jerusalem Wilderness (El-Bariyah) — Tentative List",
+          "arabicTitle": "أديرة برّية القدس (البرّية) — القائمة التمهيدية",
+          "publisher": "UNESCO World Heritage Centre",
+          "arabicPublisher": "مركز التراث العالمي - اليونسكو",
+          "url": "https://whc.unesco.org/en/tentativelists/6954/"
+        }
+      ],
+      "timeline": [
+        {
+          "year": 500,
+          "label": "6th century",
+          "description": "A monastery is built over the cave associated with the Temptation.",
+          "arabicDescription": "بناء دير فوق المغارة المرتبطة بالتجربة."
+        },
+        {
+          "year": 1892,
+          "label": "1892",
+          "description": "The present monastery is restored.",
+          "arabicDescription": "ترميم الدير الحالي."
+        },
+        {
+          "year": 2026,
+          "label": "2026",
+          "description": "Included in Palestine’s Tentative List within the Monasteries of the Jerusalem Wilderness (El-Bariyah).",
+          "arabicDescription": "الإدراج على قائمة فلسطين التمهيدية ضمن أديرة برّية القدس (البرّية)."
+        }
+      ],
+      "quiz": {
+        "question": "In which year was the present Monastery of the Temptation restored?",
+        "arabicQuestion": "في أي عام رُمّم دير قرنطل الحالي؟",
+        "options": [
+          "1492",
+          "1892",
+          "1992"
+        ],
+        "arabicOptions": [
+          "1492",
+          "1892",
+          "1992"
+        ],
+        "answerIndex": 1
+      },
+      "sourceCheckedAt": "2026-10-26",
+      "media": [
+        {
+          "id": "monastery-of-the-temptation-01",
+          "url": "https://commons.wikimedia.org/wiki/Special:FilePath/Monastery_of_the_Temptation_%28Jeriho%29.jpg?width=1600",
+          "thumbUrl": "https://commons.wikimedia.org/wiki/Special:FilePath/Monastery_of_the_Temptation_%28Jeriho%29.jpg?width=600",
+          "width": 4272,
+          "height": 2848,
+          "subject": "Monastery of the Temptation",
+          "arabicSubject": "دير قرنطل",
+          "description": "The monastery strung along the cliff face of the Mount of Temptation, 2009.",
+          "arabicDescription": "الدير ممتداً على وجه جرف جبل قرنطل، 2009.",
+          "era": "modern",
+          "credit": "Dmitrij Rodionov",
+          "license": "CC BY-SA 3.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0",
+          "capturedAt": "2009-11-04",
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Monastery_of_the_Temptation_(Jeriho).jpg",
+          "pairRole": "cover"
+        },
+        {
+          "id": "monastery-of-the-temptation-02",
+          "url": "https://commons.wikimedia.org/wiki/Special:FilePath/2010-06-16_10-40-15_Israel_Mount_of_Temptation_JH_%2852784533655%29.jpg?width=1600",
+          "thumbUrl": "https://commons.wikimedia.org/wiki/Special:FilePath/2010-06-16_10-40-15_Israel_Mount_of_Temptation_JH_%2852784533655%29.jpg?width=600",
+          "width": 4288,
+          "height": 2848,
+          "subject": "Monastery buildings",
+          "arabicSubject": "مباني الدير",
+          "description": "The domed chapel and cells of the monastery built against the rock, 2010.",
+          "arabicDescription": "الكنيسة ذات القباب وقلالي الدير المبنية ملاصقة للصخر، 2010.",
+          "era": "modern",
+          "credit": "Jan Helebrant",
+          "license": "CC0",
+          "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+          "capturedAt": "2010-06-16",
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:2010-06-16_10-40-15_Israel_Mount_of_Temptation_JH_(52784533655).jpg"
+        },
+        {
+          "id": "monastery-of-the-temptation-03",
+          "url": "https://commons.wikimedia.org/wiki/Special:FilePath/Mount_of_Temptation_interior.jpg?width=1600",
+          "thumbUrl": "https://commons.wikimedia.org/wiki/Special:FilePath/Mount_of_Temptation_interior.jpg?width=600",
+          "width": 4366,
+          "height": 3219,
+          "subject": "Monastery chapel",
+          "arabicSubject": "كنيسة الدير",
+          "description": "The chapel’s painted iconostasis and icon-covered pillars, 2018.",
+          "arabicDescription": "حامل الأيقونات المرسوم في كنيسة الدير وأعمدتها المكسوّة بالأيقونات، 2018.",
+          "era": "modern",
+          "credit": "Nevborg",
+          "license": "CC BY-SA 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+          "capturedAt": "2018-07-01",
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Mount_of_Temptation_interior.jpg"
+        },
+        {
+          "id": "monastery-of-the-temptation-04",
+          "url": "https://commons.wikimedia.org/wiki/Special:FilePath/Gezicht_op_de_Berg_der_Verzoeking_bij_Jericho_Montagne_de_la_quarantaine_%28Palestine%29_%28titel_op_object%29_%28..%29_Montagne_de_la_quarantaine_%28Palestine%29_%28titel_op_object%29%2C_RP-F-F01089-AU.jpg?width=1600",
+          "thumbUrl": "https://commons.wikimedia.org/wiki/Special:FilePath/Gezicht_op_de_Berg_der_Verzoeking_bij_Jericho_Montagne_de_la_quarantaine_%28Palestine%29_%28titel_op_object%29_%28..%29_Montagne_de_la_quarantaine_%28Palestine%29_%28titel_op_object%29%2C_RP-F-F01089-AU.jpg?width=600",
+          "width": 3918,
+          "height": 3118,
+          "subject": "Mount of Temptation",
+          "arabicSubject": "جبل قرنطل",
+          "description": "The Mount of Temptation in a 19th-century photograph (about 1867–1895) held by the Rijksmuseum.",
+          "arabicDescription": "جبل قرنطل في صورة من القرن التاسع عشر (نحو 1867–1895) محفوظة في متحف رايكس.",
+          "era": "historical",
+          "credit": "Rijksmuseum",
+          "license": "CC0",
+          "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+          "capturedAt": "between 1867 and 1895",
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Gezicht_op_de_Berg_der_Verzoeking_bij_Jericho_Montagne_de_la_quarantaine_(Palestine)_(titel_op_object)_(..)_Montagne_de_la_quarantaine_(Palestine)_(titel_op_object),_RP-F-F01089-AU.jpg"
+        }
+      ]
+    },
+    {
+      "id": "church-of-the-nativity",
+      "governorateId": "bethlehem",
+      "name": "Church of the Nativity and the Pilgrimage Route",
+      "arabicName": "كنيسة المهد ومسار الحجاج",
+      "city": "Bethlehem",
+      "arabicCity": "بيت لحم",
+      "latitude": 31.704353,
+      "longitude": 35.2075,
+      "coordinateStatus": "unesco_property_reference",
+      "description": "The place identified by Christian tradition since the 2nd century as the birthplace of Jesus, where the oldest Christian church in daily use stands among its convents at the end of the pilgrimage route.",
+      "arabicDescription": "المكان الذي يحدّده التقليد المسيحي منذ القرن الثاني مكاناً لميلاد السيد المسيح، وفيه أقدم كنيسة مسيحية ما زالت تُستخدم يومياً، تحيط بها الأديرة عند نهاية مسار الحجاج.",
+      "facts": "A first church was completed here in 339 AD. The present church is essentially the 6th-century rebuilding of the time of Justinian; it keeps parts of the original 4th-century floor mosaics and has 12th-century additions. UNESCO inscribed the property in 2012, and it stayed on the List of World Heritage in Danger from 2012 to 2019. The Greek Orthodox Church, the Custody of the Holy Land and the Armenian Church share it under the Status Quo of the Holy Places.",
+      "arabicFacts": "اكتملت أول كنيسة في المكان عام 339م. والكنيسة الحالية في جوهرها إعادة بناء من القرن السادس في عهد جستنيان، وتحتفظ بأجزاء من أرضيات الفسيفساء الأصلية من القرن الرابع وبإضافات من القرن الثاني عشر. أدرجت اليونسكو الموقع على قائمة التراث العالمي عام 2012، وبقي على قائمة التراث العالمي المعرّض للخطر من 2012 حتى 2019. وتتشارك الكنيسةَ الكنيسةُ الأرثوذكسية اليونانية وحراسة الأراضي المقدسة والكنيسة الأرمنية وفق نظام الوضع القائم (الستاتيكو) في الأماكن المقدسة.",
+      "importance": "UNESCO describes the church as an outstanding example of an early church within a remarkable architectural ensemble. It reflects two stages of history: the conversion of the Roman Empire to Christianity in the 4th–6th centuries, and the Crusader period that embellished the church and developed the three convents around it. Bethlehem has been a pilgrim destination for some 1,700 years, and the site is holy to Christians as well as to Muslims.",
+      "arabicImportance": "تصف اليونسكو الكنيسة بأنها مثال استثنائي على كنيسة مبكرة ضمن مجموعة معمارية لافتة. وهي تعكس مرحلتين من التاريخ: تحوّل الإمبراطورية الرومانية إلى المسيحية بين القرنين الرابع والسادس، والفترة الصليبية التي زيّنت الكنيسة وطوّرت الأديرة الثلاثة حولها. وبيت لحم وجهة للحجاج منذ نحو 1700 عام، والموقع مقدّس لدى المسيحيين والمسلمين معاً.",
+      "landmarks": [
+        "The Church of the Nativity basilica",
+        "The grotto venerated by Christian tradition as the birthplace",
+        "The Armenian, Franciscan and Greek Orthodox convents",
+        "The Church of St Catherine (Custody of the Holy Land)",
+        "Star Street and the historic gate of Qos al-Zarara",
+        "Manger Square"
+      ],
+      "arabicLandmarks": [
+        "بازيليكا كنيسة المهد",
+        "المغارة التي يكرّمها التقليد المسيحي مكاناً للميلاد",
+        "الأديرة الأرمنية والفرنسيسكانية والأرثوذكسية اليونانية",
+        "كنيسة القديسة كاترين (حراسة الأراضي المقدسة)",
+        "شارع النجمة وبوابة قوس الزرارة التاريخية",
+        "ساحة المهد"
+      ],
+      "walkthrough": "The pilgrimage route that UNESCO describes starts near King David’s Wells at the traditional entrance to Bethlehem. It follows Star Street through the old town gate of Qos al-Zarara to Manger Square in front of the church. Every Christmas the patriarchs of the three churches walk it ceremonially, recalling the path that Christian tradition gives to Joseph and Mary.",
+      "arabicWalkthrough": "يبدأ مسار الحجاج الذي تصفه اليونسكو قرب آبار داود عند المدخل التقليدي لبيت لحم، ويسير في شارع النجمة عبر بوابة البلدة التاريخية قوس الزرارة حتى ساحة المهد أمام الكنيسة. وفي كل عيد ميلاد يسلكه بطاركة الكنائس الثلاث في موكب احتفالي، استذكاراً للطريق الذي ينسبه التقليد المسيحي إلى يوسف ومريم.",
+      "traditions": "According to Christian tradition, a cave beneath the church is where Jesus was born; belief in this place is recorded from at least the 2nd century AD.",
+      "arabicTraditions": "بحسب التقليد المسيحي، المغارة الواقعة أسفل الكنيسة هي مكان ميلاد السيد المسيح، والإيمان بهذا المكان مسجّل منذ القرن الثاني الميلادي على الأقل.",
+      "categories": [
+        "معلم ديني"
+      ],
+      "interests": [
+        "history",
+        "architecture",
+        "religious"
+      ],
+      "reviewStatus": "source_checked",
+      "reviewed": true,
+      "sources": [
+        {
+          "title": "Birthplace of Jesus: Church of the Nativity and the Pilgrimage Route, Bethlehem",
+          "arabicTitle": "مسقط رأس السيد المسيح: كنيسة المهد ومسار الحجاج، بيت لحم",
+          "publisher": "UNESCO World Heritage Centre",
+          "arabicPublisher": "مركز التراث العالمي - اليونسكو",
+          "url": "https://whc.unesco.org/en/list/1433/"
+        }
+      ],
+      "timeline": [
+        {
+          "year": 339,
+          "label": "339 AD",
+          "description": "The first church on the site, of the time of St Helena, is completed above the grotto.",
+          "arabicDescription": "اكتمال أول كنيسة في الموقع فوق المغارة، في زمن القديسة هيلانة."
+        },
+        {
+          "year": 533,
+          "label": "6th century (533 AD)",
+          "description": "The church is rebuilt after a fire; this Justinian-era building is essentially the church standing today.",
+          "arabicDescription": "إعادة بناء الكنيسة بعد حريق؛ وهذا البناء من عهد جستنيان هو في جوهره الكنيسة القائمة اليوم."
+        },
+        {
+          "year": 1100,
+          "label": "12th century",
+          "description": "Crusader-period additions, including the paintings on the columns, mark a new upsurge in pilgrimage.",
+          "arabicDescription": "إضافات من الفترة الصليبية، منها الرسوم على الأعمدة، ترافق موجة جديدة من الحج."
+        },
+        {
+          "year": 1878,
+          "label": "1878",
+          "description": "The Status Quo of the Holy Places, under which the three churches share the site, is set by the Treaty of Berlin.",
+          "arabicDescription": "تثبيت نظام الوضع القائم في الأماكن المقدسة، الذي تتشارك بموجبه الكنائس الثلاث الموقع، في معاهدة برلين."
+        },
+        {
+          "year": 2012,
+          "label": "2012",
+          "description": "Inscribed on the World Heritage List and on the List of World Heritage in Danger.",
+          "arabicDescription": "الإدراج على قائمة التراث العالمي وعلى قائمة التراث العالمي المعرّض للخطر."
+        },
+        {
+          "year": 2019,
+          "label": "2019",
+          "description": "Removed from the List of World Heritage in Danger.",
+          "arabicDescription": "الإزالة من قائمة التراث العالمي المعرّض للخطر."
+        }
+      ],
+      "quiz": {
+        "question": "In which year was the first church on the site completed?",
+        "arabicQuestion": "في أي عام اكتملت أول كنيسة في الموقع؟",
+        "options": [
+          "339 AD",
+          "1099 AD",
+          "1878 AD"
+        ],
+        "arabicOptions": [
+          "339م",
+          "1099م",
+          "1878م"
+        ],
+        "answerIndex": 0
+      },
+      "sourceCheckedAt": "2026-10-26",
+      "media": [
+        {
+          "id": "church-of-the-nativity-01",
+          "url": "https://commons.wikimedia.org/wiki/Special:FilePath/Holy_Land_2019_%281%29_P046_Bethlehem_Church_of_the_Nativity.jpg?width=1600",
+          "thumbUrl": "https://commons.wikimedia.org/wiki/Special:FilePath/Holy_Land_2019_%281%29_P046_Bethlehem_Church_of_the_Nativity.jpg?width=600",
+          "width": 5184,
+          "height": 3888,
+          "subject": "Church of the Nativity",
+          "arabicSubject": "كنيسة المهد",
+          "description": "The fortress-like walls and bell tower of the Church of the Nativity complex seen from Manger Square, 2019.",
+          "arabicDescription": "الجدران الحجرية الضخمة وبرج الجرس لمجمّع كنيسة المهد كما تبدو من ساحة المهد، 2019.",
+          "era": "modern",
+          "credit": "Fallaner",
+          "license": "CC BY-SA 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+          "capturedAt": "2019-03-16",
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Holy_Land_2019_(1)_P046_Bethlehem_Church_of_the_Nativity.jpg",
+          "pairRole": "cover"
+        },
+        {
+          "id": "church-of-the-nativity-02",
+          "url": "https://commons.wikimedia.org/wiki/Special:FilePath/Palestine-06319_-_Entrance_%2835178641780%29.jpg?width=1600",
+          "thumbUrl": "https://commons.wikimedia.org/wiki/Special:FilePath/Palestine-06319_-_Entrance_%2835178641780%29.jpg?width=600",
+          "width": 4211,
+          "height": 6140,
+          "subject": "Door of Humility",
+          "arabicSubject": "باب التواضع",
+          "description": "The Door of Humility, the low stone entrance to the basilica, about 1.2 metres high.",
+          "arabicDescription": "باب التواضع، المدخل الحجري المنخفض إلى البازيليكا، ويبلغ ارتفاعه نحو 1.2 متر.",
+          "era": "modern",
+          "credit": "Dennis G. Jarvis",
+          "license": "CC BY-SA 2.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/2.0",
+          "capturedAt": "2016-10-09",
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Palestine-06319_-_Entrance_(35178641780).jpg"
+        },
+        {
+          "id": "church-of-the-nativity-03",
+          "url": "https://commons.wikimedia.org/wiki/Special:FilePath/%D8%B9%D8%B1%D8%A7%D9%82%D8%A9_%D8%A7%D9%84%D8%AA%D9%81%D8%A7%D8%B5%D9%8A%D9%84.jpg?width=1600",
+          "thumbUrl": "https://commons.wikimedia.org/wiki/Special:FilePath/%D8%B9%D8%B1%D8%A7%D9%82%D8%A9_%D8%A7%D9%84%D8%AA%D9%81%D8%A7%D8%B5%D9%8A%D9%84.jpg?width=600",
+          "width": 6960,
+          "height": 4640,
+          "subject": "Basilica column capital",
+          "arabicSubject": "تاج عمود في البازيليكا",
+          "description": "A carved Corinthian capital on one of the historic columns inside the church.",
+          "arabicDescription": "تاج كورنثي منحوت بدقة على أحد الأعمدة التاريخية داخل الكنيسة.",
+          "era": "modern",
+          "credit": "Shima' Zaareer",
+          "license": "CC BY-SA 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+          "capturedAt": "2025-12-22",
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:%D8%B9%D8%B1%D8%A7%D9%82%D8%A9_%D8%A7%D9%84%D8%AA%D9%81%D8%A7%D8%B5%D9%8A%D9%84.jpg"
+        },
+        {
+          "id": "church-of-the-nativity-04",
+          "url": "https://commons.wikimedia.org/wiki/Special:FilePath/Bethlehem_and_surroundings._Bethlehem%2C_nave_of_the_Basilica_%28Church_of_the_Nativity%29._Light-shafts_encircling_the_ancient_pillars_LOC_matpc.02619.jpg?width=1600",
+          "thumbUrl": "https://commons.wikimedia.org/wiki/Special:FilePath/Bethlehem_and_surroundings._Bethlehem%2C_nave_of_the_Basilica_%28Church_of_the_Nativity%29._Light-shafts_encircling_the_ancient_pillars_LOC_matpc.02619.jpg?width=600",
+          "width": 6417,
+          "height": 4744,
+          "subject": "Nave of the basilica",
+          "arabicSubject": "صحن البازيليكا",
+          "description": "Shafts of light between the rows of columns in the basilica’s nave, photographed in 1920.",
+          "arabicDescription": "أشعة الضوء تتسلل بين صفوف الأعمدة في صحن البازيليكا، في صورة التُقطت عام 1920.",
+          "era": "historical",
+          "credit": "Matson Collection, Library of Congress",
+          "license": "Public domain",
+          "licenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/",
+          "capturedAt": "1920",
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Bethlehem_and_surroundings._Bethlehem,_nave_of_the_Basilica_(Church_of_the_Nativity)._Light-shafts_encircling_the_ancient_pillars_LOC_matpc.02619.jpg"
+        }
+      ]
+    },
+    {
+      "id": "battir",
+      "governorateId": "bethlehem",
+      "name": "Battir: Land of Olives and Vines",
+      "arabicName": "بتير: أرض الزيتون والكرمة",
+      "city": "Battir",
+      "arabicCity": "بتير",
+      "latitude": 31.724722,
+      "longitude": 35.136667,
+      "coordinateStatus": "village_centre_reference",
+      "description": "A cultural landscape of farmed valleys south-west of Jerusalem, with dry-stone terraces, irrigation channels and a water-sharing system still kept by the families of Battir.",
+      "arabicDescription": "مشهد ثقافي من الأودية الزراعية جنوب غرب القدس، فيه مدرّجات حجرية جافة وقنوات ري ونظام لتقاسم الماء ما زالت عائلات بتير تحافظ عليه.",
+      "facts": "UNESCO inscribed the landscape in 2014 as “Palestine: Land of Olives and Vines – Cultural Landscape of Southern Jerusalem, Battir” and placed it on the List of World Heritage in Danger the same year. The terraces are fed by a network of channels from underground sources, and the water is shared between the village families in a time-managed rotation. UNESCO’s statement warns that building a separation barrier through the valley would severely damage the terraces and the landscape.",
+      "arabicFacts": "أدرجت اليونسكو هذا المشهد عام 2014 باسم «فلسطين: أرض الزيتون والكرمة – المشهد الثقافي لجنوب القدس، بتير»، ووضعته في العام نفسه على قائمة التراث العالمي المعرّض للخطر. تتغذّى المدرّجات من شبكة قنوات تأتي من مصادر جوفية، ويُقسَم الماء بين عائلات القرية بالتناوب وفق جدول زمني. ويحذّر بيان اليونسكو من أن بناء جدار فاصل عبر الوادي سيُلحق ضرراً بالغاً بالمدرّجات وبالمشهد كله.",
+      "importance": "The dry-stone terraces show how people settled near springs and turned a steep valley into farmland, using one of the oldest farming methods known to humankind. UNESCO calls the families’ water distribution an ancient, egalitarian system based on a simple mathematical calculation and a clear rotation.",
+      "arabicImportance": "تُظهر المدرّجات الحجرية الجافة كيف استقر الناس قرب الينابيع وحوّلوا وادياً شديد الانحدار إلى أرض زراعية، بواحدة من أقدم طرق الزراعة التي عرفتها البشرية. وتصف اليونسكو نظام توزيع الماء بين العائلات بأنه نظام قديم قائم على المساواة، يعتمد حساباً رياضياً بسيطاً ودورة تناوب واضحة.",
+      "landmarks": [
+        "Farmed valleys (widian) lined with dry-stone terraces",
+        "Irrigated vegetable terraces and dry terraces of vines and olives",
+        "The spring-fed collection pool and irrigation channels",
+        "Rock-cut tombs and agricultural towers",
+        "The village of Battir and its eco-museum"
+      ],
+      "arabicLandmarks": [
+        "أودية زراعية (وديان) تكسوها المدرّجات الحجرية الجافة",
+        "مدرّجات مرويّة للخضار ومدرّجات بعلية للكرمة والزيتون",
+        "البركة التي يجمع فيها ماء النبع وقنوات الري",
+        "مقابر منحوتة في الصخر وأبراج زراعية (مناطير)",
+        "قرية بتير ومتحفها البيئي"
+      ],
+      "walkthrough": "The record describes a series of farmed valleys called widian. Some terraces are irrigated for market gardens; others are dry and planted with grapevines and olive trees. Water from underground sources gathers in a collection pool and runs through channels, and the families of Battir take turns to receive it.",
+      "arabicWalkthrough": "يصف السجل سلسلة من الأودية الزراعية تُسمّى الوديان. بعض المدرّجات مرويّ يُزرع بالخضار، وبعضها بعليّ مزروع بالكرمة والزيتون. يتجمّع الماء الآتي من المصادر الجوفية في بركة ثم يجري في القنوات، وتتناوب عائلات بتير على الحصول عليه.",
+      "traditions": "",
+      "arabicTraditions": "",
+      "gaps": "The map point marks the village of Battir, not the boundary of the serial property. Current access and site condition are not asserted.",
+      "arabicGaps": "تشير النقطة على الخريطة إلى قرية بتير لا إلى حدود الموقع المتسلسل. لا يؤكد السجل إمكانية الوصول أو حالة الموقع الراهنة.",
+      "categories": [
+        "مشهد ثقافي",
+        "تراث ثقافي"
+      ],
+      "interests": [
+        "history",
+        "architecture"
+      ],
+      "reviewStatus": "source_checked",
+      "reviewed": true,
+      "sources": [
+        {
+          "title": "Palestine: Land of Olives and Vines – Cultural Landscape of Southern Jerusalem, Battir",
+          "arabicTitle": "فلسطين: أرض الزيتون والكرمة – المشهد الثقافي لجنوب القدس، بتير",
+          "publisher": "UNESCO World Heritage Centre",
+          "arabicPublisher": "مركز التراث العالمي - اليونسكو",
+          "url": "https://whc.unesco.org/en/list/1492/"
+        }
+      ],
+      "timeline": [
+        {
+          "year": 2014,
+          "label": "2014",
+          "description": "Inscribed on the World Heritage List and, the same year, on the List of World Heritage in Danger.",
+          "arabicDescription": "الإدراج على قائمة التراث العالمي، وفي العام نفسه على قائمة التراث العالمي المعرّض للخطر."
+        }
+      ],
+      "quiz": {
+        "question": "How do the families of Battir share their irrigation water?",
+        "arabicQuestion": "كيف تتقاسم عائلات بتير ماء الري؟",
+        "options": [
+          "By a time-managed rotation",
+          "By buying it from a city network",
+          "They do not irrigate their terraces"
+        ],
+        "arabicOptions": [
+          "بالتناوب وفق جدول زمني",
+          "بشرائه من شبكة المدينة",
+          "لا تروي مدرّجاتها"
+        ],
+        "answerIndex": 0
+      },
+      "sourceCheckedAt": "2026-10-26",
+      "media": [
+        {
+          "id": "battir-01",
+          "url": "https://commons.wikimedia.org/wiki/Special:FilePath/Village_of_Battir.jpg?width=1600",
+          "thumbUrl": "https://commons.wikimedia.org/wiki/Special:FilePath/Village_of_Battir.jpg?width=600",
+          "width": 3216,
+          "height": 2136,
+          "subject": "Battir terraces",
+          "arabicSubject": "مدرّجات بتير",
+          "description": "Stone terraces stepping down the valley below the village of Battir, 2015.",
+          "arabicDescription": "مدرّجات حجرية تتدرّج في الوادي أسفل قرية بتير، 2015.",
+          "era": "modern",
+          "credit": "Labour Palestine",
+          "license": "CC BY 2.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by/2.0",
+          "capturedAt": "2015-01-29",
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Village_of_Battir.jpg",
+          "pairRole": "cover"
+        },
+        {
+          "id": "battir-02",
+          "url": "https://commons.wikimedia.org/wiki/Special:FilePath/BattirVillageJan212023.jpg?width=1600",
+          "thumbUrl": "https://commons.wikimedia.org/wiki/Special:FilePath/BattirVillageJan212023.jpg?width=600",
+          "width": 3403,
+          "height": 2269,
+          "subject": "Battir and its valley",
+          "arabicSubject": "بتير ووديانها",
+          "description": "The village of Battir above its terraced, olive-covered slopes, seen from across the valley in 2023.",
+          "arabicDescription": "قرية بتير فوق سفوحها المدرّجة المكسوّة بالزيتون، كما تبدو من الجهة المقابلة للوادي عام 2023.",
+          "era": "modern",
+          "credit": "Hagai Agmon-Snir",
+          "license": "CC BY-SA 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+          "capturedAt": "2023-01-22",
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:BattirVillageJan212023.jpg"
+        },
+        {
+          "id": "battir-03",
+          "url": "https://commons.wikimedia.org/wiki/Special:FilePath/Beitar-141.jpg?width=1600",
+          "thumbUrl": "https://commons.wikimedia.org/wiki/Special:FilePath/Beitar-141.jpg?width=600",
+          "width": 2592,
+          "height": 1944,
+          "subject": "Battir valley",
+          "arabicSubject": "وادي بتير",
+          "description": "Terraced gardens and a stone-lined channel in the valley below the village, 2014.",
+          "arabicDescription": "بساتين مدرّجة وقناة مبطّنة بالحجر في الوادي أسفل القرية، 2014.",
+          "era": "modern",
+          "credit": "Bukvoed",
+          "license": "CC BY 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by/4.0",
+          "capturedAt": "2014-12-06",
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Beitar-141.jpg"
+        },
+        {
+          "id": "battir-04",
+          "url": "https://commons.wikimedia.org/wiki/Special:FilePath/Ain_Battir.jpg?width=1600",
+          "thumbUrl": "https://commons.wikimedia.org/wiki/Special:FilePath/Ain_Battir.jpg?width=600",
+          "width": 4269,
+          "height": 3021,
+          "subject": "Ain Battir spring",
+          "arabicSubject": "عين بتير",
+          "description": "Drinking from the spring of Battir, whose water feeds the village’s irrigation system.",
+          "arabicDescription": "الشرب من عين بتير التي يغذّي ماؤها نظام الري في القرية.",
+          "era": "modern",
+          "credit": "Urjuwan Najjar",
+          "license": "CC BY-SA 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+          "capturedAt": "2019-07-05",
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Ain_Battir.jpg"
+        }
+      ]
+    },
+    {
+      "id": "mar-saba-monastery",
+      "governorateId": "bethlehem",
+      "name": "Mar Saba Monastery",
+      "arabicName": "دير مار سابا",
+      "city": "Wadi al-Nar (Kidron Valley)",
+      "arabicCity": "وادي النار",
+      "latitude": 31.704722,
+      "longitude": 35.331111,
+      "coordinateStatus": "unesco_tentative_list_reference",
+      "description": "A Greek Orthodox monastery built into the cliffs of the Kidron Valley, founded in 483 AD by Saint Sabbas and inhabited almost continuously ever since.",
+      "arabicDescription": "دير أرثوذكسي يوناني مبنيّ في منحدرات وادي النار (قدرون)، أسّسه القديس سابا عام 483م، وسكنه الرهبان بشكل شبه متواصل منذ ذلك الحين.",
+      "facts": "Mar Saba began as a line of hermit caves along more than two kilometres of cliffs, and many of its chapels and cells are carved into the limestone. St John of Damascus lived here in the 8th century. A severe earthquake damaged the monastery in 1834, and it was rebuilt largely with Russian support. It is overseen by the Greek Orthodox Patriarchate of Jerusalem; women are not permitted inside the monastery itself.",
+      "arabicFacts": "بدأ دير مار سابا صفاً من مغاور النسّاك يمتد أكثر من كيلومترين على المنحدرات، ونُحتت كثير من كنائسه الصغيرة وقلاليه في الصخر الكلسي. عاش فيه القديس يوحنا الدمشقي في القرن الثامن. ألحق زلزال شديد عام 1834 أضراراً بالغة بالدير، فأُعيد بناؤه بدعم روسي في معظمه. تشرف عليه بطريركية الروم الأرثوذكس في القدس، ولا يُسمح للنساء بدخول الدير نفسه.",
+      "importance": "Palestine’s tentative-list entry describes Mar Saba as one of the oldest continually occupied monasteries in the world, and as the place where St Sabbas codified the Typikon that laid the groundwork for the Byzantine Rite. Its golden age came in the 9th and 10th centuries, when it drew theologians, musicians, poets and historians.",
+      "arabicImportance": "تصف قائمة فلسطين التمهيدية دير مار سابا بأنه من أقدم الأديرة المأهولة باستمرار في العالم، والمكان الذي دوّن فيه القديس سابا «التيبيكون» الذي أرسى أسس الطقس البيزنطي. وبلغ عصره الذهبي في القرنين التاسع والعاشر حين استقطب اللاهوتيين والموسيقيين والشعراء والمؤرخين.",
+      "landmarks": [
+        "The Church of the Theotokos (502 AD), where the relics of St Sabbas lie",
+        "The Church of Theoktistos, later St Nicholas (491 AD)",
+        "More than 100 hermit cells, including the retreat of St John of Damascus",
+        "The 6th-century Justinian Tower, 18 metres high"
+      ],
+      "arabicLandmarks": [
+        "كنيسة والدة الإله (502م) حيث تُحفظ رفات القديس سابا",
+        "كنيسة ثيوكتيستوس، القديس نيقولاوس لاحقاً (491م)",
+        "أكثر من مئة قلّاية للنسّاك، منها خلوة القديس يوحنا الدمشقي",
+        "برج جستنيان من القرن السادس بارتفاع 18 متراً"
+      ],
+      "walkthrough": "Most of the chapels, cells and shared rooms are cut directly into the cliff face of the Kidron Valley. The monks live without electricity or running water, light olive-oil lamps at night and draw water from a natural spring.",
+      "arabicWalkthrough": "نُحتت معظم الكنائس الصغيرة والقلالي والقاعات المشتركة مباشرة في جرف وادي النار. يعيش الرهبان دون كهرباء أو ماء جارٍ، ويضيئون قناديل زيت الزيتون ليلاً، ويستقون من نبع طبيعي.",
+      "traditions": "",
+      "arabicTraditions": "",
+      "categories": [
+        "معلم ديني"
+      ],
+      "interests": [
+        "history",
+        "architecture",
+        "religious"
+      ],
+      "reviewStatus": "source_checked",
+      "reviewed": true,
+      "sources": [
+        {
+          "title": "Monasteries of the Jerusalem Wilderness (El-Bariyah) — Tentative List",
+          "arabicTitle": "أديرة برّية القدس (البرّية) — القائمة التمهيدية",
+          "publisher": "UNESCO World Heritage Centre",
+          "arabicPublisher": "مركز التراث العالمي - اليونسكو",
+          "url": "https://whc.unesco.org/en/tentativelists/6954/"
+        }
+      ],
+      "timeline": [
+        {
+          "year": 483,
+          "label": "483 AD",
+          "description": "Sabbas the Sanctified founds the monastery.",
+          "arabicDescription": "القديس سابا المتقدّس يؤسس الدير."
+        },
+        {
+          "year": 491,
+          "label": "491 AD",
+          "description": "The Church of Theoktistos, later dedicated to St Nicholas, is built.",
+          "arabicDescription": "بناء كنيسة ثيوكتيستوس التي كُرّست لاحقاً للقديس نيقولاوس."
+        },
+        {
+          "year": 502,
+          "label": "502 AD",
+          "description": "The main Church of the Theotokos is built during St Sabbas’s lifetime.",
+          "arabicDescription": "بناء الكنيسة الرئيسية، كنيسة والدة الإله، في حياة القديس سابا."
+        },
+        {
+          "year": 700,
+          "label": "8th century",
+          "description": "St John of Damascus spends his later life at the monastery.",
+          "arabicDescription": "القديس يوحنا الدمشقي يقضي أواخر حياته في الدير."
+        },
+        {
+          "year": 850,
+          "label": "9th–10th centuries",
+          "description": "The monastery’s golden age as a centre for theologians, musicians, poets and historians.",
+          "arabicDescription": "العصر الذهبي للدير مركزاً للاهوتيين والموسيقيين والشعراء والمؤرخين."
+        },
+        {
+          "year": 1834,
+          "label": "1834",
+          "description": "An earthquake severely damages the monastery; rebuilding follows with Russian support.",
+          "arabicDescription": "زلزال يلحق أضراراً بالغة بالدير، تليه إعادة بناء بدعم روسي."
+        },
+        {
+          "year": 1965,
+          "label": "1965",
+          "description": "The relics of St Sabbas return from Venice after more than seven centuries.",
+          "arabicDescription": "عودة رفات القديس سابا من البندقية بعد أكثر من سبعة قرون."
+        },
+        {
+          "year": 2026,
+          "label": "2026",
+          "description": "Included in Palestine’s Tentative List within the Monasteries of the Jerusalem Wilderness (El-Bariyah).",
+          "arabicDescription": "الإدراج على قائمة فلسطين التمهيدية ضمن أديرة برّية القدس (البرّية)."
+        }
+      ],
+      "quiz": {
+        "question": "Who founded Mar Saba Monastery in 483 AD?",
+        "arabicQuestion": "من أسّس دير مار سابا عام 483م؟",
+        "options": [
+          "Saint Sabbas",
+          "Saint Hilarion",
+          "Emperor Justinian"
+        ],
+        "arabicOptions": [
+          "القديس سابا",
+          "القديس هيلاريون",
+          "الإمبراطور جستنيان"
+        ],
+        "answerIndex": 0
+      },
+      "sourceCheckedAt": "2026-10-26",
+      "media": [
+        {
+          "id": "mar-saba-monastery-01",
+          "url": "https://commons.wikimedia.org/wiki/Special:FilePath/%D8%A8%D9%8A%D8%AA_%D9%84%D8%AD%D9%85_.%D8%AF%D9%8A%D8%B1_%D9%85%D8%A7%D8%B1_%D8%B3%D8%A7%D8%A8%D8%A7.jpg?width=1600",
+          "thumbUrl": "https://commons.wikimedia.org/wiki/Special:FilePath/%D8%A8%D9%8A%D8%AA_%D9%84%D8%AD%D9%85_.%D8%AF%D9%8A%D8%B1_%D9%85%D8%A7%D8%B1_%D8%B3%D8%A7%D8%A8%D8%A7.jpg?width=600",
+          "width": 5312,
+          "height": 2988,
+          "subject": "Mar Saba Monastery",
+          "arabicSubject": "دير مار سابا",
+          "description": "Mar Saba’s domes, towers and walls built into the cliff of the Kidron Valley, 2024.",
+          "arabicDescription": "قباب دير مار سابا وأبراجه وأسواره المبنية في جرف وادي النار، 2024.",
+          "era": "modern",
+          "credit": "Abdallah Khader",
+          "license": "CC BY-SA 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+          "capturedAt": "2024-09-03",
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:%D8%A8%D9%8A%D8%AA_%D9%84%D8%AD%D9%85_.%D8%AF%D9%8A%D8%B1_%D9%85%D8%A7%D8%B1_%D8%B3%D8%A7%D8%A8%D8%A7.jpg",
+          "pairRole": "cover"
+        },
+        {
+          "id": "mar-saba-monastery-02",
+          "url": "https://commons.wikimedia.org/wiki/Special:FilePath/Palestine-2013-Aerial-Mar_Saba_Monastery.jpg?width=1600",
+          "thumbUrl": "https://commons.wikimedia.org/wiki/Special:FilePath/Palestine-2013-Aerial-Mar_Saba_Monastery.jpg?width=600",
+          "width": 5500,
+          "height": 6179,
+          "subject": "Mar Saba from the air",
+          "arabicSubject": "دير مار سابا من الجو",
+          "description": "An aerial view showing how the monastery clings to the gorge, 2013.",
+          "arabicDescription": "منظر جوي يُظهر كيف يتشبّث الدير بجانب الوادي العميق، 2013.",
+          "era": "modern",
+          "credit": "Godot13",
+          "license": "CC BY-SA 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+          "capturedAt": "2013-03-28",
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Palestine-2013-Aerial-Mar_Saba_Monastery.jpg"
+        },
+        {
+          "id": "mar-saba-monastery-03",
+          "url": "https://commons.wikimedia.org/wiki/Special:FilePath/Mar_Saba_interior.jpg?width=1600",
+          "thumbUrl": "https://commons.wikimedia.org/wiki/Special:FilePath/Mar_Saba_interior.jpg?width=600",
+          "width": 5184,
+          "height": 3456,
+          "subject": "Church dome at Mar Saba",
+          "arabicSubject": "قبة كنيسة دير مار سابا",
+          "description": "The painted dome of the monastery church, with Christ Pantocrator at its centre.",
+          "arabicDescription": "القبة المرسومة لكنيسة الدير، وفي وسطها أيقونة المسيح الضابط الكل.",
+          "era": "modern",
+          "credit": "Nevborg",
+          "license": "CC BY-SA 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+          "capturedAt": "2018-06-30",
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Mar_Saba_interior.jpg"
+        },
+        {
+          "id": "mar-saba-monastery-04",
+          "url": "https://commons.wikimedia.org/wiki/Special:FilePath/%D9%85%D8%A7%D8%B1%D8%B3%D8%A8%D8%A7.jpg?width=1600",
+          "thumbUrl": "https://commons.wikimedia.org/wiki/Special:FilePath/%D9%85%D8%A7%D8%B1%D8%B3%D8%A8%D8%A7.jpg?width=600",
+          "width": 7360,
+          "height": 4912,
+          "subject": "Mar Saba from a cave",
+          "arabicSubject": "دير مار سابا من مغارة",
+          "description": "The monastery framed by a cave opening in the cliffs of the valley, 2021.",
+          "arabicDescription": "الدير يظهر من فتحة مغارة في منحدرات الوادي، 2021.",
+          "era": "modern",
+          "credit": "Mahmood moutan",
+          "license": "CC BY-SA 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+          "capturedAt": "2021-02-05",
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:%D9%85%D8%A7%D8%B1%D8%B3%D8%A8%D8%A7.jpg"
+        },
+        {
+          "id": "mar-saba-monastery-05",
+          "url": "https://commons.wikimedia.org/wiki/Special:FilePath/72.Le_couvent_de_Mar-Saba.jpg?width=1600",
+          "thumbUrl": "https://commons.wikimedia.org/wiki/Special:FilePath/72.Le_couvent_de_Mar-Saba.jpg?width=600",
+          "width": 4766,
+          "height": 3850,
+          "subject": "Mar Saba Monastery",
+          "arabicSubject": "دير مار سابا",
+          "description": "Mar Saba in an 1857 lithograph from C. W. M. van de Velde’s “Le Pays d’Israël”.",
+          "arabicDescription": "دير مار سابا في مطبوعة حجرية من عام 1857 ضمن كتاب فان دي فيلده «أرض إسرائيل» (Le Pays d’Israël).",
+          "era": "historical",
+          "credit": "C. W. M. van de Velde",
+          "license": "Public domain",
+          "licenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/",
+          "capturedAt": "1857",
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:72.Le_couvent_de_Mar-Saba.jpg"
+        }
+      ]
     },
     {
       "id": "hebron-old-town",
@@ -309,7 +2309,95 @@
         "answerIndex": 0
       },
       "traditions": "",
-      "arabicTraditions": ""
+      "arabicTraditions": "",
+      "media": [
+        {
+          "id": "hebron-old-town-01",
+          "url": "https://commons.wikimedia.org/wiki/Special:FilePath/Holy_Land_2022_%281%29_P164_Hebron_Old_City.jpg?width=1600",
+          "thumbUrl": "https://commons.wikimedia.org/wiki/Special:FilePath/Holy_Land_2022_%281%29_P164_Hebron_Old_City.jpg?width=600",
+          "width": 3888,
+          "height": 5184,
+          "subject": "Hebron old town market",
+          "arabicSubject": "سوق البلدة القديمة في الخليل",
+          "description": "A covered market street in the old town of Hebron, 2022.",
+          "arabicDescription": "شارع سوق مسقوف في البلدة القديمة في الخليل، 2022.",
+          "era": "modern",
+          "credit": "Fallaner",
+          "license": "CC BY-SA 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+          "capturedAt": "2022-05-08",
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Holy_Land_2022_(1)_P164_Hebron_Old_City.jpg",
+          "pairRole": "cover"
+        },
+        {
+          "id": "hebron-old-town-02",
+          "url": "https://commons.wikimedia.org/wiki/Special:FilePath/HEBRON_OLD_CITY_0008.jpg?width=1600",
+          "thumbUrl": "https://commons.wikimedia.org/wiki/Special:FilePath/HEBRON_OLD_CITY_0008.jpg?width=600",
+          "width": 3096,
+          "height": 4128,
+          "subject": "Stone arches",
+          "arabicSubject": "الأقواس الحجرية",
+          "description": "An old alley spanned by stone arches in the old town, 2017.",
+          "arabicDescription": "زقاق قديم تعلوه أقواس حجرية في البلدة القديمة، 2017.",
+          "era": "modern",
+          "credit": "Baraa Zm",
+          "license": "CC BY-SA 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+          "capturedAt": "2017-06-22",
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:HEBRON_OLD_CITY_0008.jpg"
+        },
+        {
+          "id": "hebron-old-town-03",
+          "url": "https://commons.wikimedia.org/wiki/Special:FilePath/%D8%AE%D8%B2%D9%82_%D8%A7%D9%84%D9%81%D8%A7%D8%B1_%D8%A7%D9%84%D8%A8%D9%84%D8%AF%D9%87_%D8%A7%D9%84%D9%82%D8%AF%D9%8A%D9%85%D8%A9_%D8%A7%D9%84%D8%AE%D9%84%D9%8A%D9%84.jpg?width=1600",
+          "thumbUrl": "https://commons.wikimedia.org/wiki/Special:FilePath/%D8%AE%D8%B2%D9%82_%D8%A7%D9%84%D9%81%D8%A7%D8%B1_%D8%A7%D9%84%D8%A8%D9%84%D8%AF%D9%87_%D8%A7%D9%84%D9%82%D8%AF%D9%8A%D9%85%D8%A9_%D8%A7%D9%84%D8%AE%D9%84%D9%8A%D9%84.jpg?width=600",
+          "width": 5472,
+          "height": 3648,
+          "subject": "Khazq al-Far",
+          "arabicSubject": "خزق الفار",
+          "description": "Embroidered dresses and textiles in a shop at Khazq al-Far in the old town, 2025.",
+          "arabicDescription": "أثواب مطرّزة ومنسوجات في دكان عند خزق الفار في البلدة القديمة، 2025.",
+          "era": "modern",
+          "credit": "Abdallah Khader",
+          "license": "CC BY-SA 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+          "capturedAt": "2025-08-14",
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:%D8%AE%D8%B2%D9%82_%D8%A7%D9%84%D9%81%D8%A7%D8%B1_%D8%A7%D9%84%D8%A8%D9%84%D8%AF%D9%87_%D8%A7%D9%84%D9%82%D8%AF%D9%8A%D9%85%D8%A9_%D8%A7%D9%84%D8%AE%D9%84%D9%8A%D9%84.jpg"
+        },
+        {
+          "id": "hebron-old-town-04",
+          "url": "https://commons.wikimedia.org/wiki/Special:FilePath/%D9%82%D8%A8%D8%A7%D8%A8_%D8%A7%D9%84%D8%A8%D9%84%D8%AF%D8%A9_%D8%A7%D9%84%D9%82%D8%AF%D9%8A%D9%85%D8%A9_%D9%81%D9%8A_%D8%A7%D9%84%D8%AE%D9%84%D9%8A%D9%84.jpg?width=1600",
+          "thumbUrl": "https://commons.wikimedia.org/wiki/Special:FilePath/%D9%82%D8%A8%D8%A7%D8%A8_%D8%A7%D9%84%D8%A8%D9%84%D8%AF%D8%A9_%D8%A7%D9%84%D9%82%D8%AF%D9%8A%D9%85%D8%A9_%D9%81%D9%8A_%D8%A7%D9%84%D8%AE%D9%84%D9%8A%D9%84.jpg?width=600",
+          "width": 5184,
+          "height": 3456,
+          "subject": "Vaulted passage",
+          "arabicSubject": "ممر معقود",
+          "description": "Neighbours sitting in a vaulted passage of the old town, 2022.",
+          "arabicDescription": "جيران يجلسون في ممر معقود من البلدة القديمة، 2022.",
+          "era": "modern",
+          "credit": "Maram Abu Tour",
+          "license": "CC0",
+          "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+          "capturedAt": "2022-03-13",
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:%D9%82%D8%A8%D8%A7%D8%A8_%D8%A7%D9%84%D8%A8%D9%84%D8%AF%D8%A9_%D8%A7%D9%84%D9%82%D8%AF%D9%8A%D9%85%D8%A9_%D9%81%D9%8A_%D8%A7%D9%84%D8%AE%D9%84%D9%8A%D9%84.jpg"
+        },
+        {
+          "id": "hebron-old-town-05",
+          "url": "https://commons.wikimedia.org/wiki/Special:FilePath/PikiWiki_Israel_77859_cave_of_the_patriarchs_1874.jpg?width=1600",
+          "thumbUrl": "https://commons.wikimedia.org/wiki/Special:FilePath/PikiWiki_Israel_77859_cave_of_the_patriarchs_1874.jpg?width=600",
+          "width": 3629,
+          "height": 1966,
+          "subject": "Hebron in 1874",
+          "arabicSubject": "الخليل عام 1874",
+          "description": "Hebron and its olive groves photographed in 1874, with the walled sanctuary of the Ibrahimi Mosque in the town.",
+          "arabicDescription": "الخليل وبساتين زيتونها في صورة من عام 1874، ويظهر في البلدة حرم المسجد الإبراهيمي المسوّر.",
+          "era": "historical",
+          "credit": "Frank Mason Good",
+          "license": "Public domain",
+          "licenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/",
+          "capturedAt": "1874",
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:PikiWiki_Israel_77859_cave_of_the_patriarchs_1874.jpg"
+        }
+      ]
     },
     {
       "id": "ibrahimi-mosque",
@@ -359,7 +2447,78 @@
           "بوصفه إرشادات نقل"
         ],
         "answerIndex": 0
-      }
+      },
+      "media": [
+        {
+          "id": "ibrahimi-mosque-01",
+          "url": "https://commons.wikimedia.org/wiki/Special:FilePath/%D8%A7%D9%84%D9%85%D8%B3%D8%AC%D8%AF_%D8%A7%D9%84%D8%A5%D8%A8%D8%B1%D8%A7%D9%87%D9%8A%D9%85%D9%8A.jpg?width=1600",
+          "thumbUrl": "https://commons.wikimedia.org/wiki/Special:FilePath/%D8%A7%D9%84%D9%85%D8%B3%D8%AC%D8%AF_%D8%A7%D9%84%D8%A5%D8%A8%D8%B1%D8%A7%D9%87%D9%8A%D9%85%D9%8A.jpg?width=600",
+          "width": 3209,
+          "height": 4345,
+          "subject": "Ibrahimi Mosque",
+          "arabicSubject": "المسجد الإبراهيمي",
+          "description": "The Ibrahimi Mosque’s minaret above its massive stone enclosure walls, 2021.",
+          "arabicDescription": "مئذنة المسجد الإبراهيمي فوق أسوار حرمه الحجرية الضخمة، 2021.",
+          "era": "modern",
+          "credit": "دانا حمزة",
+          "license": "CC BY-SA 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+          "capturedAt": "2021-11-12",
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:%D8%A7%D9%84%D9%85%D8%B3%D8%AC%D8%AF_%D8%A7%D9%84%D8%A5%D8%A8%D8%B1%D8%A7%D9%87%D9%8A%D9%85%D9%8A.jpg",
+          "pairRole": "cover"
+        },
+        {
+          "id": "ibrahimi-mosque-02",
+          "url": "https://commons.wikimedia.org/wiki/Special:FilePath/C62R1412.jpg?width=1600",
+          "thumbUrl": "https://commons.wikimedia.org/wiki/Special:FilePath/C62R1412.jpg?width=600",
+          "width": 5184,
+          "height": 3456,
+          "subject": "Al-Yusufiyya hall",
+          "arabicSubject": "ساحة اليوسفية",
+          "description": "Worshippers in al-Yusufiyya hall inside the Ibrahimi Mosque on the morning of Eid al-Adha, 2018.",
+          "arabicDescription": "مصلّون في ساحة اليوسفية داخل المسجد الإبراهيمي صباح عيد الأضحى، 2018.",
+          "era": "modern",
+          "credit": "Hamza Hamdi Mohtaseb",
+          "license": "CC BY-SA 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+          "capturedAt": "2018-08-22",
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:C62R1412.jpg"
+        },
+        {
+          "id": "ibrahimi-mosque-03",
+          "url": "https://commons.wikimedia.org/wiki/Special:FilePath/%D8%A7%D9%84%D8%AD%D8%B1%D9%85_%D8%A7%D9%84%D8%A5%D8%A8%D8%B1%D8%A7%D9%87%D9%8A%D9%85%D9%8A.jpg?width=1600",
+          "thumbUrl": "https://commons.wikimedia.org/wiki/Special:FilePath/%D8%A7%D9%84%D8%AD%D8%B1%D9%85_%D8%A7%D9%84%D8%A5%D8%A8%D8%B1%D8%A7%D9%87%D9%8A%D9%85%D9%8A.jpg?width=600",
+          "width": 3096,
+          "height": 4128,
+          "subject": "Inside the Ibrahimi Mosque",
+          "arabicSubject": "داخل المسجد الإبراهيمي",
+          "description": "Stained-glass windows and a chandelier beneath a dome inside the mosque, 2017.",
+          "arabicDescription": "نوافذ من الزجاج الملوّن وثريا تحت إحدى القباب داخل المسجد، 2017.",
+          "era": "modern",
+          "credit": "Baraa Zm",
+          "license": "CC BY 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by/4.0",
+          "capturedAt": "2017-06-22",
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:%D8%A7%D9%84%D8%AD%D8%B1%D9%85_%D8%A7%D9%84%D8%A5%D8%A8%D8%B1%D8%A7%D9%87%D9%8A%D9%85%D9%8A.jpg"
+        },
+        {
+          "id": "ibrahimi-mosque-04",
+          "url": "https://commons.wikimedia.org/wiki/Special:FilePath/%C3%80_H%C3%A9bron%2C_au_c%C5%93ur_de_la_vieille_ville%2C_le_grand_sanctuaire_du_Tombeau_des_Patriarches%2C_ou_Har%C3%A2m_el-Khal%C3%AEl_-_P%C3%A8re_Rapha%C3%ABl_Savignac_-_btv1b101011354.jpg?width=1600",
+          "thumbUrl": "https://commons.wikimedia.org/wiki/Special:FilePath/%C3%80_H%C3%A9bron%2C_au_c%C5%93ur_de_la_vieille_ville%2C_le_grand_sanctuaire_du_Tombeau_des_Patriarches%2C_ou_Har%C3%A2m_el-Khal%C3%AEl_-_P%C3%A8re_Rapha%C3%ABl_Savignac_-_btv1b101011354.jpg?width=600",
+          "width": 2215,
+          "height": 2930,
+          "subject": "Ibrahimi Mosque courtyard",
+          "arabicSubject": "ساحة المسجد الإبراهيمي",
+          "description": "A courtyard of the sanctuary with one of its minarets, photographed by Raphaël Savignac around 1920.",
+          "arabicDescription": "إحدى ساحات الحرم ومئذنة من مآذنه، في صورة التقطها رافائيل سافينياك نحو عام 1920.",
+          "era": "historical",
+          "credit": "Savignac, Raphaël (1874-1951). Photographe",
+          "license": "Public domain",
+          "licenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/",
+          "capturedAt": "1920",
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:%C3%80_H%C3%A9bron,_au_c%C5%93ur_de_la_vieille_ville,_le_grand_sanctuaire_du_Tombeau_des_Patriarches,_ou_Har%C3%A2m_el-Khal%C3%AEl_-_P%C3%A8re_Rapha%C3%ABl_Savignac_-_btv1b101011354.jpg"
+        }
+      ]
     },
     {
       "id": "gaza-omari-mosque",
@@ -418,7 +2577,111 @@
         "answerIndex": 0
       },
       "traditions": "",
-      "arabicTraditions": ""
+      "arabicTraditions": "",
+      "media": [
+        {
+          "id": "gaza-omari-mosque-01",
+          "url": "https://commons.wikimedia.org/wiki/Special:FilePath/%D9%85%D8%AC%D9%85%D9%88%D8%B9%D8%A9_%D8%B5%D9%88%D8%B1_%D9%84%D9%82%D8%B7%D8%A7%D8%B9_%D8%BA%D8%B2%D8%A9_%D9%82%D8%A8%D9%84_%D8%A7%D9%84%D8%AD%D8%B1%D8%A8_%D8%A7%D9%84%D8%A3%D8%AE%D9%8A%D8%B1%D8%A9_03.jpg?width=1600",
+          "thumbUrl": "https://commons.wikimedia.org/wiki/Special:FilePath/%D9%85%D8%AC%D9%85%D9%88%D8%B9%D8%A9_%D8%B5%D9%88%D8%B1_%D9%84%D9%82%D8%B7%D8%A7%D8%B9_%D8%BA%D8%B2%D8%A9_%D9%82%D8%A8%D9%84_%D8%A7%D9%84%D8%AD%D8%B1%D8%A8_%D8%A7%D9%84%D8%A3%D8%AE%D9%8A%D8%B1%D8%A9_03.jpg?width=600",
+          "width": 3024,
+          "height": 4032,
+          "subject": "Great Omari Mosque",
+          "arabicSubject": "المسجد العمري الكبير",
+          "description": "The courtyard, arcades and minaret of the Great Omari Mosque in December 2021.",
+          "arabicDescription": "صحن المسجد العمري الكبير وأروقته ومئذنته في كانون الأول/ديسمبر 2021.",
+          "era": "modern",
+          "credit": "Mounir.Kleibo",
+          "license": "CC BY-SA 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+          "capturedAt": "2021-12-29",
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:%D9%85%D8%AC%D9%85%D9%88%D8%B9%D8%A9_%D8%B5%D9%88%D8%B1_%D9%84%D9%82%D8%B7%D8%A7%D8%B9_%D8%BA%D8%B2%D8%A9_%D9%82%D8%A8%D9%84_%D8%A7%D9%84%D8%AD%D8%B1%D8%A8_%D8%A7%D9%84%D8%A3%D8%AE%D9%8A%D8%B1%D8%A9_03.jpg",
+          "pairRole": "cover"
+        },
+        {
+          "id": "gaza-omari-mosque-02",
+          "url": "https://commons.wikimedia.org/wiki/Special:FilePath/%D8%A7%D9%84%D8%A8%D9%88%D8%A7%D8%A8%D8%A9_%D8%A7%D9%84%D8%BA%D8%B1%D8%A8%D9%8A%D8%A9_%D9%84%D9%84%D9%85%D8%B3%D8%AC%D8%AF_%D8%A7%D9%84%D8%B9%D9%85%D8%B1%D9%8A_%D8%A7%D9%84%D9%83%D8%A8%D9%8A%D8%B1_%D8%A8%D9%85%D8%AF%D9%8A%D9%86%D8%A9_%D8%BA%D8%B2%D8%A9.jpg?width=1600",
+          "thumbUrl": "https://commons.wikimedia.org/wiki/Special:FilePath/%D8%A7%D9%84%D8%A8%D9%88%D8%A7%D8%A8%D8%A9_%D8%A7%D9%84%D8%BA%D8%B1%D8%A8%D9%8A%D8%A9_%D9%84%D9%84%D9%85%D8%B3%D8%AC%D8%AF_%D8%A7%D9%84%D8%B9%D9%85%D8%B1%D9%8A_%D8%A7%D9%84%D9%83%D8%A8%D9%8A%D8%B1_%D8%A8%D9%85%D8%AF%D9%8A%D9%86%D8%A9_%D8%BA%D8%B2%D8%A9.jpg?width=600",
+          "width": 5499,
+          "height": 3666,
+          "subject": "Western gate",
+          "arabicSubject": "البوابة الغربية",
+          "description": "The pointed-arch western gate of the mosque, 2019.",
+          "arabicDescription": "البوابة الغربية للمسجد بعقدها المدبّب، 2019.",
+          "era": "modern",
+          "credit": "Ramez Habboub",
+          "license": "CC BY-SA 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+          "capturedAt": "2019-05-18",
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:%D8%A7%D9%84%D8%A8%D9%88%D8%A7%D8%A8%D8%A9_%D8%A7%D9%84%D8%BA%D8%B1%D8%A8%D9%8A%D8%A9_%D9%84%D9%84%D9%85%D8%B3%D8%AC%D8%AF_%D8%A7%D9%84%D8%B9%D9%85%D8%B1%D9%8A_%D8%A7%D9%84%D9%83%D8%A8%D9%8A%D8%B1_%D8%A8%D9%85%D8%AF%D9%8A%D9%86%D8%A9_%D8%BA%D8%B2%D8%A9.jpg"
+        },
+        {
+          "id": "gaza-omari-mosque-03",
+          "url": "https://commons.wikimedia.org/wiki/Special:FilePath/Gaza_Great_Mosque.jpg?width=1600",
+          "thumbUrl": "https://commons.wikimedia.org/wiki/Special:FilePath/Gaza_Great_Mosque.jpg?width=600",
+          "width": 3176,
+          "height": 2117,
+          "subject": "Arcade",
+          "arabicSubject": "الرواق",
+          "description": "A vaulted arcade of the Great Omari Mosque.",
+          "arabicDescription": "رواق معقود في المسجد العمري الكبير.",
+          "era": "modern",
+          "credit": "Marius Arnesen",
+          "license": "CC BY-SA 3.0 no",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0/no/deed.en",
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Gaza_Great_Mosque.jpg"
+        },
+        {
+          "id": "gaza-omari-mosque-04",
+          "url": "https://commons.wikimedia.org/wiki/Special:FilePath/%D9%85%D8%B3%D8%AC%D8%AF_%D8%A7%D9%84%D8%B9%D9%85%D8%B1%D9%8A_%D8%A7%D9%84%D9%83%D8%A8%D9%8A%D8%B1_%D8%A8%D8%BA%D8%B2%D8%A9_%D9%85%D9%86_%D8%A7%D9%84%D8%AF%D8%A7%D8%AE%D9%84.jpg?width=1600",
+          "thumbUrl": "https://commons.wikimedia.org/wiki/Special:FilePath/%D9%85%D8%B3%D8%AC%D8%AF_%D8%A7%D9%84%D8%B9%D9%85%D8%B1%D9%8A_%D8%A7%D9%84%D9%83%D8%A8%D9%8A%D8%B1_%D8%A8%D8%BA%D8%B2%D8%A9_%D9%85%D9%86_%D8%A7%D9%84%D8%AF%D8%A7%D8%AE%D9%84.jpg?width=600",
+          "width": 2448,
+          "height": 3264,
+          "subject": "Prayer hall",
+          "arabicSubject": "قاعة الصلاة",
+          "description": "Arched windows and a hanging lamp inside the prayer hall, 2017.",
+          "arabicDescription": "نوافذ معقودة وقنديل معلّق داخل قاعة الصلاة، 2017.",
+          "era": "modern",
+          "credit": "Zakaria Mansour",
+          "license": "CC BY-SA 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+          "capturedAt": "2017-09-14",
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:%D9%85%D8%B3%D8%AC%D8%AF_%D8%A7%D9%84%D8%B9%D9%85%D8%B1%D9%8A_%D8%A7%D9%84%D9%83%D8%A8%D9%8A%D8%B1_%D8%A8%D8%BA%D8%B2%D8%A9_%D9%85%D9%86_%D8%A7%D9%84%D8%AF%D8%A7%D8%AE%D9%84.jpg"
+        },
+        {
+          "id": "gaza-omari-mosque-05",
+          "url": "https://commons.wikimedia.org/wiki/Special:FilePath/Gaza_mosque_%26_minaret_LOC_matpc.14804.jpg?width=1600",
+          "thumbUrl": "https://commons.wikimedia.org/wiki/Special:FilePath/Gaza_mosque_%26_minaret_LOC_matpc.14804.jpg?width=600",
+          "width": 4238,
+          "height": 2837,
+          "subject": "Minaret of the Great Omari Mosque",
+          "arabicSubject": "مئذنة المسجد العمري الكبير",
+          "description": "The minaret rising above the flat roofs of Gaza in the 1940s.",
+          "arabicDescription": "المئذنة ترتفع فوق أسطح غزة المنبسطة في أربعينيات القرن العشرين.",
+          "era": "historical",
+          "credit": "Matson Collection, Library of Congress",
+          "license": "Public domain",
+          "licenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/",
+          "capturedAt": "between 1940 and 1946",
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Gaza_mosque_%26_minaret_LOC_matpc.14804.jpg"
+        },
+        {
+          "id": "gaza-omari-mosque-06",
+          "url": "https://commons.wikimedia.org/wiki/Special:FilePath/The_Ruins_of_the_Great_Mosque%2C_Gaza%2C_Palestine%2C_1919_Art.IWMART4564.jpg?width=1600",
+          "thumbUrl": "https://commons.wikimedia.org/wiki/Special:FilePath/The_Ruins_of_the_Great_Mosque%2C_Gaza%2C_Palestine%2C_1919_Art.IWMART4564.jpg?width=600",
+          "width": 2734,
+          "height": 2480,
+          "subject": "Great Omari Mosque in 1919",
+          "arabicSubject": "المسجد العمري الكبير عام 1919",
+          "description": "Sydney Carline’s 1919 painting “The Ruins of the Great Mosque, Gaza”, made after the fighting of the First World War.",
+          "arabicDescription": "لوحة سيدني كارلاين «أطلال المسجد الكبير، غزة» من عام 1919، رُسمت بعد معارك الحرب العالمية الأولى.",
+          "era": "historical",
+          "credit": "Sydney Carline / Imperial War Museums",
+          "license": "Public domain",
+          "licenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/",
+          "capturedAt": "1919",
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:The_Ruins_of_the_Great_Mosque,_Gaza,_Palestine,_1919_Art.IWMART4564.jpg"
+        }
+      ]
     },
     {
       "id": "gaza-porphyrius-church",
@@ -470,11 +2733,339 @@
         "answerIndex": 0
       },
       "traditions": "",
-      "arabicTraditions": ""
+      "arabicTraditions": "",
+      "media": [
+        {
+          "id": "gaza-porphyrius-church-01",
+          "url": "https://commons.wikimedia.org/wiki/Special:FilePath/Saint_Porphyrius_Church%2C_Gaza_City.jpg?width=1600",
+          "thumbUrl": "https://commons.wikimedia.org/wiki/Special:FilePath/Saint_Porphyrius_Church%2C_Gaza_City.jpg?width=600",
+          "width": 3021,
+          "height": 2733,
+          "subject": "Saint Porphyrius Church",
+          "arabicSubject": "كنيسة القديس برفيريوس",
+          "description": "The stone walls and entrance stair of Saint Porphyrius Church, November 2022.",
+          "arabicDescription": "الجدران الحجرية لكنيسة القديس برفيريوس ودرج مدخلها، تشرين الثاني/نوفمبر 2022.",
+          "era": "modern",
+          "credit": "Dan Palraz",
+          "license": "CC BY-SA 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+          "capturedAt": "2022-11-29",
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Saint_Porphyrius_Church,_Gaza_City.jpg",
+          "pairRole": "cover"
+        },
+        {
+          "id": "gaza-porphyrius-church-02",
+          "url": "https://commons.wikimedia.org/wiki/Special:FilePath/Tolerance_-_panoramio.jpg?width=1600",
+          "thumbUrl": "https://commons.wikimedia.org/wiki/Special:FilePath/Tolerance_-_panoramio.jpg?width=600",
+          "width": 2304,
+          "height": 1728,
+          "subject": "Church and minaret",
+          "arabicSubject": "الكنيسة والمئذنة",
+          "description": "The church’s bell gable beside the minaret of the Katib al-Wilaya Mosque in the historic centre of Gaza.",
+          "arabicDescription": "جملون جرس الكنيسة بجوار مئذنة مسجد كاتب الولاية في مركز غزة التاريخي.",
+          "era": "modern",
+          "credit": "rahimabaid",
+          "license": "CC BY-SA 3.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0",
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Tolerance_-_panoramio.jpg"
+        },
+        {
+          "id": "gaza-porphyrius-church-03",
+          "url": "https://commons.wikimedia.org/wiki/Special:FilePath/%C3%89glise_Saint-Porphyre.jpg?width=1600",
+          "thumbUrl": "https://commons.wikimedia.org/wiki/Special:FilePath/%C3%89glise_Saint-Porphyre.jpg?width=600",
+          "width": 4623,
+          "height": 3201,
+          "subject": "Saint Porphyrius Church in 1922",
+          "arabicSubject": "كنيسة القديس برفيريوس عام 1922",
+          "description": "The church and its surroundings on a glass-plate negative taken by Raphaël Savignac in 1922.",
+          "arabicDescription": "الكنيسة ومحيطها في صورة على لوح زجاجي التقطها رافائيل سافينياك عام 1922.",
+          "era": "historical",
+          "credit": "Raphaël Savignac",
+          "license": "Public domain",
+          "licenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/",
+          "capturedAt": "1922",
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:%C3%89glise_Saint-Porphyre.jpg"
+        }
+      ]
+    },
+    {
+      "id": "saint-hilarion-monastery",
+      "governorateId": "gaza",
+      "name": "Saint Hilarion Monastery / Tell Umm Amer",
+      "arabicName": "دير القديس هيلاريون / تل أم عامر",
+      "city": "Nuseirat",
+      "arabicCity": "النصيرات",
+      "latitude": 31.447306,
+      "longitude": 34.366361,
+      "coordinateStatus": "unesco_property_reference",
+      "description": "The ruins of one of the earliest monastic sites in the Middle East, founded in the 4th century by Saint Hilarion on the coastal dunes of Nuseirat.",
+      "arabicDescription": "أطلال واحد من أقدم المواقع الرهبانية في الشرق الأوسط، أسّسه القديس هيلاريون في القرن الرابع على الكثبان الساحلية في النصيرات.",
+      "facts": "It was the first monastic community in the Holy Land, growing from a mud-brick hermitage into a large church complex. Its remains include three superimposed churches with elaborate mosaic floors, crypts, cells, a refectory, a water system and baths within a pilgrim hostel. UNESCO inscribed it on the World Heritage List in 2024 and, the same year, on the List of World Heritage in Danger.",
+      "arabicFacts": "كان أول مجتمع رهباني في الأرض المقدسة، وتطوّر من صومعة من الطوب الطيني إلى مجمّع كنسي كبير. تضم بقاياه ثلاث كنائس متراكبة بأرضيات فسيفساء متقنة، وسراديب، وقلالي، وقاعة طعام، ونظاماً للمياه، وحمّامات داخل نُزُل للحجاج. أدرجته اليونسكو على قائمة التراث العالمي عام 2024، وفي العام نفسه على قائمة التراث العالمي المعرّض للخطر.",
+      "importance": "The monastery stood at a crossroads of trade routes between Asia and Africa and drew scholars and monks from across the Byzantine Empire, forming the community known as the Monastic School of Gaza. It records the move from solitary hermits to organised communities, and the meeting of monastic life and pilgrimage.",
+      "arabicImportance": "قام الدير عند ملتقى طرق التجارة بين آسيا وأفريقيا، واجتذب العلماء والرهبان من أنحاء الإمبراطورية البيزنطية، فتشكّلت فيه الجماعة المعروفة بمدرسة غزة الرهبانية. وهو شاهد على الانتقال من النسّاك المنفردين إلى المجتمعات الرهبانية المنظمة، وعلى التقاء الحياة الرهبانية بالحج.",
+      "landmarks": [
+        "Three superimposed churches with mosaic floors",
+        "Crypts and monks’ cells",
+        "The refectory",
+        "The water management system",
+        "Baths within the pilgrim hostel"
+      ],
+      "arabicLandmarks": [
+        "ثلاث كنائس متراكبة بأرضيات من الفسيفساء",
+        "السراديب وقلالي الرهبان",
+        "قاعة الطعام",
+        "نظام إدارة المياه",
+        "الحمّامات داخل نُزُل الحجاج"
+      ],
+      "traditions": "",
+      "arabicTraditions": "",
+      "gaps": "Current site condition and access are not asserted. The record describes the documented heritage; each photograph shows the date it was taken.",
+      "arabicGaps": "لا يؤكد السجل حالة الموقع الراهنة أو إمكانية الوصول إليه. يصف السجل التراث الموثّق، وتُظهر كل صورة تاريخ التقاطها.",
+      "categories": [
+        "معلم ديني",
+        "موقع أثري"
+      ],
+      "interests": [
+        "history",
+        "architecture",
+        "religious"
+      ],
+      "reviewStatus": "source_checked",
+      "reviewed": true,
+      "sources": [
+        {
+          "title": "Saint Hilarion Monastery/ Tell Umm Amer",
+          "arabicTitle": "دير القديس هيلاريون / تل أم عامر",
+          "publisher": "UNESCO World Heritage Centre",
+          "arabicPublisher": "مركز التراث العالمي - اليونسكو",
+          "url": "https://whc.unesco.org/en/list/1749/"
+        }
+      ],
+      "timeline": [
+        {
+          "year": 340,
+          "label": "4th century",
+          "description": "Saint Hilarion founds the monastery as a mud-brick hermitage.",
+          "arabicDescription": "القديس هيلاريون يؤسس الدير صومعةً من الطوب الطيني."
+        },
+        {
+          "year": 450,
+          "label": "4th–5th centuries",
+          "description": "A thriving communal (cenobitic) monastery is documented.",
+          "arabicDescription": "توثيق دير جماعي مزدهر."
+        },
+        {
+          "year": 600,
+          "label": "4th–7th centuries",
+          "description": "The complex grows around the saint’s memory, with churches, baths and a pilgrim hostel.",
+          "arabicDescription": "المجمّع يتوسع حول ذكرى القديس بكنائس وحمّامات ونُزُل للحجاج."
+        },
+        {
+          "year": 2024,
+          "label": "2024",
+          "description": "Inscribed on the World Heritage List and on the List of World Heritage in Danger.",
+          "arabicDescription": "الإدراج على قائمة التراث العالمي وعلى قائمة التراث العالمي المعرّض للخطر."
+        }
+      ],
+      "quiz": {
+        "question": "Where does Saint Hilarion Monastery stand?",
+        "arabicQuestion": "أين يقع دير القديس هيلاريون؟",
+        "options": [
+          "On the coastal dunes of Nuseirat",
+          "In the Kidron Valley",
+          "On Mount Gerizim"
+        ],
+        "arabicOptions": [
+          "على الكثبان الساحلية في النصيرات",
+          "في وادي النار",
+          "على جبل جرزيم"
+        ],
+        "answerIndex": 0
+      },
+      "sourceCheckedAt": "2026-10-26",
+      "media": [
+        {
+          "id": "saint-hilarion-monastery-01",
+          "url": "https://commons.wikimedia.org/wiki/Special:FilePath/GAZA002.jpg?width=1600",
+          "thumbUrl": "https://commons.wikimedia.org/wiki/Special:FilePath/GAZA002.jpg?width=600",
+          "width": 6240,
+          "height": 4160,
+          "subject": "Tell Umm Amer excavations",
+          "arabicSubject": "حفريات تل أم عامر",
+          "description": "The excavated walls of the monastery at Tell Umm Amer, with a visitor walkway, March 2023.",
+          "arabicDescription": "جدران الدير المكشوفة بالتنقيب في تل أم عامر، مع ممر للزوار، آذار/مارس 2023.",
+          "era": "modern",
+          "credit": "RIZEK ABDELJAWAD",
+          "license": "CC BY-SA 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+          "capturedAt": "2023-03-07",
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:GAZA002.jpg",
+          "pairRole": "cover"
+        },
+        {
+          "id": "saint-hilarion-monastery-02",
+          "url": "https://commons.wikimedia.org/wiki/Special:FilePath/GAZA003.jpg?width=1600",
+          "thumbUrl": "https://commons.wikimedia.org/wiki/Special:FilePath/GAZA003.jpg?width=600",
+          "width": 6240,
+          "height": 4160,
+          "subject": "Tell Umm Amer excavations",
+          "arabicSubject": "حفريات تل أم عامر",
+          "description": "Foundations of the monastery buildings among the dunes of Nuseirat, March 2023.",
+          "arabicDescription": "أساسات مباني الدير بين كثبان النصيرات، آذار/مارس 2023.",
+          "era": "modern",
+          "credit": "RIZEK ABDELJAWAD",
+          "license": "CC BY-SA 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+          "capturedAt": "2023-03-07",
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:GAZA003.jpg"
+        },
+        {
+          "id": "saint-hilarion-monastery-03",
+          "url": "https://commons.wikimedia.org/wiki/Special:FilePath/GAZA009.jpg?width=1600",
+          "thumbUrl": "https://commons.wikimedia.org/wiki/Special:FilePath/GAZA009.jpg?width=600",
+          "width": 6720,
+          "height": 4480,
+          "subject": "Inside the excavated remains",
+          "arabicSubject": "داخل البقايا المكشوفة",
+          "description": "A narrow passage among the excavated stone remains, August 2024.",
+          "arabicDescription": "ممر ضيق بين البقايا الحجرية المكشوفة، آب/أغسطس 2024.",
+          "era": "modern",
+          "credit": "RIZEK ABDELJAWAD",
+          "license": "CC BY-SA 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+          "capturedAt": "2024-08-15",
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:GAZA009.jpg"
+        }
+      ]
+    },
+    {
+      "id": "anthedon-harbour",
+      "governorateId": "gaza",
+      "name": "Anthedon Harbour",
+      "arabicName": "ميناء الأنثيدون (البلاخية)",
+      "city": "Gaza",
+      "arabicCity": "غزة",
+      "coordinateStatus": "pending_verification",
+      "description": "The first known seaport of Gaza, called Tida or Blakhiyeh in Islamic literature, inhabited from 800 BC to 1100 AD.",
+      "arabicDescription": "أول ميناء معروف لغزة، ويُسمّى في المصادر الإسلامية «تيدا» أو «البلاخية»، وقد سُكن من عام 800 ق.م حتى 1100م.",
+      "facts": "The harbour saw Neo-Assyrian, Babylonian, Persian, Greek, Roman, Byzantine and early Islamic rule. Excavations uncovered a Roman temple, villas, mosaic floors, warehouses, a 65-metre mud-brick wall and massive earthen walls 8 metres high and 6 metres thick. One kilometre to the south lay Maiumas, the ancient harbour of Gaza.",
+      "arabicFacts": "تعاقب على الميناء الحكم الآشوري الحديث والبابلي والفارسي واليوناني والروماني والبيزنطي والإسلامي المبكر. وكشفت الحفريات عن معبد روماني وفيلات وأرضيات فسيفساء ومستودعات وسور من الطوب الطيني طوله 65 متراً، وجدران ترابية ضخمة بارتفاع 8 أمتار وسماكة 6 أمتار. وعلى بعد كيلومتر جنوباً كان ميناء ميوماس، ميناء غزة القديم.",
+      "importance": "Palestine’s tentative-list entry presents Anthedon as a clear example of the Eastern Mediterranean seaports on the ancient trade route between Europe and the Levant, with underwater heritage that has yet to be explored.",
+      "arabicImportance": "تقدّم قائمة فلسطين التمهيدية الأنثيدون مثالاً واضحاً على موانئ شرق المتوسط على طريق التجارة القديم بين أوروبا وبلاد الشام، وفيه تراث مغمور تحت الماء لم يُستكشف بعد.",
+      "landmarks": [
+        "The mud-brick acropolis projecting towards the sea like a tower",
+        "Remains of a Roman temple and a section of wall",
+        "Roman artisan quarters and a series of villas",
+        "Mosaic floors, warehouses and fortified structures",
+        "Underwater archaeology off the shore"
+      ],
+      "arabicLandmarks": [
+        "الأكروبول من الطوب الطيني البارز نحو البحر كأنه برج",
+        "بقايا معبد روماني وجزء من سور",
+        "أحياء الحرفيين الرومانية وسلسلة من الفيلات",
+        "أرضيات فسيفساء ومستودعات ومنشآت محصّنة",
+        "آثار مغمورة تحت الماء قبالة الشاطئ"
+      ],
+      "traditions": "",
+      "arabicTraditions": "",
+      "gaps": "UNESCO’s entry notes that the site of ancient Anthedon has not been precisely identified, and its listed coordinates do not point to Gaza, so no map marker is shown. Current site condition and access are not asserted. The record describes the documented heritage; each photograph shows the date it was taken.",
+      "arabicGaps": "يشير مدخل اليونسكو إلى أن موقع الأنثيدون القديم لم يُحدَّد بدقة، والإحداثيات المذكورة فيه لا تقع في غزة، لذلك لا تظهر علامة على الخريطة. لا يؤكد السجل حالة الموقع الراهنة أو إمكانية الوصول إليه. يصف السجل التراث الموثّق، وتُظهر كل صورة تاريخ التقاطها.",
+      "categories": [
+        "موقع أثري"
+      ],
+      "interests": [
+        "history",
+        "architecture"
+      ],
+      "reviewStatus": "source_checked",
+      "reviewed": true,
+      "sources": [
+        {
+          "title": "Anthedon Harbour — Tentative List",
+          "arabicTitle": "ميناء الأنثيدون — القائمة التمهيدية",
+          "publisher": "UNESCO World Heritage Centre",
+          "arabicPublisher": "مركز التراث العالمي - اليونسكو",
+          "url": "https://whc.unesco.org/en/tentativelists/5719/"
+        }
+      ],
+      "timeline": [
+        {
+          "year": -800,
+          "label": "800 BC",
+          "description": "The earliest documented habitation of the harbour city.",
+          "arabicDescription": "أقدم استيطان موثّق لمدينة الميناء."
+        },
+        {
+          "year": 1100,
+          "label": "1100 AD",
+          "description": "The end of the documented habitation.",
+          "arabicDescription": "نهاية الاستيطان الموثّق."
+        },
+        {
+          "year": 2012,
+          "label": "2012",
+          "description": "Submitted to Palestine’s Tentative List.",
+          "arabicDescription": "الإدراج على قائمة فلسطين التمهيدية."
+        }
+      ],
+      "quiz": {
+        "question": "What was Anthedon?",
+        "arabicQuestion": "ما هو الأنثيدون؟",
+        "options": [
+          "A desert monastery",
+          "The first known seaport of Gaza",
+          "A Roman theatre in Nablus"
+        ],
+        "arabicOptions": [
+          "دير في البرّية",
+          "أول ميناء معروف لغزة",
+          "مسرح روماني في نابلس"
+        ],
+        "answerIndex": 1
+      },
+      "sourceCheckedAt": "2026-10-26",
+      "media": [
+        {
+          "id": "anthedon-harbour-01",
+          "url": "https://commons.wikimedia.org/wiki/Special:FilePath/Tr%C3%A9sors_sauv%C3%A9s_de_Gaza_IMG_9510.jpg?width=1600",
+          "thumbUrl": "https://commons.wikimedia.org/wiki/Special:FilePath/Tr%C3%A9sors_sauv%C3%A9s_de_Gaza_IMG_9510.jpg?width=600",
+          "width": 4640,
+          "height": 6960,
+          "subject": "Greek head from Anthedon",
+          "arabicSubject": "رأس يوناني من الأنثيدون",
+          "description": "A Greek stone head in Cypriot style found at Anthedon, shown in the 2025 exhibition “Trésors sauvés de Gaza” at the Institut du monde arabe, Paris.",
+          "arabicDescription": "رأس حجري يوناني على الطراز القبرصي عُثر عليه في الأنثيدون، عُرض في معرض «كنوز غزة المُنقَذة» في معهد العالم العربي في باريس عام 2025.",
+          "era": "modern",
+          "credit": "David.Monniaux",
+          "license": "CC BY-SA 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+          "capturedAt": "2025-10-21",
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Tr%C3%A9sors_sauv%C3%A9s_de_Gaza_IMG_9510.jpg",
+          "pairRole": "cover"
+        },
+        {
+          "id": "anthedon-harbour-02",
+          "url": "https://commons.wikimedia.org/wiki/Special:FilePath/Tr%C3%A9sors_sauv%C3%A9s_de_Gaza_IMG_9491.jpg?width=1600",
+          "thumbUrl": "https://commons.wikimedia.org/wiki/Special:FilePath/Tr%C3%A9sors_sauv%C3%A9s_de_Gaza_IMG_9491.jpg?width=600",
+          "width": 4640,
+          "height": 6960,
+          "subject": "Glass flask from Anthedon",
+          "arabicSubject": "قارورة زجاجية من الأنثيدون",
+          "description": "A glass flask shaped like a human head, found at Anthedon and shown in the same 2025 exhibition.",
+          "arabicDescription": "قارورة زجاجية على شكل رأس إنسان عُثر عليها في الأنثيدون، وعُرضت في المعرض نفسه عام 2025.",
+          "era": "modern",
+          "credit": "David.Monniaux",
+          "license": "CC BY-SA 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+          "capturedAt": "2025-10-21",
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Tr%C3%A9sors_sauv%C3%A9s_de_Gaza_IMG_9491.jpg"
+        }
+      ]
     }
   ],
   "gaps": {
-    "en": "This initial record contains source-checked factual summaries. No reviewed photographs, before/after pairs, local oral accounts or current access information have been added. Coordinates, when available, are reference points, not entrances. This is a cultural reading journey; it does not establish a physical route, travel time, accessibility or permission to visit.",
-    "ar": "يحتوي هذا السجل الأولي على ملخصات حقائق تحقّقنا من مصادرها. لم تُضف صور مراجعة أو مقارنات قبل/بعد أو روايات محلية أو معلومات وصول حالية. الإحداثيات المتاحة نقاط مرجعية وليست مداخل. هذه رحلة قراءة ثقافية لا تثبت مساراً ميدانياً أو وقت انتقال أو إمكانية الوصول أو إذناً بالزيارة."
+    "en": "This record contains source-checked factual summaries and credited, licensed photographs; each photograph shows its date and source. Local oral accounts and current access information have not been added. Coordinates, when available, are reference points, not entrances. This is a cultural reading journey; it does not establish a physical route, travel time, accessibility or permission to visit.",
+    "ar": "يحتوي هذا السجل على ملخصات حقائق تحقّقنا من مصادرها وصور مرخّصة منسوبة إلى أصحابها، وتُظهر كل صورة تاريخها ومصدرها. لم تُضف روايات محلية أو معلومات وصول حالية. الإحداثيات المتاحة نقاط مرجعية وليست مداخل. هذه رحلة قراءة ثقافية لا تثبت مساراً ميدانياً أو وقت انتقال أو إمكانية الوصول أو إذناً بالزيارة."
   }
 }

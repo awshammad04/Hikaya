@@ -11,6 +11,28 @@ export interface Governorate {
   coverImageUrl?: string;
 }
 
+/** A licensed photograph of a national place, credited like content/media/media.json. */
+export interface CatalogMedia {
+  id: string;
+  url: string;
+  thumbUrl: string;
+  width: number;
+  height: number;
+  subject: string;
+  arabicSubject: string;
+  description: string;
+  arabicDescription: string;
+  /** 'modern' or 'historical'; checked by tools/generate-palestine-data.py. */
+  era: string;
+  /** 'cover', 'before' or 'after'; plain gallery photos have none. */
+  pairRole?: string;
+  credit: string;
+  license: string;
+  licenseUrl: string;
+  capturedAt?: string;
+  sourceUrl: string;
+}
+
 export interface CatalogLocation {
   id: string;
   governorateId: string;
@@ -51,6 +73,9 @@ export interface CatalogLocation {
     arabicOptions: string[];
     answerIndex: number;
   };
+  gaps?: string;
+  arabicGaps?: string;
+  media?: CatalogMedia[];
 }
 
 export interface PalestineCatalog {

@@ -9,18 +9,18 @@ import { useInterfaceLanguage } from "../context/LanguageContext";
  * Points are approximate [lat, lng] pairs, good for an overview scale.
  */
 const COAST: [number, number][] = [
-  [32.3, 34.86], [32.15, 34.79], [32.05, 34.75], [31.92, 34.7], [31.8, 34.63],
+  [32.45, 34.88], [32.3, 34.86], [32.15, 34.79], [32.05, 34.75], [31.92, 34.7], [31.8, 34.63],
   [31.67, 34.55], [31.57, 34.49], [31.52, 34.43], [31.46, 34.36], [31.4, 34.3],
   [31.32, 34.22], [31.25, 34.05], [31.12, 33.85],
 ];
-const SEA: [number, number][] = [...COAST, [31.12, 33.4], [32.3, 33.4]];
+const SEA: [number, number][] = [...COAST, [31.12, 33.4], [32.45, 33.4]];
 const DEAD_SEA: [number, number][] = [
   [31.77, 35.56], [31.74, 35.47], [31.68, 35.44], [31.5, 35.39], [31.35, 35.38],
   [31.2, 35.4], [31.12, 35.43], [31.2, 35.5], [31.3, 35.55], [31.48, 35.58], [31.65, 35.59],
 ];
 const JORDAN: [number, number][] = [
   [31.77, 35.56], [31.84, 35.545], [31.9, 35.555], [31.97, 35.54], [32.05, 35.535],
-  [32.12, 35.55], [32.2, 35.56], [32.3, 35.57],
+  [32.12, 35.55], [32.2, 35.56], [32.3, 35.57], [32.45, 35.58],
 ];
 
 export type Projector = (lat: number, lng: number) => { x: number; y: number };
@@ -66,8 +66,11 @@ export const GeographyLayer: React.FC<GeographyLayerProps> = ({ project, labelSi
   );
 };
 
-/** Frame shared by the overview maps: the coast to the Jordan valley. */
-export const OVERVIEW_BOUNDS = { minLat: 31.2, maxLat: 32.2, minLng: 34.2, maxLng: 35.7 };
+/**
+ * Frame shared by the overview maps: Gaza to Nablus, the coast to the Jordan
+ * valley. The span keeps roughly the 4:3 shape of the maps it is drawn into.
+ */
+export const OVERVIEW_BOUNDS = { minLat: 31.25, maxLat: 32.35, minLng: 34.05, maxLng: 35.78 };
 
 const MINI = { width: 255, height: 200 };
 const miniProject: Projector = (lat, lng) => ({
@@ -85,7 +88,24 @@ interface MiniMapProps {
   className?: string;
 }
 
-/** A small orientation map of the four governorates in the archive. */
+/**
+ * Where each name sits beside its dot. Jerusalem, Bethlehem and Jericho are
+ * a few pixels apart at this scale, so they fan out instead of stacking.
+ */
+const LABEL_SIDE: Record<string, "above" | "below" | "west" | "east"> = {
+  jerusalem: "west",
+  bethlehem: "below",
+  hebron: "below",
+  jericho: "east",
+};
+const labelPosition = (id: string, p: { x: number; y: number }) => {
+  const side = LABEL_SIDE[id] ?? "above";
+  if (side === "west") return { x: p.x - 8, y: p.y + 3.5, anchor: "end" as const };
+  if (side === "east") return { x: p.x + 8, y: p.y + 3.5, anchor: "start" as const };
+  return { x: p.x, y: p.y + (side === "below" ? 17 : -9), anchor: "middle" as const };
+};
+
+/** A small orientation map of the governorates in the archive. */
 export const PalestineMiniMap: React.FC<MiniMapProps> = ({ highlight, interactive = false, focus = false, className = "" }) => {
   const { isArabic } = useInterfaceLanguage();
   const centre = highlight ? governorates.find((item) => item.id === highlight)?.mapCenter : undefined;
@@ -98,16 +118,17 @@ export const PalestineMiniMap: React.FC<MiniMapProps> = ({ highlight, interactiv
         const p = miniProject(item.mapCenter.latitude, item.mapCenter.longitude);
         const on = highlight ? item.id === highlight : interactive;
         const name = isArabic ? item.arabicName : item.name;
-        const labelBelow = item.id === "jerusalem" || item.id === "hebron";
+        const label = labelPosition(item.id, p);
         const marker = (
           <g>
             {on && <circle cx={p.x} cy={p.y} r={9} fill="#FBBF24" opacity={0.25} />}
             <circle cx={p.x} cy={p.y} r={on ? 4.5 : 3} fill={on ? "#FBBF24" : "rgba(255,255,255,0.55)"} stroke="#3f412d" strokeWidth={1} />
             {(interactive || (on && !focus)) && (
               <text
-                x={p.x}
-                y={p.y + (labelBelow ? 17 : -9)}
-                textAnchor="middle"
+                x={label.x}
+                y={label.y}
+                textAnchor={label.anchor}
+                direction="ltr"
                 fontSize={10}
                 fontWeight={800}
                 fill="#ffffff"

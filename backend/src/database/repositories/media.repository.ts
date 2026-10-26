@@ -1,6 +1,7 @@
 import { MediaItem } from '../entities/media.entity';
 import { DatabaseService } from '../database.service';
 import { SEED_MEDIA } from '../seed/generated-data';
+import { PALESTINE_MEDIA } from '../seed/palestine-data';
 import { countBy } from './count-by';
 
 export interface BeforeAfterPair {
@@ -106,7 +107,9 @@ export class PostgresMediaRepository implements MediaRepository {
 
 /** Serves database/seed-generated.sql from memory when PostgreSQL is absent. */
 export class InMemoryMediaRepository implements MediaRepository {
-  private readonly media: MediaItem[] = SEED_MEDIA.map((item) => ({ ...item }));
+  private readonly media: MediaItem[] = [...SEED_MEDIA, ...PALESTINE_MEDIA].map(
+    (item) => ({ ...item }),
+  );
 
   findByLocation(locationId: string): Promise<MediaItem[]> {
     return Promise.resolve(

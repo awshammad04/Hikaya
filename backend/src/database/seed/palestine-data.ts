@@ -5,11 +5,16 @@ import { Location } from '../entities/location.entity';
 import { Story } from '../entities/story.entity';
 import { TimelineEvent } from '../entities/timeline-event.entity';
 import { QuizQuestion } from '../entities/quiz-question.entity';
+import { MediaItem } from '../entities/media.entity';
 
 export { catalog };
+const coverOf = (item: (typeof catalog.locations)[number]) =>
+  item.media?.find((photo) => photo.pairRole === 'cover')?.url;
+
 export const PALESTINE_LOCATIONS: Location[] = catalog.locations.map(
-  (item) => ({
+  ({ media: _media, ...item }) => ({
     ...item,
+    coverImageUrl: coverOf({ ...item, media: _media }),
     country: 'Palestine',
     isPublished: item.reviewed && item.reviewStatus === 'source_checked',
     contentFile: `content/ai-ready/${item.id}-summary.md`,
@@ -27,7 +32,7 @@ export const PALESTINE_STORIES: Story[] = catalog.locations.map((item) => ({
   tone: 'neutral',
   source: `content/ai-ready/${item.id}-summary.md`,
   isAiGenerated: false,
-  uncertaintyNotes: [catalog.gaps.en],
+  uncertaintyNotes: [item.gaps ?? catalog.gaps.en],
   status:
     item.reviewed && item.reviewStatus === 'source_checked'
       ? 'published'
@@ -54,3 +59,13 @@ export const PALESTINE_QUIZ: QuizQuestion[] = catalog.locations.map((item) => ({
   sourceNote: item.sources[0].url,
   sortOrder: 0,
 }));
+export const PALESTINE_MEDIA: MediaItem[] = catalog.locations.flatMap((item) =>
+  (item.media ?? []).map((photo, index) => ({
+    ...photo,
+    era: photo.era as MediaItem['era'],
+    pairRole: photo.pairRole as MediaItem['pairRole'],
+    locationId: item.id,
+    type: 'image' as const,
+    sortOrder: index,
+  })),
+);
