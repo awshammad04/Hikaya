@@ -15,9 +15,9 @@ const labelClass =
 
 /**
  * Sign in or create an account with a phone number, the usual identifier in
- * Palestine. `?mode=login` opens the sign-in tab and `?next=/path` returns
- * there afterwards. Accounts made before phone sign-up can still log in with
- * their email. Guests are never forced here.
+ * Palestine. An email can be added at sign-up for contact only; it is never a
+ * way to log in. `?mode=login` opens the sign-in tab and `?next=/path` returns
+ * there afterwards. Guests are never forced here.
  */
 export const AccountPage: React.FC = () => {
   const { isArabic } = useInterfaceLanguage();
@@ -29,7 +29,6 @@ export const AccountPage: React.FC = () => {
   const [countryCode, setCountryCode] = useState(DEFAULT_COUNTRY_CODE);
   const [phone, setPhone] = useState("");
   const [email, setEmail] = useState("");
-  const [withEmail, setWithEmail] = useState(false);
   const [password, setPassword] = useState("");
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -39,29 +38,27 @@ export const AccountPage: React.FC = () => {
 
   if (status === "signed-in") return <Navigate to={next} replace />;
 
-  const usingEmail = mode === "login" && withEmail;
-
   const submit = async (event: React.FormEvent) => {
     event.preventDefault();
     setError(null);
-    if (!usingEmail && !normalizePhone(countryCode, phone)) {
+    if (!normalizePhone(countryCode, phone)) {
       setError(isArabic ? "تحقق من رقم الهاتف ورمز الدولة." : "Check the phone number and country code.");
       return;
     }
     setBusy(true);
     try {
-      if (mode === "signup") await signUp(name, countryCode, phone, password);
-      else await logIn(usingEmail ? { email } : { countryCode, phone }, password);
+      if (mode === "signup") await signUp(name, countryCode, phone, password, email);
+      else await logIn(countryCode, phone, password);
       navigate(next, { replace: true });
     } catch (caught) {
       const status = caught instanceof AccountError ? caught.status : undefined;
       setError(
         status === 401
-          ? usingEmail
-            ? (isArabic ? "البريد الإلكتروني أو كلمة المرور غير صحيحة." : "The email or password is incorrect.")
-            : (isArabic ? "رقم الهاتف أو كلمة المرور غير صحيحة." : "The phone number or password is incorrect.")
+          ? (isArabic ? "رقم الهاتف أو كلمة المرور غير صحيحة." : "The phone number or password is incorrect.")
           : status === 409
-            ? (isArabic ? "يوجد حساب بهذا الرقم. سجّل الدخول بدلاً من ذلك." : "An account with this phone number already exists. Log in instead.")
+            ? caught instanceof Error && /email/i.test(caught.message)
+              ? (isArabic ? "هذا البريد مستخدم في حساب آخر. اتركه فارغاً أو استخدم بريداً آخر." : "This email is already on another account. Leave it empty or use another one.")
+              : (isArabic ? "يوجد حساب بهذا الرقم. سجّل الدخول بدلاً من ذلك." : "An account with this phone number already exists. Log in instead.")
             : status === 429
               ? (isArabic ? "محاولات كثيرة غير ناجحة. انتظر بضع دقائق ثم حاول مجدداً." : "Too many failed attempts. Wait a few minutes and try again.")
               : status === 400 && caught instanceof Error
@@ -125,28 +122,21 @@ export const AccountPage: React.FC = () => {
                 <input id="account-name" className={fieldClass} value={name} onChange={(event) => setName(event.target.value)} required maxLength={80} autoComplete="name" />
               </div>
             )}
-            {usingEmail ? (
+            <PhoneField
+              id="account-phone"
+              label={isArabic ? "رقم الهاتف" : "Phone number"}
+              countryCode={countryCode}
+              number={phone}
+              onCountryCode={setCountryCode}
+              onNumber={setPhone}
+              preview={mode === "signup"}
+            />
+            {mode === "signup" && (
               <div>
-                <label className={labelClass} htmlFor="account-email">{isArabic ? "البريد الإلكتروني" : "Email"}</label>
-                <input id="account-email" type="email" dir="ltr" className={fieldClass} value={email} onChange={(event) => setEmail(event.target.value)} required maxLength={254} autoComplete="email" />
+                <label className={labelClass} htmlFor="account-email">{isArabic ? "البريد الإلكتروني (اختياري)" : "Email (optional)"}</label>
+                <input id="account-email" type="email" dir="ltr" className={fieldClass} value={email} onChange={(event) => setEmail(event.target.value)} maxLength={254} autoComplete="email" />
+                <p className="text-xs text-brand-muted mt-1.5">{isArabic ? "لا يُستخدم لتسجيل الدخول؛ فقط للتواصل معك." : "Not used to log in — only so we can reach you."}</p>
               </div>
-            ) : (
-              <PhoneField
-                id="account-phone"
-                label={isArabic ? "رقم الهاتف" : "Phone number"}
-                countryCode={countryCode}
-                number={phone}
-                onCountryCode={setCountryCode}
-                onNumber={setPhone}
-                preview={mode === "signup"}
-              />
-            )}
-            {mode === "login" && (
-              <button type="button" onClick={() => { setWithEmail(!withEmail); setError(null); }} className="text-xs font-bold text-brand-olive hover:text-brand-amber">
-                {withEmail
-                  ? (isArabic ? "الدخول برقم الهاتف" : "Log in with your phone number")
-                  : (isArabic ? "حسابك قديم بالبريد الإلكتروني؟ ادخل به" : "Older account with an email? Log in with it")}
-              </button>
             )}
             <div>
               <label className={labelClass} htmlFor="account-password">{isArabic ? "كلمة المرور" : "Password"}</label>

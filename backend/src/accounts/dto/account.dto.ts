@@ -11,7 +11,6 @@ import {
   Matches,
   MaxLength,
   MinLength,
-  ValidateIf,
 } from 'class-validator';
 import type {
   ProgressKind,
@@ -38,28 +37,26 @@ export class SignUpDto {
   @MaxLength(32)
   phone: string;
 
+  /** Optional contact address; never used to log in. */
+  @IsOptional()
+  @IsEmail()
+  @MaxLength(254)
+  email?: string;
+
   @IsString()
   @MinLength(8, { message: 'password must be at least 8 characters' })
   @MaxLength(200)
   password: string;
 }
 
-/** A phone number with its country code, or an older account's email. */
 export class LogInDto {
-  @ValidateIf((dto: LogInDto) => dto.phone === undefined)
-  @IsEmail()
-  @MaxLength(254)
-  email?: string;
+  @Matches(CALLING_CODE, { message: 'countryCode must look like +970' })
+  countryCode: string;
 
-  @ValidateIf((dto: LogInDto) => dto.email === undefined)
   @IsString()
   @IsNotEmpty()
   @MaxLength(32)
-  phone?: string;
-
-  @ValidateIf((dto: LogInDto) => dto.phone !== undefined)
-  @Matches(CALLING_CODE, { message: 'countryCode must look like +970' })
-  countryCode?: string;
+  phone: string;
 
   @IsString()
   @IsNotEmpty()
