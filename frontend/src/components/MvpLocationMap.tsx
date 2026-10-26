@@ -313,7 +313,7 @@ export const MvpLocationMap: React.FC<MvpLocationMapProps> = ({
 
       <div
         ref={viewportRef}
-        className={`paper-scope relative w-full h-[500px] sm:h-[610px] rounded-3xl border border-brand-border overflow-hidden shadow-xl bg-[#eae3d3] select-none ${zoom > MIN_ZOOM ? "cursor-grab active:cursor-grabbing" : "cursor-zoom-in"}`}
+        className={`paper-scope relative isolate w-full h-[500px] sm:h-[610px] rounded-3xl border border-brand-border overflow-hidden shadow-xl bg-[#eae3d3] select-none ${zoom > MIN_ZOOM ? "cursor-grab active:cursor-grabbing" : "cursor-zoom-in"}`}
         style={{ touchAction: "none" }}
         onPointerDown={handlePointerDown}
         onPointerMove={handlePointerMove}

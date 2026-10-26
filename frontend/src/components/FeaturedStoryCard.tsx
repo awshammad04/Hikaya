@@ -8,6 +8,9 @@ import { locationById } from "../data/heritage";
 import { visitorWalkthrough } from "../visitorWalkthroughs";
 import { SourceCitationLine } from "./SourceCitationLine";
 import { readableNarrative } from "../utils/plainText";
+import { LoadingRegion, SkeletonLine } from "./Skeleton";
+import { Reveal } from "./motion";
+import { useFeaturedStory } from "../hooks/useFeaturedStory";
 
 interface FeaturedStoryCardProps {
   featured: FeaturedStory;
@@ -127,5 +130,36 @@ export const FeaturedStoryCard: React.FC<FeaturedStoryCardProps> = ({
         )}
       </div>
     </article>
+  );
+};
+
+/**
+ * The "Story of the day" section: heading, a skeleton while it loads, then
+ * the card. Hands its load error up so the page's data banner can show it.
+ */
+export const StoryOfTheDay: React.FC<{ story: ReturnType<typeof useFeaturedStory> }> = ({ story }) => {
+  const { isArabic } = useInterfaceLanguage();
+  const { featured, loading, shuffling, shuffle } = story;
+  if (!loading && !featured) return null;
+  return (
+    <Reveal className="space-y-4">
+      <h2 className="font-serif font-black text-2xl text-brand-olive">
+        {isArabic ? "حكاية اليوم" : "Story of the day"}
+      </h2>
+      {loading ? (
+        <div className="bg-brand-surface rounded-3xl border border-brand-border overflow-hidden grid grid-cols-1 md:grid-cols-5">
+          <SkeletonLine className="h-48 md:col-span-2 rounded-none" />
+          <div className="md:col-span-3 p-6 space-y-3">
+            <SkeletonLine className="h-3 w-28" />
+            <SkeletonLine className="h-6 w-3/4" />
+            <SkeletonLine className="h-3 w-full" />
+            <SkeletonLine className="h-3 w-5/6" />
+          </div>
+          <LoadingRegion label={isArabic ? "جارٍ تحميل حكاية اليوم" : "Loading the story of the day"} />
+        </div>
+      ) : (
+        featured && <FeaturedStoryCard featured={featured} onShuffle={shuffle} shuffling={shuffling} />
+      )}
+    </Reveal>
   );
 };
