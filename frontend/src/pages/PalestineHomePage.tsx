@@ -14,6 +14,8 @@ import { DataSourceBanner } from "../components/DataSourceBanner";
 import { PalestineMiniMap } from "../components/PalestineGeography";
 import { governoratesCount, placesCount } from "../utils/plural";
 import { DailyQuestion } from "../components/DailyQuestion";
+import { StoryOfTheDay } from "../components/FeaturedStoryCard";
+import { useFeaturedStory } from "../hooks/useFeaturedStory";
 
 const STEPS = [
   {
@@ -42,10 +44,13 @@ const STEPS = [
 export const PalestineHomePage: React.FC = () => {
   const { isArabic } = useInterfaceLanguage();
   const { locations, source, reason } = useLocations("all");
+  const story = useFeaturedStory();
+  // An odd count leaves the last row half empty, so the first card spans it.
+  const wideFirst = governorates.length % 2 === 1;
   return (
     <PageTransition>
       <div className="space-y-14">
-        <DataSourceBanner source={source} reason={reason} />
+        <DataSourceBanner source={source} reason={reason || story.error} />
         <section className="relative overflow-hidden rounded-3xl bg-brand-olive p-7 sm:p-12 text-white">
           <div className="absolute inset-0 tatreez-grid opacity-10 pointer-events-none" />
           <div className="relative grid gap-10 md:grid-cols-[1fr_minmax(0,22rem)] items-center">
@@ -86,6 +91,8 @@ export const PalestineHomePage: React.FC = () => {
           </div>
         </section>
 
+        <StoryOfTheDay story={story} />
+
         <Reveal className="space-y-5">
           <div>
             <h2 className="font-serif font-black text-3xl text-brand-olive">
@@ -98,17 +105,18 @@ export const PalestineHomePage: React.FC = () => {
             </p>
           </div>
           <StaggerList className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-            {governorates.map((governorate) => {
+            {governorates.map((governorate, index) => {
               const count = locations.filter(
                 (item) => (item.governorateId ?? "jerusalem") === governorate.id,
               ).length;
+              const wide = wideFirst && index === 0;
               return (
-                <StaggerItem key={governorate.id}>
+                <StaggerItem key={governorate.id} className={wide ? "sm:col-span-2" : undefined}>
                   <Link
                     to={`/governorates/${governorate.slug}`}
                     className="group block h-full overflow-hidden rounded-3xl border border-brand-border bg-brand-surface shadow-sm transition hover:border-brand-amber hover:shadow-lg"
                   >
-                    <div className="relative h-40 overflow-hidden bg-gradient-to-br from-brand-olive to-[#2d3a2c]">
+                    <div className={`relative overflow-hidden bg-gradient-to-br from-brand-olive to-[#2d3a2c] ${wide ? "h-40 sm:h-56" : "h-40"}`}>
                       {governorate.coverImageUrl ? (
                         <img
                           src={governorate.coverImageUrl}

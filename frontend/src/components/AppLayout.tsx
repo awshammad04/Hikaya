@@ -140,11 +140,11 @@ export const AppLayout: React.FC = () => {
   }, [placesOpen, menuOpen]);
 
   const navLinkClass = (active: boolean) =>
-    `relative inline-flex h-10 items-center gap-1.5 rounded-full px-3 text-sm font-bold transition-colors ${
+    `relative inline-flex h-10 items-center gap-1.5 whitespace-nowrap rounded-full px-3 text-sm font-bold transition-colors ${
       active ? "bg-brand-olive/10 text-brand-olive" : "text-brand-muted hover:bg-brand-olive/5 hover:text-brand-olive"
     }`;
   const storyButton =
-    "h-10 items-center gap-2 rounded-full bg-brand-olive px-4 text-sm font-bold text-white transition-colors hover:bg-brand-olive-deep";
+    "h-10 shrink-0 items-center gap-2 whitespace-nowrap rounded-full bg-brand-olive px-4 text-sm font-bold text-white transition-colors hover:bg-brand-olive-deep";
   const mobileStoryButton =
     "mt-4 flex w-full min-h-12 items-center justify-center gap-2 rounded-2xl bg-brand-olive text-base font-bold text-white sm:hidden";
   const iconButton =
@@ -166,8 +166,8 @@ export const AppLayout: React.FC = () => {
               <source media="(max-width: 520px)" srcSet="/logo-icon.png" />
               <img src="/logo-horizontal.png" alt="" className="h-11 w-auto max-w-[130px] rounded-lg object-contain" />
             </picture>
-            <span className="hidden xl:block h-8 w-px shrink-0 bg-brand-border-light" aria-hidden="true" />
-            <span className="hidden xl:block max-w-[12rem] text-xs leading-snug text-brand-muted">
+            <span className="hidden 2xl:block h-8 w-px shrink-0 bg-brand-border-light" aria-hidden="true" />
+            <span className="hidden 2xl:block max-w-[12rem] text-xs leading-snug text-brand-muted">
               {isJerusalem
                 ? isArabic ? "المرشد الرقمي الذكي للقدس" : "The intelligent guide to Jerusalem"
                 : isArabic ? "المرشد الرقمي للتراث الفلسطيني" : "The digital guide to Palestinian heritage"}
@@ -331,15 +331,52 @@ export const AppLayout: React.FC = () => {
           </Suspense>
         </ErrorBoundary>
       </main>
-      <footer className="print:hidden mt-8 border-t border-brand-border-light py-8">
-        <div className="max-w-7xl mx-auto flex flex-col items-center justify-between gap-4 px-4 text-sm text-brand-muted sm:flex-row sm:px-6 lg:px-8">
-          <p>
+      <footer className="print:hidden mt-8 border-t border-brand-border-light bg-brand-surface/50">
+        <div className="max-w-7xl mx-auto grid gap-8 px-4 py-10 sm:grid-cols-2 sm:px-6 lg:grid-cols-[minmax(0,1.5fr)_1fr_1fr] lg:px-8">
+          <div className="space-y-3 sm:col-span-2 lg:col-span-1">
+            <p className="flex items-center gap-2 font-serif text-xl font-black text-brand-olive">
+              <img src="/logo-icon.png" alt="" className="h-9 w-9 rounded-lg object-contain mix-blend-multiply dark:mix-blend-normal dark:bg-[#f5f5f0] dark:p-0.5" />
+              {isArabic ? "حكاية" : "Hikaya"}
+            </p>
+            <p className="max-w-sm text-sm leading-6 text-brand-muted">
+              {isArabic
+                ? "دليل شخصي وأرشيف حي للأماكن الفلسطينية: حكايات مراجَعة من مصادر موثّقة، ودليل يصرّح حين تنقص المعلومة بدل أن يخمّن."
+                : "A personal guide and living archive of Palestinian places: reviewed stories from cited sources, and a guide that says when the record is incomplete instead of guessing."}
+            </p>
+          </div>
+          <nav aria-label={isArabic ? "المحافظات" : "Governorates"}>
+            <p className="mb-3 text-xs font-bold text-brand-olive">{isArabic ? "المحافظات" : "Governorates"}</p>
+            <ul className="grid grid-cols-2 gap-x-4 gap-y-2 text-sm">
+              {governorates.map((item) => (
+                <li key={item.id}>
+                  <Link to={`/governorates/${item.id}`} className="text-brand-muted transition-colors hover:text-brand-olive">
+                    {isArabic ? item.arabicName : item.name}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </nav>
+          <nav aria-label={isArabic ? "روابط التذييل" : "Footer"}>
+            <p className="mb-3 text-xs font-bold text-brand-olive">{isArabic ? "استكشف وشارك" : "Explore and take part"}</p>
+            <ul className="space-y-2 text-sm">
+              {[
+                { to: "/create-story", ar: "أنشئ حكايتك", en: "Create your story" },
+                { to: "/palestine-map", ar: "خريطة فلسطين", en: "Palestine map" },
+                { to: "/me", ar: "جواز سفري", en: "My passport" },
+                { to: "/contribute", ar: "شارك حكاية", en: "Contribute" },
+                { to: "/about", ar: "عن المنصة", en: "About" },
+              ].map(({ to, ar, en }) => (
+                <li key={to}>
+                  <Link to={to} className="text-brand-muted transition-colors hover:text-brand-olive">{isArabic ? ar : en}</Link>
+                </li>
+              ))}
+            </ul>
+          </nav>
+        </div>
+        <div className="border-t border-brand-border-light">
+          <p className="max-w-7xl mx-auto px-4 py-5 text-xs text-brand-muted sm:px-6 lg:px-8">
             © 2026 {isArabic ? "حكاية" : "Hikaya"} · {isArabic ? "المرشد الرقمي للتراث الفلسطيني" : "The digital guide to Palestinian heritage"}
           </p>
-          <nav aria-label={isArabic ? "روابط التذييل" : "Footer"} className="flex gap-5 font-bold">
-            <Link to="/contribute" className="hover:text-brand-olive">{isArabic ? "شارك حكاية" : "Contribute"}</Link>
-            <Link to="/about" className="hover:text-brand-olive">{isArabic ? "عن المنصة" : "About"}</Link>
-          </nav>
         </div>
       </footer>
       <MyJerusalemStoryModal open={storyOpen} onClose={() => setStoryOpen(false)} />

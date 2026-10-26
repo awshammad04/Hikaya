@@ -1,18 +1,17 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { Link } from "react-router-dom";
 import { motion, useReducedMotion } from "motion/react";
 import { PenLine, Route, Sparkles, Waypoints } from "lucide-react";
 import { useLocations } from "../hooks/useLocations";
 import { useVisitedLocations } from "../hooks/useVisitedLocations";
 import { LocationCard } from "../components/LocationCard";
-import { FeaturedStoryCard } from "../components/FeaturedStoryCard";
+import { StoryOfTheDay } from "../components/FeaturedStoryCard";
 import { ProgressTracker } from "../components/ProgressTracker";
 import { WalkingTour } from "../components/WalkingTour";
 import { DataSourceBanner } from "../components/DataSourceBanner";
-import { LoadingRegion, SkeletonCardGrid, SkeletonLine } from "../components/Skeleton";
+import { LoadingRegion, SkeletonCardGrid } from "../components/Skeleton";
 import { PageTransition, Reveal, StaggerItem, StaggerList } from "../components/motion";
-import { getFeaturedStory, getRandomStory } from "../services/api";
-import { FeaturedStory } from "../types";
+import { useFeaturedStory } from "../hooks/useFeaturedStory";
 import { useInterfaceLanguage } from "../context/LanguageContext";
 import { JerusalemPulse } from "../components/JerusalemPulse";
 
@@ -22,44 +21,13 @@ export const HomePage: React.FC = () => {
   const { locations, loading, source, reason } = useLocations();
   const visitedState = useVisitedLocations(locations.length);
 
-  const [featured, setFeatured] = useState<FeaturedStory | null>(null);
-  const [featuredLoading, setFeaturedLoading] = useState(true);
-  const [shuffling, setShuffling] = useState(false);
-  const [featuredError, setFeaturedError] = useState<string | undefined>();
-
-  useEffect(() => {
-    let active = true;
-    getFeaturedStory()
-      .then((result) => {
-        if (active) setFeatured(result.data);
-      })
-      .catch((error) => { if (active) setFeaturedError(error instanceof Error ? error.message : "Story service unavailable."); })
-      .finally(() => {
-        if (active) setFeaturedLoading(false);
-      });
-    return () => {
-      active = false;
-    };
-  }, []);
-
-  const shuffle = async () => {
-    setShuffling(true);
-    try {
-      const result = await getRandomStory(featured?.story.id);
-      setFeatured(result.data);
-      setFeaturedError(undefined);
-    } catch (error) {
-      setFeaturedError(error instanceof Error ? error.message : "Story service unavailable.");
-    } finally {
-      setShuffling(false);
-    }
-  };
+  const story = useFeaturedStory();
 
   return (
     <PageTransition>
       <div className="space-y-14">
         <Link to="/" className="inline-block text-sm text-brand-muted hover:text-brand-olive">{isArabic ? "فلسطين / القدس" : "Palestine / Jerusalem"}</Link>
-        <DataSourceBanner source={source} reason={reason || featuredError} />
+        <DataSourceBanner source={source} reason={reason || story.error} />
 
         {/* --- Hero -------------------------------------------------------- */}
         <JerusalemPulse>
@@ -118,31 +86,7 @@ export const HomePage: React.FC = () => {
         </JerusalemPulse>
 
         {/* --- Story of the day -------------------------------------------- */}
-        <Reveal className="space-y-4">
-          <h2 className="font-serif font-black text-2xl text-brand-olive">
-            {isArabic ? "حكاية اليوم" : "Story of the day"}
-          </h2>
-          {featuredLoading ? (
-            <div className="bg-brand-surface rounded-3xl border border-brand-border overflow-hidden grid grid-cols-1 md:grid-cols-5">
-              <SkeletonLine className="h-48 md:col-span-2 rounded-none" />
-              <div className="md:col-span-3 p-6 space-y-3">
-                <SkeletonLine className="h-3 w-28" />
-                <SkeletonLine className="h-6 w-3/4" />
-                <SkeletonLine className="h-3 w-full" />
-                <SkeletonLine className="h-3 w-5/6" />
-              </div>
-              <LoadingRegion label={isArabic ? "جارٍ تحميل حكاية اليوم" : "Loading the story of the day"} />
-            </div>
-          ) : (
-            featured && (
-              <FeaturedStoryCard
-                featured={featured}
-                onShuffle={() => void shuffle()}
-                shuffling={shuffling}
-              />
-            )
-          )}
-        </Reveal>
+        <StoryOfTheDay story={story} />
 
         {/* --- Locations --------------------------------------------------- */}
         <Reveal className="space-y-5">

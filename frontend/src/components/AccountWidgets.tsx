@@ -22,7 +22,7 @@ const compactChip =
 
 /**
  * Header entry point: the guest passport, or the signed-in visitor. A round
- * button until extra-wide screens, where the header has room for names.
+ * button until the widest screens, where the header has room for names.
  */
 export const AccountChip: React.FC = () => {
   const { isArabic } = useInterfaceLanguage();
@@ -31,19 +31,19 @@ export const AccountChip: React.FC = () => {
   if (status === "signed-in" && user) {
     const firstName = user.fullName.split(/\s+/)[0];
     return (
-      <Link to="/me" className="inline-flex h-10 shrink-0 items-center gap-2 rounded-full border border-brand-border bg-brand-surface p-1 xl:pe-3 text-xs font-bold text-brand-olive whitespace-nowrap transition-colors hover:border-brand-olive" aria-label={isArabic ? "جواز سفري" : "My passport"}>
+      <Link to="/me" className="inline-flex h-10 shrink-0 items-center gap-2 rounded-full border border-brand-border bg-brand-surface p-1 2xl:pe-3 text-xs font-bold text-brand-olive whitespace-nowrap transition-colors hover:border-brand-olive" aria-label={isArabic ? "جواز سفري" : "My passport"}>
         <span className="grid h-8 w-8 place-items-center rounded-full bg-brand-olive text-sm text-white">{firstName.charAt(0).toUpperCase()}</span>
-        <span className="hidden xl:inline">{firstName}</span>
+        <span className="hidden 2xl:inline">{firstName}</span>
       </Link>
     );
   }
   const guestLabel = isArabic ? `${guest.ar} · جواز سفر الضيف` : `${guest.en} · guest passport`;
   return (
     <>
-      <Link to="/me" className={`${compactChip} xl:hidden`} aria-label={guestLabel} title={guestLabel}>
+      <Link to="/me" className={`${compactChip} 2xl:hidden`} aria-label={guestLabel} title={guestLabel}>
         <UserRound className="w-4 h-4" />
       </Link>
-      <span className="hidden xl:inline-flex h-10 shrink-0 items-center rounded-full border border-brand-border bg-brand-surface p-1 text-xs font-bold whitespace-nowrap">
+      <span className="hidden 2xl:inline-flex h-10 shrink-0 items-center rounded-full border border-brand-border bg-brand-surface p-1 text-xs font-bold whitespace-nowrap">
         <Link to="/me" className="ps-3 pe-2 text-brand-muted hover:text-brand-olive" title={guestLabel}>
           {isArabic ? guest.ar : guest.en}
         </Link>

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { NotFoundPage } from "./NotFoundPage";
-import { BookHeart, MapPin, Route } from "lucide-react";
+import { BookHeart, ChevronDown, Info, MapPin, Route } from "lucide-react";
 import { useInterfaceLanguage } from "../context/LanguageContext";
 import { governorateById, catalog } from "../data/heritage";
 import { useLocations } from "../hooks/useLocations";
@@ -30,6 +30,10 @@ export const GovernoratePage: React.FC = () => {
     <RegionalExperience key={governorateId} governorateId={governorateId} />
   );
 };
+
+/** Two or four places fill two columns; three columns would leave a hole. */
+const placeColumns = (count: number) =>
+  count % 3 === 0 || count > 4 ? "lg:grid-cols-3" : "";
 
 const RegionalExperience: React.FC<{ governorateId: string }> = ({
   governorateId,
@@ -89,9 +93,14 @@ const RegionalExperience: React.FC<{ governorateId: string }> = ({
             </div>
           </div>
         </section>
-        <p className="rounded-2xl border border-brand-amber/20 bg-brand-amber/5 p-4 text-sm leading-6 text-brand-muted">
-          {isArabic ? catalog.gaps.ar : catalog.gaps.en}
-        </p>
+        <details className="group rounded-2xl border border-brand-border-light bg-brand-surface px-4 py-3 text-sm text-brand-muted">
+          <summary className="flex cursor-pointer list-none items-center gap-2 font-bold text-brand-olive [&::-webkit-details-marker]:hidden">
+            <Info className="h-4 w-4 shrink-0 text-brand-amber" />
+            {isArabic ? "عن هذا السجل وحدوده" : "About this record and its limits"}
+            <ChevronDown className="ms-auto h-4 w-4 transition-transform group-open:rotate-180" />
+          </summary>
+          <p className="mt-2 leading-6">{isArabic ? catalog.gaps.ar : catalog.gaps.en}</p>
+        </details>
         <Reveal className="space-y-5">
           <h2 className="font-serif text-2xl font-black text-brand-olive">
             {isArabic ? `أماكن ${name}` : `Places in ${name}`}
@@ -99,7 +108,7 @@ const RegionalExperience: React.FC<{ governorateId: string }> = ({
           {loading ? (
             <SkeletonCardGrid />
           ) : locations.length ? (
-            <StaggerList className="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
+            <StaggerList className={`grid gap-5 md:grid-cols-2 ${placeColumns(locations.length)}`}>
               {locations.map((location) => (
                 <StaggerItem key={location.id}>
                   <LocationCard
