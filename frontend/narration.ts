@@ -236,7 +236,8 @@ async function synthesise(text: string, voice: string, onAudio: (pcm: Buffer, sa
   return withGemini(async (ai, mode) => {
     const request = {
       model: TTS_MODEL,
-      contents: [{ parts: [{ text: `${STYLE_DIRECTION}\n${text}` }] }],
+      // Vertex rejects contents without a role; the Developer API defaults it.
+      contents: [{ role: "user", parts: [{ text: `${STYLE_DIRECTION}\n${text}` }] }],
       config: {
         responseModalities: ["AUDIO"],
         speechConfig: { voiceConfig: { prebuiltVoiceConfig: { voiceName: voice } } },

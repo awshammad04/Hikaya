@@ -29,7 +29,7 @@ import urllib.error
 import urllib.request
 from typing import Dict, List, Optional
 
-DEFAULT_MODELS = {"gemini": "gemini-3.5-flash", "anthropic": "claude-sonnet-5"}
+DEFAULT_MODELS = {"gemini": "gemini-3.5-flash", "anthropic": "claude-sonnet-5-5"}
 # Tried when the main Gemini model is overloaded or out of quota for the day.
 DEFAULT_GEMINI_FALLBACK = "gemini-3.5-flash-lite"
 DEFAULT_MAX_TOKENS = 2800
@@ -252,10 +252,10 @@ def _complete_anthropic(system_prompt, user_prompt, max_tokens, temperature):
     client = anthropic.Anthropic(timeout=120.0, max_retries=0)
     _last.model = model_name()
     try:
+        # No temperature: current Claude models reject it as deprecated.
         message = client.messages.create(
             model=model_name(),
             max_tokens=max_tokens or DEFAULT_MAX_TOKENS,
-            temperature=temperature,
             system=system_prompt,
             messages=[{"role": "user", "content": user_prompt}],
         )
