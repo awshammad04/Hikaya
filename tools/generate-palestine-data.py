@@ -91,15 +91,20 @@ def outputs():
         gap_note = location.get('gaps', data['gaps']['en'])
         sql.append(insert('stories',['id','location_id','title','summary','simplified_story','audience','language','tone','source','is_ai_generated','status','uncertainty_notes'],
             [quote('record-'+id),quote(id),quote(location['name']),quote(location['description']),quote(location['description']+' '+location['facts']),'\'general\'','\'en\'','\'neutral\'',quote(source),'FALSE',quote('published' if approved else 'pending_review'),array([gap_note])]))
+        # The record story and timeline are the catalogue's own rows, so rerunning the seed brings them up to date.
+        sql.append(f"UPDATE stories SET summary = {quote(location['description'])}, simplified_story = {quote(location['description']+' '+location['facts'])} WHERE id = {quote('record-'+id)};")
         for index, event in enumerate(location['timeline']):
             sql.append(insert('timeline_events',['id','location_id','period_label','description','sort_year','sort_order','is_tradition','source_file'],
                 [quote(f'palestine-timeline-{id}-{index}'),quote(id),quote(event['label']),quote(event['description']),str(event['year']),str(index),'FALSE',quote(source)]))
+            sql.append(f"UPDATE timeline_events SET period_label = {quote(event['label'])}, description = {quote(event['description'])}, sort_year = {event['year']}, sort_order = {index} WHERE id = {quote(f'palestine-timeline-{id}-{index}')};")
+        sql.append(f"DELETE FROM timeline_events WHERE location_id = {quote(id)} AND id LIKE {quote(f'palestine-timeline-{id}-%')} AND sort_order >= {len(location['timeline'])};")
         for order, item in enumerate(location.get('media', [])):
             sql.append(insert('media', ['id','location_id','type','url','thumb_url','width','height','subject','subject_ar','description','description_ar','era','pair_role','credit','license','license_url','captured_at','source_url','sort_order'],
                 [quote(item['id']),quote(id),"'image'",quote(item['url']),quote(item['thumbUrl']),str(item['width']),str(item['height']),quote(item['subject']),quote(item['arabicSubject']),quote(item['description']),quote(item['arabicDescription']),quote(item['era']),quote(item.get('pairRole')),quote(item['credit']),quote(item['license']),quote(item['licenseUrl']),quote(item.get('capturedAt')),quote(item['sourceUrl']),str(order)]))
         quiz = location['quiz']
         sql.append(insert('quiz_questions',['id','location_id','question','options','answer_index','explanation','source_note','sort_order'],
             [quote('palestine-quiz-'+id),quote(id),quote(quiz['question']),array(quiz['options']),str(quiz['answerIndex']),quote(location['description']+' '+location['facts']+' '+location['traditions']),quote(location['sources'][0]['url']),'0']))
+        sql.append(f"UPDATE quiz_questions SET explanation = {quote(location['description']+' '+location['facts']+' '+location['traditions'])} WHERE id = {quote('palestine-quiz-'+id)};")
         summary = f'---\nlocation_id: {id}\nname: {location["name"]}\narabic_name: {location["arabicName"]}\ngovernorate_id: {location["governorateId"]}\nsource_file: content/palestine/catalog.json\nreviewed: {str(approved).lower()}\nreview_status: {location["reviewStatus"]}\n---\n\n'
         summary += f'## 1. Short overview\n{location["description"]}\n\n## 2. Key historical timeline\n' + ('| Period | Event |\n| --- | --- |\n'+'\n'.join('| '+event['label']+' | '+event['description']+' |' for event in location['timeline']) if location['timeline'] else '')
         importance = location.get('importance', '')

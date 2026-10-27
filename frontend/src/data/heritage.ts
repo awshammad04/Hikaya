@@ -117,7 +117,11 @@ export function localizeNationalTimeline(
   const record = nationalRecord(event.locationId);
   const data = record?.timeline[event.sortOrder];
   return arabic && data
-    ? { ...event, description: data.arabicDescription }
+    ? {
+        ...event,
+        periodLabel: ("arabicLabel" in data && data.arabicLabel) || event.periodLabel,
+        description: data.arabicDescription,
+      }
     : event;
 }
 export function localizeNationalQuiz(quiz: ApiQuizQuestion, arabic: boolean) {

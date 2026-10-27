@@ -12,10 +12,13 @@ review_status: source_checked
 A church in Gaza's historic centre with Byzantine origins and later architectural layers.
 
 ## 2. Key historical timeline
-
+| Period | Event |
+| --- | --- |
+| Early 5th century AD | The church is established. |
+| 2026 | Included in the historic-centre Tentative List submission, not inscription. |
 
 ## 5. Important facts
-- The historic-centre nomination includes the church alongside the Omari Mosque.
+- The Church of Saint Porphyrius was established in the early 5th century AD, as Christianity reshaped Gaza's sacred landscape. Its substantial sandstone walls, pointed arches, painted wooden iconostasis and adjoining monastic quarters show a Byzantine origin reshaped in the Crusader and later periods. The nomination counts it among the oldest continuously active churches in Palestine, a Greek Orthodox church serving the city's Christian community near the Omari Mosque. The historic-centre nomination that includes it was submitted in 2026; it is a Tentative List entry, not World Heritage inscription.
 
 ## 6. Religious traditions
 

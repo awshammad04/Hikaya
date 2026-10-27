@@ -153,8 +153,8 @@
       "arabicCity": "بيرزيت",
       "description": "A cultural institution in Birzeit beside Birzeit University, documenting Palestinian history and culture.",
       "arabicDescription": "مؤسسة ثقافية في بيرزيت بجوار جامعة بيرزيت توثّق التاريخ والثقافة الفلسطينية.",
-      "facts": "The museum's first building phase was completed in 2016. Its terraced design draws on the surrounding landscape.",
-      "arabicFacts": "اكتملت المرحلة الأولى من مبنى المتحف عام 2016. يستلهم تصميمه المدرّج المشهد المحيط.",
+      "facts": "The idea began in 1997, when members of the Taawon-Welfare Association set out to create a museum dedicated to the memory of the Nakba; it later grew into an institution celebrating Palestinian culture more broadly. It was built in Birzeit rather than Jerusalem because of the occupation's restrictions on Palestinian building in the city and on movement to it, on a 40,000 m² plot offered by Birzeit University seven kilometres north of Ramallah. The Dublin firm Heneghan Peng won the 2011 international design competition with a building set into terraces that follow the hillside, and the first phase, 3,500 m², was completed in 2016. The building holds a LEED Gold certificate, and the museum launched without a collection, relying on touring exhibitions and digital platforms.",
+      "arabicFacts": "بدأت الفكرة عام 1997 حين أراد أعضاء في مؤسسة التعاون إنشاء متحف لذاكرة النكبة، ثم اتّسعت لتصبح مؤسسة تحتفي بالثقافة الفلسطينية كلها. بُني المتحف في بيرزيت لا في القدس بسبب قيود الاحتلال على البناء الفلسطيني في المدينة وعلى التنقّل إليها، على أرض مساحتها 40 ألف متر مربع قدّمتها جامعة بيرزيت، على بعد سبعة كيلومترات شمال رام الله. فاز مكتب «هينيغان بنغ» من دبلن بمسابقة التصميم الدولية عام 2011 بمبنى يندمج في مصاطب تتبع انحدار التلة، واكتملت المرحلة الأولى بمساحة 3,500 متر مربع عام 2016. يحمل المبنى شهادة LEED الذهبية للأبنية الخضراء، وانطلق المتحف من دون مجموعة مقتنيات، معتمداً على المعارض المتنقلة والمنصات الرقمية.",
       "categories": [
         "متحف",
         "تراث ثقافي"
@@ -183,6 +183,18 @@
         }
       ],
       "timeline": [
+        {
+          "year": 1997,
+          "label": "1997",
+          "description": "Members of the Taawon-Welfare Association propose a museum dedicated to the memory of the Nakba.",
+          "arabicDescription": "أعضاء في مؤسسة التعاون يقترحون متحفاً لذاكرة النكبة."
+        },
+        {
+          "year": 2011,
+          "label": "2011",
+          "description": "Heneghan Peng wins the international design competition.",
+          "arabicDescription": "مكتب «هينيغان بنغ» يفوز بمسابقة التصميم الدولية."
+        },
         {
           "year": 2016,
           "label": "2016",
@@ -452,6 +464,7 @@
         {
           "year": 1700,
           "label": "18th–19th centuries",
+          "arabicLabel": "القرنان الثامن عشر والتاسع عشر",
           "description": "The central highlands are divided into twenty-four sheikhdoms ruled from the throne villages.",
           "arabicDescription": "تقسيم المرتفعات الوسطى إلى أربع وعشرين مشيخة تُحكم من قرى الكراسي."
         },
@@ -593,36 +606,42 @@
         {
           "year": 72,
           "label": "72 AD",
+          "arabicLabel": "72م",
           "description": "The Roman city of Flavia Neapolis, “the new city”, is founded under Vespasian.",
           "arabicDescription": "تأسيس المدينة الرومانية فلافيا نيابوليس، «المدينة الجديدة»، في عهد فسباسيان."
         },
         {
           "year": 636,
           "label": "636 AD",
+          "arabicLabel": "636م",
           "description": "Under Muslim rule, Nablus becomes part of the district of Jund Filastin, with its capital at Ramla.",
           "arabicDescription": "تحت الحكم الإسلامي تصبح نابلس جزءاً من جند فلسطين وعاصمته الرملة."
         },
         {
           "year": 1099,
           "label": "1099 AD",
+          "arabicLabel": "1099م",
           "description": "Crusader control; the fortress and several churches are rebuilt on the eastern side.",
           "arabicDescription": "السيطرة الصليبية؛ إعادة بناء القلعة وعدة كنائس في الجهة الشرقية."
         },
         {
           "year": 1187,
           "label": "1187 AD",
+          "arabicLabel": "1187م",
           "description": "The Ayyubids regain the city; churches are restored and converted into mosques.",
           "arabicDescription": "الأيوبيون يستعيدون المدينة وتُرمَّم الكنائس وتُحوَّل إلى مساجد."
         },
         {
           "year": 1198,
           "label": "1198 AD",
+          "arabicLabel": "1198م",
           "description": "A devastating earthquake is followed by reconstruction under the Ayyubids and Mamluks.",
           "arabicDescription": "زلزال مدمّر تعقبه إعادة إعمار في عهدَي الأيوبيين والمماليك."
         },
         {
           "year": 1516,
           "label": "1516 AD",
+          "arabicLabel": "1516م",
           "description": "Ottoman rule begins a period of major expansion; the 18th century becomes the city’s golden age.",
           "arabicDescription": "بداية الحكم العثماني وفترة توسع كبير، ويصبح القرن الثامن عشر العصر الذهبي للمدينة."
         },
@@ -829,36 +848,42 @@
         {
           "year": -850,
           "label": "9th century BCE",
+          "arabicLabel": "القرن التاسع قبل الميلاد",
           "description": "Occupation begins; in the Iron Age the site is a prominent regional political centre.",
           "arabicDescription": "بداية الاستيطان؛ وفي العصر الحديدي يصبح الموقع مركزاً سياسياً إقليمياً بارزاً."
         },
         {
           "year": -300,
           "label": "Hellenistic period",
+          "arabicLabel": "العصر الهلنستي",
           "description": "The city becomes a fortified stronghold.",
           "arabicDescription": "المدينة تصبح معقلاً محصّناً."
         },
         {
           "year": -25,
           "label": "Roman period",
+          "arabicLabel": "العصر الروماني",
           "description": "Herod renames the city Sebaste.",
           "arabicDescription": "هيرودس يعيد تسمية المدينة «سيباستي»."
         },
         {
           "year": 200,
           "label": "Roman period (Septimius Severus)",
+          "arabicLabel": "العصر الروماني (سبتيموس سيفيروس)",
           "description": "Sebaste receives the status of a Roman colony.",
           "arabicDescription": "سيباستي تنال صفة المستعمرة الرومانية."
         },
         {
           "year": 400,
           "label": "Byzantine period",
+          "arabicLabel": "العصر البيزنطي",
           "description": "The city declines in importance but becomes the seat of a bishopric.",
           "arabicDescription": "تتراجع أهمية المدينة لكنها تصبح مقراً لأسقفية."
         },
         {
           "year": 1100,
           "label": "Crusader era",
+          "arabicLabel": "العصر الصليبي",
           "description": "Notable Crusader-period structures are added.",
           "arabicDescription": "إضافة منشآت بارزة في الفترة الصليبية."
         },
@@ -1030,36 +1055,42 @@
         {
           "year": -128,
           "label": "128 BC",
+          "arabicLabel": "128 ق.م",
           "description": "The Hellenistic Samaritan town on the summit is probably destroyed by John Hyrcanus.",
           "arabicDescription": "تدمير البلدة السامرية الهلنستية على القمة، على الأرجح على يد يوحنا هيركانوس."
         },
         {
           "year": 150,
           "label": "2nd century AD",
+          "arabicLabel": "القرن الثاني الميلادي",
           "description": "A temple to Zeus is built on Tell er-Ras, overlooking Flavia Neapolis.",
           "arabicDescription": "بناء معبد لزيوس على تل الراس المطلّ على فلافيا نيابوليس."
         },
         {
           "year": 484,
           "label": "484 AD",
+          "arabicLabel": "484م",
           "description": "An octagonal church dedicated to Mary Theotokos is built on the main summit.",
           "arabicDescription": "بناء كنيسة مثمّنة مكرّسة لمريم والدة الإله على القمة الرئيسية."
         },
         {
           "year": 529,
           "label": "529 AD",
+          "arabicLabel": "529م",
           "description": "After the Samaritan revolt the church is turned into a fortress, later strengthened by Justinian.",
           "arabicDescription": "بعد الثورة السامرية تتحول الكنيسة إلى حصن يقوّيه جستنيان لاحقاً."
         },
         {
           "year": 750,
           "label": "8th–9th centuries",
+          "arabicLabel": "القرنان الثامن والتاسع الميلاديان",
           "description": "The church is abandoned and the fortress dismantled.",
           "arabicDescription": "هجر الكنيسة ثم تفكيك الحصن."
         },
         {
           "year": 1550,
           "label": "16th century",
+          "arabicLabel": "القرن السادس عشر",
           "description": "The shrine of Sheikh Ghanim is built on a corner of the ruined church.",
           "arabicDescription": "بناء مقام الشيخ غانم على زاوية الكنيسة المهدّمة."
         },
@@ -1246,24 +1277,28 @@
         {
           "year": -10500,
           "label": "c. 10,500 BC",
+          "arabicLabel": "نحو 10,500 ق.م",
           "description": "The earliest archaeological deposits of human activity on the tell.",
           "arabicDescription": "أقدم الرواسب الأثرية للنشاط البشري في التل."
         },
         {
           "year": -8500,
           "label": "9th–8th millennium BC",
+          "arabicLabel": "الألفان التاسع والثامن ق.م",
           "description": "A sizeable permanent settlement with a wall, a ditch and a tower.",
           "arabicDescription": "مستوطنة دائمة كبيرة لها سور وخندق وبرج."
         },
         {
           "year": -3000,
           "label": "Early Bronze Age",
+          "arabicLabel": "العصر البرونزي المبكر",
           "description": "Archaeological material shows early urban planning.",
           "arabicDescription": "مواد أثرية تكشف عن تخطيط حضري مبكر."
         },
         {
           "year": -1800,
           "label": "Middle Bronze Age",
+          "arabicLabel": "العصر البرونزي الوسيط",
           "description": "A large Canaanite city-state with innovative rampart fortifications.",
           "arabicDescription": "دولة-مدينة كنعانية كبيرة بتحصينات أسوار مبتكرة."
         },
@@ -1420,24 +1455,28 @@
         {
           "year": 724,
           "label": "724–743 AD",
+          "arabicLabel": "724–743م",
           "description": "Built in the Umayyad period, most likely by Caliph Hisham bin Abd al-Malik.",
           "arabicDescription": "البناء في العصر الأموي، على الأرجح بأمر الخليفة هشام بن عبد الملك."
         },
         {
           "year": 743,
           "label": "743–744 AD",
+          "arabicLabel": "743–744م",
           "description": "Decorated by Hisham’s heir, al-Walid II.",
           "arabicDescription": "الوليد الثاني، وليّ عهد هشام، يزخرف القصر."
         },
         {
           "year": 749,
           "label": "749 AD",
+          "arabicLabel": "749م",
           "description": "A severe earthquake destroys the complex.",
           "arabicDescription": "زلزال شديد يدمّر المجمّع."
         },
         {
           "year": 750,
           "label": "750–950 AD",
+          "arabicLabel": "750–950م",
           "description": "An elite residence with a small mosque, houses and stables is added in the Northern Area during the Abbasid period.",
           "arabicDescription": "إضافة مسكن للنخبة فيه مسجد صغير وبيوت وإسطبلات في المنطقة الشمالية خلال العصر العباسي."
         },
@@ -1618,6 +1657,7 @@
         {
           "year": 500,
           "label": "6th century",
+          "arabicLabel": "القرن السادس الميلادي",
           "description": "A monastery is built over the cave associated with the Temptation.",
           "arabicDescription": "بناء دير فوق المغارة المرتبطة بالتجربة."
         },
@@ -1781,18 +1821,21 @@
         {
           "year": 339,
           "label": "339 AD",
+          "arabicLabel": "339م",
           "description": "The first church on the site, of the time of St Helena, is completed above the grotto.",
           "arabicDescription": "اكتمال أول كنيسة في الموقع فوق المغارة، في زمن القديسة هيلانة."
         },
         {
           "year": 533,
           "label": "6th century (533 AD)",
+          "arabicLabel": "القرن السادس الميلادي (533م)",
           "description": "The church is rebuilt after a fire; this Justinian-era building is essentially the church standing today.",
           "arabicDescription": "إعادة بناء الكنيسة بعد حريق؛ وهذا البناء من عهد جستنيان هو في جوهره الكنيسة القائمة اليوم."
         },
         {
           "year": 1100,
           "label": "12th century",
+          "arabicLabel": "القرن الثاني عشر",
           "description": "Crusader-period additions, including the paintings on the columns, mark a new upsurge in pilgrimage.",
           "arabicDescription": "إضافات من الفترة الصليبية، منها الرسوم على الأعمدة، ترافق موجة جديدة من الحج."
         },
@@ -2109,30 +2152,35 @@
         {
           "year": 483,
           "label": "483 AD",
+          "arabicLabel": "483م",
           "description": "Sabbas the Sanctified founds the monastery.",
           "arabicDescription": "القديس سابا المتقدّس يؤسس الدير."
         },
         {
           "year": 491,
           "label": "491 AD",
+          "arabicLabel": "491م",
           "description": "The Church of Theoktistos, later dedicated to St Nicholas, is built.",
           "arabicDescription": "بناء كنيسة ثيوكتيستوس التي كُرّست لاحقاً للقديس نيقولاوس."
         },
         {
           "year": 502,
           "label": "502 AD",
+          "arabicLabel": "502م",
           "description": "The main Church of the Theotokos is built during St Sabbas’s lifetime.",
           "arabicDescription": "بناء الكنيسة الرئيسية، كنيسة والدة الإله، في حياة القديس سابا."
         },
         {
           "year": 700,
           "label": "8th century",
+          "arabicLabel": "القرن الثامن الميلادي",
           "description": "St John of Damascus spends his later life at the monastery.",
           "arabicDescription": "القديس يوحنا الدمشقي يقضي أواخر حياته في الدير."
         },
         {
           "year": 850,
           "label": "9th–10th centuries",
+          "arabicLabel": "القرنان التاسع والعاشر الميلاديان",
           "description": "The monastery’s golden age as a centre for theologians, musicians, poets and historians.",
           "arabicDescription": "العصر الذهبي للدير مركزاً للاهوتيين والموسيقيين والشعراء والمؤرخين."
         },
@@ -2272,8 +2320,8 @@
       "coordinateStatus": "unesco_property_reference",
       "description": "A historic urban ensemble shaped by Mamluk and Ottoman building traditions.",
       "arabicDescription": "نسيج عمراني تاريخي شكّلته تقاليد البناء المملوكية والعثمانية.",
-      "facts": "UNESCO inscribed the old town in 2017. Its courtyard housing forms part of the historic urban fabric.",
-      "arabicFacts": "أدرجت اليونسكو البلدة القديمة عام 2017. وتشكّل بيوت الأحواش جزءاً من نسيجها التاريخي.",
+      "facts": "The old town spread over three hills and into the valley around the Ibrahimi Mosque, its focal point since the town moved down from Tell Rumeida after the Roman and Byzantine periods. Local limestone shaped its building in the Mamluk period (1250–1517), and it grew at a crossroads of caravan routes between southern Palestine, Sinai, eastern Jordan and the north of the Arabian Peninsula. Its houses cluster around small courtyards in the hosh system, and continuous “rampart houses” on its edges defended it in place of a town wall. Restoration with traditional materials since the mid-1990s has brought inhabitants back. UNESCO inscribed the old town in 2017 and placed it on the List of World Heritage in Danger the same year.",
+      "arabicFacts": "امتدّت البلدة القديمة على ثلاثة تلال وفي الوادي المحيط بالحرم الإبراهيمي، الذي صار مركزها بعد أن انتقلت المدينة من تل الرميدة عقب العصرين الروماني والبيزنطي. شكّل الحجر الجيري المحلي عمارتها في العصر المملوكي (1250–1517)، ونمت على ملتقى طرق القوافل بين جنوب فلسطين وسيناء وشرق الأردن وشمال الجزيرة العربية. تتجمّع بيوتها حول أحواش صغيرة، وكانت «البيوت السور» المتلاصقة على أطرافها خطّ دفاعها بدل الأسوار. ومنذ منتصف التسعينيات أعاد الترميم بالمواد والتقنيات التقليدية السكان إليها. أدرجتها اليونسكو على قائمة التراث العالمي عام 2017، وعلى قائمة التراث العالمي المعرّض للخطر في العام نفسه.",
       "categories": [
         "حارة تاريخية",
         "سوق تراثي"
@@ -2296,10 +2344,22 @@
       ],
       "timeline": [
         {
+          "year": 1250,
+          "label": "1250–1517",
+          "description": "Mamluk period: local limestone shapes the town's building and its quarters.",
+          "arabicDescription": "العصر المملوكي: الحجر الجيري المحلي يشكّل عمارة البلدة وحاراتها."
+        },
+        {
+          "year": 1517,
+          "label": "1517–1917",
+          "description": "Ottoman period: the town extends into surrounding areas and houses gain upper storeys.",
+          "arabicDescription": "العصر العثماني: البلدة تمتد إلى ما حولها وتُضاف إلى البيوت طوابق علوية."
+        },
+        {
           "year": 2017,
           "label": "2017",
-          "description": "Inscribed on the World Heritage List.",
-          "arabicDescription": "الإدراج على قائمة التراث العالمي."
+          "description": "Inscribed on the World Heritage List and on the List of World Heritage in Danger.",
+          "arabicDescription": "الإدراج على قائمة التراث العالمي وعلى قائمة التراث العالمي المعرّض للخطر."
         }
       ],
       "quiz": {
@@ -2420,10 +2480,10 @@
       "coordinateStatus": "tourism_portal_map_reference",
       "description": "A sacred architectural complex at the heart of Hebron's old town.",
       "arabicDescription": "مجمّع معماري ديني في قلب البلدة القديمة بالخليل.",
-      "facts": "The Hebron Rehabilitation Committee documents successive Byzantine, Islamic and Crusader architectural layers.",
-      "arabicFacts": "توثّق لجنة إعمار الخليل طبقات معمارية بيزنطية وإسلامية وصليبية متعاقبة.",
-      "traditions": "Religious tradition associates the site with Ibrahim / Abraham and his family; this is presented as belief, not archaeological proof.",
-      "arabicTraditions": "يربط التقليد الديني الموقع بإبراهيم وعائلته؛ ويُعرض ذلك بوصفه معتقداً لا إثباتاً أثرياً.",
+      "facts": "The monumental enclosure around the Cave of Machpelah (al-Ghar al-Sharif) was built in the 1st century AD, probably by Herod, and the site has stayed in religious use from the early Roman period to today. The Hebron Rehabilitation Committee documents successive Byzantine, Islamic and Crusader architectural layers. The town's main roads lead to the mosque, and in the Ayyubid and Mamluk periods Sufi lodges (zawaya) spread through the quarters around it. Nearby, the Takiyya of Ibrahim, a hospice already described in 9th-century accounts, still offers meals to the poor and to visitors.",
+      "arabicFacts": "بُني السور الضخم حول مغارة المكفيلة (الغار الشريف) في القرن الأول الميلادي، والأرجح أن هيرودس هو من بناه، وظلّ الموقع مستخدماً للعبادة منذ العصر الروماني المبكر حتى اليوم. وتوثّق لجنة إعمار الخليل طبقات معمارية بيزنطية وإسلامية وصليبية متعاقبة. تقود طرق البلدة الرئيسية إلى الحرم، وفي العصرين الأيوبي والمملوكي انتشرت زوايا الصوفية في الحارات المحيطة به. وعلى مقربة منه ما تزال التكية الإبراهيمية، التي تذكرها روايات من القرن التاسع الميلادي، تقدّم الطعام للفقراء والزوار.",
+      "traditions": "Religious tradition holds that the cave contains the tombs of Ibrahim / Abraham and the patriarchs and matriarchs of his family, and the site is venerated in Judaism, Christianity and Islam; this is presented as belief, not archaeological proof.",
+      "arabicTraditions": "يرى التقليد الديني أن المغارة تضمّ قبور إبراهيم وآباء سلالته وأمهاتها، ويُبجَّل الموقع في اليهودية والمسيحية والإسلام؛ ويُعرض ذلك بوصفه معتقداً لا إثباتاً أثرياً.",
       "categories": [
         "معلم ديني"
       ],
@@ -2443,6 +2503,13 @@
           "url": "https://www.hebronrc.ps/xindex.php/en/node/275"
         },
         {
+          "title": "Hebron / Al-Khalil Old Town",
+          "arabicTitle": "البلدة القديمة في الخليل",
+          "publisher": "UNESCO World Heritage Centre",
+          "arabicPublisher": "مركز التراث العالمي لليونسكو",
+          "url": "https://whc.unesco.org/en/list/1565/"
+        },
+        {
           "title": "Al-Haram Al-Ibrahimi — site page and map",
           "arabicTitle": "الحرم الإبراهيمي — صفحة الموقع وخريطته",
           "publisher": "Travel Palestine",
@@ -2450,7 +2517,35 @@
           "url": "https://www.travelpalestine.ps/en/Site/205/Al-Haram-Al-Ibrahimi"
         }
       ],
-      "timeline": [],
+      "timeline": [
+        {
+          "year": 1,
+          "label": "1st century AD",
+          "arabicLabel": "القرن الأول الميلادي",
+          "description": "A monumental enclosure is built around the cave, probably by Herod.",
+          "arabicDescription": "بناء سور ضخم حول المغارة، والأرجح أن هيرودس هو من بناه."
+        },
+        {
+          "year": 800,
+          "label": "9th century AD",
+          "arabicLabel": "القرن التاسع الميلادي",
+          "description": "Early accounts describe the Takiyya hospice offering meals to the poor and visitors.",
+          "arabicDescription": "روايات مبكرة تصف التكية الإبراهيمية وهي تقدّم الطعام للفقراء والزوار."
+        },
+        {
+          "year": 1187,
+          "label": "Ayyubid and Mamluk periods",
+          "arabicLabel": "العصران الأيوبي والمملوكي",
+          "description": "Sufi lodges (zawaya) spread through the quarters around the sanctuary.",
+          "arabicDescription": "انتشار زوايا الصوفية في الحارات المحيطة بالحرم."
+        },
+        {
+          "year": 2017,
+          "label": "2017",
+          "description": "Inscribed on the World Heritage List as part of Hebron / Al-Khalil Old Town.",
+          "arabicDescription": "الإدراج على قائمة التراث العالمي ضمن البلدة القديمة في الخليل."
+        }
+      ],
       "quiz": {
         "question": "How should the association with Ibrahim / Abraham be understood here?",
         "arabicQuestion": "كيف يُعرض ارتباط الموقع بإبراهيم هنا؟",
@@ -2550,8 +2645,8 @@
       "coordinateStatus": "unesco_site_reference",
       "description": "A layered religious monument in Gaza's historic centre, incorporating a Crusader basilica.",
       "arabicDescription": "معلم ديني متعدد الطبقات في مركز غزة التاريخي يضم عناصر من كنيسة صليبية.",
-      "facts": "The Mamluks and Ottomans enlarged the mosque. The historic-centre nomination was submitted in 2026; it is a Tentative List entry, not World Heritage inscription.",
-      "arabicFacts": "وسّع المماليك والعثمانيون المسجد. قُدّم ترشيح المركز التاريخي عام 2026 إلى القائمة التمهيدية، وليس إدراجاً على قائمة التراث العالمي.",
+      "facts": "The Great Omari Mosque stands on a site venerated for centuries, first a pagan temple and then a Byzantine church; after the Islamic conquest in 634 it became the focal point of the Islamic city. The Mamluks and Ottomans enlarged the mosque and rebuilt it around a Crusader basilica incorporated into its structure. The nomination describes a tall minaret, an open courtyard, a marble mihrab and a Gothic-style entrance arch, calls it Gaza's main congregational mosque beside the Qaysariyya and Zawiya souqs, and notes damage from repeated wars across the historic centre. The historic-centre nomination was submitted in 2026; it is a Tentative List entry, not World Heritage inscription.",
+      "arabicFacts": "يقوم المسجد العمري الكبير على موقع قُدّس منذ قرون، كان معبداً وثنياً ثم كنيسة بيزنطية، وصار بعد الفتح الإسلامي عام 634م مركز المدينة الإسلامية. وسّع المماليك والعثمانيون المسجد وأعادوا بناءه حول كنيسة صليبية أُدمجت في بنيته. يصف ملف الترشيح مئذنة عالية وصحناً مكشوفاً ومحراباً رخامياً وقوس مدخل على الطراز القوطي، ويعدّه الجامع الرئيسي في غزة إلى جوار سوقي القيسارية والزاوية، ويشير إلى أضرار خلّفتها الحروب المتكررة في المركز التاريخي. قُدّم ترشيح المركز التاريخي عام 2026 إلى القائمة التمهيدية، وليس إدراجاً على قائمة التراث العالمي.",
       "categories": [
         "معلم ديني"
       ],
@@ -2572,6 +2667,19 @@
         }
       ],
       "timeline": [
+        {
+          "year": 634,
+          "label": "634",
+          "description": "After the Islamic conquest, the site becomes the focal point of the Islamic city.",
+          "arabicDescription": "بعد الفتح الإسلامي يصبح الموقع مركز المدينة الإسلامية."
+        },
+        {
+          "year": 1250,
+          "label": "Mamluk and Ottoman periods",
+          "arabicLabel": "العصران المملوكي والعثماني",
+          "description": "The mosque is rebuilt and enlarged.",
+          "arabicDescription": "إعادة بناء المسجد وتوسيعه."
+        },
         {
           "year": 2026,
           "label": "2026",
@@ -2713,8 +2821,8 @@
       "coordinateStatus": "unesco_site_reference",
       "description": "A church in Gaza's historic centre with Byzantine origins and later architectural layers.",
       "arabicDescription": "كنيسة في مركز غزة التاريخي ذات أصول بيزنطية وطبقات معمارية لاحقة.",
-      "facts": "The historic-centre nomination includes the church alongside the Omari Mosque.",
-      "arabicFacts": "يشمل ترشيح المركز التاريخي الكنيسة إلى جانب المسجد العمري.",
+      "facts": "The Church of Saint Porphyrius was established in the early 5th century AD, as Christianity reshaped Gaza's sacred landscape. Its substantial sandstone walls, pointed arches, painted wooden iconostasis and adjoining monastic quarters show a Byzantine origin reshaped in the Crusader and later periods. The nomination counts it among the oldest continuously active churches in Palestine, a Greek Orthodox church serving the city's Christian community near the Omari Mosque. The historic-centre nomination that includes it was submitted in 2026; it is a Tentative List entry, not World Heritage inscription.",
+      "arabicFacts": "أُسّست كنيسة القديس برفيريوس في مطلع القرن الخامس الميلادي، حين كانت المسيحية تعيد تشكيل المشهد المقدّس في غزة. تكشف جدرانها الضخمة من الحجر الرملي وأقواسها المدبّبة وحاجز الأيقونات الخشبي المرسوم والمساكن الرهبانية الملحقة بها عن أصل بيزنطي أعادت العصور الصليبية واللاحقة تشكيله. ويعدّها ملف الترشيح من أقدم الكنائس العاملة دون انقطاع في فلسطين، وهي كنيسة للروم الأرثوذكس تخدم المجتمع المسيحي على مقربة من المسجد العمري. قُدّم ترشيح المركز التاريخي الذي يشملها عام 2026 إلى القائمة التمهيدية، وليس إدراجاً على قائمة التراث العالمي.",
       "categories": [
         "معلم ديني"
       ],
@@ -2734,7 +2842,21 @@
           "url": "https://whc.unesco.org/en/tentativelists/6955/"
         }
       ],
-      "timeline": [],
+      "timeline": [
+        {
+          "year": 400,
+          "label": "Early 5th century AD",
+          "arabicLabel": "مطلع القرن الخامس الميلادي",
+          "description": "The church is established.",
+          "arabicDescription": "تأسيس الكنيسة."
+        },
+        {
+          "year": 2026,
+          "label": "2026",
+          "description": "Included in the historic-centre Tentative List submission, not inscription.",
+          "arabicDescription": "إدراجها في ترشيح المركز التاريخي إلى القائمة التمهيدية، وليس الإدراج على قائمة التراث العالمي."
+        }
+      ],
       "quiz": {
         "question": "Which mosque is included alongside the church in the historic-centre nomination?",
         "arabicQuestion": "أي مسجد يرد إلى جانب الكنيسة في ترشيح المركز التاريخي؟",
@@ -2864,18 +2986,21 @@
         {
           "year": 340,
           "label": "4th century",
+          "arabicLabel": "القرن الرابع الميلادي",
           "description": "Saint Hilarion founds the monastery as a mud-brick hermitage.",
           "arabicDescription": "القديس هيلاريون يؤسس الدير صومعةً من الطوب الطيني."
         },
         {
           "year": 450,
           "label": "4th–5th centuries",
+          "arabicLabel": "القرنان الرابع والخامس الميلاديان",
           "description": "A thriving communal (cenobitic) monastery is documented.",
           "arabicDescription": "توثيق دير جماعي مزدهر."
         },
         {
           "year": 600,
           "label": "4th–7th centuries",
+          "arabicLabel": "من القرن الرابع إلى السابع الميلادي",
           "description": "The complex grows around the saint’s memory, with churches, baths and a pilgrim hostel.",
           "arabicDescription": "المجمّع يتوسع حول ذكرى القديس بكنائس وحمّامات ونُزُل للحجاج."
         },
@@ -3020,12 +3145,14 @@
         {
           "year": -800,
           "label": "800 BC",
+          "arabicLabel": "800 ق.م",
           "description": "The earliest documented habitation of the harbour city.",
           "arabicDescription": "أقدم استيطان موثّق لمدينة الميناء."
         },
         {
           "year": 1100,
           "label": "1100 AD",
+          "arabicLabel": "1100م",
           "description": "The end of the documented habitation.",
           "arabicDescription": "نهاية الاستيطان الموثّق."
         },
