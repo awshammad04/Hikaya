@@ -79,6 +79,10 @@ def outputs():
             [quote(location[k]) for k in ['id','governorateId','name','arabicName','city']]+[quote('Palestine'),quote(location.get('latitude')),quote(location.get('longitude')),quote(location['description']),quote(location['arabicDescription']),quote(source),quote(source),quote(approved),quote(location['reviewStatus']),quote(location['coordinateStatus'])]))
         if cover_of(location):
             sql.append(f"UPDATE locations SET cover_image_url = {quote(cover_of(location))} WHERE id = {quote(id)} AND cover_image_url IS NULL;")
+        # Coordinates verified after a place was first seeded fill its empty position; a set one is kept.
+        if location.get('latitude') is not None and location.get('longitude') is not None:
+            sql.append(f"UPDATE locations SET latitude = {quote(location['latitude'])}, longitude = {quote(location['longitude'])}, "
+                       f"coordinate_status = {quote(location['coordinateStatus'])} WHERE id = {quote(id)} AND latitude IS NULL;")
         for category in location['categories']:
             category_id = 'palestine-' + CATEGORY_IDS[category]
             sql.append(insert('categories', ['id','name'], [quote(category_id),quote(category)]))

@@ -25,3 +25,4 @@ A sacred architectural complex at the heart of Hebron's old town.
 
 ## 10. Reviewed references
 - Al-Haram Al-Ibrahimi — https://www.hebronrc.ps/xindex.php/en/node/275
+- Al-Haram Al-Ibrahimi — site page and map — https://www.travelpalestine.ps/en/Site/205/Al-Haram-Al-Ibrahimi

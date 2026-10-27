@@ -270,7 +270,9 @@
       ],
       "reviewStatus": "source_checked",
       "reviewed": true,
-      "coordinateStatus": "pending_verification",
+      "latitude": 31.911433,
+      "longitude": 35.208827,
+      "coordinateStatus": "tourism_portal_map_reference",
       "sources": [
         {
           "title": "Yasser Arafat Museum — official introduction",
@@ -313,6 +315,13 @@
           "publisher": "Yasser Arafat Foundation",
           "arabicPublisher": "مؤسسة ياسر عرفات",
           "url": "https://www.yam.ps/page-12186-ar.html"
+        },
+        {
+          "title": "Yasser Arafat Museum — site page and map",
+          "arabicTitle": "متحف ياسر عرفات — صفحة الموقع وخريطته",
+          "publisher": "Travel Palestine",
+          "arabicPublisher": "Travel Palestine",
+          "url": "https://www.travelpalestine.ps/en/Site/33"
         }
       ],
       "timeline": [],
@@ -2406,7 +2415,9 @@
       "arabicName": "الحرم الإبراهيمي",
       "city": "Hebron",
       "arabicCity": "الخليل",
-      "coordinateStatus": "pending_verification",
+      "latitude": 31.525326,
+      "longitude": 35.110761,
+      "coordinateStatus": "tourism_portal_map_reference",
       "description": "A sacred architectural complex at the heart of Hebron's old town.",
       "arabicDescription": "مجمّع معماري ديني في قلب البلدة القديمة بالخليل.",
       "facts": "The Hebron Rehabilitation Committee documents successive Byzantine, Islamic and Crusader architectural layers.",
@@ -2430,6 +2441,13 @@
           "publisher": "Hebron Rehabilitation Committee",
           "arabicPublisher": "لجنة إعمار الخليل",
           "url": "https://www.hebronrc.ps/xindex.php/en/node/275"
+        },
+        {
+          "title": "Al-Haram Al-Ibrahimi — site page and map",
+          "arabicTitle": "الحرم الإبراهيمي — صفحة الموقع وخريطته",
+          "publisher": "Travel Palestine",
+          "arabicPublisher": "Travel Palestine",
+          "url": "https://www.travelpalestine.ps/en/Site/205/Al-Haram-Al-Ibrahimi"
         }
       ],
       "timeline": [],
@@ -2946,7 +2964,9 @@
       "arabicName": "ميناء الأنثيدون (البلاخية)",
       "city": "Gaza",
       "arabicCity": "غزة",
-      "coordinateStatus": "pending_verification",
+      "latitude": 31.546667,
+      "longitude": 34.453889,
+      "coordinateStatus": "eamena_record_via_wikipedia",
       "description": "The first known seaport of Gaza, called Tida or Blakhiyeh in Islamic literature, inhabited from 800 BC to 1100 AD.",
       "arabicDescription": "أول ميناء معروف لغزة، ويُسمّى في المصادر الإسلامية «تيدا» أو «البلاخية»، وقد سُكن من عام 800 ق.م حتى 1100م.",
       "facts": "The harbour saw Neo-Assyrian, Babylonian, Persian, Greek, Roman, Byzantine and early Islamic rule. Excavations uncovered a Roman temple, villas, mosaic floors, warehouses, a 65-metre mud-brick wall and massive earthen walls 8 metres high and 6 metres thick. One kilometre to the south lay Maiumas, the ancient harbour of Gaza.",
@@ -2969,8 +2989,8 @@
       ],
       "traditions": "",
       "arabicTraditions": "",
-      "gaps": "UNESCO’s entry notes that the site of ancient Anthedon has not been precisely identified, and its listed coordinates do not point to Gaza, so no map marker is shown. Current site condition and access are not asserted. The record describes the documented heritage; each photograph shows the date it was taken.",
-      "arabicGaps": "يشير مدخل اليونسكو إلى أن موقع الأنثيدون القديم لم يُحدَّد بدقة، والإحداثيات المذكورة فيه لا تقع في غزة، لذلك لا تظهر علامة على الخريطة. لا يؤكد السجل حالة الموقع الراهنة أو إمكانية الوصول إليه. يصف السجل التراث الموثّق، وتُظهر كل صورة تاريخ التقاطها.",
+      "gaps": "UNESCO’s entry notes that the site of ancient Anthedon has not been precisely identified, and its listed coordinates do not point to Gaza. The map marker instead follows the EAMENA heritage record for Anthedon (Tida, al-Blakhiyah), as given in Wikipedia’s list of archaeological sites in the Gaza Strip, and is approximate. Current site condition and access are not asserted. The record describes the documented heritage; each photograph shows the date it was taken.",
+      "arabicGaps": "يشير مدخل اليونسكو إلى أن موقع الأنثيدون القديم لم يُحدَّد بدقة، والإحداثيات المذكورة فيه لا تقع في غزة. لذلك تتبع العلامة على الخريطة سجلّ الأنثيدون (تيدا، البلاخية) في قاعدة بيانات EAMENA للتراث الأثري المهدَّد، كما تورده قائمة المواقع الأثرية في قطاع غزة على ويكيبيديا، وهي علامة تقريبية. لا يؤكد السجل حالة الموقع الراهنة أو إمكانية الوصول إليه. يصف السجل التراث الموثّق، وتُظهر كل صورة تاريخ التقاطها.",
       "categories": [
         "موقع أثري"
       ],
@@ -2987,6 +3007,13 @@
           "publisher": "UNESCO World Heritage Centre",
           "arabicPublisher": "مركز التراث العالمي - اليونسكو",
           "url": "https://whc.unesco.org/en/tentativelists/5719/"
+        },
+        {
+          "title": "List of archaeological sites in the Gaza Strip — Anthedon, after EAMENA record EAMENA-0186596",
+          "arabicTitle": "قائمة المواقع الأثرية في قطاع غزة — الأنثيدون، نقلاً عن سجل EAMENA-0186596",
+          "publisher": "Wikipedia",
+          "arabicPublisher": "ويكيبيديا",
+          "url": "https://en.wikipedia.org/wiki/List_of_archaeological_sites_in_the_Gaza_Strip"
         }
       ],
       "timeline": [

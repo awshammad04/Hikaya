@@ -36,7 +36,8 @@ Palestine’s tentative-list entry presents Anthedon as a clear example of the E
 
 
 ## 8. Source notes
-- Gaps the AI must not fill: UNESCO’s entry notes that the site of ancient Anthedon has not been precisely identified, and its listed coordinates do not point to Gaza, so no map marker is shown. Current site condition and access are not asserted. The record describes the documented heritage; each photograph shows the date it was taken.
+- Gaps the AI must not fill: UNESCO’s entry notes that the site of ancient Anthedon has not been precisely identified, and its listed coordinates do not point to Gaza. The map marker instead follows the EAMENA heritage record for Anthedon (Tida, al-Blakhiyah), as given in Wikipedia’s list of archaeological sites in the Gaza Strip, and is approximate. Current site condition and access are not asserted. The record describes the documented heritage; each photograph shows the date it was taken.
 
 ## 10. Reviewed references
 - Anthedon Harbour — Tentative List — https://whc.unesco.org/en/tentativelists/5719/
+- List of archaeological sites in the Gaza Strip — Anthedon, after EAMENA record EAMENA-0186596 — https://en.wikipedia.org/wiki/List_of_archaeological_sites_in_the_Gaza_Strip

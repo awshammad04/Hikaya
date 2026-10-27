@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import { Link, useParams, Navigate } from "react-router-dom";
-import { MvpLocationMap } from "../components/MvpLocationMap";
+import { fitBounds, MvpLocationMap } from "../components/MvpLocationMap";
 import { LocationCard } from "../components/LocationCard";
 import { DataSourceBanner } from "../components/DataSourceBanner";
 import { useLocations } from "../hooks/useLocations";
@@ -12,7 +12,8 @@ import { PageTransition } from "../components/motion";
 import { OVERVIEW_BOUNDS } from "../components/PalestineGeography";
 import { placesCount } from "../utils/plural";
 
-// Wide enough to show the coast and the Jordan valley for orientation.
+// Wide enough to show the coast and the Jordan valley for orientation; maps
+// with places frame them instead (fitBounds), which keeps the coast in view.
 export const NATIONAL_BOUNDS = OVERVIEW_BOUNDS;
 export const HeritageMapPage: React.FC = () => {
   const { governorateId } = useParams();
@@ -27,6 +28,12 @@ export const HeritageMapPage: React.FC = () => {
   );
   const [selected, setSelected] = useState<ApiLocation | null>(null);
   const [showSites, setShowSites] = useState(false);
+  // Frame the places; a fixed box can leave them on the edge, under the
+  // map's cards. Every governorate centre lies among its places.
+  const bounds = useMemo(
+    () => fitBounds(locations, governorate?.bounds ?? NATIONAL_BOUNDS),
+    [governorate, locations],
+  );
   if (governorateId && !governorate)
     return <Navigate to="/palestine-map" replace />;
   if (governorateId === "jerusalem") return <Navigate to="/map" replace />;
@@ -88,6 +95,14 @@ export const HeritageMapPage: React.FC = () => {
             </button>
           </div>
         )}
+        {loading && (
+          <div className="grid lg:grid-cols-12 gap-6" role="status" aria-label={isArabic ? "جارٍ تحميل الخريطة" : "Loading the map"}>
+            <div className="lg:col-span-8 h-[500px] sm:h-[610px] rounded-3xl border border-brand-border bg-[#eae3d3] animate-pulse" />
+            <div className="lg:col-span-4 space-y-3" aria-hidden="true">
+              {[0, 1, 2].map((item) => <div key={item} className="h-14 rounded-2xl border border-brand-border bg-brand-surface animate-pulse" />)}
+            </div>
+          </div>
+        )}
         {!loading && (
           <div className="grid lg:grid-cols-12 gap-6">
             <div className="lg:col-span-8">
@@ -99,7 +114,8 @@ export const HeritageMapPage: React.FC = () => {
                 selectedId={selected?.id}
                 onSelect={setSelected}
                 visited={visited.visited}
-                bounds={governorate?.bounds ?? NATIONAL_BOUNDS}
+                bounds={bounds}
+                terrainId={governorate?.id}
                 mapLabel={title}
                 jerusalem={false}
                 drawRoute={false}

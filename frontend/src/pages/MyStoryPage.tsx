@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { Download, BookHeart } from "lucide-react";
 import { useInterfaceLanguage } from "../context/LanguageContext";
 import { readJourney } from "../services/journeys";
-import { MvpLocationMap } from "../components/MvpLocationMap";
+import { fitBounds, MvpLocationMap } from "../components/MvpLocationMap";
 import { StoryNarrator } from "../components/StoryNarrator";
 import { HeritageChat } from "../components/HeritageChat";
 import { MyJerusalemStoryModal } from "../components/MyJerusalemStoryModal";
@@ -54,10 +54,11 @@ export const MyStoryPage: React.FC = () => {
   const journeyArabic = journey.preferences.language === "ar";
   const scope =
     journey.governorateIds.length === 1 ? journey.governorateIds[0] : "all";
-  const bounds =
-    journey.governorateIds.length === 1
-      ? governorateById(scope)?.bounds
-      : NATIONAL_BOUNDS;
+  const governorateBounds = governorateById(scope)?.bounds;
+  // Jerusalem keeps its drawn Old City frame; any other trip frames its stops.
+  const bounds = scope === "jerusalem" && governorateBounds
+    ? governorateBounds
+    : fitBounds(journey.stops.map((stop) => stop.location), governorateBounds ?? NATIONAL_BOUNDS);
   const showChapter = (location: ApiLocation) => {
     setSelected(location);
     document.getElementById(`chapter-${location.id}`)?.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -121,7 +122,8 @@ export const MyStoryPage: React.FC = () => {
               locations={journey.stops.map((stop) => stop.location)}
               selectedId={selected?.id}
               onSelect={showChapter}
-              bounds={bounds ?? NATIONAL_BOUNDS}
+              bounds={bounds}
+              terrainId={scope !== "all" && scope !== "jerusalem" ? scope : undefined}
               mapLabel={isArabic ? "أماكن رحلتي" : "Places on my trip"}
               routeIds={journey.stops.map((stop) => stop.location.id)}
               jerusalem={scope === "jerusalem"}

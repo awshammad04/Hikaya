@@ -44,3 +44,4 @@ Read the museum as a sequence joining two buildings: the main exhibition space r
 - Resource Centre — https://www.yam.ps/page-12184-ar.html
 - Forum Hall — https://www.yam.ps/page-12185-ar.html
 - Exhibition Hall — https://www.yam.ps/page-12186-ar.html
+- Yasser Arafat Museum — site page and map — https://www.travelpalestine.ps/en/Site/33

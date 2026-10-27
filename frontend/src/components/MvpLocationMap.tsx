@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useRef, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { motion, useReducedMotion } from "motion/react";
 import {
   Check,
@@ -18,6 +18,7 @@ import { ApiLocation } from "../types";
 import { useInterfaceLanguage } from "../context/LanguageContext";
 import { locationById } from "../data/heritage";
 import { GeographyLayer } from "./PalestineGeography";
+import { TerrainLayer } from "./TerrainLayer";
 import { documentedPlacesCount, governoratesCount } from "../utils/plural";
 
 interface MvpLocationMapProps {
@@ -26,16 +27,60 @@ interface MvpLocationMapProps {
   onSelect: (location: ApiLocation) => void;
   visited?: string[];
   routeIds?: string[];
-  bounds?: typeof BOUNDS;
+  bounds?: MapBounds;
   mapLabel?: string;
+  /** Governorate whose relief (public/terrain/<id>.json) to draw under the markers. */
+  terrainId?: string;
   jerusalem?: boolean;
   drawRoute?: boolean;
   /** What the markers are, for the count in the map card. */
   markerKind?: "places" | "governorates";
 }
 
-const BOUNDS = { minLng: 35.215, maxLng: 35.255, minLat: 31.765, maxLat: 31.798 };
+export type MapBounds = { minLng: number; maxLng: number; minLat: number; maxLat: number };
+
+const BOUNDS: MapBounds = { minLng: 35.215, maxLng: 35.255, minLat: 31.765, maxLat: 31.798 };
 const MAP = { left: 65, top: 55, width: 870, height: 650 };
+/*
+ * Where a marker and its name stay clear of the count card, the zoom
+ * controls and the hint at the bottom, in the 1000 x 760 view units.
+ * tools/generate-terrain.py repeats MAP, SAFE and MIN_FRAME_KM.
+ */
+const SAFE = { left: 190, right: 810, top: 235, bottom: 650 };
+const MIN_FRAME_KM = 2;
+const KM_PER_LAT = 110.57;
+const kmPerLng = (lat: number) => 111.32 * Math.cos((lat * Math.PI) / 180);
+
+/**
+ * A frame around the places, at the same scale both ways, with every marker
+ * inside SAFE. Falls back to `fallback` when no place has coordinates.
+ */
+export function fitBounds(locations: ApiLocation[], fallback: MapBounds): MapBounds {
+  const points = locations.filter((item) => item.latitude != null && item.longitude != null);
+  if (!points.length) return fallback;
+  const lats = points.map((item) => item.latitude!);
+  const lngs = points.map((item) => item.longitude!);
+  const midLat = (Math.min(...lats) + Math.max(...lats)) / 2;
+  const midLng = (Math.min(...lngs) + Math.max(...lngs)) / 2;
+  const widthKm = Math.max((Math.max(...lngs) - Math.min(...lngs)) * kmPerLng(midLat), MIN_FRAME_KM);
+  const heightKm = Math.max((Math.max(...lats) - Math.min(...lats)) * KM_PER_LAT, MIN_FRAME_KM);
+  const kmPerUnit = Math.max(widthKm / (SAFE.right - SAFE.left), heightKm / (SAFE.bottom - SAFE.top));
+  const lngSpan = (kmPerUnit * MAP.width) / kmPerLng(midLat);
+  const latSpan = (kmPerUnit * MAP.height) / KM_PER_LAT;
+  const minLng = midLng - (((SAFE.left + SAFE.right) / 2 - MAP.left) / MAP.width) * lngSpan;
+  const maxLat = midLat + (((SAFE.top + SAFE.bottom) / 2 - MAP.top) / MAP.height) * latSpan;
+  return { minLng, maxLng: minLng + lngSpan, minLat: maxLat - latSpan, maxLat };
+}
+
+const SCALE_STEPS_KM = [0.05, 0.1, 0.2, 0.25, 0.5, 1, 2, 5, 10, 20, 25, 50, 100];
+
+/** The longest round distance that fits in about 90px at this zoom. */
+function scaleBar(bounds: MapBounds, viewportWidth: number, zoom: number) {
+  const kmAcross = (bounds.maxLng - bounds.minLng) * kmPerLng((bounds.minLat + bounds.maxLat) / 2);
+  const pxPerKm = ((viewportWidth / 1000) * MAP.width * zoom) / kmAcross;
+  const km = [...SCALE_STEPS_KM].reverse().find((step) => step * pxPerKm <= 90) ?? SCALE_STEPS_KM[0];
+  return { km, px: km * pxPerKm };
+}
 const MIN_ZOOM = 1;
 const MAX_ZOOM = 3.5;
 const ZOOM_STEP = 0.35;
@@ -114,7 +159,7 @@ export const MvpLocationMap: React.FC<MvpLocationMapProps> = ({
   onSelect,
   visited = [],
   routeIds = [],
-  bounds = BOUNDS, mapLabel, jerusalem = true, drawRoute = true, markerKind = "places",
+  bounds = BOUNDS, mapLabel, terrainId, jerusalem = true, drawRoute = true, markerKind = "places",
 }) => {
   const { isArabic } = useInterfaceLanguage();
   const reduced = useReducedMotion();
@@ -129,6 +174,15 @@ export const MvpLocationMap: React.FC<MvpLocationMapProps> = ({
   const pointersRef = useRef(new Map<number, MapPoint>());
   const dragStartRef = useRef<{ pointer: MapPoint; pan: MapPoint } | null>(null);
   const gestureStartRef = useRef<GestureStart | null>(null);
+  const [viewportWidth, setViewportWidth] = useState(0);
+
+  useEffect(() => {
+    const element = viewportRef.current;
+    if (!element || typeof ResizeObserver === "undefined") return;
+    const observer = new ResizeObserver(([entry]) => setViewportWidth(entry.contentRect.width));
+    observer.observe(element);
+    return () => observer.disconnect();
+  }, []);
 
   const available = useMemo(() => {
     const present = new Set<string>();
@@ -296,7 +350,25 @@ export const MvpLocationMap: React.FC<MvpLocationMapProps> = ({
     zoomAt(zoomRef.current + .65, pointerPosition(event.clientX, event.clientY));
   };
 
+  // Names open inward near the edges, and close neighbours take opposite
+  // sides, so names neither run off the map nor print over each other.
+  const labelSides: Record<string, string> = {};
+  const placedLabels: { x: number; y: number; below: boolean }[] = [];
+  shown.forEach((location) => {
+    const p = project(location.latitude!, location.longitude!);
+    const below = placedLabels.some((other) => !other.below && Math.abs(other.x - p.x) < 140 && Math.abs(other.y - p.y) < 70);
+    placedLabels.push({ ...p, below });
+    const side = p.x < 300 ? "left-0" : p.x > 700 ? "right-0" : "left-1/2 -translate-x-1/2";
+    labelSides[location.id] = `${below ? "top-full mt-1" : "bottom-full mb-1"} ${side}`;
+  });
+
   const zoomPercent = Math.round(zoom * 100);
+  const scale = viewportWidth > 0 ? scaleBar(bounds, viewportWidth, zoom) : null;
+  const scaleLabel = scale
+    ? scale.km < 1
+      ? `${Math.round(scale.km * 1000)} ${isArabic ? "م" : "m"}`
+      : `${scale.km} ${isArabic ? "كم" : "km"}`
+    : "";
   const showDetailedMapLabels = zoom >= 1.4 || routePoints.length < 2;
 
   const toggle = (category: string) => setActive((current) => current.includes(category) ? current.filter((item) => item !== category) : [...current, category]);
@@ -340,7 +412,9 @@ export const MvpLocationMap: React.FC<MvpLocationMapProps> = ({
           <rect width="1000" height="760" fill="url(#mapPaper)" />
           <rect width="1000" height="760" fill="url(#mapGrain)" />
 
-          {!jerusalem && <GeographyLayer project={project} labelSize={20 / zoom} />}
+          {!jerusalem && (terrainId
+            ? <TerrainLayer id={terrainId} project={project} zoom={zoom} />
+            : <GeographyLayer project={project} labelSize={20 / zoom} />)}
 
           {jerusalem && <>
           {/* Terrain contours: a quiet geographic backdrop rather than an empty grid. */}
@@ -405,11 +479,11 @@ export const MvpLocationMap: React.FC<MvpLocationMapProps> = ({
           {drawRoute && routePoints.length > 1 && <polyline points={routePoints.map((p) => `${p.x},${p.y}`).join(" ")} fill="none" stroke="#d97706" strokeWidth="3" strokeDasharray={`${7 / zoom} ${7 / zoom}`} strokeLinecap="round" strokeLinejoin="round" vectorEffect="non-scaling-stroke" />}
 
           <g transform="translate(895 90)" fill="#5a5a40" aria-label={isArabic ? "اتجاه الشمال" : "North"}><circle cx="12" cy="18" r="24" fill="#fffaf0" opacity=".75" /><path d="M0 30 L12 0 L24 30 L12 24 Z" fill="#b45309" /><text x="12" y="56" textAnchor="middle" fontSize={13 / zoom} fontWeight="800">{isArabic ? "الشمال" : "N"}</text></g>
-          {jerusalem && <g transform="translate(65 710)" stroke="#5a5a40" strokeWidth="4"><path d="M0 0 H80" /><path d="M0 -5 V5 M80 -5 V5" /><text x="40" y="20" textAnchor="middle" stroke="none" fill="#5a5a40" fontSize={12 / zoom}>{isArabic ? "≈ ١ كم" : "≈ 1 km"}</text></g>}
         </svg>
 
         {shown.map((location, index) => {
           const p = project(location.latitude!, location.longitude!);
+          const labelPlacement = LABEL_PLACEMENT[location.id] ?? labelSides[location.id];
           const x = (p.x / 1000) * 100;
           const y = (p.y / 760) * 100;
           const isSelected = location.id === selectedId;
@@ -430,7 +504,7 @@ export const MvpLocationMap: React.FC<MvpLocationMapProps> = ({
           const labelVisible = isSelected || showAllLabels;
           return <button data-map-marker key={location.id} type="button" onClick={() => onSelect(location)} aria-pressed={isSelected} aria-label={isArabic ? `اختر ${label}` : `Select ${label}`} className={`absolute group focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-amber rounded-full transition-opacity ${isSelected ? "z-30" : "z-20 hover:z-30"}`} style={{ left: `${x}%`, top: `${y}%`, transform: `translate(-50%, -50%) scale(${1 / zoom})`, opacity: reduced ? 1 : Math.min(1, .72 + index * .04) }}>
             <span
-              className={`absolute whitespace-nowrap rounded-full font-bold border shadow-sm transition-[opacity,background-color,color,border-color] duration-200 ${LABEL_PLACEMENT[location.id] ?? "bottom-full mb-1 left-1/2 -translate-x-1/2"} ${isSelected ? "bg-brand-olive text-white border-brand-olive opacity-100" : `bg-[#fffaf0]/92 text-brand-text border-white/85 ${labelVisible ? "opacity-95" : "pointer-events-none opacity-0 group-hover:opacity-100 group-focus-visible:opacity-100"}`}`}
+              className={`absolute whitespace-nowrap rounded-full font-bold border shadow-sm transition-[opacity,background-color,color,border-color] duration-200 ${labelPlacement} ${isSelected ? "bg-brand-olive text-white border-brand-olive opacity-100" : `bg-[#fffaf0]/92 text-brand-text border-white/85 ${labelVisible ? "opacity-95" : "pointer-events-none opacity-0 group-hover:opacity-100 group-focus-visible:opacity-100"}`}`}
               style={{
                 fontSize: `${labelFontSize}px`,
                 lineHeight: 1.15,
@@ -456,9 +530,16 @@ export const MvpLocationMap: React.FC<MvpLocationMapProps> = ({
         })}
         </div>
 
-        <div className="absolute top-5 start-5 z-30 max-w-[calc(100%-6.5rem)] rounded-2xl bg-[#fffaf0]/92 backdrop-blur px-4 py-3 border border-white/70 shadow-sm pointer-events-none">
+        <div className="absolute top-3 start-3 sm:top-5 sm:start-5 z-30 max-w-[calc(100%-6.5rem)] rounded-2xl bg-[#fffaf0]/92 backdrop-blur px-3 py-2 sm:px-4 sm:py-3 border border-white/70 shadow-sm pointer-events-none">
           <p className="text-xs uppercase tracking-widest text-brand-muted inline-flex items-center gap-1.5"><Compass className="w-3 h-3 text-brand-amber" />{mapLabel ?? (isArabic ? "القدس وضواحي البلدة القديمة" : "Jerusalem & Old City approaches")}</p>
-          <p className="font-serif font-black text-lg text-brand-olive">{markerKind === "governorates" ? governoratesCount(shown.length, isArabic) : documentedPlacesCount(shown.length, isArabic)}</p>
+          <p className="font-serif font-black text-base sm:text-lg text-brand-olive">{markerKind === "governorates" ? governoratesCount(shown.length, isArabic) : documentedPlacesCount(shown.length, isArabic)}</p>
+          {/* In the card, which every marker already keeps clear of. */}
+          {scale && (
+            <div className="mt-1 flex items-center gap-2 text-xs font-bold text-brand-muted" role="img" aria-label={isArabic ? `مقياس الرسم: ${scaleLabel}` : `Scale: ${scaleLabel}`}>
+              <span className="block h-1.5 shrink-0 border-x-2 border-b-2 border-[#5a5a40]" style={{ width: `${scale.px}px` }} aria-hidden="true" />
+              <span aria-hidden="true">{scaleLabel}</span>
+            </div>
+          )}
         </div>
 
         <div data-map-control className="absolute top-5 end-5 z-40 flex flex-col items-center gap-2">
