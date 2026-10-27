@@ -62,7 +62,7 @@ const STATUS_STYLE: Record<AccountContribution["status"], string> = {
  */
 export const PassportPage: React.FC = () => {
   const { isArabic } = useInterfaceLanguage();
-  const { status, user, guest, syncing, logOut, deleteAccount } = useAuth();
+  const { status, user, guestSince, syncing, logOut, deleteAccount } = useAuth();
   const navigate = useNavigate();
   const progress = useProgress();
   const { memories, removeMemory } = useUserMemories();
@@ -163,8 +163,8 @@ export const PassportPage: React.FC = () => {
     }
   };
 
-  const displayName = signedIn && user ? user.fullName : (isArabic ? guest.ar : guest.en);
-  const since = new Date(signedIn && user ? user.createdAt : guest.since)
+  const displayName = signedIn && user ? user.fullName : (isArabic ? "ضيف" : "Guest");
+  const since = new Date(signedIn && user ? user.createdAt : guestSince)
     .toLocaleDateString(isArabic ? "ar" : "en", { year: "numeric", month: "long" });
 
   if (status === "loading") {
@@ -181,12 +181,8 @@ export const PassportPage: React.FC = () => {
             <div className="space-y-2">
               <p className="text-xs font-mono uppercase tracking-[0.3em] text-brand-amber">
                 {isArabic ? "جواز سفر حكاية" : "Hikaya passport"}
-                {!signedIn && ` · ${isArabic ? "ضيف" : "guest"}`}
               </p>
-              <h1 className="font-serif font-black text-3xl sm:text-4xl">
-                {displayName}
-                {!signedIn && <span className="text-brand-amber font-mono text-lg ms-2">#{guest.number}</span>}
-              </h1>
+              <h1 className="font-serif font-black text-3xl sm:text-4xl">{displayName}</h1>
               <p className="text-sm text-white/75">
                 {signedIn
                   ? (isArabic ? `عضو منذ ${since}` : `Member since ${since}`)

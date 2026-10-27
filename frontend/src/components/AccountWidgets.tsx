@@ -26,7 +26,7 @@ const compactChip =
  */
 export const AccountChip: React.FC = () => {
   const { isArabic } = useInterfaceLanguage();
-  const { status, user, guest } = useAuth();
+  const { status, user } = useAuth();
   if (status === "loading") return null;
   if (status === "signed-in" && user) {
     const firstName = user.fullName.split(/\s+/)[0];
@@ -37,7 +37,7 @@ export const AccountChip: React.FC = () => {
       </Link>
     );
   }
-  const guestLabel = isArabic ? `${guest.ar} · جواز سفر الضيف` : `${guest.en} · guest passport`;
+  const guestLabel = isArabic ? "جواز سفر الضيف" : "Guest passport";
   return (
     <>
       <Link to="/me" className={`${compactChip} 2xl:hidden`} aria-label={guestLabel} title={guestLabel}>
@@ -45,7 +45,7 @@ export const AccountChip: React.FC = () => {
       </Link>
       <span className="hidden 2xl:inline-flex h-10 shrink-0 items-center rounded-full border border-brand-border bg-brand-surface p-1 text-xs font-bold whitespace-nowrap">
         <Link to="/me" className="ps-3 pe-2 text-brand-muted hover:text-brand-olive" title={guestLabel}>
-          {isArabic ? guest.ar : guest.en}
+          {isArabic ? "ضيف" : "Guest"}
         </Link>
         <Link to="/account?mode=login" className="rounded-full bg-brand-olive px-3 py-2 text-white">
           {isArabic ? "دخول" : "Sign in"}

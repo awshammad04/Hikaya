@@ -21,7 +21,7 @@ const labelClass =
  */
 export const AccountPage: React.FC = () => {
   const { isArabic } = useInterfaceLanguage();
-  const { status, guest, accountsAvailable, signUp, logIn } = useAuth();
+  const { status, accountsAvailable, signUp, logIn } = useAuth();
   const [params] = useSearchParams();
   const navigate = useNavigate();
   const [mode, setMode] = useState<"signup" | "login">(params.get("mode") === "login" ? "login" : "signup");
@@ -159,8 +159,7 @@ export const AccountPage: React.FC = () => {
 
         <aside className="space-y-4">
           <div className="rounded-3xl bg-brand-olive text-white p-6 space-y-3">
-            <p className="text-xs font-mono uppercase tracking-widest text-brand-amber">{isArabic ? "جواز سفر ضيف" : "Guest passport"}</p>
-            <p className="font-serif font-black text-2xl">{isArabic ? guest.ar : guest.en} <span className="text-brand-amber font-mono text-base">#{guest.number}</span></p>
+            <p className="font-serif font-black text-2xl">{isArabic ? "جواز سفر ضيف" : "Guest passport"}</p>
             <p className="text-sm text-white/80 leading-relaxed">
               {carried > 0
                 ? (isArabic

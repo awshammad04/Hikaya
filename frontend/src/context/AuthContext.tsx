@@ -6,8 +6,7 @@ import {
   clearAccountDataFromDevice,
   deviceOwner,
   flushProgress,
-  guestIdentity,
-  GuestIdentity,
+  guestSince,
   markDeviceOwner,
   MergeSummary,
   setSignedIn,
@@ -19,7 +18,8 @@ type AuthStatus = "loading" | "guest" | "signed-in";
 interface AuthContextValue {
   status: AuthStatus;
   user: AccountUser | null;
-  guest: GuestIdentity;
+  /** When this device started its guest journey (ISO date). */
+  guestSince: string;
   /** False when the API is unreachable: the app runs in guest mode only. */
   accountsAvailable: boolean;
   syncing: boolean;
@@ -37,7 +37,7 @@ const AuthContext = createContext<AuthContextValue | null>(null);
 export const AuthProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
   const [status, setStatus] = useState<AuthStatus>("loading");
   const [user, setUser] = useState<AccountUser | null>(null);
-  const [guest] = useState(guestIdentity);
+  const [guestStartedAt] = useState(guestSince);
   const [accountsAvailable, setAccountsAvailable] = useState(true);
   const [syncing, setSyncing] = useState(false);
   const [lastMerge, setLastMerge] = useState<MergeSummary | null>(null);
@@ -114,7 +114,7 @@ export const AuthProvider: React.FC<React.PropsWithChildren> = ({ children }) =>
   const value = useMemo<AuthContextValue>(() => ({
     status,
     user,
-    guest,
+    guestSince: guestStartedAt,
     accountsAvailable,
     syncing,
     lastMerge,
@@ -123,7 +123,7 @@ export const AuthProvider: React.FC<React.PropsWithChildren> = ({ children }) =>
     logIn,
     logOut,
     deleteAccount,
-  }), [status, user, guest, accountsAvailable, syncing, lastMerge, signUp, logIn, logOut, deleteAccount]);
+  }), [status, user, guestStartedAt, accountsAvailable, syncing, lastMerge, signUp, logIn, logOut, deleteAccount]);
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };

@@ -267,39 +267,17 @@ export function journeyTotals(): MergeSummary {
   };
 }
 
-// --- Guest identity ----------------------------------------------------------
+// --- Guest passport ----------------------------------------------------------
 
-export interface GuestIdentity {
-  ar: string;
-  en: string;
-  number: number;
-  since: string;
-}
-
-const GUEST_MOTIFS = [
-  { ar: "الزيتون", en: "Olive" },
-  { ar: "الياسمين", en: "Jasmine" },
-  { ar: "الزعتر", en: "Za'atar" },
-  { ar: "زهر البرتقال", en: "Orange Blossom" },
-  { ar: "السنديان", en: "Oak" },
-  { ar: "التطريز", en: "Tatreez" },
-  { ar: "الكوفية", en: "Keffiyeh" },
-  { ar: "الصبّار", en: "Sabr" },
-];
-
-/** A friendly, stable name for this device's guest passport. */
-export function guestIdentity(): GuestIdentity {
-  const stored = readJson<GuestIdentity | null>(GUEST_KEY, null);
-  if (stored?.ar && stored.en && stored.number) return stored;
-  const motif = GUEST_MOTIFS[Math.floor(Math.random() * GUEST_MOTIFS.length)];
-  const identity = {
-    ar: `رحّالة ${motif.ar}`,
-    en: `${motif.en} Traveler`,
-    number: 100 + Math.floor(Math.random() * 900),
-    since: new Date().toISOString(),
-  };
-  writeJson(GUEST_KEY, identity);
-  return identity;
+/**
+ * When this device's guest passport was opened. Older builds also stored a
+ * made-up guest name and number here; rewriting the record drops them.
+ */
+export function guestSince(): string {
+  const stored = readJson<{ since?: string } | null>(GUEST_KEY, null);
+  const since = stored?.since || new Date().toISOString();
+  writeJson(GUEST_KEY, { since });
+  return since;
 }
 
 // --- Live mirroring while signed in ------------------------------------------
