@@ -13,7 +13,8 @@ services:
     region: frankfurt
     plan: free
     rootDir: frontend
-    buildCommand: npm ci && npm run build
+    # NODE_ENV=production would make npm skip the build tools (nest, esbuild).
+    buildCommand: npm ci --include=dev && npm run build
     startCommand: npm start
     healthCheckPath: /health
     autoDeployTrigger: commit
@@ -44,7 +45,8 @@ services:
     region: frankfurt
     plan: free
     rootDir: backend
-    buildCommand: npm ci && npm run build
+    # NODE_ENV=production would make npm skip the build tools (nest, esbuild).
+    buildCommand: npm ci --include=dev && npm run build
     startCommand: npm run start:prod
     healthCheckPath: /api/v1/health
     autoDeployTrigger: commit
