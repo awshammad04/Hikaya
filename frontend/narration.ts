@@ -127,13 +127,13 @@ export function splitNarration(text: string) {
   return pieces;
 }
 
-// TTS models take no system instruction, and a long style paragraph in the
-// prompt gets read aloud (it once added ~14 s of speech to every piece and
-// threw the word highlighting off). A short lead-in ending in a colon is
-// treated as direction only. Bump STYLE_VERSION whenever it changes so cached
-// audio made with the old direction is not reused.
-const STYLE_VERSION = "2";
-const STYLE_DIRECTION = "Narrate warmly and naturally, like a Palestinian heritage guide:";
+// TTS models take no system instruction, and any style direction in the prompt
+// can be read aloud: a long paragraph once added ~14 s of speech to every
+// piece, and even a one-line "Narrate warmly…:" lead-in was still spoken now
+// and then. So the model gets only the text to read; the chosen voice carries
+// the tone. Bump STYLE_VERSION whenever the prompt changes so cached audio made
+// with the old one is not reused.
+const STYLE_VERSION = "3";
 
 /** Raw 16-bit mono PCM from an inline audio part (L16/PCM, or WAV). */
 function pcmFromPart(data: string, mimeType: string) {
@@ -237,7 +237,7 @@ async function synthesise(text: string, voice: string, onAudio: (pcm: Buffer, sa
     const request = {
       model: TTS_MODEL,
       // Vertex rejects contents without a role; the Developer API defaults it.
-      contents: [{ role: "user", parts: [{ text: `${STYLE_DIRECTION}\n${text}` }] }],
+      contents: [{ role: "user", parts: [{ text }] }],
       config: {
         responseModalities: ["AUDIO"],
         speechConfig: { voiceConfig: { prebuiltVoiceConfig: { voiceName: voice } } },
