@@ -60,7 +60,7 @@ export const ProgressTracker: React.FC<{ state: VisitedState; scope?: string; on
         className="w-full rounded-2xl border border-brand-amber/35 bg-brand-amber/10 px-4 py-3 text-xs font-bold text-brand-olive transition hover:border-brand-amber hover:bg-brand-amber/15 inline-flex items-center justify-center gap-2"
       >
         <Sparkles className="h-4 w-4 text-brand-amber" />
-        {isArabic ? `تذكار رحلتي في ${governorateName(scope,true)}` : `My ${governorateName(scope,false)} keepsake`}
+        {isArabic ? `ألبوم رحلتي في ${governorateName(scope,true)}` : `My ${governorateName(scope,false)} trip album`}
       </button>
 
       <div className="flex flex-wrap gap-2">

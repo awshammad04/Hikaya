@@ -51,8 +51,11 @@ export const ConstellationPage: React.FC<{scope?: string}> = ({scope}) => {
         <DataSourceBanner source={source} reason={reason} />
 
         <div>
-          <h1 className="font-serif font-black text-3xl text-brand-olive">
+          <p className="text-xs font-bold uppercase tracking-widest text-brand-amber">
             {isArabic ? "كوكبة الذاكرة" : "Memory constellation"}
+          </p>
+          <h1 className="mt-1 font-serif font-black text-3xl text-brand-olive">
+            {isArabic ? "كيف تتصل الأماكن" : "How the places connect"}
           </h1>
           <p className="text-sm text-brand-text max-w-2xl mt-2 leading-relaxed">
             {isArabic ? "تجمع هذه الشبكة أماكن الأرشيف والموضوعات المشتركة والذكريات المرتبطة بها. تكشف المساحات الفارغة ما لم يُوثَّق بعد بوضوح لا يقل عن وضوح الروابط الموجودة." : "Every location in the archive, the themes they have in common, and the memories people have attached to them. The gaps are as informative as the lines: a site with nothing orbiting it is one nobody has written about yet."}
@@ -71,7 +74,7 @@ export const ConstellationPage: React.FC<{scope?: string}> = ({scope}) => {
               <section className="rounded-3xl border border-brand-border bg-brand-surface p-5 sm:p-6 space-y-4">
                 <div>
                   <p className="text-xs uppercase tracking-widest text-brand-amber font-bold">{isArabic ? "فجوات الذاكرة" : "Memory gaps"}</p>
-                  <h2 className="font-serif font-black text-xl text-brand-olive">{isArabic ? "أماكن تنتظر حكايات أهلها" : "Places waiting for community stories"}</h2>
+                  <h2 className="font-serif font-black text-xl text-brand-olive">{isArabic ? "أماكن تنتظر ذكريات أهلها" : "Places waiting for community memories"}</h2>
                   <p className="text-xs text-brand-muted mt-1 max-w-2xl">{isArabic ? "لا نملأ هذه المساحات بنصوص مخترعة. إذا كانت لديك ذكرى شخصية من أحد هذه الأماكن، شاركها وسيحفظها فريق التوثيق بوصفها ذاكرة شفوية منسوبة لصاحبها." : "These spaces are not filled with invented copy. If you hold a personal memory of one of these places, submit it for review as clearly attributed oral heritage."}</p>
                 </div>
                 <div className="flex flex-wrap gap-2">

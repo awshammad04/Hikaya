@@ -148,7 +148,7 @@ export const DailyQuestion: React.FC = () => {
           <p className="text-brand-muted">{shown.explanation}</p>
           {shown.sourceNote && <p className="text-xs text-brand-muted">{isArabic ? "المصدر: " : "Source: "}{shown.sourceNote}</p>}
           <p className="flex flex-wrap gap-x-4 gap-y-1 pt-1 font-bold">
-            <Link to={`/locations/${placeId}`} className="text-brand-amber">{isArabic ? `اقرأ حكاية ${placeName} ←` : `Read the story of ${placeName} →`}</Link>
+            <Link to={`/locations/${placeId}`} className="text-brand-amber">{isArabic ? `اقرأ عن ${placeName} ←` : `Read about ${placeName} →`}</Link>
             <span className="text-xs font-normal text-brand-muted">{isArabic ? "سؤال جديد غداً." : "A new question tomorrow."}</span>
           </p>
         </div>

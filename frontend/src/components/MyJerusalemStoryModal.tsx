@@ -171,7 +171,7 @@ export const MyJerusalemStoryModal: React.FC<{ open: boolean; onClose: () => voi
     : (item.governorateId ?? "jerusalem") === scope), ...defaultMemories];
   const story = buildStory(isArabic, displayedMemories, locations, scope);
   const scopeName = scope === "all" ? (isArabic ? "فلسطين" : "Palestine") : governorateName(scope,isArabic);
-  const storyTitle = isArabic ? `تذكار رحلتي في ${scopeName}` : `My ${scopeName} keepsake`;
+  const storyTitle = isArabic ? `ألبوم رحلتي في ${scopeName}` : `My ${scopeName} trip album`;
   const albumTitle = isArabic ? `ألبوم ذكرياتي ولحظاتي في ${scopeName}` : `My ${scopeName} Journey Memories`;
   const explored = locations.filter((location) => story.exploredLocationIds.includes(location.id));
   const exploredNames = explored.map((item) => isArabic ? item.arabicName : item.name);

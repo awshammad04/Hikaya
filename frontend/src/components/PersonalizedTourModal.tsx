@@ -151,7 +151,7 @@ export const PersonalizedTourModal: React.FC = () => {
       <section className="bg-brand-surface rounded-3xl border border-brand-border shadow-2xl overflow-hidden">
         <div className="bg-brand-olive text-white p-7 sm:p-10 relative overflow-hidden">
           <div className="absolute inset-0 tatreez-grid opacity-10" />
-          <div className="relative"><p className="text-brand-amber-light text-xs font-bold tracking-widest">{isArabic ? "مخطط المسار الذكي" : "SMART ROUTE PLANNER"}</p><h1 className="font-serif font-black text-3xl sm:text-4xl mt-2">{isArabic ? "صمّم جولتك الذكية في القدس" : "Design your smart Jerusalem tour"}</h1><p className="text-stone-200 text-sm mt-2">{isArabic ? "ثلاث خطوات لمسار شخصي، قابل للاستخدام دون اتصال، ومبني على محتوى موثّق." : "Three steps to a personalized, offline-ready route grounded in reviewed content."}</p></div>
+          <div className="relative"><p className="text-brand-amber-light text-xs font-bold tracking-widest">{isArabic ? "مخطط المسار الذكي" : "SMART ROUTE PLANNER"}</p><h1 className="font-serif font-black text-3xl sm:text-4xl mt-2">{isArabic ? "خطّط مسار مشي في القدس" : "Plan a Jerusalem walking route"}</h1><p className="text-stone-200 text-sm mt-2">{isArabic ? "ثلاث خطوات لمسار شخصي، قابل للاستخدام دون اتصال، ومبني على محتوى موثّق." : "Three steps to a personalized, offline-ready route grounded in reviewed content."}</p></div>
         </div>
         <div className="p-6 sm:p-10 space-y-8">
           <div className="flex gap-2" aria-label={isArabic ? "التقدم" : "Progress"}>{[0,1,2].map((item) => <span key={item} className={`h-2 flex-1 rounded-full ${item <= step ? "bg-brand-amber" : "bg-brand-border-light"}`} />)}</div>

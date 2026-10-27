@@ -39,9 +39,9 @@ function excerpt(text: string, words = 55): string {
 }
 
 /**
- * The story of the day, on the home page.
+ * The place of the day, on the home page.
  *
- * Labelled "Story of the day" rather than "On this day": the reviewed content
+ * Labelled "Place of the day" rather than "On this day": the reviewed content
  * dates events to a year at best, so an anniversary claim would be a precision
  * the records cannot support. What it actually is - the same story for everyone,
  * changing daily - is what it says.
@@ -76,12 +76,12 @@ export const FeaturedStoryCard: React.FC<FeaturedStoryCardProps> = ({
           {reason === "random" ? (
             <>
               <Shuffle className="w-3 h-3" />
-              {isArabic ? "حكاية من الأرشيف" : "A story from the archive"}
+              {isArabic ? "اختيار عشوائي من الأرشيف" : "A random pick from the archive"}
             </>
           ) : (
             <>
               <CalendarDays className="w-3 h-3" />
-              {isArabic ? "حكاية اليوم" : "Story of the day"}
+              {isArabic ? "اختيار اليوم" : "Today’s pick"}
             </>
           )}
         </p>
@@ -107,7 +107,7 @@ export const FeaturedStoryCard: React.FC<FeaturedStoryCardProps> = ({
               to={`/locations/${location.id}`}
               className="bg-brand-olive hover:bg-brand-olive-deep text-brand-bg text-xs font-serif font-black tracking-widest uppercase px-5 py-2.5 rounded-full inline-flex items-center gap-2 transition-colors"
             >
-              {isArabic ? "اقرأ الحكاية" : "Read it"}
+              {isArabic ? "افتح المكان" : "Open the place"}
               <ArrowRight className="w-3.5 h-3.5 text-brand-amber" />
             </Link>
           )}
@@ -120,7 +120,7 @@ export const FeaturedStoryCard: React.FC<FeaturedStoryCardProps> = ({
               className="border border-brand-border hover:border-brand-amber disabled:opacity-50 text-brand-olive text-xs font-serif font-black tracking-widest uppercase px-5 py-2.5 rounded-full inline-flex items-center gap-2 transition-colors"
             >
               <Shuffle className={`w-3.5 h-3.5 ${shuffling ? "animate-spin" : ""}`} />
-              {isArabic ? "حكاية أخرى" : "Surprise me"}
+              {isArabic ? "مكان آخر" : "Another place"}
             </button>
           )}
         </div>
@@ -134,7 +134,7 @@ export const FeaturedStoryCard: React.FC<FeaturedStoryCardProps> = ({
 };
 
 /**
- * The "Story of the day" section: heading, a skeleton while it loads, then
+ * The "Place of the day" section: heading, a skeleton while it loads, then
  * the card. Hands its load error up so the page's data banner can show it.
  */
 export const StoryOfTheDay: React.FC<{ story: ReturnType<typeof useFeaturedStory> }> = ({ story }) => {
@@ -144,7 +144,7 @@ export const StoryOfTheDay: React.FC<{ story: ReturnType<typeof useFeaturedStory
   return (
     <Reveal className="space-y-4">
       <h2 className="font-serif font-black text-2xl text-brand-olive">
-        {isArabic ? "حكاية اليوم" : "Story of the day"}
+        {isArabic ? "مكان اليوم" : "Place of the day"}
       </h2>
       {loading ? (
         <div className="bg-brand-surface rounded-3xl border border-brand-border overflow-hidden grid grid-cols-1 md:grid-cols-5">
@@ -155,7 +155,7 @@ export const StoryOfTheDay: React.FC<{ story: ReturnType<typeof useFeaturedStory
             <SkeletonLine className="h-3 w-full" />
             <SkeletonLine className="h-3 w-5/6" />
           </div>
-          <LoadingRegion label={isArabic ? "جارٍ تحميل حكاية اليوم" : "Loading the story of the day"} />
+          <LoadingRegion label={isArabic ? "جارٍ تحميل مكان اليوم" : "Loading the place of the day"} />
         </div>
       ) : (
         featured && <FeaturedStoryCard featured={featured} onShuffle={shuffle} shuffling={shuffling} />

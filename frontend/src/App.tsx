@@ -20,7 +20,7 @@ const PersonalizedTourModal = page(() => import("./components/PersonalizedTourMo
 const AboutPage = page(() => import("./pages/AboutPage"), "AboutPage");
 const ConstellationPage = page(() => import("./pages/ConstellationPage"), "ConstellationPage");
 const ContributePage = page(() => import("./pages/ContributePage"), "ContributePage");
-const HomePage = page(() => import("./pages/HomePage"), "HomePage");
+const PlacesPage = page(() => import("./pages/PlacesPage"), "PlacesPage");
 const GovernoratePage = page(() => import("./pages/GovernoratePage"), "GovernoratePage");
 const HeritageMapPage = page(() => import("./pages/HeritageMapPage"), "HeritageMapPage");
 const CreateStoryPage = page(() => import("./pages/CreateStoryPage"), "CreateStoryPage");
@@ -36,6 +36,7 @@ const ReviewPage = page(() => import("./pages/ReviewPage"), "ReviewPage");
  * Routes for the Sprint 2 MVP flow:
  *
  *   /                   home
+ *   /places             every place, with search and filters
  *   /map                interactive map of the archived locations
  *   /constellation      the archive drawn as a web of shared themes
  *   /locations/:id      details, reviewed stories, AI narrative, memories
@@ -57,7 +58,8 @@ export default function App() {
         <Routes>
           <Route element={<AppLayout />}>
             <Route index element={<PalestineHomePage />} />
-            <Route path="jerusalem" element={<HomePage />} />
+            <Route path="places" element={<PlacesPage />} />
+            <Route path="jerusalem" element={<Navigate to="/governorates/jerusalem" replace />} />
             <Route path="governorates/:governorateId" element={<GovernoratePage />} />
             <Route path="governorates/:governorateId/map" element={<HeritageMapPage />} />
             <Route path="governorates/:governorateId/create-story" element={<CreateStoryPage />} />

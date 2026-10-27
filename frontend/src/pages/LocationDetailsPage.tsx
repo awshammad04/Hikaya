@@ -70,6 +70,7 @@ import { useInterfaceLanguage } from "../context/LanguageContext";
 import { locationById, governorateName, nationalRecord } from "../data/heritage";
 import { visitorWalkthrough } from "../visitorWalkthroughs";
 import { SourceCitationLine } from "../components/SourceCitationLine";
+import { categoryLabel } from "../utils/categories";
 import { markMemoryUncovered } from "../services/progress";
 import { InAppWalkingRouteModal } from "../components/InAppWalkingRouteModal";
 
@@ -102,7 +103,7 @@ const EMPTY: PageData = {
  * endless scroll: the story, the documented facts, the timeline, the
  * photographs, and what people remember.
  *
- * `?ask=1` opens on the guide (the "Ask Hikaya" call to action), and `?tour=1`
+ * `?ask=1` opens on the guide (the "Ask the guide" call to action), and `?tour=1`
  * opens on the story and starts reading it aloud (the walking tour).
  */
 export const LocationDetailsPage: React.FC = () => {
@@ -218,11 +219,11 @@ export const LocationDetailsPage: React.FC = () => {
             <code className="font-mono" dir="ltr">{locationId}</code>
           </p>
           <Link
-            to="/map"
+            to="/places"
             className="text-xs font-serif font-bold uppercase tracking-widest text-brand-olive hover:text-brand-amber inline-flex items-center gap-1.5"
           >
             <ArrowLeft className="w-3.5 h-3.5" />
-            {isArabic ? "العودة إلى الخريطة" : "Back to the map"}
+            {isArabic ? "ابحث في كل الأماكن" : "Search all places"}
           </Link>
         </div>
       </PageTransition>
@@ -232,7 +233,6 @@ export const LocationDetailsPage: React.FC = () => {
   const profile = locationById(location.id);
   const governorateId = location.governorateId ?? "jerusalem";
   const isJerusalem = governorateId === "jerusalem";
-  const mapPath = isJerusalem ? "/map" : `/governorates/${governorateId}/map`;
   const displayName = isArabic ? (profile?.arabicName ?? location.arabicName ?? location.name) : location.name;
   const secondaryName = isArabic ? location.name : (location.arabicName ?? profile?.arabicName);
   const description = isArabic ? (profile?.arabicSummary ?? location.description) : (profile?.summary ?? location.description);
@@ -258,13 +258,15 @@ export const LocationDetailsPage: React.FC = () => {
       <div className="space-y-8">
         <DataSourceBanner source={source} reason={reason} />
 
-        <Link
-          to={mapPath}
-          className="text-sm font-bold text-brand-muted hover:text-brand-olive inline-flex items-center gap-1.5"
-        >
-          <ArrowLeft className={`w-4 h-4 ${isArabic ? "rotate-180" : ""}`} />
-          {isArabic ? "كل الأماكن" : "All locations"}
-        </Link>
+        <nav aria-label={isArabic ? "مسار التنقل" : "Breadcrumb"} className="flex flex-wrap items-center gap-x-1.5 text-sm text-brand-muted">
+          <Link to="/" className="hover:text-brand-olive">{isArabic ? "فلسطين" : "Palestine"}</Link>
+          <span aria-hidden="true">/</span>
+          <Link to={`/governorates/${governorateId}`} className="font-bold hover:text-brand-olive">
+            {isArabic ? `أماكن ${governorateName(governorateId, true)}` : `Places in ${governorateName(governorateId, false)}`}
+          </Link>
+          <span aria-hidden="true">/</span>
+          <span className="text-brand-text">{displayName}</span>
+        </nav>
 
         {/* --- Header ------------------------------------------------------ */}
         <header className="relative rounded-3xl overflow-hidden border border-brand-border bg-brand-olive h-64">
@@ -309,7 +311,7 @@ export const LocationDetailsPage: React.FC = () => {
                       key={category}
                       className="rounded-full border border-brand-border-light bg-brand-bg px-2.5 py-1 font-mono text-xs text-brand-muted"
                     >
-                      {isArabic ? category : ({ "حارة تاريخية": "Historic quarter", "معلم ديني": "Sacred site", "سوق تراثي": "Historic souq", "حي مقدسي": "Jerusalem neighbourhood", "ذاكرة شفوية": "Oral memory", "متحف":"Museum", "تراث ثقافي":"Cultural heritage" }[category] ?? category)}
+                      {categoryLabel(category, isArabic)}
                     </span>
                   ))}
                 </div>
@@ -433,10 +435,12 @@ export const LocationDetailsPage: React.FC = () => {
               <div className="space-y-2">
                 <h2 className="font-serif font-black text-2xl text-brand-olive flex items-center gap-2">
                   <Sparkles className="w-5 h-5 text-brand-amber" />
-                  {isArabic ? "احكِ لي الحكاية" : "Tell me the story"}
+                  {isArabic ? "اقرأها بأسلوب يناسبك" : "Read it your way"}
                 </h2>
                 <p className="text-sm text-brand-muted">
-                  {isArabic ? "تُولَّد الحكاية من المحتوى المراجع لهذا المكان فقط." : "Generated from the reviewed content for this location only."}
+                  {isArabic
+                    ? "اختر القارئ والأسلوب، فيُعاد كتابة النص لك من المحتوى المراجع لهذا المكان فقط."
+                    : "Pick a reader and a style, and the text is rewritten for you from this place’s reviewed content only."}
                 </p>
                 <StoryWizard location={location} />
               </div>
@@ -483,14 +487,14 @@ export const LocationDetailsPage: React.FC = () => {
             <div className="space-y-4">
               <div className="flex items-end justify-between gap-4 flex-wrap">
                 <p className="text-sm text-brand-muted">
-                  {isArabic ? "حكايات يكتبها الزوار والسكان وتُنشر بعد موافقة المشرف." : "Stories written by visitors and residents, published after an admin approves them."}
+                  {isArabic ? "ذكريات يكتبها الزوار والسكان وتُنشر بعد موافقة المشرف." : "Memories written by visitors and residents, published after an admin approves them."}
                 </p>
                 <Link
                   to={`/contribute?location=${location.id}`}
                   className="text-xs font-serif font-bold uppercase tracking-widest text-brand-olive hover:text-brand-amber inline-flex items-center gap-1.5"
                 >
                   <PenLine className="w-3.5 h-3.5" />
-                  {isArabic ? "اكتب حكايتك" : "Write your story"}
+                  {isArabic ? "شارك ذكراك" : "Share your memory"}
                 </Link>
                 <Link
                   to={`/contribute?location=${location.id}&interview=1`}

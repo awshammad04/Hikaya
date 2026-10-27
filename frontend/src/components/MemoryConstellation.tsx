@@ -5,16 +5,25 @@ import { ApiContribution, ApiLocation } from "../types";
 import { useInterfaceLanguage } from "../context/LanguageContext";
 import { markMemoryUncovered } from "../services/progress";
 import { ArrowUpLeft, MessageSquareText, X } from "lucide-react";
+import { categoryLabel } from "../utils/categories";
 
 interface MemoryConstellationProps {
   locations: ApiLocation[];
   memories: ApiContribution[];
 }
 
-const SIZE = 720;
-const CENTRE = SIZE / 2;
-const LOCATION_RADIUS = 210;
-const CATEGORY_RADIUS = 120;
+// Wider than tall: place names run outwards to the left and right.
+const WIDTH = 1000;
+const HEIGHT = 760;
+const CX = WIDTH / 2;
+const CY = HEIGHT / 2;
+const LOCATION_RADIUS = 240;
+const CATEGORY_RADIUS = 125;
+/** Names longer than this are shortened on the drawing; the full name stays in the tooltip. */
+const LABEL_CHARS = 28;
+
+const shorten = (label: string) =>
+  label.length > LABEL_CHARS ? `${label.slice(0, LABEL_CHARS - 1).trimEnd()}…` : label;
 
 interface Node {
   id: string;
@@ -23,6 +32,24 @@ interface Node {
   y: number;
   kind: "location" | "category" | "memory";
   locationId?: string;
+  /** Direction from the centre, used to set a place's name outside the ring. */
+  angle?: number;
+}
+
+/**
+ * Sets a place's name outside the ring, running away from the centre, so
+ * neighbouring names sit one above the other instead of on top of each other.
+ * The text is laid out left to right so "start" and "end" mean the same thing
+ * for Arabic and English names.
+ */
+function labelPlacement(node: Node) {
+  const cos = Math.cos(node.angle ?? Math.PI / 2);
+  const sin = Math.sin(node.angle ?? Math.PI / 2);
+  const x = node.x + cos * 22;
+  const y = node.y + sin * 22;
+  if (cos > 0.15) return { x, y: y + 4, textAnchor: "start" as const };
+  if (cos < -0.15) return { x, y: y + 4, textAnchor: "end" as const };
+  return { x, y: sin < 0 ? y - 2 : y + 10, textAnchor: "middle" as const };
 }
 
 /**
@@ -88,17 +115,17 @@ export const MemoryConstellation: React.FC<MemoryConstellationProps> = ({
       const angle = offset + index * step;
       nodeList.push({
         id: `category:${category}`,
-        label: category,
-        x: CENTRE + Math.cos(angle) * CATEGORY_RADIUS,
-        y: CENTRE + Math.sin(angle) * CATEGORY_RADIUS,
+        label: categoryLabel(category, isArabic),
+        x: CX + Math.cos(angle) * CATEGORY_RADIUS,
+        y: CY + Math.sin(angle) * CATEGORY_RADIUS,
         kind: "category",
       });
     });
 
     ordered.forEach((location, index) => {
       const angle = ringAngle(index);
-      const x = CENTRE + Math.cos(angle) * LOCATION_RADIUS;
-      const y = CENTRE + Math.sin(angle) * LOCATION_RADIUS;
+      const x = CX + Math.cos(angle) * LOCATION_RADIUS;
+      const y = CY + Math.sin(angle) * LOCATION_RADIUS;
       nodeList.push({
         id: `location:${location.id}`,
         label: isArabic ? (location.arabicName ?? location.name) : location.name,
@@ -106,6 +133,7 @@ export const MemoryConstellation: React.FC<MemoryConstellationProps> = ({
         y,
         kind: "location",
         locationId: location.id,
+        angle,
       });
 
       location.categories.forEach((category) => {
@@ -116,16 +144,17 @@ export const MemoryConstellation: React.FC<MemoryConstellationProps> = ({
         });
       });
 
-      // Memories orbit their own location, fanned outwards from the centre.
+      // Memories sit just inside their own location, leaving the outside of
+      // the ring free for the place names.
       const attached = memories.filter((memory) => memory.locationId === location.id);
       attached.forEach((memory, memoryIndex) => {
-        const spread = ((memoryIndex - (attached.length - 1) / 2) * Math.PI) / 9;
+        const spread = ((memoryIndex - (attached.length - 1) / 2) * Math.PI) / 40;
         const memoryAngle = angle + spread;
         nodeList.push({
           id: `memory:${memory.id}`,
           label: memory.title,
-          x: CENTRE + Math.cos(memoryAngle) * (LOCATION_RADIUS + 86),
-          y: CENTRE + Math.sin(memoryAngle) * (LOCATION_RADIUS + 86),
+          x: CX + Math.cos(memoryAngle) * (LOCATION_RADIUS - 46),
+          y: CY + Math.sin(memoryAngle) * (LOCATION_RADIUS - 46),
           kind: "memory",
           locationId: location.id,
         });
@@ -173,7 +202,7 @@ export const MemoryConstellation: React.FC<MemoryConstellationProps> = ({
   return (
     <div className="bg-brand-surface rounded-3xl border border-brand-border overflow-hidden">
       <svg
-        viewBox={`0 0 ${SIZE} ${SIZE}`}
+        viewBox={`0 0 ${WIDTH} ${HEIGHT}`}
         className="w-full h-auto"
         role="img"
         aria-label={isArabic ? "الأرشيف مرسوماً شبكة من الأماكن والتصنيفات والذكريات" : "The archive drawn as a web of locations, categories and memories"}
@@ -185,7 +214,7 @@ export const MemoryConstellation: React.FC<MemoryConstellationProps> = ({
           </radialGradient>
         </defs>
 
-        <circle cx={CENTRE} cy={CENTRE} r={LOCATION_RADIUS} fill="url(#constellation-glow)" />
+        <circle cx={CX} cy={CY} r={LOCATION_RADIUS} fill="url(#constellation-glow)" />
 
         {edges.map((edge, index) => {
           const from = byId[edge.from];
@@ -291,13 +320,11 @@ export const MemoryConstellation: React.FC<MemoryConstellationProps> = ({
                 strokeWidth={3}
               />
               <text
-                x={node.x}
-                y={node.y + 32}
-                textAnchor="middle"
+                {...labelPlacement(node)}
                 className="fill-brand-olive"
-                style={{ fontSize: 13, fontFamily: "Thmanyah Serif Display, serif", fontWeight: 700 }}
+                style={{ fontSize: 13, fontFamily: "Thmanyah Serif Display, serif", fontWeight: 700, direction: "ltr" }}
               >
-                {node.label}
+                {shorten(node.label)}
               </text>
               <title>{node.label}</title>
             </motion.g>

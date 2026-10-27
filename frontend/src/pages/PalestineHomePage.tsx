@@ -1,6 +1,6 @@
-import React from "react";
-import { Link } from "react-router-dom";
-import { ArrowLeft, BookHeart, Headphones, MapPin, Sparkles } from "lucide-react";
+import React, { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { ArrowLeft, Headphones, MapPin, Route, Search } from "lucide-react";
 import { useInterfaceLanguage } from "../context/LanguageContext";
 import {
   PageTransition,
@@ -8,7 +8,7 @@ import {
   StaggerList,
   StaggerItem,
 } from "../components/motion";
-import { governorates } from "../data/heritage";
+import { governorates, scopedProfiles } from "../data/heritage";
 import { useLocations } from "../hooks/useLocations";
 import { DataSourceBanner } from "../components/DataSourceBanner";
 import { PalestineMiniMap } from "../components/PalestineGeography";
@@ -19,34 +19,49 @@ import { useFeaturedStory } from "../hooks/useFeaturedStory";
 
 const STEPS = [
   {
-    icon: MapPin,
-    ar: "اختر مكاناً",
-    en: "Pick a place",
-    arText: "ابدأ من محافظة أو من الخريطة، وكل مكان له سجل موثّق المصادر.",
-    enText: "Start from a governorate or the map; every place has a sourced record.",
+    icon: Search,
+    ar: "ابحث عن مكان",
+    en: "Find a place",
+    arText: "ابحث بالاسم أو تصفّح المحافظات والخريطة؛ لكل مكان سجل موثّق المصادر.",
+    enText: "Search by name or browse the governorates and the map; every place has a sourced record.",
+    to: "/places",
+    arLink: "كل الأماكن",
+    enLink: "All places",
   },
   {
     icon: Headphones,
     ar: "اقرأ واستمع",
     en: "Read and listen",
-    arText: "حكايات مراجَعة بصوت راوٍ، مع خط زمني وصور وأسئلة للدليل.",
-    enText: "Reviewed stories with narration, a timeline, photos and a guide to ask.",
+    arText: "في صفحة كل مكان: النص بصوت راوٍ، وخط زمني وصور، ومرشد تسأله.",
+    enText: "On every place page: narrated text, a timeline, photos and a guide to ask.",
   },
   {
-    icon: Sparkles,
-    ar: "أنشئ حكايتك",
-    en: "Create your story",
-    arText: "اختر اهتماماتك ووقتك، فتجمع حكاية الأماكن في حكاية واحدة لك.",
-    enText: "Choose your interests and time, and Hikaya weaves the places into one story.",
+    icon: Route,
+    ar: "خطّط رحلتك",
+    en: "Plan your trip",
+    arText: "اختر المحافظات واهتماماتك ووقتك، فنكتب لك رحلة تجمع الأماكن في حكاية واحدة.",
+    enText: "Choose governorates, interests and time, and Hikaya writes a trip that links the places into one story.",
+    to: "/create-story",
+    arLink: "خطّط رحلتك في فلسطين",
+    enLink: "Plan your Palestine trip",
   },
 ];
 
 export const PalestineHomePage: React.FC = () => {
   const { isArabic } = useInterfaceLanguage();
+  const navigate = useNavigate();
+  const [query, setQuery] = useState("");
   const { locations, source, reason } = useLocations("all");
   const story = useFeaturedStory();
+  // The bundled records give the count before the list arrives.
+  const placeTotal = locations.length || scopedProfiles("all").length;
   // An odd count leaves the last row half empty, so the first card spans it.
   const wideFirst = governorates.length % 2 === 1;
+  const search = (event: React.FormEvent) => {
+    event.preventDefault();
+    const q = query.trim();
+    navigate(q ? `/places?q=${encodeURIComponent(q)}` : "/places");
+  };
   return (
     <PageTransition>
       <div className="space-y-14">
@@ -62,20 +77,39 @@ export const PalestineHomePage: React.FC = () => {
               </h1>
               <p className="text-base leading-8 text-white/85">
                 {isArabic
-                  ? "من حارات القدس إلى متاحف رام الله وتراث الخليل وذاكرة غزة، اكتشف الأماكن من مصادر موثّقة، وصمّم حكاية ثقافية تجمع ما يهمك."
-                  : "From Jerusalem’s quarters to Ramallah’s museums, Hebron’s heritage and Gaza’s memory, explore sourced place records and create a cultural story around your interests."}
+                  ? `${placesCount(placeTotal, true)} من القدس إلى غزة، لكل منها سجل من مصادر موثّقة. ابحث عن مكان أو اختر محافظة لتبدأ.`
+                  : `${placesCount(placeTotal, false)} from Jerusalem to Gaza, each with a record from cited sources. Search for a place or pick a governorate to begin.`}
               </p>
+              <form role="search" onSubmit={search} className="flex max-w-xl gap-2 rounded-full bg-white p-1.5 shadow-lg">
+                <label className="relative flex-1">
+                  <span className="sr-only">{isArabic ? "ابحث عن مكان" : "Search for a place"}</span>
+                  <Search className="pointer-events-none absolute start-3 top-1/2 h-5 w-5 -translate-y-1/2 text-brand-muted" aria-hidden="true" />
+                  <input
+                    type="search"
+                    value={query}
+                    onChange={(event) => setQuery(event.target.value)}
+                    placeholder={isArabic ? "ابحث: سبسطية، كنيسة، سوق…" : "Search: Sebastia, church, souq…"}
+                    className="h-11 w-full rounded-full bg-transparent ps-10 pe-2 text-base text-brand-text outline-none placeholder:text-brand-muted [&::-webkit-search-cancel-button]:hidden"
+                  />
+                </label>
+                <button
+                  type="submit"
+                  className="shrink-0 rounded-full bg-brand-amber px-5 text-sm font-bold transition-colors hover:bg-brand-amber-deep"
+                >
+                  {isArabic ? "ابحث" : "Search"}
+                </button>
+              </form>
               <div className="flex flex-wrap gap-3">
                 <Link
-                  to="/create-story"
-                  className="rounded-full bg-brand-amber px-6 py-3 text-sm font-bold inline-flex items-center gap-2 transition-colors hover:bg-brand-amber-deep"
+                  to="/places"
+                  className="rounded-full bg-white/15 px-5 py-2.5 text-sm font-bold inline-flex items-center gap-2 transition-colors hover:bg-white/25"
                 >
-                  <BookHeart className="w-4 h-4" />
-                  {isArabic ? "أنشئ حكايتك في فلسطين" : "Create your Palestine story"}
+                  {isArabic ? "تصفّح كل الأماكن" : "Browse all places"}
+                  <ArrowLeft className={`w-4 h-4 ${isArabic ? "" : "rotate-180"}`} />
                 </Link>
                 <Link
                   to="/palestine-map"
-                  className="rounded-full border border-white/40 px-6 py-3 text-sm font-bold inline-flex items-center gap-2 transition-colors hover:bg-white/10"
+                  className="rounded-full border border-white/40 px-5 py-2.5 text-sm font-bold inline-flex items-center gap-2 transition-colors hover:bg-white/10"
                 >
                   <MapPin className="w-4 h-4" />
                   {isArabic ? "خريطة فلسطين" : "Palestine map"}
@@ -90,8 +124,6 @@ export const PalestineHomePage: React.FC = () => {
             </div>
           </div>
         </section>
-
-        <StoryOfTheDay story={story} />
 
         <Reveal className="space-y-5">
           <div>
@@ -146,10 +178,10 @@ export const PalestineHomePage: React.FC = () => {
                       </p>
                       <div className="flex items-center justify-between text-sm font-bold">
                         <span className="text-brand-muted">
-                          {placesCount(count, isArabic)} {isArabic ? "في الأرشيف" : "in the archive"}
+                          {placesCount(count, isArabic)}
                         </span>
                         <span className="inline-flex items-center gap-2 text-brand-olive transition-colors group-hover:text-brand-amber">
-                          {isArabic ? "ابدأ الحكاية" : "Explore"}
+                          {isArabic ? "استكشف" : "Explore"}
                           <ArrowLeft
                             className={`w-4 h-4 transition-transform group-hover:-translate-x-1 ${isArabic ? "" : "rotate-180"}`}
                           />
@@ -163,15 +195,15 @@ export const PalestineHomePage: React.FC = () => {
           </StaggerList>
         </Reveal>
 
-        <DailyQuestion />
+        <StoryOfTheDay story={story} />
 
         <Reveal className="space-y-5">
           <h2 className="font-serif font-black text-3xl text-brand-olive">
             {isArabic ? "كيف تعمل حكاية" : "How Hikaya works"}
           </h2>
           <ol className="grid gap-4 md:grid-cols-3">
-            {STEPS.map(({ icon: Icon, ar, en, arText, enText }, index) => (
-              <li key={en} className="rounded-3xl border border-brand-border bg-brand-surface p-6 space-y-3">
+            {STEPS.map(({ icon: Icon, ar, en, arText, enText, to, arLink, enLink }, index) => (
+              <li key={en} className="flex flex-col rounded-3xl border border-brand-border bg-brand-surface p-6 gap-3">
                 <div className="flex items-center gap-3">
                   <span className="grid h-10 w-10 place-items-center rounded-2xl bg-brand-amber/10 text-brand-amber">
                     <Icon className="w-5 h-5" />
@@ -179,11 +211,19 @@ export const PalestineHomePage: React.FC = () => {
                   <span className="text-sm font-bold text-brand-muted">{index + 1}</span>
                 </div>
                 <h3 className="font-serif text-xl font-black text-brand-olive">{isArabic ? ar : en}</h3>
-                <p className="text-sm leading-6 text-brand-muted">{isArabic ? arText : enText}</p>
+                <p className="flex-1 text-sm leading-6 text-brand-muted">{isArabic ? arText : enText}</p>
+                {to && (
+                  <Link to={to} className="inline-flex items-center gap-1.5 text-sm font-bold text-brand-olive hover:text-brand-amber">
+                    {isArabic ? arLink : enLink}
+                    <ArrowLeft className={`w-4 h-4 ${isArabic ? "" : "rotate-180"}`} />
+                  </Link>
+                )}
               </li>
             ))}
           </ol>
         </Reveal>
+
+        <DailyQuestion />
       </div>
     </PageTransition>
   );

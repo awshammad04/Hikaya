@@ -176,7 +176,7 @@ export const StoryWizard: React.FC<StoryWizardProps> = ({ location, autoPlay }) 
     <div className="bg-brand-surface rounded-3xl border border-brand-border p-6 space-y-5 shadow-sm">
       {/* --- Step indicator --------------------------------------------- */}
       <ol className="flex items-center gap-2 text-xs font-mono uppercase tracking-wider">
-        {(isArabic ? ["الجمهور", "الأسلوب", "الحكاية"] : ["Audience", "Style", "Story"]).map((label, index) => (
+        {(isArabic ? ["القارئ", "الأسلوب", "النص"] : ["Reader", "Style", "Text"]).map((label, index) => (
           <li key={label} className="flex items-center gap-2">
             <span
               className={`w-5 h-5 rounded-full inline-flex items-center justify-center border transition-colors ${

@@ -1,6 +1,6 @@
 import React, { Suspense, useEffect, useRef, useState } from "react";
 import { Link, NavLink, Outlet, useLocation, useNavigationType } from "react-router-dom";
-import { BookHeart, ChevronDown, Home, Info, Languages, Loader2, MapPin, Menu, Moon, PenLine, ShieldCheck, Stamp, Sun, Waypoints, X } from "lucide-react";
+import { ChevronDown, Home, Info, Languages, Loader2, MapPin, Menu, Moon, PenLine, Route, Search, ShieldCheck, Stamp, Sun, X } from "lucide-react";
 import { useInterfaceLanguage } from "../context/LanguageContext";
 import { MyJerusalemStoryModal } from "./MyJerusalemStoryModal";
 import { governorates, governorateById, nationalRecord } from "../data/heritage";
@@ -78,29 +78,22 @@ export const AppLayout: React.FC = () => {
   const navigationType = useNavigationType();
 
   const governorateId = currentGovernorate(pathname);
-  const isJerusalem = governorateId === "jerusalem";
   const governorate = governorateId ? governorateById(governorateId) : undefined;
 
-  // Labels stay the same everywhere; inside Jerusalem the map and connections
-  // open the Jerusalem versions.
+  // The menu reads and leads the same on every page; only the trip planner
+  // starts from the governorate the visitor is in.
   const pendingReviews = usePendingReviews();
   const navItems = [
     { to: "/", en: "Home", ar: "الرئيسية", icon: Home, active: pathname === "/" },
+    { to: "/places", en: "Places", ar: "الأماكن", icon: Search, active: pathname === "/places" },
     {
-      to: isJerusalem ? "/map" : "/palestine-map",
+      to: "/palestine-map",
       en: "Map",
       ar: "الخريطة",
       icon: MapPin,
       active: pathname === "/map" || pathname === "/palestine-map" || /^\/governorates\/[^/]+\/map$/.test(pathname),
     },
-    {
-      to: isJerusalem ? "/constellation" : "/palestine-connections",
-      en: "Connections",
-      ar: "الروابط",
-      icon: Waypoints,
-      active: pathname === "/constellation" || pathname === "/palestine-connections" || /^\/governorates\/[^/]+\/connections$/.test(pathname),
-    },
-    { to: "/contribute", en: "Contribute", ar: "شارك حكاية", icon: PenLine, active: pathname === "/contribute" },
+    { to: "/contribute", en: "Share a memory", ar: "شارك ذكرى", icon: PenLine, active: pathname === "/contribute" },
     { to: "/about", en: "About", ar: "عن المنصة", icon: Info, active: pathname === "/about" },
   ];
   const storyPath = governorateId ? `/governorates/${governorateId}/create-story` : "/create-story";
@@ -175,14 +168,12 @@ export const AppLayout: React.FC = () => {
             </picture>
             <span className="hidden 2xl:block h-8 w-px shrink-0 bg-brand-border-light" aria-hidden="true" />
             <span className="hidden 2xl:block max-w-[12rem] text-xs leading-snug text-brand-muted">
-              {isJerusalem
-                ? isArabic ? "المرشد الرقمي الذكي للقدس" : "The intelligent guide to Jerusalem"
-                : isArabic ? "المرشد الرقمي للتراث الفلسطيني" : "The digital guide to Palestinian heritage"}
+              {isArabic ? "المرشد الرقمي للتراث الفلسطيني" : "The digital guide to Palestinian heritage"}
             </span>
           </Link>
 
           <nav aria-label={isArabic ? "التنقل الرئيسي" : "Main"} className="hidden lg:flex items-center gap-1">
-            {navItems.slice(0, 1).map(({ to, en, ar, icon: Icon, active }) => (
+            {navItems.slice(0, 2).map(({ to, en, ar, icon: Icon, active }) => (
               <Link key={to} to={to} className={navLinkClass(active)} aria-current={active ? "page" : undefined}>
                 <Icon className="hidden xl:block w-4 h-4" /> {isArabic ? ar : en}
               </Link>
@@ -195,7 +186,7 @@ export const AppLayout: React.FC = () => {
                 aria-haspopup="true"
                 className={navLinkClass(Boolean(governorate))}
               >
-                {governorate ? (isArabic ? governorate.arabicName : governorate.name) : isArabic ? "المحافظات" : "Governorates"}
+                {isArabic ? "المحافظات" : "Governorates"}
                 <ChevronDown className={`w-4 h-4 transition-transform ${placesOpen ? "rotate-180" : ""}`} />
               </button>
               {placesOpen && (
@@ -217,7 +208,7 @@ export const AppLayout: React.FC = () => {
                 </div>
               )}
             </div>
-            {navItems.slice(1).map(({ to, en, ar, icon: Icon, active }) => (
+            {navItems.slice(2).map(({ to, en, ar, icon: Icon, active }) => (
               <Link key={to} to={to} className={navLinkClass(active)} aria-current={active ? "page" : undefined}>
                 <Icon className="hidden xl:block w-4 h-4" /> {isArabic ? ar : en}
               </Link>
@@ -243,17 +234,10 @@ export const AppLayout: React.FC = () => {
             </button>
             <ReviewChip pending={pendingReviews} />
             <AccountChip />
-            {isJerusalem ? (
-              <button type="button" onClick={() => setStoryOpen(true)} className={`hidden sm:inline-flex ${storyButton}`}>
-                <BookHeart className="w-4 h-4 text-brand-amber-light" />
-                {isArabic ? "أنشئ حكايتك" : "Create your story"}
-              </button>
-            ) : (
-              <Link to={storyPath} className={`hidden sm:inline-flex ${storyButton} ${storyActive ? "ring-2 ring-brand-amber ring-offset-2 ring-offset-brand-bg" : ""}`}>
-                <BookHeart className="w-4 h-4 text-brand-amber-light" />
-                {isArabic ? "أنشئ حكايتك" : "Create your story"}
-              </Link>
-            )}
+            <Link to={storyPath} className={`hidden sm:inline-flex ${storyButton} ${storyActive ? "ring-2 ring-brand-amber ring-offset-2 ring-offset-brand-bg" : ""}`}>
+              <Route className="w-4 h-4 text-brand-amber-light" />
+              {isArabic ? "خطّط رحلتك" : "Plan your trip"}
+            </Link>
             <button
               type="button"
               onClick={() => setMenuOpen((open) => !open)}
@@ -310,17 +294,10 @@ export const AppLayout: React.FC = () => {
                 </Link>
               ))}
             </div>
-            {isJerusalem ? (
-              <button type="button" onClick={() => { setMenuOpen(false); setStoryOpen(true); }} className={mobileStoryButton}>
-                <BookHeart className="w-5 h-5 text-brand-amber-light" />
-                {isArabic ? "أنشئ حكايتك" : "Create your story"}
-              </button>
-            ) : (
-              <Link to={storyPath} className={mobileStoryButton}>
-                <BookHeart className="w-5 h-5 text-brand-amber-light" />
-                {isArabic ? "أنشئ حكايتك" : "Create your story"}
-              </Link>
-            )}
+            <Link to={storyPath} className={mobileStoryButton}>
+              <Route className="w-5 h-5 text-brand-amber-light" />
+              {isArabic ? "خطّط رحلتك" : "Plan your trip"}
+            </Link>
           </div>
         )}
       </header>
@@ -367,10 +344,12 @@ export const AppLayout: React.FC = () => {
             <p className="mb-3 text-xs font-bold text-brand-olive">{isArabic ? "استكشف وشارك" : "Explore and take part"}</p>
             <ul className="space-y-2 text-sm">
               {[
-                { to: "/create-story", ar: "أنشئ حكايتك", en: "Create your story" },
+                { to: "/places", ar: "كل الأماكن", en: "All places" },
+                { to: "/create-story", ar: "خطّط رحلتك", en: "Plan your trip" },
                 { to: "/palestine-map", ar: "خريطة فلسطين", en: "Palestine map" },
+                { to: "/palestine-connections", ar: "كيف تتصل الأماكن", en: "How places connect" },
                 { to: "/me", ar: "جواز سفري", en: "My passport" },
-                { to: "/contribute", ar: "شارك حكاية", en: "Contribute" },
+                { to: "/contribute", ar: "شارك ذكرى", en: "Share a memory" },
                 { to: "/about", ar: "عن المنصة", en: "About" },
               ].map(({ to, ar, en }) => (
                 <li key={to}>

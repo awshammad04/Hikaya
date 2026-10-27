@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Navigate, useNavigate, useParams } from "react-router-dom";
-import { Check, BookHeart, Loader2 } from "lucide-react";
+import { Check, Loader2, Route } from "lucide-react";
 import { useInterfaceLanguage } from "../context/LanguageContext";
 import { governorates, governorateById } from "../data/heritage";
 import {
@@ -12,8 +12,6 @@ import {
 } from "../types";
 import { createJourney, JOURNEY_KEY } from "../services/journeys";
 import { PageTransition } from "../components/motion";
-import { MyJerusalemStoryModal } from "../components/MyJerusalemStoryModal";
-import { HomePage } from "./HomePage";
 import { saveStory } from "../services/accountSync";
 
 const interests: { id: TourInterest; ar: string; en: string }[] = [
@@ -96,16 +94,6 @@ export const CreateStoryPage: React.FC = () => {
   });
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
-  if (governorateId === "jerusalem")
-    return (
-      <>
-        <HomePage />
-        <MyJerusalemStoryModal
-          open={true}
-          onClose={() => navigate("/governorates/jerusalem")}
-        />
-      </>
-    );
   if (governorateId && !governorateById(governorateId))
     return <Navigate to="/" replace />;
   const name = governorateId
@@ -116,8 +104,8 @@ export const CreateStoryPage: React.FC = () => {
       ? "فلسطين"
       : "Palestine";
   const title = isArabic
-    ? `أنشئ حكايتك في ${name}`
-    : `Create your ${name} story`;
+    ? `خطّط رحلتك في ${name}`
+    : `Plan your ${name} trip`;
   const stepLabels = [
     { ar: "المحافظات", en: "Places" },
     { ar: "الأسلوب", en: "Style" },
@@ -182,13 +170,13 @@ export const CreateStoryPage: React.FC = () => {
               </h1>
               <p className="mt-3 text-sm leading-6 text-white/80">
                 {isArabic
-                  ? "حكاية شخصية من أماكن المحافظات التي تختارها، وفق اهتماماتك ولغتك ووقت القراءة."
-                  : "A personal story from your selected governorates, shaped by your interests, language and reading time."}
+                  ? "اختر المحافظات والأسلوب والوقت واهتماماتك، فنكتب لك رحلة من عدة أماكن تُقرأ كحكاية واحدة، فصلاً لكل محطة."
+                  : "Choose governorates, style, time and interests, and Hikaya writes a trip through several places that reads as one story, a chapter per stop."}
               </p>
             </div>
           </header>
           <div className="p-6 sm:p-10 space-y-7">
-            <ol className="grid gap-2" style={{ gridTemplateColumns: `repeat(${totalSteps}, minmax(0, 1fr))` }} aria-label={isArabic ? "خطوات الحكاية" : "Story steps"}>
+            <ol className="grid gap-2" style={{ gridTemplateColumns: `repeat(${totalSteps}, minmax(0, 1fr))` }} aria-label={isArabic ? "خطوات تخطيط الرحلة" : "Trip planning steps"}>
               {stepLabels.map((label, index) => (
                 <li key={label.en} className="space-y-2" aria-current={index === step ? "step" : undefined}>
                   <span className={`block h-1.5 rounded-full ${index <= step ? "bg-brand-amber" : "bg-brand-border-light"}`} />
@@ -333,8 +321,8 @@ export const CreateStoryPage: React.FC = () => {
                 {preferences.governorateIds.length > (DURATION_STOPS[preferences.duration] ?? 5) && (
                   <p className="rounded-2xl border border-brand-amber/30 bg-brand-amber/10 px-4 py-3 text-sm text-brand-text" role="note">
                     {isArabic
-                      ? `اخترت ${preferences.governorateIds.length} محافظات، فستضم الحكاية ${preferences.governorateIds.length} فصول: فصلاً واحداً على الأقل لكل محافظة.`
-                      : `You chose ${preferences.governorateIds.length} governorates, so the story will have ${preferences.governorateIds.length} chapters: at least one for each.`}
+                      ? `اخترت ${preferences.governorateIds.length} محافظات، فستضم الرحلة ${preferences.governorateIds.length} فصول: فصلاً واحداً على الأقل لكل محافظة.`
+                      : `You chose ${preferences.governorateIds.length} governorates, so the trip will have ${preferences.governorateIds.length} chapters: at least one for each.`}
                   </p>
                 )}
               </div>
@@ -398,15 +386,15 @@ export const CreateStoryPage: React.FC = () => {
                   {busy ? (
                     <Loader2 className="w-4 h-4 animate-spin" />
                   ) : (
-                    <BookHeart className="w-4 h-4" />
+                    <Route className="w-4 h-4" />
                   )}
                   {busy
                     ? isArabic
-                      ? "جارٍ إنشاء الحكاية"
-                      : "Creating your story"
+                      ? "جارٍ تخطيط رحلتك"
+                      : "Planning your trip"
                     : isArabic
-                      ? "أنشئ حكايتي"
-                      : "Create my story"}
+                      ? "خطّط رحلتي"
+                      : "Plan my trip"}
                 </button>
               )}
             </div>

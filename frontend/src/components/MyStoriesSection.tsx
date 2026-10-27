@@ -98,12 +98,12 @@ export const MyStoriesSection: React.FC<{ stories: SavedStory[]; onDelete: (id: 
   return (
     <section className="space-y-4">
       <div className="flex flex-wrap items-end justify-between gap-3">
-        <h2 className="font-serif font-black text-2xl text-brand-olive">{isArabic ? "حكايات كتبتها" : "Stories I wrote"}</h2>
-        <Link to="/contribute" className="text-xs font-bold text-brand-amber inline-flex items-center gap-1"><PenLine className="w-3.5 h-3.5" />{isArabic ? "اكتب حكاية" : "Write a story"}</Link>
+        <h2 className="font-serif font-black text-2xl text-brand-olive">{isArabic ? "ذكريات كتبتها" : "Memories I wrote"}</h2>
+        <Link to="/contribute" className="text-xs font-bold text-brand-amber inline-flex items-center gap-1"><PenLine className="w-3.5 h-3.5" />{isArabic ? "شارك ذكرى" : "Share a memory"}</Link>
       </div>
       {stories.length === 0 ? (
         <p className="text-sm text-brand-muted rounded-3xl border border-dashed border-brand-border p-6">
-          {isArabic ? "اكتب حكايتك عن أي مكان؛ تبقى هنا لك وحدك، أو تشاركها مع الجميع بعد مراجعة المشرف." : "Write your story of any place. It stays here just for you, or you can share it with everyone after an admin reviews it."}
+          {isArabic ? "اكتب ذكراك عن أي مكان؛ تبقى هنا لك وحدك، أو تشاركها مع الجميع بعد مراجعة المشرف." : "Write your memory of any place. It stays here just for you, or you can share it with everyone after an admin reviews it."}
         </p>
       ) : (
         <ul className="space-y-3">

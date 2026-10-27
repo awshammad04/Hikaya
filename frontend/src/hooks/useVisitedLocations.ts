@@ -136,12 +136,13 @@ function buildBadges(count: number, total: number): Badge[] {
     },
   ];
 
-  // Deduplicate thresholds so a small future collection never awards two
-  // differently named badges for the same action.
+  // Drop badges a governorate has too few places to earn, and deduplicate
+  // thresholds so a small collection never awards two differently named
+  // badges for the same action.
   const seen = new Set<number>();
   return definitions
     .filter((badge) => {
-      if (seen.has(badge.threshold)) return false;
+      if (badge.threshold > Math.max(total, 1) || seen.has(badge.threshold)) return false;
       seen.add(badge.threshold);
       return true;
     })

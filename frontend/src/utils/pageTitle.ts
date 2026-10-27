@@ -6,12 +6,14 @@ const STATIC: Record<string, { ar: string; en: string }> = {
   "/jerusalem": { ar: "القدس", en: "Jerusalem" },
   "/map": { ar: "خريطة القدس", en: "Jerusalem map" },
   "/palestine-map": { ar: "خريطة فلسطين", en: "Map of Palestine" },
-  "/constellation": { ar: "روابط القدس", en: "Jerusalem connections" },
-  "/palestine-connections": { ar: "روابط فلسطين", en: "Connections across Palestine" },
-  "/create-story": { ar: "أنشئ حكايتك", en: "Create your story" },
-  "/my-story": { ar: "حكايتي", en: "My story" },
-  "/plan-tour": { ar: "خطط جولتك", en: "Plan your tour" },
-  "/contribute": { ar: "شارك حكاية", en: "Share a memory" },
+  "/places": { ar: "كل الأماكن", en: "All places" },
+  "/constellation": { ar: "كيف تتصل أماكن القدس", en: "How Jerusalem's places connect" },
+  "/palestine-connections": { ar: "كيف تتصل الأماكن", en: "How places connect" },
+  "/connections": { ar: "كيف تتصل الأماكن", en: "How places connect" },
+  "/create-story": { ar: "خطّط رحلتك", en: "Plan your trip" },
+  "/my-story": { ar: "رحلتي", en: "My trip" },
+  "/plan-tour": { ar: "مسار مشي في القدس", en: "Jerusalem walking route" },
+  "/contribute": { ar: "شارك ذكرى", en: "Share a memory" },
   "/about": { ar: "عن المنصة", en: "About" },
   "/account": { ar: "الحساب", en: "Account" },
   "/me": { ar: "جواز سفري", en: "My passport" },
@@ -41,10 +43,10 @@ export function pageTitle(pathname: string, isArabic: boolean): string {
   if (area) {
     const governorate = governorateById(area[1]);
     if (!governorate) return name("الصفحة غير موجودة", "Page not found");
-    const section = area[2] ? STATIC[`/${area[2] === "connections" ? "palestine-connections" : area[2]}`] : undefined;
+    const section = area[2] ? STATIC[`/${area[2] === "map" ? "palestine-map" : area[2]}`] : undefined;
     const label = { ar: governorate.arabicName, en: governorate.name };
     return section
-      ? name(`${section.ar.replace(" فلسطين", "")} · ${label.ar}`, `${section.en.replace(/ (?:of|across) Palestine$/, "")} · ${label.en}`)
+      ? name(`${section.ar.replace(" فلسطين", "")} · ${label.ar}`, `${section.en.replace(/ of Palestine$/, "")} · ${label.en}`)
       : name(label.ar, label.en);
   }
   return site;

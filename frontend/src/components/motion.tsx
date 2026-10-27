@@ -29,7 +29,9 @@ export const PageTransition: React.FC<{ children: React.ReactNode }> = ({
  * Reveals a block as it scrolls into view, once.
  *
  * `viewport.once` matters: re-animating on every scroll past turns a long
- * location page into a flicker show.
+ * location page into a flicker show. The reveal starts 200px before the block
+ * reaches the screen and is short, so scrolling quickly never shows an empty
+ * page.
  */
 export const Reveal: React.FC<{
   children: React.ReactNode;
@@ -40,10 +42,10 @@ export const Reveal: React.FC<{
   return (
     <motion.div
       className={className}
-      initial={{ opacity: 0, y: reduced ? 0 : 16 }}
+      initial={{ opacity: 0, y: reduced ? 0 : 12 }}
       whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-60px" }}
-      transition={{ duration: reduced ? 0.15 : 0.5, delay: reduced ? 0 : delay }}
+      viewport={{ once: true, margin: "0px 0px 200px 0px" }}
+      transition={{ duration: reduced ? 0.15 : 0.3, delay: reduced ? 0 : delay }}
     >
       {children}
     </motion.div>

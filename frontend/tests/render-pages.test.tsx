@@ -8,6 +8,7 @@ import { AppLayout } from "../src/components/AppLayout";
 import { PalestineHomePage } from "../src/pages/PalestineHomePage";
 import { GovernoratePage } from "../src/pages/GovernoratePage";
 import { CreateStoryPage } from "../src/pages/CreateStoryPage";
+import { PlacesPage, normalizeSearch } from "../src/pages/PlacesPage";
 import { MyStoryPage } from "../src/pages/MyStoryPage";
 import { MyJerusalemStoryModal } from "../src/components/MyJerusalemStoryModal";
 import { MvpLocationMap } from "../src/components/MvpLocationMap";
@@ -61,10 +62,17 @@ for (const language of ["ar", "en"]) {
   assert.ok(
     home.includes(
       language === "ar"
-        ? "أنشئ حكايتك في فلسطين"
-        : "Create your Palestine story",
+        ? "خطّط رحلتك في فلسطين"
+        : "Plan your Palestine trip",
     ),
   );
+  assert.ok(home.includes('href="/places"'));
+  assert.ok(home.includes('role="search"'));
+  const places = render("/places", <PlacesPage />);
+  assert.ok(places.includes(language === "ar" ? "كل الأماكن" : "All places"));
+  assert.ok(places.includes('type="search"'));
+  // The menu reads the same everywhere and no longer leads with "Connections".
+  assert.doesNotMatch(home, /الروابط<|>Connections</);
   for (const governorate of governorates) {
     assert.ok(home.includes(`/governorates/${governorate.id}`));
     assert.ok(
@@ -74,9 +82,8 @@ for (const language of ["ar", "en"]) {
     );
   }
   assert.doesNotMatch(home, /hackathon|هاكاثون|Q.?GUIDE/i);
-  for (const governorate of governorates.filter(
-    (item) => item.id !== "jerusalem",
-  )) {
+  // Every governorate, Jerusalem included, uses the same page and planner.
+  for (const governorate of governorates) {
     const regional = render(
       `/governorates/${governorate.id}`,
       <GovernoratePage />,
@@ -85,6 +92,8 @@ for (const language of ["ar", "en"]) {
     assert.ok(
       regional.includes(`/governorates/${governorate.id}/create-story`),
     );
+    assert.ok(regional.includes(`/governorates/${governorate.id}/map`));
+    assert.ok(regional.includes(`/governorates/${governorate.id}/connections`));
     const wizard = render(
       `/governorates/${governorate.id}/create-story`,
       <CreateStoryPage />,
@@ -93,10 +102,15 @@ for (const language of ["ar", "en"]) {
     assert.ok(
       wizard.includes(
         language === "ar"
-          ? `أنشئ حكايتك في ${governorate.arabicName}`
-          : `Create your ${governorate.name} story`,
+          ? `خطّط رحلتك في ${governorate.arabicName}`
+          : `Plan your ${governorate.name} trip`,
       ),
     );
+    if (governorate.id === "jerusalem") {
+      assert.ok(regional.includes("/plan-tour"));
+      continue;
+    }
+    assert.doesNotMatch(regional, /images\/jerusalem|\/plan-tour/);
     const album = render(
       "/album",
       <MyJerusalemStoryModal
@@ -164,8 +178,13 @@ for (const language of ["ar", "en"]) {
     ),
   );
   const empty = render("/my-story", <MyStoryPage />);
+  assert.ok(empty.includes(language === "ar" ? "خطّط رحلتك" : "Plan your trip"));
   assert.ok(empty.includes('href="/create-story"'));
 }
+// Search folds spelling variants: hamza forms, taa marbuta and letter case.
+assert.equal(normalizeSearch("أريحا"), normalizeSearch("اريحا"));
+assert.equal(normalizeSearch("القدس القديمة"), normalizeSearch("القدس القديمه"));
+assert.equal(normalizeSearch("SEBASTIA"), "sebastia");
 console.log(
   "Arabic/English page rendering, national navigation, scoped wizards and honest memory albums passed.",
 );

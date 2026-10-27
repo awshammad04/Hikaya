@@ -35,18 +35,18 @@ export const MyStoryPage: React.FC = () => {
       <PageTransition>
         <div className="rounded-3xl border border-brand-border bg-brand-surface p-8 space-y-4">
           <h1 className="text-3xl font-serif font-black text-brand-olive">
-            {isArabic ? "حكايتي في فلسطين" : "My Palestine story"}
+            {isArabic ? "رحلتي في فلسطين" : "My Palestine trip"}
           </h1>
           <p className="text-sm text-brand-muted">
             {isArabic
-              ? "أنشئ حكايتك أولاً، وستُحفظ على هذا الجهاز."
-              : "Create your story first. It will be saved on this device."}
+              ? "خطّط رحلتك أولاً، وستُحفظ على هذا الجهاز."
+              : "Plan your trip first. It will be saved on this device."}
           </p>
           <Link
             to="/create-story"
             className="inline-block rounded-full bg-brand-amber px-6 py-3 text-sm font-bold text-white"
           >
-            {isArabic ? "أنشئ حكايتك" : "Create your story"}
+            {isArabic ? "خطّط رحلتك" : "Plan your trip"}
           </Link>
         </div>
       </PageTransition>
@@ -105,13 +105,13 @@ export const MyStoryPage: React.FC = () => {
               className="rounded-full border border-white/40 px-5 py-3 text-sm font-bold inline-flex gap-2 items-center transition-colors hover:bg-white/10"
             >
               <BookHeart className="w-4 h-4" />
-              {isArabic ? "ألبوم ذكرياتي" : "My memory album"}
+              {isArabic ? "ألبوم رحلتي" : "My trip album"}
             </button>
             <Link
               to="/create-story"
               className="rounded-full px-3 py-3 text-sm font-bold text-white/80 underline-offset-4 hover:text-white hover:underline"
             >
-              {isArabic ? "أنشئ حكاية أخرى" : "Create another story"}
+              {isArabic ? "خطّط رحلة أخرى" : "Plan another trip"}
             </Link>
           </div>
         </header>
@@ -122,7 +122,7 @@ export const MyStoryPage: React.FC = () => {
               selectedId={selected?.id}
               onSelect={showChapter}
               bounds={bounds ?? NATIONAL_BOUNDS}
-              mapLabel={isArabic ? "أماكن حكايتي" : "Places in my story"}
+              mapLabel={isArabic ? "أماكن رحلتي" : "Places on my trip"}
               routeIds={journey.stops.map((stop) => stop.location.id)}
               jerusalem={scope === "jerusalem"}
               drawRoute={false}
@@ -131,7 +131,7 @@ export const MyStoryPage: React.FC = () => {
           <div className="space-y-6 lg:col-span-7">
             <section className="rounded-3xl border border-brand-border bg-brand-surface p-5 space-y-4">
               <h2 className="text-xl font-serif font-black text-brand-olive">
-                {isArabic ? "حكاية واحدة.. أماكن متعددة" : "One story, many places"}
+                {isArabic ? "رحلة واحدة.. أماكن متعددة" : "One trip, many places"}
               </h2>
               <ol className="flex flex-wrap gap-2">
                 {journey.stops.map((stop) => (

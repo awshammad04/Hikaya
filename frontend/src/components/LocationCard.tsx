@@ -2,19 +2,17 @@ import React from "react";
 import { Link } from "react-router-dom";
 import {
   ArrowRight,
-  BookOpen,
   Check,
-  Clock,
   Image as ImageIcon,
   MapPin,
   MessageSquare,
-  Milestone,
 } from "lucide-react";
 import { ApiLocation } from "../types";
 import { CoverImage } from "./CoverImage";
 import { useInterfaceLanguage } from "../context/LanguageContext";
 import { locationById, nationalRecord } from "../data/heritage";
 import { arabicCount, ArabicForms } from "../utils/plural";
+import { categoryLabel } from "../utils/categories";
 
 interface LocationCardProps {
   location: ApiLocation;
@@ -38,14 +36,6 @@ const Stat: React.FC<{
 };
 
 const COUNT_FORMS: Record<string, { ar: ArabicForms; en: (n: number) => string }> = {
-  stories: {
-    ar: { one: "حكاية واحدة", two: "حكايتان", few: (n) => `${n} حكايات`, many: (n) => `${n} حكاية` },
-    en: (n) => `${n} ${n === 1 ? "story" : "stories"}`,
-  },
-  timeline: {
-    ar: { one: "محطة زمنية", two: "محطتان زمنيتان", few: (n) => `${n} محطات زمنية`, many: (n) => `${n} محطة زمنية` },
-    en: (n) => `${n} timeline ${n === 1 ? "entry" : "entries"}`,
-  },
   images: {
     ar: { one: "صورة واحدة", two: "صورتان", few: (n) => `${n} صور`, many: (n) => `${n} صورة` },
     en: (n) => `${n} photo${n === 1 ? "" : "s"}`,
@@ -54,18 +44,14 @@ const COUNT_FORMS: Record<string, { ar: ArabicForms; en: (n: number) => string }
     ar: { one: "ذكرى واحدة", two: "ذكريان", few: (n) => `${n} ذكريات`, many: (n) => `${n} ذكرى` },
     en: (n) => `${n} ${n === 1 ? "memory" : "memories"}`,
   },
-  minutes: {
-    ar: { one: "دقيقة قراءة", two: "دقيقتا قراءة", few: (n) => `${n} دقائق قراءة`, many: (n) => `${n} دقيقة قراءة` },
-    en: (n) => `${n} min read`,
-  },
 };
 
 /**
  * Location summary card.
  *
- * The counts along the bottom answer "is there anything in here for me?" before
- * the reader commits to opening the page - how many stories, pictures, timeline
- * entries and memories, and roughly how long the reading takes.
+ * Only the counts that differ between places are shown: photographs, and the
+ * memories visitors have shared. Every place has one story and a short read,
+ * so repeating those on each card would add noise, not information.
  */
 export const LocationCard: React.FC<LocationCardProps> = ({ location, visited }) => {
   const { isArabic } = useInterfaceLanguage();
@@ -122,11 +108,8 @@ export const LocationCard: React.FC<LocationCardProps> = ({ location, visited })
 
       {location.stats && (
         <div className="flex flex-wrap items-center gap-x-3 gap-y-1 pt-1">
-          <Stat icon={BookOpen} value={location.stats.storyCount} text={count("stories", location.stats.storyCount)} />
-          <Stat icon={Milestone} value={location.stats.timelineEventCount} text={count("timeline", location.stats.timelineEventCount)} />
           <Stat icon={ImageIcon} value={location.stats.imageCount} text={count("images", location.stats.imageCount)} />
           <Stat icon={MessageSquare} value={location.stats.memoryCount} text={count("memories", location.stats.memoryCount)} />
-          <Stat icon={Clock} value={location.stats.readingTimeMinutes} text={count("minutes", location.stats.readingTimeMinutes)} />
         </div>
       )}
 
@@ -136,7 +119,7 @@ export const LocationCard: React.FC<LocationCardProps> = ({ location, visited })
             key={category}
             className="text-xs font-mono px-2 py-0.5 rounded-full bg-brand-bg border border-brand-border-light text-brand-muted"
           >
-            {category}
+            {categoryLabel(category, isArabic)}
           </span>
         ))}
       </div>
