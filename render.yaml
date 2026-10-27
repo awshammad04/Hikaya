@@ -39,8 +39,13 @@ services:
       # Covers the backend and AI waking up from sleep in turn.
       - key: API_PROXY_TIMEOUT_MS
         value: '180000'
+      # Natural narration (Gemini TTS) runs here; reuse the AI service's key so
+      # it is entered only once.
       - key: GEMINI_API_KEY
-        sync: false
+        fromService:
+          type: web
+          name: hikaya-ai
+          envVarKey: GEMINI_API_KEY
   - type: web
     name: hikaya-api
     runtime: node
