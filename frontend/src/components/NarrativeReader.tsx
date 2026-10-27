@@ -6,6 +6,7 @@ import { markAudioListened } from "../services/progress";
 import { useInterfaceLanguage } from "../context/LanguageContext";
 import type { WordTimestamp } from "../types";
 import { readableNarrative } from "../utils/plainText";
+import { Select } from "./Select";
 
 export type { WordTimestamp } from "../types";
 
@@ -100,6 +101,9 @@ export const NarrativeReader: React.FC<NarrativeReaderProps> = ({
   const reduced = useReducedMotion();
   const { language, isArabic } = useInterfaceLanguage();
   const speech = useNarration(language);
+  const deviceVoices = speech.voices.filter((voice) => voice.lang.toLowerCase().startsWith(language));
+  // Either "natural" rate saved in the other language still reads as Natural.
+  const naturalRate = speech.rate === 0.88 || speech.rate === 0.94 ? speech.rate : isArabic ? 0.88 : 0.94;
   // The same cleaned text is displayed and narrated, so word highlighting
   // stays aligned with the audio.
   const { text, headings } = useMemo(() => readableNarrative(rawText), [rawText]);
@@ -252,58 +256,59 @@ export const NarrativeReader: React.FC<NarrativeReaderProps> = ({
 
           {settingsOpen && !speech.speaking && !speech.loading && (
             <div className="basis-full flex flex-wrap items-center gap-2 border-t border-brand-border-light pt-2.5">
-              <label className="text-xs text-brand-muted inline-flex items-center gap-1.5">
-                <Sparkles className="w-3 h-3 text-brand-amber" />
-                <span className="sr-only">{isArabic ? "نوع الصوت" : "Voice mode"}</span>
-                <select
-                  value={speech.mode}
-                  onChange={(event) => speech.setMode(event.target.value as "natural" | "device")}
-                  className="bg-brand-surface border border-brand-border rounded-full px-3 py-1.5 text-xs text-brand-olive focus:outline-none focus:border-brand-amber"
-                  aria-label={isArabic ? "نوع الصوت" : "Voice mode"}
-                >
-                  <option value="natural">{isArabic ? "صوت الراوي" : "Narrator voice"}</option>
-                  <option value="device">{isArabic ? "صوت الجهاز (دون إنترنت)" : "Device voice (offline)"}</option>
-                </select>
-              </label>
+              <Select
+                size="sm"
+                icon={<Sparkles className="w-3 h-3" />}
+                value={speech.mode}
+                onChange={(value) => speech.setMode(value as "natural" | "device")}
+                aria-label={isArabic ? "نوع الصوت" : "Voice mode"}
+                options={[
+                  { value: "natural", label: isArabic ? "صوت الراوي" : "Narrator voice" },
+                  { value: "device", label: isArabic ? "صوت الجهاز (دون إنترنت)" : "Device voice (offline)" },
+                ]}
+              />
 
-              {speech.mode === "device" && speech.voices.length > 0 && (
-                <select
+              {speech.mode === "device" && deviceVoices.length > 0 && (
+                <Select
+                  size="sm"
+                  className="max-w-48"
                   value={speech.selectedVoice}
-                  onChange={(event) => speech.setSelectedVoice(event.target.value)}
-                  className="max-w-48 bg-brand-surface border border-brand-border rounded-full px-3 py-1.5 text-xs text-brand-olive focus:outline-none focus:border-brand-amber"
+                  onChange={speech.setSelectedVoice}
                   aria-label={isArabic ? "اختر صوت الجهاز" : "Choose device voice"}
-                >
-                  {speech.voices
-                    .filter((voice) => voice.lang.toLowerCase().startsWith(language))
-                    .map((voice) => <option key={voice.voiceURI} value={voice.voiceURI}>{voice.name}</option>)}
-                </select>
+                  placeholder={isArabic ? "صوت الجهاز" : "Device voice"}
+                  searchable={deviceVoices.length > 8}
+                  options={deviceVoices.map((voice) => ({ value: voice.voiceURI, label: voice.name }))}
+                />
               )}
 
               {speech.mode === "natural" && (
-                <select
+                <Select
+                  size="sm"
                   value={speech.naturalVoice}
-                  onChange={(event) => speech.setNaturalVoice(event.target.value as "Kore" | "Charon")}
-                  className="bg-brand-surface border border-brand-border rounded-full px-3 py-1.5 text-xs text-brand-olive focus:outline-none focus:border-brand-amber"
+                  onChange={(value) => speech.setNaturalVoice(value as "Kore" | "Charon")}
                   aria-label={isArabic ? "اختر نبرة المرشد" : "Choose guide voice"}
-                >
-                  <option value="Kore">{isArabic ? "ليلى · دافئة وواضحة" : "Layla · warm and clear"}</option>
-                  <option value="Charon">{isArabic ? "سامي · هادئ وقصصي" : "Sami · calm storyteller"}</option>
-                </select>
+                  options={[
+                    { value: "Kore", label: isArabic ? "ليلى" : "Layla", hint: isArabic ? "دافئة وواضحة" : "warm and clear" },
+                    { value: "Charon", label: isArabic ? "سامي" : "Sami", hint: isArabic ? "هادئ وقصصي" : "calm storyteller" },
+                  ]}
+                />
               )}
 
-              <label className="text-xs text-brand-muted inline-flex items-center gap-1.5">
-                <span>{isArabic ? "السرعة" : "Speed"}</span>
-                <select
-                  value={speech.rate}
-                  onChange={(event) => speech.setRate(Number(event.target.value))}
-                  className="bg-brand-surface border border-brand-border rounded-full px-3 py-1.5 text-xs text-brand-olive focus:outline-none focus:border-brand-amber"
+              <span className="text-xs text-brand-muted inline-flex items-center gap-1.5">
+                <span aria-hidden="true">{isArabic ? "السرعة" : "Speed"}</span>
+                <Select
+                  size="sm"
+                  minPanelWidth={160}
+                  value={String(speech.rate)}
+                  onChange={(value) => speech.setRate(Number(value))}
                   aria-label={isArabic ? "سرعة القراءة" : "Reading speed"}
-                >
-                  <option value={0.78}>{isArabic ? "هادئة" : "Slow"}</option>
-                  <option value={isArabic ? 0.88 : 0.94}>{isArabic ? "طبيعية" : "Natural"}</option>
-                  <option value={1.05}>{isArabic ? "سريعة" : "Fast"}</option>
-                </select>
-              </label>
+                  options={[
+                    { value: "0.78", label: isArabic ? "هادئة" : "Slow" },
+                    { value: String(naturalRate), label: isArabic ? "طبيعية" : "Natural" },
+                    { value: "1.05", label: isArabic ? "سريعة" : "Fast" },
+                  ]}
+                />
+              </span>
             </div>
           )}
         </div>

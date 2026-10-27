@@ -268,6 +268,53 @@ textarea {
   }
 }
 
+/*
+ * Dropdown popups (components/Select.tsx): a short entrance, a quiet
+ * scrollbar, and no focus ring on the search box and list, whose highlighted
+ * row already shows where the keyboard is.
+ */
+.popup-panel {
+  animation: popup-in 140ms ease-out;
+}
+.popup-panel[data-side="top"] {
+  animation-name: popup-in-up;
+}
+@keyframes popup-in {
+  from {
+    opacity: 0;
+    transform: translateY(-4px) scale(0.98);
+  }
+}
+@keyframes popup-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(4px) scale(0.98);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .popup-panel {
+    animation: none;
+  }
+}
+.popup-list {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-brand-border) transparent;
+}
+.popup-list::-webkit-scrollbar {
+  width: 6px;
+}
+.popup-list::-webkit-scrollbar-track {
+  background: transparent;
+}
+.popup-list::-webkit-scrollbar-thumb {
+  background: var(--color-brand-border);
+  border-radius: 3px;
+}
+.popup-list:focus-visible,
+.popup-search:focus-visible {
+  outline: none;
+}
+
 /* Custom scrollbars matching the Bold Typography theme */
 ::-webkit-scrollbar {
   width: 8px;

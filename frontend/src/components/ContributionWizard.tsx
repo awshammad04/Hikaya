@@ -24,7 +24,7 @@ import { MyStoryPayload, saveStory } from "../services/accountSync";
 import { rememberContribution } from "../services/myContributions";
 import { useInterfaceLanguage } from "../context/LanguageContext";
 import { useAuth } from "../context/AuthContext";
-import { governorates, locationById } from "../data/heritage";
+import { PlaceSelect } from "./PlaceSelect";
 
 export interface ContributionDraft {
   locationId?: string;
@@ -360,29 +360,12 @@ export const ContributionWizard: React.FC<ContributionWizardProps> = ({
                 <label className={labelClass} htmlFor="wizard-location">
                   {isArabic ? "المكان" : "Location"}
                 </label>
-                <select
+                <PlaceSelect
                   id="wizard-location"
-                  className={fieldClass}
+                  locations={locations}
                   value={form.locationId}
-                  onChange={(event) => update("locationId", event.target.value)}
-                >
-                  <option value="" disabled>
-                    {isArabic ? "اختر مكاناً…" : "Choose a place…"}
-                  </option>
-                  {governorates.map((governorate) => {
-                    const inGovernorate = locations.filter((location) => (location.governorateId ?? "jerusalem") === governorate.id);
-                    if (!inGovernorate.length) return null;
-                    return (
-                      <optgroup key={governorate.id} label={isArabic ? governorate.arabicName : governorate.name}>
-                        {inGovernorate.map((location) => (
-                          <option key={location.id} value={location.id}>
-                            {isArabic ? (locationById(location.id)?.arabicName ?? location.arabicName ?? location.name) : location.name}
-                          </option>
-                        ))}
-                      </optgroup>
-                    );
-                  })}
-                </select>
+                  onChange={(locationId) => update("locationId", locationId)}
+                />
               </div>
             </>
           )}

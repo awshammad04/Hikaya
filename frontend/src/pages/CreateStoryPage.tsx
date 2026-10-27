@@ -12,6 +12,7 @@ import {
 } from "../types";
 import { createJourney, JOURNEY_KEY } from "../services/journeys";
 import { PageTransition } from "../components/motion";
+import { Select } from "../components/Select";
 import { saveStory } from "../services/accountSync";
 
 const interests: { id: TourInterest; ar: string; en: string }[] = [
@@ -239,19 +240,20 @@ export const CreateStoryPage: React.FC = () => {
                   ))}
                 </div>
                 <div className="grid sm:grid-cols-2 gap-4">
-                  <label className="text-sm font-bold text-brand-olive">
-                    {isArabic ? "لمن تُروى الحكاية؟" : "Who is the story for?"}
-                    <select
-                      className="block mt-2 w-full rounded-xl border border-brand-border bg-brand-bg p-3 text-sm font-normal text-brand-text"
+                  <div className="space-y-2">
+                    <span id="story-audience-label" className="block text-sm font-bold text-brand-olive">
+                      {isArabic ? "لمن تُروى الحكاية؟" : "Who is the story for?"}
+                    </span>
+                    <Select
+                      aria-labelledby="story-audience-label"
                       value={preferences.targetAudience}
-                      onChange={(event) =>
+                      onChange={(value) =>
                         setPreferences({
                           ...preferences,
-                          targetAudience: event.target.value as AudienceMode,
+                          targetAudience: value as AudienceMode,
                         })
                       }
-                    >
-                      {[
+                      options={[
                         { id: "general", ar: "الجميع", en: "General" },
                         { id: "student", ar: "طالب", en: "Student" },
                         { id: "tourist", ar: "زائر", en: "Visitor" },
@@ -262,37 +264,30 @@ export const CreateStoryPage: React.FC = () => {
                           ar: "باحث في التاريخ",
                           en: "Historian",
                         },
-                      ].map((item) => (
-                        <option key={item.id} value={item.id}>
-                          {isArabic ? item.ar : item.en}
-                        </option>
-                      ))}
-                    </select>
-                  </label>
-                  <label className="text-sm font-bold text-brand-olive">
-                    {isArabic ? "النبرة" : "Tone"}
-                    <select
-                      className="block mt-2 w-full rounded-xl border border-brand-border bg-brand-bg p-3 text-sm font-normal text-brand-text"
+                      ].map((item) => ({ value: item.id, label: isArabic ? item.ar : item.en }))}
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <span id="story-tone-label" className="block text-sm font-bold text-brand-olive">
+                      {isArabic ? "النبرة" : "Tone"}
+                    </span>
+                    <Select
+                      aria-labelledby="story-tone-label"
                       value={preferences.tone}
-                      onChange={(event) =>
+                      onChange={(value) =>
                         setPreferences({
                           ...preferences,
-                          tone: event.target.value as StoryTone,
+                          tone: value as StoryTone,
                         })
                       }
-                    >
-                      {[
+                      options={[
                         { id: "storytelling", ar: "سردية", en: "Storytelling" },
                         { id: "educational", ar: "تعليمية", en: "Educational" },
                         { id: "neutral", ar: "محايدة", en: "Neutral" },
                         { id: "emotional", ar: "وجدانية", en: "Reflective" },
-                      ].map((item) => (
-                        <option key={item.id} value={item.id}>
-                          {isArabic ? item.ar : item.en}
-                        </option>
-                      ))}
-                    </select>
-                  </label>
+                      ].map((item) => ({ value: item.id, label: isArabic ? item.ar : item.en }))}
+                    />
+                  </div>
                 </div>
               </div>
             )}

@@ -4,6 +4,7 @@ import type { ApiLocation } from "../types";
 import { useInterfaceLanguage } from "../context/LanguageContext";
 import { locationById } from "../data/heritage";
 import type { ContributionDraft } from "./ContributionWizard";
+import { PlaceSelect } from "./PlaceSelect";
 
 interface Prompt {
   id: string;
@@ -82,6 +83,7 @@ interface InterviewKitProps {
 export const InterviewKit: React.FC<InterviewKitProps> = ({ locations, defaultLocationId = "", onUseNotes }) => {
   const { isArabic } = useInterfaceLanguage();
   const [notes, setNotes] = useState<Notes>(() => loadNotes(defaultLocationId));
+  const [confirmingReset, setConfirmingReset] = useState(false);
 
   useEffect(() => {
     try {
@@ -121,7 +123,7 @@ export const InterviewKit: React.FC<InterviewKitProps> = ({ locations, defaultLo
   };
 
   const field =
-    "w-full rounded-xl border border-brand-border bg-brand-bg px-3 py-2 text-sm text-brand-text focus:border-brand-amber focus:outline-none";
+    "w-full rounded-xl border border-brand-border bg-brand-bg px-3 py-2.5 text-sm text-brand-text focus:border-brand-amber focus:outline-none";
 
   return (
     <section className="space-y-6 rounded-3xl border border-brand-border bg-brand-surface p-6 sm:p-8 print:border-0 print:p-0" aria-labelledby="interview-kit-title">
@@ -147,17 +149,15 @@ export const InterviewKit: React.FC<InterviewKitProps> = ({ locations, defaultLo
       </ul>
 
       <div className="grid gap-4 sm:grid-cols-3">
-        <label className="space-y-1.5 text-sm">
-          <span className="block font-bold text-brand-olive">{isArabic ? "المكان" : "Place"}</span>
-          <select className={field} value={notes.locationId} onChange={(event) => setNotes({ ...notes, locationId: event.target.value })}>
-            <option value="">{isArabic ? "اختر مكاناً…" : "Choose a place…"}</option>
-            {locations.map((item) => (
-              <option key={item.id} value={item.id}>
-                {isArabic ? (locationById(item.id)?.arabicName ?? item.arabicName ?? item.name) : item.name}
-              </option>
-            ))}
-          </select>
-        </label>
+        <div className="space-y-1.5 text-sm">
+          <span id="interview-place-label" className="block font-bold text-brand-olive">{isArabic ? "المكان" : "Place"}</span>
+          <PlaceSelect
+            aria-labelledby="interview-place-label"
+            locations={locations}
+            value={notes.locationId}
+            onChange={(locationId) => setNotes({ ...notes, locationId })}
+          />
+        </div>
         <label className="space-y-1.5 text-sm">
           <span className="block font-bold text-brand-olive">{isArabic ? "مع من تتحدث؟" : "Who are you talking to?"}</span>
           <input className={field} value={notes.who} maxLength={80} onChange={(event) => setNotes({ ...notes, who: event.target.value })} placeholder={isArabic ? "مثلاً: جدتي أم خليل" : "e.g. my grandmother Um Khalil"} />
@@ -203,19 +203,42 @@ export const InterviewKit: React.FC<InterviewKitProps> = ({ locations, defaultLo
             ? `حوّل الإجابات إلى ذكرى${answered.length ? ` (${answered.length})` : ""}`
             : `Turn the answers into a memory${answered.length ? ` (${answered.length})` : ""}`}
         </button>
-        {(answered.length > 0 || notes.who || notes.when) && (
-          <button
-            type="button"
-            onClick={() => {
-              if (window.confirm(isArabic ? "مسح الملاحظات والبدء بمقابلة جديدة؟" : "Clear these notes and start a new interview?")) {
-                setNotes({ locationId: notes.locationId, who: "", when: "", answers: {} });
-              }
-            }}
-            className="text-xs font-bold text-brand-muted hover:text-brand-olive"
-          >
-            {isArabic ? "مقابلة جديدة" : "New interview"}
-          </button>
-        )}
+        {(answered.length > 0 || notes.who || notes.when) &&
+          (confirmingReset ? (
+            <span
+              role="group"
+              aria-label={isArabic ? "تأكيد مسح الملاحظات" : "Confirm clearing the notes"}
+              className="inline-flex flex-wrap items-center gap-x-3 gap-y-1 rounded-full border border-brand-border bg-brand-bg px-4 py-2 text-xs"
+            >
+              <span className="text-brand-text">{isArabic ? "مسح الملاحظات والبدء بمقابلة جديدة؟" : "Clear these notes and start a new interview?"}</span>
+              <button
+                type="button"
+                onClick={() => {
+                  setNotes({ locationId: notes.locationId, who: "", when: "", answers: {} });
+                  setConfirmingReset(false);
+                }}
+                className="font-bold text-red-700 hover:text-red-800 dark:text-red-400 dark:hover:text-red-300"
+              >
+                {isArabic ? "نعم، امسحها" : "Yes, clear them"}
+              </button>
+              <button
+                type="button"
+                autoFocus
+                onClick={() => setConfirmingReset(false)}
+                className="font-bold text-brand-muted hover:text-brand-olive"
+              >
+                {isArabic ? "تراجع" : "Keep them"}
+              </button>
+            </span>
+          ) : (
+            <button
+              type="button"
+              onClick={() => setConfirmingReset(true)}
+              className="text-xs font-bold text-brand-muted hover:text-brand-olive"
+            >
+              {isArabic ? "مقابلة جديدة" : "New interview"}
+            </button>
+          ))}
         <button
           type="button"
           onClick={() => window.print()}

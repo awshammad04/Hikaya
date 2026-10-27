@@ -23,6 +23,7 @@ import {
 } from "../services/progress";
 import { useInterfaceLanguage } from "../context/LanguageContext";
 import { prepareMemoryPhoto, useUserMemories } from "../hooks/useUserMemories";
+import { Combobox } from "./Select";
 import { photoAsDataUrl } from "../services/accountSync";
 
 function readVisited(): string[] {
@@ -349,8 +350,7 @@ export const MyJerusalemStoryModal: React.FC<{ open: boolean; onClose: () => voi
                   <div className="space-y-3">
                     <div>
                       <label htmlFor="memory-location" className="mb-1 block text-xs font-bold uppercase tracking-wider text-brand-muted">{isArabic ? "المكان" : "Location"}</label>
-                      <input id="memory-location" list="jerusalem-memory-locations" value={locationTag} onChange={(event) => setLocationTag(event.target.value)} placeholder={isArabic ? "مثال: باب العامود" : "Example: Damascus Gate"} className="w-full rounded-xl border border-brand-border bg-brand-bg px-3 py-2 text-sm focus:border-brand-amber focus:outline-none" maxLength={100} />
-                      <datalist id="jerusalem-memory-locations">{locationSuggestions.map((location) => <option key={location} value={location} />)}</datalist>
+                      <Combobox id="memory-location" value={locationTag} onChange={setLocationTag} suggestions={locationSuggestions} optionIcon={<MapPin className="h-3.5 w-3.5" />} placeholder={isArabic ? "مثال: باب العامود" : "Example: Damascus Gate"} className="w-full rounded-xl border border-brand-border bg-brand-bg px-3 py-2 text-sm focus:border-brand-amber focus:outline-none" maxLength={100} />
                     </div>
                     <div>
                       <label htmlFor="memory-note" className="mb-1 block text-xs font-bold uppercase tracking-wider text-brand-muted">{isArabic ? "ماذا تريد أن تتذكر؟" : "What do you want to remember?"}</label>

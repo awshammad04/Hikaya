@@ -1,7 +1,7 @@
 import React from "react";
-import { ChevronDown } from "lucide-react";
 import { useInterfaceLanguage } from "../context/LanguageContext";
 import { COUNTRY_CODES, formatPhone, normalizePhone } from "../utils/phone";
+import { Select } from "./Select";
 
 const fieldClass =
   "bg-brand-bg border border-brand-border rounded-xl px-3 py-2.5 text-sm text-brand-text focus:outline-none focus:border-brand-amber transition-colors";
@@ -31,23 +31,22 @@ export const PhoneField: React.FC<{
       </label>
       <div className="flex gap-2" dir="ltr">
         {/* The closed picker shows only flag and code; the list has names. */}
-        <div className={`${fieldClass} relative flex shrink-0 items-center gap-1.5 focus-within:border-brand-amber`}>
-          <span aria-hidden="true" className="font-mono">{selected.flag} {selected.code}</span>
-          <ChevronDown aria-hidden="true" className="w-3.5 h-3.5 text-brand-muted" />
-          <select
-            aria-label={isArabic ? "رمز الدولة" : "Country code"}
-            className="absolute inset-0 w-full cursor-pointer opacity-0"
-            value={countryCode}
-            onChange={(event) => onCountryCode(event.target.value)}
-            autoComplete="tel-country-code"
-          >
-            {COUNTRY_CODES.map((item) => (
-              <option key={`${item.code}-${item.en}`} value={item.code}>
-                {item.flag} {item.code} · {isArabic ? item.ar : item.en}
-              </option>
-            ))}
-          </select>
-        </div>
+        <Select
+          className="w-auto! shrink-0 px-3!"
+          value={selected.code}
+          onChange={onCountryCode}
+          aria-label={isArabic ? "رمز الدولة" : "Country code"}
+          minPanelWidth={270}
+          searchable
+          searchPlaceholder={isArabic ? "ابحث باسم الدولة أو الرمز" : "Search by country or code"}
+          renderValue={() => <span className="font-mono">{selected.flag} {selected.code}</span>}
+          options={COUNTRY_CODES.map((item) => ({
+            value: item.code,
+            label: `${item.flag}  ${isArabic ? item.ar : item.en}`,
+            hint: item.code,
+            keywords: `${item.code.slice(1)} ${item.ar} ${item.en}`,
+          }))}
+        />
         <input
           id={id}
           type="tel"
