@@ -357,7 +357,6 @@ export const StoryWizard: React.FC<StoryWizardProps> = ({ location, autoPlay }) 
                     generatedBy={story.generatedBy}
                     wordCount={story.wordCount}
                     audience={story.targetAudience}
-                    uncertaintyNotes={story.uncertaintyNotes}
                     queuedForReview={Boolean(story.storyId)}
                   />
 

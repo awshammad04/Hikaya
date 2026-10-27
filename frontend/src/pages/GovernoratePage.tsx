@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { NotFoundPage } from "./NotFoundPage";
-import { BookHeart, ChevronDown, Info, MapPin, Route } from "lucide-react";
+import { BookHeart, MapPin, Route } from "lucide-react";
 import { useInterfaceLanguage } from "../context/LanguageContext";
-import { governorateById, catalog } from "../data/heritage";
+import { governorateById } from "../data/heritage";
 import { useLocations } from "../hooks/useLocations";
 import { useVisitedLocations } from "../hooks/useVisitedLocations";
 import {
@@ -93,14 +93,6 @@ const RegionalExperience: React.FC<{ governorateId: string }> = ({
             </div>
           </div>
         </section>
-        <details className="group rounded-2xl border border-brand-border-light bg-brand-surface px-4 py-3 text-sm text-brand-muted">
-          <summary className="flex cursor-pointer list-none items-center gap-2 font-bold text-brand-olive [&::-webkit-details-marker]:hidden">
-            <Info className="h-4 w-4 shrink-0 text-brand-amber" />
-            {isArabic ? "عن هذا السجل وحدوده" : "About this record and its limits"}
-            <ChevronDown className="ms-auto h-4 w-4 transition-transform group-open:rotate-180" />
-          </summary>
-          <p className="mt-2 leading-6">{isArabic ? catalog.gaps.ar : catalog.gaps.en}</p>
-        </details>
         <Reveal className="space-y-5">
           <h2 className="font-serif text-2xl font-black text-brand-olive">
             {isArabic ? `أماكن ${name}` : `Places in ${name}`}

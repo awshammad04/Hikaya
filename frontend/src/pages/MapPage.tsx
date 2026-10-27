@@ -146,7 +146,6 @@ export const MapPage: React.FC = () => {
                       </React.Fragment>;
                     })}
                   </ol>
-                  <p className="text-xs text-stone-300 border-t border-white/10 pt-3">{itinerary.uncertaintyNotes[0]}</p>
                   <button type="button" onClick={openMyJerusalemStory} className="w-full rounded-xl border border-brand-amber/50 bg-brand-amber/15 px-4 py-3 text-xs font-bold text-white transition hover:bg-brand-amber/25 inline-flex items-center justify-center gap-2">
                     <Sparkles className="h-4 w-4 text-brand-amber" />{tourText("إنشاء حكايتي في القدس", "Generate My Jerusalem Story", "Créer mon histoire de Jérusalem")}
                   </button>

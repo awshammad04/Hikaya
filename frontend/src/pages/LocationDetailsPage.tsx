@@ -67,7 +67,7 @@ import { LoadingRegion, SkeletonLine, SkeletonText } from "../components/Skeleto
 import { PageTransition, Reveal } from "../components/motion";
 import { LocalArtisansSection } from "../components/LocalArtisansSection";
 import { useInterfaceLanguage } from "../context/LanguageContext";
-import { locationById, governorateName, nationalRecord, catalog } from "../data/heritage";
+import { locationById, governorateName, nationalRecord } from "../data/heritage";
 import { visitorWalkthrough } from "../visitorWalkthroughs";
 import { SourceCitationLine } from "../components/SourceCitationLine";
 import { markMemoryUncovered } from "../services/progress";
@@ -232,9 +232,6 @@ export const LocationDetailsPage: React.FC = () => {
   const profile = locationById(location.id);
   const governorateId = location.governorateId ?? "jerusalem";
   const isJerusalem = governorateId === "jerusalem";
-  const nationalEntry = nationalRecord(location.id);
-  const recordGap = (isArabic ? nationalEntry?.arabicGaps : nationalEntry?.gaps)
-    || (isArabic ? catalog.gaps.ar : catalog.gaps.en);
   const mapPath = isJerusalem ? "/map" : `/governorates/${governorateId}/map`;
   const displayName = isArabic ? (profile?.arabicName ?? location.arabicName ?? location.name) : location.name;
   const secondaryName = isArabic ? location.name : (location.arabicName ?? profile?.arabicName);
@@ -298,7 +295,6 @@ export const LocationDetailsPage: React.FC = () => {
           </div>
         </header>
 
-        {!isJerusalem && <p className="rounded-2xl border border-brand-amber/20 bg-brand-amber/5 p-4 text-sm leading-relaxed text-brand-muted">{recordGap}</p>}
         <div className="space-y-5">
           {/* --- Facts ----------------------------------------------------- */}
           <section className="rounded-3xl border border-brand-border bg-brand-surface p-5 shadow-sm md:p-6">

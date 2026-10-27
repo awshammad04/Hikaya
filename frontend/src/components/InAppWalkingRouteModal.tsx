@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
-import { ExternalLink, Footprints, MapPin, Navigation2, Route, ShieldCheck, X } from "lucide-react";
+import { ExternalLink, Footprints, MapPin, Navigation2, Route, X } from "lucide-react";
 import { ApiLocation } from "../types";
 import { locationById } from "../data/heritage";
 import { useInterfaceLanguage } from "../context/LanguageContext";
@@ -82,11 +82,6 @@ export const InAppWalkingRouteModal: React.FC<InAppWalkingRouteModalProps> = ({ 
               </li>
             ))}
           </ol>
-
-          <div className="rounded-2xl border border-brand-amber/20 bg-brand-amber/10 p-4 text-xs leading-6 text-brand-olive">
-            <ShieldCheck className="mb-1 h-4 w-4 text-brand-amber" />
-            {isArabic ? "احترم خصوصية السكان والمصلين، ولا تعتمد على مسار رقمي بدلاً من تعليمات الموقع أو إرشادات الوصول الحالية." : "Respect residents’ and worshippers’ privacy, and never treat a digital route as a substitute for onsite directions or current access guidance."}
-          </div>
 
           <div className="grid gap-2 sm:grid-cols-2">
             <Link to={`/map?focus=${encodeURIComponent(location.id)}`} onClick={onClose} className="inline-flex items-center justify-center gap-2 rounded-xl bg-brand-olive px-4 py-3 text-xs font-bold text-white transition hover:bg-brand-olive-deep">

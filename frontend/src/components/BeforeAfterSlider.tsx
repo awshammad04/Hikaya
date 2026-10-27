@@ -67,11 +67,6 @@ export const BeforeAfterSlider: React.FC<BeforeAfterSliderProps> = ({ data, fall
               </a>
             )}
           </div>
-          <p className="border-t border-brand-border-light bg-brand-bg px-5 py-3 text-xs leading-5 text-brand-muted">
-            {isArabic
-              ? "لا توجد بعد صورتان موثقتان للزاوية نفسها، لذلك نعرض هذه الصورة وحدها ولا نصنع مقارنة قد توحي بتغيّر غير مثبت."
-              : "The archive does not yet hold two verified views of the same angle, so this photograph is shown on its own rather than implying an unverified comparison."}
-          </p>
         </figure>
       );
     }

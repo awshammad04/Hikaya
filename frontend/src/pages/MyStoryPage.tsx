@@ -115,11 +115,6 @@ export const MyStoryPage: React.FC = () => {
             </Link>
           </div>
         </header>
-        <p className="rounded-2xl border border-brand-amber/20 bg-brand-amber/5 p-4 text-sm leading-6 text-brand-muted">
-          {isArabic
-            ? "صياغة شخصية مولّدة من سجلات المصادر؛ لم تعتمدها هيئة تحرير. رحلة قراءة ثقافية لا تُثبت وقت انتقال أو طريقاً أو حالة وصول."
-            : "A personal narrative generated from source records, awaiting editorial approval. This cultural reading journey does not establish travel times, a physical route or access conditions."}
-        </p>
         <div className="grid gap-8 lg:grid-cols-12 lg:items-start">
           <aside className="space-y-4 lg:col-span-5 lg:order-last lg:sticky lg:top-24">
             <MvpLocationMap
@@ -220,11 +215,6 @@ export const MyStoryPage: React.FC = () => {
                 ]
           }
         />
-        <section className="text-sm text-brand-muted space-y-2">
-          {journey.uncertaintyNotes.map((note, index) => (
-            <p key={index}>{note}</p>
-          ))}
-        </section>
         <MyJerusalemStoryModal
           open={albumOpen}
           onClose={() => setAlbumOpen(false)}

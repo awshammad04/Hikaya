@@ -541,7 +541,6 @@ export const MvpLocationMap: React.FC<MvpLocationMapProps> = ({
         {available.map((category) => <span key={category} className="text-xs text-brand-muted inline-flex items-center gap-1.5"><span className="w-2 h-2 rounded-full" style={{ backgroundColor: CATEGORY_STYLE[category].color }} />{isArabic ? CATEGORY_STYLE[category].ar : CATEGORY_STYLE[category].en}</span>)}
         {drawRoute && routeIds.length > 1 && <span className="text-xs text-brand-amber inline-flex items-center gap-1"><span className="w-5 border-t-2 border-dashed border-brand-amber" />{isArabic ? "المسار المقترح" : "Suggested route"}</span>}
       </div>
-      <p className="text-xs text-brand-muted">{!jerusalem ? (isArabic ? "خريطة نقاط مرجعية دون اتصال؛ لا تعرض حدوداً أو طرقاً أو مداخل مؤكدة. الأماكن التي لم تُوثّق إحداثياتها متاحة في القائمة." : "Offline reference-point map; no boundaries, roads or verified entrances are implied. Places awaiting coordinate verification remain available in the list.") : isArabic ? "خريطة توضيحية تعمل دون اتصال. اتبع زر الاتجاهات لكل محطة للحصول على مسار مشي حي، وتحقق محلياً من الوصول وساعات الفتح والظروف الراهنة." : "Offline illustrated map. Use each stop’s directions button for live walking navigation, and verify current access, opening hours and local conditions."}</p>
     </div>
   );
 };

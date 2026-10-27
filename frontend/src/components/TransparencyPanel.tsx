@@ -10,7 +10,6 @@ interface TransparencyPanelProps {
   generatedBy: string;
   wordCount?: number;
   audience?: string;
-  uncertaintyNotes: string[];
   queuedForReview?: boolean;
 }
 
@@ -24,11 +23,11 @@ const BACKEND_LABELS: Record<string, string> = {
 };
 
 /**
- * Where a generated story came from, and what it could not say.
+ * Where a generated story came from.
  *
  * Always attached to generated text, never collapsed away entirely. A reader
- * who cannot identify the public bibliography behind a claim, or see that the
- * records had a gap, has no way to check the platform's work.
+ * who cannot identify the public bibliography behind a claim has no way to
+ * check the platform's work.
  */
 export const TransparencyPanel: React.FC<TransparencyPanelProps> = ({
   sourceFile,
@@ -36,7 +35,6 @@ export const TransparencyPanel: React.FC<TransparencyPanelProps> = ({
   generatedBy,
   wordCount,
   audience,
-  uncertaintyNotes,
   queuedForReview,
 }) => {
   const { isArabic } = useInterfaceLanguage();
@@ -57,19 +55,6 @@ export const TransparencyPanel: React.FC<TransparencyPanelProps> = ({
         </p>
         <SourceCitationLine sourceId={sourceFile ?? summaryFile} />
       </div>
-
-      {uncertaintyNotes.length > 0 && (
-        <div className="px-4 py-3 border-t border-brand-border-light space-y-1.5">
-          <p className="text-xs font-mono uppercase tracking-widest text-brand-muted">
-            {isArabic ? "ما لا تغطيه السجلات" : "What the records do not cover"}
-          </p>
-          <ul className="text-xs text-brand-text leading-relaxed list-disc ps-4 space-y-1">
-            {uncertaintyNotes.map((note, index) => (
-              <li key={index}>{note}</li>
-            ))}
-          </ul>
-        </div>
-      )}
 
       <button
         type="button"

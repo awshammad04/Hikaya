@@ -359,13 +359,6 @@ export const CreateStoryPage: React.FC = () => {
                 </div>
               </div>
             )}
-            {step === totalSteps - 1 && (
-            <p className="rounded-2xl bg-brand-bg p-4 text-sm leading-6 text-brand-muted">
-              {isArabic
-                ? "هذه رحلة ثقافية للقراءة والاستماع، وليست مسار سفر مؤكداً. تضم محطة من كل محافظة مختارة متى توفر محتوى، وتوضّح الفجوات في المصادر."
-                : "This is a cultural reading and listening journey. It includes a chapter from each selected governorate where content is available, and makes source gaps visible. It does not establish a travel route."}
-            </p>
-            )}
             {error && (
               <p role="alert" className="text-sm text-red-700">
                 {error}
