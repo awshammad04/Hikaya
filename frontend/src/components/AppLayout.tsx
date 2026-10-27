@@ -1,5 +1,5 @@
 import React, { Suspense, useEffect, useRef, useState } from "react";
-import { Link, NavLink, Outlet, useLocation } from "react-router-dom";
+import { Link, NavLink, Outlet, useLocation, useNavigationType } from "react-router-dom";
 import { BookHeart, ChevronDown, Home, Info, Languages, Loader2, MapPin, Menu, Moon, PenLine, ShieldCheck, Stamp, Sun, Waypoints, X } from "lucide-react";
 import { useInterfaceLanguage } from "../context/LanguageContext";
 import { MyJerusalemStoryModal } from "./MyJerusalemStoryModal";
@@ -75,6 +75,7 @@ export const AppLayout: React.FC = () => {
   const [placesOpen, setPlacesOpen] = useState(false);
   const placesRef = useRef<HTMLDivElement>(null);
   const { pathname } = useLocation();
+  const navigationType = useNavigationType();
 
   const governorateId = currentGovernorate(pathname);
   const isJerusalem = governorateId === "jerusalem";
@@ -114,6 +115,12 @@ export const AppLayout: React.FC = () => {
   useEffect(() => {
     setMenuOpen(false);
     setPlacesOpen(false);
+  }, [pathname]);
+
+  // A new page opens at the top; Back and Forward keep the browser's own
+  // scroll restoration. Query-only changes on the same page do not scroll.
+  useEffect(() => {
+    if (navigationType !== "POP") window.scrollTo(0, 0);
   }, [pathname]);
 
   useEffect(() => {
