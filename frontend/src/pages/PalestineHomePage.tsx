@@ -197,6 +197,8 @@ export const PalestineHomePage: React.FC = () => {
 
         <StoryOfTheDay story={story} />
 
+        <DailyQuestion />
+
         <Reveal className="space-y-5">
           <h2 className="font-serif font-black text-3xl text-brand-olive">
             {isArabic ? "كيف تعمل حكاية" : "How Hikaya works"}
@@ -222,8 +224,6 @@ export const PalestineHomePage: React.FC = () => {
             ))}
           </ol>
         </Reveal>
-
-        <DailyQuestion />
       </div>
     </PageTransition>
   );
