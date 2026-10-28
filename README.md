@@ -6,10 +6,10 @@ Use [the Render deployment guide](docs/render-deployment.md) and the root
 `render.yaml`. The guide includes service setup, safe PostgreSQL initialization,
 custom-domain DNS, verification, and outstanding live checks.
 
-An AI-powered personalized guide and living-memory archive covering Jerusalem,
-Ramallah, Hebron and Gaza. The original Jerusalem experience is preserved inside
-the national platform. The
-Arabic-first interface supports smart walking itineraries, grounded storytelling,
+An AI-powered personalized guide and living-memory archive covering seven
+Palestinian governorates: Jerusalem, Ramallah, Nablus, Jericho, Bethlehem, Hebron
+and Gaza. The original Jerusalem experience is preserved inside the national
+platform. The Arabic-first interface supports smart walking itineraries, grounded storytelling,
 natural narration, exact-place photography, community memories and offline fallback.
 
 The stories are built **only** from reviewed content. When the records do not cover
@@ -98,10 +98,11 @@ Each folder has its own README.
 
 ## Features
 
-- National home and data-driven exploration of Jerusalem, Ramallah, Hebron and Gaza
+- National home and data-driven exploration of seven governorates, from Nablus to Gaza
 - A unified “Create My Story in Palestine” journey across selected governorates,
   with narration, map, sourced chapters and a guide scoped to the selection
-- Six new bilingual sourced location records, with explicit missing-media and
+- Eighteen bilingual, source-checked national records, most written from UNESCO
+  World Heritage pages, with credited Wikimedia Commons photos and explicit
   coordinate states
 - Illustrated Jerusalem map with Old City walls, four named gates, surrounding
   neighbourhoods, route numbering, category filters and visited-site markers

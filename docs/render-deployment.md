@@ -328,8 +328,8 @@ PostgreSQL server. Managed PostgreSQL behavior must also be verified live.
 
 ## Live acceptance checklist
 
-- Homepage and Jerusalem routes, Palestine homepage and four governorates.
-- All 14 location pages; direct URL refresh and navigation back/forward.
+- Homepage and Jerusalem routes, Palestine homepage and seven governorates.
+- All 26 location pages; direct URL refresh and navigation back/forward.
 - Existing Jerusalem maps, Google Maps if enabled, marker interactions and images.
 - Personalized stories in Arabic and English; single/multi/all governorate journeys.
 - Heritage Guide questions and follow-ups; source-bound refusals and provider failures.

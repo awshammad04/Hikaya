@@ -21,7 +21,7 @@ The original eight Jerusalem records, slugs, coordinates, content, photographs, 
 
 | Layer | Main changes |
 | --- | --- |
-| Shared content | `content/palestine/catalog.json`; six new `content/ai-ready/*-summary.md` files; `tools/generate-palestine-data.py` |
+| Shared content | `content/palestine/catalog.json`; eighteen national `content/ai-ready/*-summary.md` files; `tools/generate-palestine-data.py` |
 | Frontend | `src/data/heritage.ts`; national home, governorate, map, creation and saved-story pages; `services/journeys.ts`; routes, layout, API fallbacks and shared detail/progress/memory components |
 | Backend | `src/governorates/`, `src/journeys/`, scoped locations/AI services, geographic entity fields, repositories and national in-memory seed |
 | Python AI | `service/scope.py`, `service/journeys.py`, scoped requests, source references, bilingual new-record rendering, multi-location guide retrieval and both HTTP servers |
@@ -39,7 +39,7 @@ psql -d hikaya -f database/seed-palestine.sql
 
 Both scripts are repeatable. They do not delete or replace existing heritage/user rows. Existing locations receive `governorate_id=jerusalem`; new records must declare a review status. The existing `schema.sql` is a fresh-install script that resets tables and must not be used to upgrade a populated database.
 
-For a new, empty database, run `schema.sql`, `seed.sql` and `seed-generated.sql` first, followed by the two scripts above. PostgreSQL is optional locally: the backend's in-memory repositories serve the same four governorates and fourteen locations.
+For a new, empty database, run `schema.sql`, `seed.sql` and `seed-generated.sql` first, followed by the two scripts above. PostgreSQL is optional locally: the backend's in-memory repositories serve the same seven governorates and 26 locations.
 
 ## API additions
 

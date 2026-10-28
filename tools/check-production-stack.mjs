@@ -109,7 +109,7 @@ try {
   await json('/api/video-download', { operationName: 'fallback-operation-scenic' }, 400);
   await json('/api/generate-video', { prompt: 'test' }, 503);
   await json('/api/generate-video', { prompt: 'test' }, 429);
-  console.log('PASS: production proxy/auth, 4 governorates/14 locations, galleries/timelines/quizzes, bilingual stories, national journey, guide, contribution moderation and persistence across database/API restart, SPA refresh, blocked source downloads, explicit paid-service failures and usage limits.');
+  console.log('PASS: production proxy/auth, 7 governorates/26 locations, galleries/timelines/quizzes, bilingual stories, national journey, guide, contribution moderation and persistence across database/API restart, SPA refresh, blocked source downloads, explicit paid-service failures and usage limits.');
   if (process.argv.includes('--keep')) {
     console.log('Browser QA server: ' + web);
     await new Promise((done) => process.once('SIGINT', done));

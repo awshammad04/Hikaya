@@ -35,5 +35,5 @@ assert.equal((await db.query('SELECT COUNT(*)::int AS count FROM governorates'))
 assert.equal((await db.query('SELECT COUNT(*)::int AS count FROM locations')).rows[0].count,26);
 assert.equal((await db.query("SELECT COUNT(*)::int AS count FROM locations WHERE governorate_id='jerusalem'")).rows[0].count,8);
 assert.equal((await db.query("SELECT COUNT(*)::int AS count FROM stories WHERE is_ai_generated AND status='published' AND location_id NOT IN (SELECT id FROM locations WHERE governorate_id='jerusalem')")).rows[0].count,0);
-console.log(`Migration and seed ran twice; preserved all original rows in ${tables.length} tables; four governorates and 14 locations present.`);
+console.log(`Migration and seed ran twice; preserved all original rows in ${tables.length} tables; seven governorates and 26 locations present.`);
 await db.close();

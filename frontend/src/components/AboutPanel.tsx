@@ -34,7 +34,7 @@ export const AboutPanel: React.FC = () => {
             {isArabic ? "حكاية · دليل حي للتراث الفلسطيني" : "Hikaya · A Living Palestinian Heritage Guide"}
           </h3>
           <p className="text-white/85 text-base leading-relaxed">
-            {isArabic ? "حكاية دليل شخصي مدعوم بالذكاء الاصطناعي وأرشيف حي يجمع القدس ورام الله والخليل وغزة. يجمع بين السرد الموثّق والمسارات التي تعمل دون اتصال والرواية الصوتية وصور الماضي والحاضر وذكريات المجتمع المراجعة." : "Hikaya is an AI-powered personal guide and living archive covering Jerusalem, Ramallah, Hebron and Gaza. It combines grounded storytelling, offline routing, narration, then-and-now photography and reviewed community memories."}
+            {isArabic ? "حكاية دليل شخصي مدعوم بالذكاء الاصطناعي وأرشيف حي يجمع سبع محافظات فلسطينية، من نابلس إلى غزة. يجمع بين السرد الموثّق والمسارات التي تعمل دون اتصال والرواية الصوتية وصور الماضي والحاضر وذكريات المجتمع المراجعة." : "Hikaya is an AI-powered personal guide and living archive covering seven Palestinian governorates, from Nablus to Gaza. It combines grounded storytelling, offline routing, narration, then-and-now photography and reviewed community memories."}
           </p>
         </div>
       </div>

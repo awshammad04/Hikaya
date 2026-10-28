@@ -1,6 +1,7 @@
 # Frontend Module
 
-The Arabic-first Hikaya interface covers Jerusalem, Ramallah, Hebron and Gaza.
+The Arabic-first Hikaya interface covers seven governorates: Jerusalem, Ramallah,
+Nablus, Jericho, Bethlehem, Hebron and Gaza.
 The original Jerusalem experience remains intact alongside national navigation,
 governorate maps and a unified cultural story builder.
 
