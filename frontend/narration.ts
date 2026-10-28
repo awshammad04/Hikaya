@@ -127,13 +127,16 @@ export function splitNarration(text: string) {
   return pieces;
 }
 
-// TTS models take no system instruction, and any style direction in the prompt
-// can be read aloud: a long paragraph once added ~14 s of speech to every
-// piece, and even a one-line "Narrate warmly…:" lead-in was still spoken now
-// and then. So the model gets only the text to read; the chosen voice carries
-// the tone. Bump STYLE_VERSION whenever the prompt changes so cached audio made
-// with the old one is not reused.
-const STYLE_VERSION = "3";
+// Direction written into the prompt can be read aloud (a style paragraph once
+// added ~14 s of speech to every piece; even a one-line "Narrate warmly…:"
+// lead-in was spoken now and then), and the TTS model rejects a system
+// instruction. Gemini 3.8 TTS takes direction as a speech_metadata style
+// annotation instead, which only the Interactions API carries; the text itself
+// is read verbatim. Bump STYLE_VERSION whenever the style or prompt changes so
+// cached audio made with the old one is not reused.
+const STYLE_VERSION = "4";
+const SPEECH_STYLE = "Warm and natural, like a Palestinian heritage guide";
+const INTERACTIONS_URL = "https://generativelanguage.googleapis.com/v1beta/interactions";
 
 /** Raw 16-bit mono PCM from an inline audio part (L16/PCM, or WAV). */
 function pcmFromPart(data: string, mimeType: string) {
@@ -245,19 +248,31 @@ async function synthesise(text: string, voice: string, onAudio: (pcm: Buffer, sa
     };
     const pieces: Buffer[] = [];
     let sampleRate = 24000;
+    const emit = (pcm: Buffer, rate: number) => {
+      sampleRate = rate;
+      if (!pcm.length) return;
+      pieces.push(pcm);
+      onAudio(pcm, rate);
+    };
     const take = (parts: Array<{ inlineData?: { data?: string; mimeType?: string } }> | undefined) => {
       for (const part of parts ?? []) {
         if (!part.inlineData?.data) continue;
         const audio = pcmFromPart(part.inlineData.data, part.inlineData.mimeType ?? "");
-        sampleRate = audio.sampleRate;
-        if (!audio.pcm.length) continue;
-        pieces.push(audio.pcm);
-        onAudio(audio.pcm, sampleRate);
+        emit(audio.pcm, audio.sampleRate);
       }
     };
     if (mode === "developer") {
-      for await (const chunk of await ai.models.generateContentStream(request)) {
-        take(chunk.candidates?.[0]?.content?.parts);
+      try {
+        await streamStyledSpeech(text, voice, emit);
+        if (!pieces.length) throw new Error("The styled voice request returned no audio.");
+      } catch (error) {
+        // Read the piece unstyled rather than fail it, unless audio has already
+        // played or the caller must see the error (quota, key for the other API).
+        if (pieces.length || isWrongApi(error) || errorDetails(error).quotaExceeded) throw error;
+        console.warn("Styled narration unavailable; reading without style:", errorText(error));
+        for await (const chunk of await ai.models.generateContentStream(request)) {
+          take(chunk.candidates?.[0]?.content?.parts);
+        }
       }
     } else {
       // Vertex AI Express keys reject the streaming method, so each piece is
@@ -267,6 +282,54 @@ async function synthesise(text: string, voice: string, onAudio: (pcm: Buffer, sa
     if (!pieces.length) throw new Error("The voice model returned no audio.");
     return { pcm: Buffer.concat(pieces), sampleRate };
   });
+}
+
+/**
+ * Streams one piece from the Interactions API with SPEECH_STYLE attached as a
+ * speech_metadata annotation. Audio arrives as server-sent `step.delta` events
+ * carrying headerless 16-bit PCM. Errors keep the API's JSON body as the message
+ * and its HTTP status, so errorDetails and isWrongApi read them like SDK errors.
+ */
+async function streamStyledSpeech(text: string, voice: string, emit: (pcm: Buffer, sampleRate: number) => void) {
+  const response = await fetch(INTERACTIONS_URL, {
+    method: "POST",
+    headers: { "content-type": "application/json", "x-goog-api-key": process.env.GEMINI_API_KEY ?? "" },
+    body: JSON.stringify({
+      model: TTS_MODEL,
+      input: [{
+        type: "user_input",
+        content: [{ type: "text", text, annotations: [{ type: "speech_metadata", style: SPEECH_STYLE }] }],
+      }],
+      response_format: { type: "audio" },
+      generation_config: { speech_config: [{ voice }] },
+      stream: true,
+    }),
+    signal: AbortSignal.timeout(120_000),
+  });
+  if (!response.ok || !response.body) {
+    throw Object.assign(new Error(await response.text()), { status: response.status });
+  }
+  const reader = response.body.getReader();
+  const decoder = new TextDecoder();
+  let buffered = "";
+  for (;;) {
+    const { done, value } = await reader.read();
+    buffered += decoder.decode(value, { stream: !done });
+    let newline: number;
+    while ((newline = buffered.indexOf("\n")) >= 0) {
+      const line = buffered.slice(0, newline).trim();
+      buffered = buffered.slice(newline + 1);
+      const payload = line.startsWith("data:") ? line.slice(5).trim() : "";
+      if (!payload || payload === "[DONE]") continue;
+      const event = JSON.parse(payload);
+      if (event.error) throw Object.assign(new Error(JSON.stringify(event)), { status: event.error.code });
+      if (event.event_type === "step.delta" && event.delta?.type === "audio" && event.delta.data) {
+        const rate = Number(String(event.delta.mime_type ?? "").match(/rate=(\d+)/i)?.[1] ?? 24000);
+        emit(Buffer.from(event.delta.data, "base64"), rate);
+      }
+    }
+    if (done) break;
+  }
 }
 
 function normalisedWord(value: string) {
