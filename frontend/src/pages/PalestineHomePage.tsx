@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import React from "react";
+import { Link } from "react-router-dom";
 import { ArrowLeft, Headphones, MapPin, Route, Search } from "lucide-react";
 import { useInterfaceLanguage } from "../context/LanguageContext";
 import {
@@ -11,6 +11,7 @@ import {
 import { governorates, scopedProfiles } from "../data/heritage";
 import { useLocations } from "../hooks/useLocations";
 import { DataSourceBanner } from "../components/DataSourceBanner";
+import { PlaceSearchBox } from "../components/PlaceSearchBox";
 import { PalestineMiniMap } from "../components/PalestineGeography";
 import { governoratesCount, placesCount } from "../utils/plural";
 import { DailyQuestion } from "../components/DailyQuestion";
@@ -49,25 +50,19 @@ const STEPS = [
 
 export const PalestineHomePage: React.FC = () => {
   const { isArabic } = useInterfaceLanguage();
-  const navigate = useNavigate();
-  const [query, setQuery] = useState("");
   const { locations, source, reason } = useLocations("all");
   const story = useFeaturedStory();
   // The bundled records give the count before the list arrives.
   const placeTotal = locations.length || scopedProfiles("all").length;
   // An odd count leaves the last row half empty, so the first card spans it.
   const wideFirst = governorates.length % 2 === 1;
-  const search = (event: React.FormEvent) => {
-    event.preventDefault();
-    const q = query.trim();
-    navigate(q ? `/places?q=${encodeURIComponent(q)}` : "/places");
-  };
   return (
     <PageTransition>
       <div className="space-y-14">
         <DataSourceBanner source={source} reason={reason || story.error} />
-        <section className="relative overflow-hidden rounded-3xl bg-brand-olive p-7 sm:p-12 text-white">
-          <div className="absolute inset-0 tatreez-grid opacity-10 pointer-events-none" />
+        {/* Not clipped, so the search suggestions can hang below the hero. */}
+        <section className="relative rounded-3xl bg-brand-olive p-7 sm:p-12 text-white">
+          <div className="absolute inset-0 rounded-[inherit] tatreez-grid opacity-10 pointer-events-none" />
           <div className="relative grid gap-10 md:grid-cols-[1fr_minmax(0,22rem)] items-center">
             <div className="max-w-2xl space-y-6">
               <h1 className="font-serif font-black text-4xl sm:text-5xl leading-tight">
@@ -80,25 +75,7 @@ export const PalestineHomePage: React.FC = () => {
                   ? `${placesCount(placeTotal, true)} من القدس إلى غزة، لكل منها سجل من مصادر موثّقة. ابحث عن مكان أو اختر محافظة لتبدأ.`
                   : `${placesCount(placeTotal, false)} from Jerusalem to Gaza, each with a record from cited sources. Search for a place or pick a governorate to begin.`}
               </p>
-              <form role="search" onSubmit={search} className="flex max-w-xl gap-2 rounded-full bg-white p-1.5 shadow-lg">
-                <label className="relative flex-1">
-                  <span className="sr-only">{isArabic ? "ابحث عن مكان" : "Search for a place"}</span>
-                  <Search className="pointer-events-none absolute start-3 top-1/2 h-5 w-5 -translate-y-1/2 text-brand-muted" aria-hidden="true" />
-                  <input
-                    type="search"
-                    value={query}
-                    onChange={(event) => setQuery(event.target.value)}
-                    placeholder={isArabic ? "ابحث: سبسطية، كنيسة، سوق…" : "Search: Sebastia, church, souq…"}
-                    className="h-11 w-full rounded-full bg-transparent ps-10 pe-2 text-base text-brand-text outline-none placeholder:text-brand-muted [&::-webkit-search-cancel-button]:hidden"
-                  />
-                </label>
-                <button
-                  type="submit"
-                  className="shrink-0 rounded-full bg-brand-amber px-5 text-sm font-bold transition-colors hover:bg-brand-amber-deep"
-                >
-                  {isArabic ? "ابحث" : "Search"}
-                </button>
-              </form>
+              <PlaceSearchBox locations={locations} />
               <div className="flex flex-wrap gap-3">
                 <Link
                   to="/places"
